@@ -57,7 +57,7 @@ namespace DragonsDiscordRPG
                 IgnoreExtraArguments = true,
             }, ModuloCliente.Client);
 
-            new ModuloBanco();
+            ModuloBanco.CarregarModuloBanco();
 
             await ModuloCliente.Client.ConnectAsync();
             await Task.Delay(-1);

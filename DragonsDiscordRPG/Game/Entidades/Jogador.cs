@@ -7,7 +7,7 @@ namespace DragonsDiscordRPG.Game.Entidades
     {
         [BsonId]
         public ulong Id { get; set; }
-        public int dolar { get; set; }
+        public ulong IdVoz { get; set; }
     }
 }
 

@@ -1,7 +1,9 @@
 ﻿using DragonsDiscordRPG.Extensoes;
+using DragonsDiscordRPG.Game.Entidades;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
+using MongoDB.Driver;
 using System;
 using System.Threading.Tasks;
 using static DragonsDiscordRPG.Entidades.Extras;
@@ -18,6 +20,59 @@ namespace DragonsDiscordRPG.Entidades
             Client.Ready += Client_Ready;
             Client.GuildAvailable += Client_GuildAvailable;
             Client.ClientErrored += Client_ClientError;
+            Client.GuildMemberAdded += Client_GuildMemberAdded;
+            Client.MessageCreated += Client_MessageCreated;
+            Client.VoiceStateUpdated += Client_VoiceStateUpdated;
+        }
+
+        private async Task Client_VoiceStateUpdated(VoiceStateUpdateEventArgs e)
+        {
+            DiscordMember member;
+            DiscordRole role;
+            Regiao reg;
+
+            if (e.Channel != null)
+            {
+                reg = await ModuloBanco.ColecaoRegiao.Find(x => x.IdVoz == e.Channel.Id).FirstAsync();
+                if (reg != null)
+                {
+                    member = await e.Guild.GetMemberAsync(e.User.Id);
+                    role = e.Guild.GetRole(reg.IdCargoTexto);
+                    await member.GrantRoleAsync(role);
+                    await ModuloBanco.ColecaoJogador.UpdateOneAsync(x => x.Id == e.User.Id,
+                        new UpdateDefinitionBuilder<Jogador>().Set(x => x.IdVoz, reg.IdVoz),
+                        new UpdateOptions() { IsUpsert = true });
+                }
+                return;
+            }
+
+            member = await e.Guild.GetMemberAsync(e.User.Id);
+            Jogador jogador = await ModuloBanco.ColecaoJogador.Find(x => x.Id == e.User.Id).FirstAsync();
+            reg = await ModuloBanco.ColecaoRegiao.Find(x => x.IdVoz == jogador.IdVoz).FirstAsync();
+            role = e.Guild.GetRole(reg.IdCargoTexto);
+            await member.RevokeRoleAsync(role);
+            return;
+        }
+
+        private async Task Client_MessageCreated(MessageCreateEventArgs e)
+        {
+            if (e.Channel.Id != 742793406417338468)
+            {
+
+                return;
+            }
+            DiscordMember membro = await e.Guild.GetMemberAsync(e.Author.Id);
+            DiscordRole role = e.Guild.GetRole(742785152933036174);
+            await membro.GrantRoleAsync(role, "Avisou que estava sem ver os canais de vozes");
+            await e.Message.DeleteAsync();
+            return;
+        }
+
+        private Task Client_GuildMemberAdded(GuildMemberAddEventArgs e)
+        {
+            DiscordRole role = e.Guild.GetRole(742785152933036174);
+            e.Member.GrantRoleAsync(role, "Entrou no servidor");
+            return Task.CompletedTask;
         }
 
         private Task Client_Ready(ReadyEventArgs e)

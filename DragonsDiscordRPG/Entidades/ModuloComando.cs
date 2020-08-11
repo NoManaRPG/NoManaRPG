@@ -7,9 +7,7 @@ using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.Exceptions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DragonsDiscordRPG.Entidades
@@ -26,6 +24,7 @@ namespace DragonsDiscordRPG.Entidades
             // Comandos.SetHelpFormatter<IAjudaComando>();
 
             Comandos.RegisterCommands<Gmae>();
+            Comandos.RegisterCommands<ComandosAdministrativos>();
         }
 
         //Envia mensagem ao receber um erro.

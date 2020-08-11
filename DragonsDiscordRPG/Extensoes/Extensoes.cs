@@ -1,5 +1,7 @@
 ﻿using DragonsDiscordRPG.Entidades;
 using DSharpPlus.Entities;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,9 @@ namespace DragonsDiscordRPG.Extensoes
 {
     public static class Extensoes
     {
+
+
+
         public static string Titulo(this string titulo)
             => "**⌈" + titulo + "⌋**";
 
