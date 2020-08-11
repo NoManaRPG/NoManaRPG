@@ -1,11 +1,9 @@
 ﻿using DragonsDiscordRPG.Entidades;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
-using DSharpPlus.Entities;
 using System;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
+using static DragonsDiscordRPG.Entidades.Extras;
 
 namespace DragonsDiscordRPG
 {
@@ -13,20 +11,6 @@ namespace DragonsDiscordRPG
     {
         public static ConfigCore _config;
         static void Main(string[] args) => new Program().RodarOBotAsync().GetAwaiter().GetResult();
-
-        public static string EntrarPasta(string nome)
-        {
-            StringBuilder raizProjeto = new StringBuilder();
-#if DEBUG
-            raizProjeto.Append(Path.GetFullPath(Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\..\")));
-            raizProjeto.Replace(@"/", @"\");
-            return raizProjeto + nome + @"\";
-#else
-            raizProjeto.Append(Path.GetFullPath(Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, @"../../../../")));
-            raizProjeto.Replace(@"\", @"/");
-            return raizProjeto + nome + @"/";
-#endif
-        }
 
         public async Task RodarOBotAsync()
         {
@@ -39,24 +23,21 @@ namespace DragonsDiscordRPG
                 Console.ReadKey();
                 Environment.Exit(0);
             }
+
             DiscordConfiguration cfg = new DiscordConfiguration
             {
-#if DEBUG
-                Token = _config.TokenTeste,
-#else
-                Token = _config.Token,
-#endif
                 TokenType = TokenType.Bot,
                 ReconnectIndefinitely = true,
                 GatewayCompressionLevel = GatewayCompressionLevel.Stream,
                 AutoReconnect = true,
+                UseInternalLogHandler = true,
 #if DEBUG
+                Token = _config.TokenTeste,
                 LogLevel = LogLevel.Debug,
 #else
+                Token = _config.Token,
                 LogLevel = LogLevel.Info,
 #endif
-                UseInternalLogHandler = true,
-
             };
             ModuloCliente cliente = new ModuloCliente(cfg);
 
@@ -75,7 +56,9 @@ namespace DragonsDiscordRPG
                 EnableMentionPrefix = true,
                 IgnoreExtraArguments = true,
             }, ModuloCliente.Client);
+
             new ModuloBanco();
+
             await ModuloCliente.Client.ConnectAsync();
             await Task.Delay(-1);
         }

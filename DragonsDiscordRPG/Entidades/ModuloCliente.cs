@@ -3,10 +3,8 @@ using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
+using static DragonsDiscordRPG.Entidades.Extras;
 
 namespace DragonsDiscordRPG.Entidades
 {
@@ -24,35 +22,31 @@ namespace DragonsDiscordRPG.Entidades
 
         private Task Client_Ready(ReadyEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "ZAYN", "Cliente está pronto para processar eventos.", DateTime.Now);
-#if DEBUG
-            string projetoRaiz = Path.GetFullPath(Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\..\")) + "BotCore.json";
-#else
-            string projetoRaiz = Path.GetFullPath(Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, @"../../../../")) + "BotCore.json";
-#endif
-            Bot = BotCore.LoadFromFile(projetoRaiz);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "Dragon", "Cliente está pronto.", DateTime.Now);
+            Bot = BotCore.LoadFromFile(EntrarPasta("") + "BotCore.json");
             if (Bot == null)
                 Bot = new BotCore();
+            Client.UpdateStatusAsync(new DiscordActivity($"!ajuda", ActivityType.Playing), UserStatus.Online);
 #if DEBUG
             Bot.VersaoRevisao++;
-            Bot.SaveToFile(projetoRaiz);
+            Bot.SaveToFile(EntrarPasta("") + "BotCore.json");
 #endif
-            Client.UpdateStatusAsync(new DiscordActivity($"z!ajuda", ActivityType.Playing), UserStatus.Online);
             return Task.CompletedTask;
         }
 
         private Task Client_GuildAvailable(GuildCreateEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "Zayn", $"Guilda {e.Guild.Name.RemoverAcentos()}", DateTime.Now);
-            Bot.QuantidadeServidores++;
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "Dragon", $"Guilda {e.Guild.Name.RemoverAcentos()}", DateTime.Now);
             Bot.QuantidadeMembros += e.Guild.MemberCount;
-            Bot.QuantidadeCanais += e.Guild.Channels.Count;
             return Task.CompletedTask;
         }
 
         private Task Client_ClientError(ClientErrorEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Error, "Zayn", $"Um erro aconteceu: {e.Exception.GetType()}: {e.Exception.Message}", DateTime.Now);
+            string erro = $"Um erro aconteceu no client: {e.Exception.GetType()}: {e.Exception.Message}";
+            e.Client.DebugLogger.LogMessage(LogLevel.Error, "Dragon", erro, DateTime.Now);
+            DiscordChannel channel = e.Client.GetChannelAsync(742778666509008956).Result;
+            e.Client.SendMessageAsync(channel, erro);
             return Task.CompletedTask;
         }
     }

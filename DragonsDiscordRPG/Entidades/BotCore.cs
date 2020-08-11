@@ -8,12 +8,10 @@ namespace DragonsDiscordRPG.Entidades
     {
         [JsonIgnore]
         public const ulong Id = 459873132975620134;
-        [JsonIgnore]
-        public int QuantidadeServidores { get; set; }
+
         [JsonIgnore]
         public int QuantidadeMembros { get; set; }
-        [JsonIgnore]
-        public int QuantidadeCanais { get; set; }
+
         [JsonIgnore]
         public DateTime TempoAtivo { get; set; } = DateTime.Now;
 

@@ -1,8 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace DragonsDiscordRPG.Entidades
 {
@@ -13,7 +10,6 @@ namespace DragonsDiscordRPG.Entidades
         /// </summary>
         [JsonProperty("clientToken")]
         internal string Token = "Seu token...";
-
 
         /// <summary>
         /// O token de teste do seu bot
