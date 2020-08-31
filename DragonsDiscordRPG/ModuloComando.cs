@@ -18,6 +18,7 @@ namespace DragonsDiscordRPG
 
             Comandos.RegisterCommands<ComandoTeste>();
             Comandos.RegisterCommands<ComandoAdministrativo>();
+            Comandos.RegisterCommands<ComandoWiki>();
         }
     }
 }

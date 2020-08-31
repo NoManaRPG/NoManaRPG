@@ -1,41 +1,17 @@
-﻿using DragonsDiscordRPG.Entidades;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using MongoDB.Driver;
 using System.Threading.Tasks;
-using static DragonsDiscordRPG.ModuloBanco;
 
 namespace DragonsDiscordRPG.Comandos
 {
     public class ComandoAdministrativo : BaseCommandModule
     {
-        [Command("linkar")]
-        [RequireUserPermissions(DSharpPlus.Permissions.Administrator)]
-        public async Task LinkarAsync(CommandContext ctx, DiscordRole cargo)
-        {
-            if (ctx.Member.VoiceState == null)
-            {
-                await ctx.RespondAsync("Entre em um canal de voz antes!");
-                return;
-            }
+        
 
-            var reg = ColecaoRegiao.Find(x => x.IdVoz == ctx.Member.VoiceState.Channel.Id).FirstOrDefault();
-            if (reg == null)
-                reg = new Regiao()
-                {
-                    IdVoz = ctx.Member.VoiceState.Channel.Id,
-                    IdCargoTexto = cargo.Id,
-                    Nome = ctx.Channel.Parent.Name
-                };
-            else
-            {
-                await ctx.RespondAsync("Canal de voz já linkado!");
-                return;
-            }
-
-            await ColecaoRegiao.InsertOneAsync(reg);
-            await ctx.RespondAsync("Linkado!");
-        }
+        [Command("purge")]
+        [RequireUserPermissions(Permissions.Administrator)]
+        public async Task PurgeAsync(CommandContext ctx, int quantidade)
+            => await ctx.Channel.DeleteMessagesAsync(await ctx.Channel.GetMessagesAsync(quantidade + 1));
     }
 }

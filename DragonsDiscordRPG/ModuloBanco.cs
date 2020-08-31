@@ -17,6 +17,7 @@ namespace DragonsDiscordRPG
         public static IMongoDatabase Database { get; private set; }
         public static IMongoCollection<Jogador> ColecaoJogador { get; private set; }
         public static IMongoCollection<Regiao> ColecaoRegiao { get; private set; }
+        public static IMongoCollection<Wiki> ColecaoWiki { get; private set; }
 
         public static void Conectar()
         {
@@ -25,6 +26,7 @@ namespace DragonsDiscordRPG
 
             ColecaoJogador = Database.CriarCollection<Jogador>();
             ColecaoRegiao = Database.CriarCollection<Regiao>();
+            ColecaoWiki = Database.CriarCollection<Wiki>();
 
             //BsonSerializer.RegisterSerializer(typeof(float),
             //    new SingleSerializer(BsonType.Double, new RepresentationConverter(
