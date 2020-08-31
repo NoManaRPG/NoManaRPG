@@ -1,6 +1,4 @@
-﻿using DragonsDiscordRPG.Entidades;
-using DragonsDiscordRPG.Game.Entidades;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using MongoDB.Driver;
 using System;
@@ -11,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DragonsDiscordRPG.Comandos
 {
-    public class Gmae : BaseCommandModule
+    public class ComandoTeste : BaseCommandModule
     {
         [Command("dolar")]
         [Aliases("d")]

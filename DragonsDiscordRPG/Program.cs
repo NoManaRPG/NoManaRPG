@@ -1,21 +1,20 @@
-﻿using DragonsDiscordRPG.Entidades;
+﻿using DragonsDiscordRPG.Extensoes;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using System;
 using System.Threading.Tasks;
-using static DragonsDiscordRPG.Entidades.Extras;
 
 namespace DragonsDiscordRPG
 {
     public class Program
     {
-        public static ConfigCore _config;
+        public static ConfigFile configFile;
         static void Main(string[] args) => new Program().RodarOBotAsync().GetAwaiter().GetResult();
 
         public async Task RodarOBotAsync()
         {
-            _config = ConfigCore.LoadFromFile(EntrarPasta("") + "config.json");
-            if (_config == null)
+            configFile = ConfigFile.LoadFromFile(StringExtension.EntrarPasta("") + "Config.json");
+            if (configFile == null)
             {
                 Console.WriteLine("O arquivo config.json não existe!");
                 Console.WriteLine("Coloque as informações necessarias no arquivo gerado!");
@@ -24,7 +23,7 @@ namespace DragonsDiscordRPG
                 Environment.Exit(0);
             }
 
-            DiscordConfiguration cfg = new DiscordConfiguration
+            ModuloCliente cliente = new ModuloCliente(new DiscordConfiguration
             {
                 TokenType = TokenType.Bot,
                 ReconnectIndefinitely = true,
@@ -32,24 +31,21 @@ namespace DragonsDiscordRPG
                 AutoReconnect = true,
                 UseInternalLogHandler = true,
 #if DEBUG
-                Token = _config.TokenTeste,
+                Token = configFile.TokenTeste,
                 LogLevel = LogLevel.Debug,
 #else
-                Token = _config.Token,
+                Token = configFile.Token,
                 LogLevel = LogLevel.Info,
 #endif
-            };
-            ModuloCliente cliente = new ModuloCliente(cfg);
+            });
 
-            string[] prefix = new string[1];
-#if DEBUG
-            prefix[0] = _config.PrefixTeste;
-#else
-            prefix[0] = _config.Prefix;
-#endif
             ModuloComandos todosOsComandos = new ModuloComandos(new CommandsNextConfiguration
             {
-                StringPrefixes = prefix,
+#if DEBUG
+                StringPrefixes = new string[1] { configFile.PrefixTeste },
+#else
+                StringPrefixes = new string[1] { configFile.Prefix },
+#endif
                 EnableDms = false,
                 CaseSensitive = false,
                 EnableDefaultHelp = false,
@@ -57,7 +53,7 @@ namespace DragonsDiscordRPG
                 IgnoreExtraArguments = true,
             }, ModuloCliente.Client);
 
-            ModuloBanco.CarregarModuloBanco();
+            ModuloBanco.Conectar();
 
             await ModuloCliente.Client.ConnectAsync();
             await Task.Delay(-1);

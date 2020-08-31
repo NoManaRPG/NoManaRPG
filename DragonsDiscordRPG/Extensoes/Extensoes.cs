@@ -1,22 +1,9 @@
-﻿using DragonsDiscordRPG.Entidades;
-using DSharpPlus.Entities;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using DSharpPlus.Entities;
 
 namespace DragonsDiscordRPG.Extensoes
 {
     public static class Extensoes
     {
-
-
-
-        public static string Titulo(this string titulo)
-            => "**⌈" + titulo + "⌋**";
 
         //public static DiscordEmbedBuilder Padrao(this DiscordEmbedBuilder embed)
         //{
@@ -28,23 +15,7 @@ namespace DragonsDiscordRPG.Extensoes
         //public static DiscordEmbedBuilder Padrao(this DiscordEmbedBuilder embed, string titulo, CommandContext ctx)
         //    => embed.Padrao().WithAuthor($"{titulo} - {ctx.User.Username}", iconUrl: ctx.User.AvatarUrl);
 
-        public static string FirstUpper(this string texto)
-            => texto.First().ToString().ToUpper() + texto.Substring(1);
-
-        public static string Text(this double numero)
-          => string.Format("{0:N2}", numero);
-
-        public static string Underline(this string texto)
-            => $"__{texto}__";
-
-        public static string Bold(this string texto)
-            => $"**{texto}**";
-
-        public static string Italic(this string texto)
-            => $"*{texto}*";
-
-        public static string RemoverAcentos(this string texto)
-            => Regex.Replace(texto, @"[^\u0000-\u007F]+", string.Empty);
+      
         //public static async Task ExecutarComandoAsync(this CommandContext ctx, string comando)
         //{
         //    var cmd = ctx.CommandsNext.FindCommand(comando, out var args);

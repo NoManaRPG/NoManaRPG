@@ -1,5 +1,4 @@
-﻿using DragonsDiscordRPG.Comandos;
-using DragonsDiscordRPG.Extensoes;
+﻿using DragonsDiscordRPG.Extensoes;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -10,25 +9,12 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DragonsDiscordRPG.Entidades
+namespace DragonsDiscordRPG.Eventos
 {
-    public class ModuloComandos
+    public static class CommandErrored
     {
-        public static CommandsNextExtension Comandos { get; private set; }
-
-        public ModuloComandos(CommandsNextConfiguration ccfg, DiscordClient client)
-        {
-            Comandos = client.UseCommandsNext(ccfg);
-            Comandos.CommandExecuted += ComandoExecutado;
-            Comandos.CommandErrored += ComandoAconteceuErro;
-            // Comandos.SetHelpFormatter<IAjudaComando>();
-
-            Comandos.RegisterCommands<Gmae>();
-            Comandos.RegisterCommands<ComandosAdministrativos>();
-        }
-
         //Envia mensagem ao receber um erro.
-        private async Task ComandoAconteceuErro(CommandErrorEventArgs e)
+        public static async Task EventAsync(CommandErrorEventArgs e)
         {
             CommandContext ctx = e.Context;
             switch (e.Exception)
@@ -72,12 +58,6 @@ namespace DragonsDiscordRPG.Entidades
                     await CanalRPG.SendMessageAsync($"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception.ToString()}\nstack:{e.Exception.StackTrace}\ninner:{e.Exception?.InnerException}.\n{e.Context.Message.JumpLink}");
                     break;
             }
-        }
-
-        private Task ComandoExecutado(CommandExecutionEventArgs e)
-        {
-            e.Context.Client.DebugLogger.LogMessage(LogLevel.Info, $"({e.Context.Guild.Id}) {e.Context.Guild.Name.RemoverAcentos()}", $"({e.Context.User.Id}) {e.Context.User.Username.RemoverAcentos()} executou '{e.Command.QualifiedName}'", DateTime.Now);
-            return Task.CompletedTask;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 
-namespace DragonsDiscordRPG.Game.Entidades
+namespace DragonsDiscordRPG.Entidades
 {
     [BsonIgnoreExtraElements]
     public class Regiao

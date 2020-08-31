@@ -1,5 +1,5 @@
-﻿using DragonsDiscordRPG.Extensoes;
-using DragonsDiscordRPG.Game.Entidades;
+﻿using DragonsDiscordRPG.Entidades;
+using DragonsDiscordRPG.Extensoes;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Options;
@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DragonsDiscordRPG.Entidades
+namespace DragonsDiscordRPG
 {
     public static class ModuloBanco
     {
@@ -18,19 +18,13 @@ namespace DragonsDiscordRPG.Entidades
         public static IMongoCollection<Jogador> ColecaoJogador { get; private set; }
         public static IMongoCollection<Regiao> ColecaoRegiao { get; private set; }
 
-        public static void CarregarModuloBanco()
+        public static void Conectar()
         {
-            //IMongoClient _client = new MongoClient("mongodb://admin:.Sts8562@localhost");
             Cliente = new MongoClient();
             Database = Cliente.GetDatabase("Dragon");
 
-            var filter = new ListCollectionNamesOptions { Filter = Builders<BsonDocument>.Filter.Eq("name", nameof(Jogador)) };
-            if (!Database.ListCollectionNames(filter).Any()) Database.CreateCollection(nameof(Jogador));
-            ColecaoJogador = Database.GetCollection<Jogador>(nameof(Jogador));
-
-            filter = new ListCollectionNamesOptions { Filter = Builders<BsonDocument>.Filter.Eq("name", nameof(Regiao)) };
-            if (!Database.ListCollectionNames(filter).Any()) Database.CreateCollection(nameof(Regiao));
-            ColecaoRegiao = Database.GetCollection<Regiao>(nameof(Regiao));
+            ColecaoJogador = Database.CriarCollection<Jogador>();
+            ColecaoRegiao = Database.CriarCollection<Regiao>();
 
             //BsonSerializer.RegisterSerializer(typeof(float),
             //    new SingleSerializer(BsonType.Double, new RepresentationConverter(
@@ -43,7 +37,5 @@ namespace DragonsDiscordRPG.Entidades
             //var indexModel = new CreateIndexModel<RPGJogador>(notificationLogBuilder.Ascending(x => x.NivelAtual));
             //ColecaoJogador.Indexes.CreateOne(indexModel);
         }
-
-        public static void EditJogador(Jogador jogador) => ColecaoJogador.ReplaceOne(x => x.Id == jogador.Id, jogador);
     }
 }

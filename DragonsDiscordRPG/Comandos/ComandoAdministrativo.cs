@@ -1,15 +1,14 @@
 ﻿using DragonsDiscordRPG.Entidades;
-using DragonsDiscordRPG.Game.Entidades;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using MongoDB.Driver;
 using System.Threading.Tasks;
-using static DragonsDiscordRPG.Entidades.ModuloBanco;
+using static DragonsDiscordRPG.ModuloBanco;
 
 namespace DragonsDiscordRPG.Comandos
 {
-    public class ComandosAdministrativos : BaseCommandModule
+    public class ComandoAdministrativo : BaseCommandModule
     {
         [Command("linkar")]
         [RequireUserPermissions(DSharpPlus.Permissions.Administrator)]

@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
 
-namespace DragonsDiscordRPG.Entidades
+namespace DragonsDiscordRPG
 {
-    public class ConfigCore
+    public class ConfigFile
     {
         /// <summary>
         /// O token do seu bot
@@ -52,19 +52,17 @@ namespace DragonsDiscordRPG.Entidades
         /// </summary>
         /// <param name="path">Caminho para o arquivo config.</param>
         /// <returns></returns>
-        public static ConfigCore LoadFromFile(string path)
+        public static ConfigFile LoadFromFile(string path)
         {
             if (!File.Exists(path))
             {
-                ConfigCore config = new ConfigCore();
+                ConfigFile config = new ConfigFile();
                 config.SaveToFile(path);
                 return null;
             }
 
             using (var sr = new StreamReader(path))
-            {
-                return JsonConvert.DeserializeObject<ConfigCore>(sr.ReadToEnd());
-            }
+                return JsonConvert.DeserializeObject<ConfigFile>(sr.ReadToEnd());
         }
 
         /// <summary>
@@ -74,9 +72,7 @@ namespace DragonsDiscordRPG.Entidades
         public void SaveToFile(string path)
         {
             using (var sw = new StreamWriter(path))
-            {
                 sw.Write(JsonConvert.SerializeObject(this, Formatting.Indented));
-            }
         }
     }
 }

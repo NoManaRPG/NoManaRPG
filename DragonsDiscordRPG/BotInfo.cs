@@ -2,13 +2,10 @@
 using System;
 using System.IO;
 
-namespace DragonsDiscordRPG.Entidades
+namespace DragonsDiscordRPG
 {
-    public class BotCore
+    public class BotInfo
     {
-        [JsonIgnore]
-        public const ulong Id = 459873132975620134;
-
         [JsonIgnore]
         public int QuantidadeMembros { get; set; }
 
@@ -24,27 +21,23 @@ namespace DragonsDiscordRPG.Entidades
         [JsonProperty("versaoRevisao")]
         public int VersaoRevisao { get; set; } = 0;
 
-        public static BotCore LoadFromFile(string path)
+        public static BotInfo LoadFromFile(string path)
         {
             if (!File.Exists(path))
             {
-                BotCore config = new BotCore();
+                BotInfo config = new BotInfo();
                 config.SaveToFile(path);
                 return null;
             }
 
             using (var sr = new StreamReader(path))
-            {
-                return JsonConvert.DeserializeObject<BotCore>(sr.ReadToEnd());
-            }
+                return JsonConvert.DeserializeObject<BotInfo>(sr.ReadToEnd());
         }
 
         public void SaveToFile(string path)
         {
             using (var sw = new StreamWriter(path))
-            {
                 sw.Write(JsonConvert.SerializeObject(this, Formatting.Indented));
-            }
         }
     }
 }

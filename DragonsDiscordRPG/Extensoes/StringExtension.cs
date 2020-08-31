@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
-namespace DragonsDiscordRPG.Entidades
+namespace DragonsDiscordRPG.Extensoes
 {
-    public static class Extras
+    public static class StringExtension
     {
         /// <summary>
         /// Permite entrar em uma pasta, após a pasta raiz.
@@ -24,5 +26,23 @@ namespace DragonsDiscordRPG.Entidades
             return raizProjeto + nome + @"/";
 #endif
         }
+
+        public static string Titulo(this string titulo)
+            => "**⌈" + titulo + "⌋**";
+
+        public static string FirstUpper(this string texto)
+            => texto.First().ToString().ToUpper() + texto.Substring(1);
+
+        public static string Underline(this string texto)
+            => $"__{texto}__";
+
+        public static string Bold(this string texto)
+           => $"**{texto}**";
+
+        public static string Italic(this string texto)
+            => $"*{texto}*";
+
+        public static string RemoverAcentos(this string texto)
+          => Regex.Replace(texto, @"[^\u0000-\u007F]+", string.Empty);
     }
 }
