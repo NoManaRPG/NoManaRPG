@@ -10,10 +10,8 @@ namespace DragonsDiscordRPG.Eventos
     {
         public static Task Event(ClientErrorEventArgs e)
         {
-            string erro = $"Um erro aconteceu no client: {e.Exception.GetType()}: {e.Exception.Message}";
+            string erro = $"{e.Exception.GetType()}: {e.Exception.Message}";
             e.Client.DebugLogger.LogMessage(LogLevel.Error, "Dragon", erro, DateTime.Now);
-            DiscordChannel channel = e.Client.GetChannelAsync(742778666509008956).Result;
-            e.Client.SendMessageAsync(channel, erro);
             return Task.CompletedTask;
         }
     }

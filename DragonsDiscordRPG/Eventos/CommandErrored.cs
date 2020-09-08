@@ -53,9 +53,8 @@ namespace DragonsDiscordRPG.Eventos
                     break;
                 default:
                     e.Context.Client.DebugLogger.LogMessage(LogLevel.Debug, "Erro", $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception.ToString()}\nstack:{e.Exception.StackTrace}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
-                    var MundoZayn = await ModuloCliente.Client.GetGuildAsync(420044060720627712);
-                    var CanalRPG = MundoZayn.GetChannel(600736364484493424);
-                    await CanalRPG.SendMessageAsync($"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception.ToString()}\nstack:{e.Exception.StackTrace}\ninner:{e.Exception?.InnerException}.\n{e.Context.Message.JumpLink}");
+                    DiscordChannel channel = await ctx.Client.GetChannelAsync(742778666509008956);
+                    await ctx.Client.SendMessageAsync(channel, $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception.ToString()}\nstack:{e.Exception.StackTrace}\ninner:{e.Exception?.InnerException}.\n{e.Context.Message.JumpLink}");
                     break;
             }
         }

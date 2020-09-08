@@ -39,6 +39,12 @@ namespace DragonsDiscordRPG.Extensoes
         public static string Bold(this string texto)
            => $"**{texto}**";
 
+        public static string Bold(this double texto)
+          => $"**{texto}**";
+
+        public static string Bold(this int texto)
+       => $"**{texto}**";
+
         public static string Italic(this string texto)
             => $"*{texto}*";
 

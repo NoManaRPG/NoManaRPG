@@ -23,16 +23,4 @@ namespace DragonsDiscordRPG.Extensoes
         //    await ctx.CommandsNext.ExecuteCommandAsync(cfx);
         //}
     }
-
-    public static class Emojis
-    {
-        public static DiscordEmoji PontosVida { get => DiscordEmoji.FromGuildEmote(ModuloCliente.Client, 631907691467636736); }
-        public static DiscordEmoji PontosPoder { get => DiscordEmoji.FromGuildEmote(ModuloCliente.Client, 631907691425562674); }
-        public const string QuadradoAzul = ":blue_square:";
-        public const string QuadradoNorte = ":regional_indicator_n:";
-        public const string QuadradoSul = ":regional_indicator_s:";
-        public const string QuadradoLeste = ":regional_indicator_l:";
-        public const string QuadradoOeste = ":regional_indicator_o:";
-        public const string Mago = ":mage:";
-    }
 }
