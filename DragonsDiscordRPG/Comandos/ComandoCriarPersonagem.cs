@@ -3,7 +3,6 @@ using DragonsDiscordRPG.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using System;
 using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
