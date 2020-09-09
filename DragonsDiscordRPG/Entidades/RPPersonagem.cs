@@ -101,6 +101,7 @@ namespace DragonsDiscordRPG.Entidades
             foreach (var item in Pocoes)
                 item.AddCarga(double.MaxValue);
             Efeitos = new List<RPEfeito>();
+            Nivel.PersonagemMorreu();
         }
 
         public void CalcVida()

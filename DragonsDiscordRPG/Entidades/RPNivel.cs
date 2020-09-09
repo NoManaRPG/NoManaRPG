@@ -16,6 +16,8 @@ namespace DragonsDiscordRPG.Entidades
             ExpMax = 525;
         }
 
+        public void PersonagemMorreu() => ExpAtual *= 0.9;
+
         public int AddExp(double exp)
         {
             double expResultante = ExpAtual + exp;
