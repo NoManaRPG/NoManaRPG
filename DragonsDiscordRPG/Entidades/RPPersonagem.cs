@@ -93,6 +93,16 @@ namespace DragonsDiscordRPG.Entidades
             return false;
         }
 
+        public void Resetar()
+        {
+            Zona = new RPZona();
+            Vida.Adicionar(double.MaxValue);
+            Mana.Adicionar(double.MaxValue);
+            foreach (var item in Pocoes)
+                item.AddCarga(double.MaxValue);
+            Efeitos = new List<RPEfeito>();
+        }
+
         public void CalcVida()
         {
             Vida.Maximo = (38 + (Nivel.Atual * 12) + (Atributos.Forca / 2)) * Vida.PorcentagemAdicional;

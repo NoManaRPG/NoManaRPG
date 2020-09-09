@@ -11,8 +11,8 @@ namespace DragonsDiscordRPG.Entidades
     {
 
         public int Nivel { get; set; }
-        public int OndaTotal { get; set; }
-        public int OndaAtual { get; set; }
+        public long OndaTotal { get; set; }
+        public long OndaAtual { get; set; }
         public int Turno { get; set; } // Reseta em outra onda
         public double PontosAcaoTotal { get; set; }
         public List<RPItem> ItensNoChao { get; set; }
@@ -30,7 +30,7 @@ namespace DragonsDiscordRPG.Entidades
             Turno = 0;
             Nivel = nivel;
             OndaAtual = 1;
-            OndaTotal = 3 * Nivel;
+            OndaTotal = Convert.ToInt64(Math.Pow(Nivel, 2) * 2);
             int quantidadeInimigo = Calculo.SortearValor(1, 4);
             for (int i = 0; i < quantidadeInimigo; i++)
             {
