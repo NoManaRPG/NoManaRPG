@@ -15,6 +15,9 @@ namespace DragonsDiscordRPG.Comandos
         [Command("combate")]
         public async Task ComandoCombateAsync(CommandContext ctx)
         {
+            var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
+            if (jogadorNaoExisteAsync) return;
+
             RPJogador jogador = await ModuloBanco.GetJogadorAsync(ctx);
             RPPersonagem personagem = jogador.Personagem;
 

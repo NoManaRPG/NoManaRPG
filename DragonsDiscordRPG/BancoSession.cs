@@ -21,7 +21,7 @@ namespace DragonsDiscordRPG
             this.session = session;
             session.StartTransaction();
             Database = session.Client.GetDatabase("Dragon");
-            ColecaoJogador = Database.GetCollection<RPJogador>("Jogador");
+            ColecaoJogador = Database.GetCollection<RPJogador>(nameof(RPJogador));
         }
 
         public Task<RPJogador> GetJogadorAsync(CommandContext ctx)

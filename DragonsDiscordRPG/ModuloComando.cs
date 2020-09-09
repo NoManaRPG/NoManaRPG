@@ -22,10 +22,11 @@ namespace DragonsDiscordRPG
             Comandos.RegisterCommands<ComandoWiki>();
             Comandos.RegisterCommands<ComandoCriarPersonagem>();
             Comandos.RegisterCommands<ComandoAtacar>();
-            Comandos.RegisterCommands<ComandoAvancar>();
-            Comandos.RegisterCommands<ComandoVoltar>();
+            Comandos.RegisterCommands<ComandoDescer>();
+            Comandos.RegisterCommands<ComandoSubir>();
             Comandos.RegisterCommands<ComandoExplorar>();
             Comandos.RegisterCommands<ComandoCombate>();
+            Comandos.RegisterCommands<ComandoUsar>();
         }
     }
 }

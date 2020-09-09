@@ -1,5 +1,8 @@
-﻿namespace DragonsDiscordRPG.Entidades
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace DragonsDiscordRPG.Entidades
 {
+    [BsonIgnoreExtraElements]
     public class RPAtributo
     {
         public int Inteligencia { get; private set; }

@@ -1,5 +1,6 @@
 ﻿using DragonsDiscordRPG.Entidades;
 using DragonsDiscordRPG.Extensoes;
+using DragonsDiscordRPG.Itens.Pocoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using MongoDB.Bson;
@@ -30,6 +31,8 @@ namespace DragonsDiscordRPG
 
             ColecaoJogador = Database.CriarCollection<RPJogador>();
             ColecaoWiki = Database.CriarCollection<Wiki>();
+
+            RPPocoes.Carregar();
 
             //BsonSerializer.RegisterSerializer(typeof(float),
             //    new SingleSerializer(BsonType.Double, new RepresentationConverter(

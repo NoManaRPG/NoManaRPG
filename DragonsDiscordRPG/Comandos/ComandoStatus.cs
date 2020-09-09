@@ -37,19 +37,20 @@ namespace DragonsDiscordRPG.Comandos
             RPPersonagem personagem = jogador.Personagem;
 
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
-            embed.WithAuthor($"{user.Username} - Nível {personagem.Nivel.Atual} - {personagem.Classe}", iconUrl: user.AvatarUrl);
+            embed.WithAuthor($"{user.Username} - Nível {personagem.Nivel.Atual} - {personagem.Classe} - {personagem.Nome}", iconUrl: user.AvatarUrl);
 
-            embed.WithDescription($"Tem {personagem.Nivel.ExpAtual.Text().Bold()} pontos de experiencia e precisa de {personagem.Nivel.ExpMax.Text().Bold()} para avançar.\n" +
+            embed.WithDescription($"Tem {personagem.Nivel.ExpAtual.Text().Bold()} pontos de experiencia e precisa de {personagem.Nivel.ExpMax.Text().Bold()} para evoluir.\n" +
                 $"Está carregando **{0}** itens.\n" +
-                $"Regenera {personagem.Vida.RegenPorSegundo.Text().Bold()} vida por segundo.\n" +
-                $"Regenera {personagem.Mana.RegenPorSegundo.Text().Bold()} mana por segundo.\n" +
-                $"{personagem.Evasao.Atual.Text().Bold()} pontos de evasão.\n" +
-                $"{personagem.Precisao.Atual.Text().Bold()} pontos de precisão.\n" +
-                $"{personagem.Armadura.Atual.Text().Bold()} pontos de armadura.\n");
+                $"Regenera {personagem.Vida.RegenPorSegundo.Text().Bold()} pontos vida por segundo.\n" +
+                $"Regenera {personagem.Mana.RegenPorSegundo.Text().Bold()} pontos mana por segundo.\n" +
+                $"Tem {personagem.Evasao.Atual.Text().Bold()} pontos de evasão.\n" +
+                $"Tem {personagem.Precisao.Atual.Text().Bold()} pontos de precisão.\n" +
+                $"Tem {personagem.Armadura.Atual.Text().Bold()} pontos de armadura.\n");
 
             embed.AddField($"{Emoji.OrbVida} {"Vida".Titulo()}", $"{personagem.Vida.Atual.Text()}/{personagem.Vida.Maximo.Text()}", true);
             embed.AddField($"{Emoji.OrbMana} {"Mana".Titulo()}", $"{personagem.Mana.Atual.Text()}/{personagem.Mana.Maximo.Text()}", true);
-            embed.AddField("Dano por segundo".Titulo(), $"{((personagem.DanoFisico.Maximo + personagem.DanoFisico.Minimo / 2) * personagem.VelocidadeAtaque.Atual).Text()} Dps");
+            embed.AddField("Dano por segundo".Titulo(), $"{((personagem.DanoFisico.Maximo + personagem.DanoFisico.Minimo / 2) * personagem.VelocidadeAtaque.Atual).Text()}");
+            embed.AddField("Dano físico combinado".Titulo(), $"{personagem.DanoFisico.Minimo} - {personagem.DanoFisico.Maximo}", true);
 
             return embed;
         }

@@ -2,6 +2,7 @@
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -39,6 +40,23 @@ namespace DragonsDiscordRPG.Comandos
                 }
             }
             await ctx.RespondAsync("Banco foi atualizado com sucesso!");
+        }
+
+        [Command("sudo")]
+        [RequireOwner]
+        public async Task Sudo(CommandContext ctx, DiscordUser member, [RemainingText] string command)
+        {
+            await ctx.TriggerTypingAsync();
+            var invocation = command.Substring(1);
+            var cmd = ctx.CommandsNext.FindCommand(invocation, out var args);
+            if (cmd == null)
+            {
+                await ctx.RespondAsync("Comando não encontrado");
+                return;
+            }
+
+            var cfx = ctx.CommandsNext.CreateFakeContext(member, ctx.Channel, "", "!", cmd, args);
+            await ctx.CommandsNext.ExecuteCommandAsync(cfx);
         }
     }
 }

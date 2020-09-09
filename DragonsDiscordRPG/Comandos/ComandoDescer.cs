@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace DragonsDiscordRPG.Comandos
 {
-    public class ComandoVoltar : BaseCommandModule
+    public class ComandoDescer : BaseCommandModule
     {
-        [Command("voltar")]
-        public async Task ComandoVoltarAsync(CommandContext ctx)
+        [Command("descer")]
+        public async Task ComandoDescerAsync(CommandContext ctx)
         {
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
             if (jogadorNaoExisteAsync) return;
@@ -27,15 +27,15 @@ namespace DragonsDiscordRPG.Comandos
 
                     if (personagem.Zona.Monstros != null)
                     {
-                        await ctx.RespondAsync($"{ctx.User.Mention}, você precisa eliminar todos os montros para voltar!");
+                        await ctx.RespondAsync($"{ctx.User.Mention}, você precisa eliminar todos os montros para descer!");
                         return;
                     }
 
-                    bool temMonstros = ModuloBanco.MonstrosNomes.ContainsKey(personagem.Zona.Nivel - 1);
+                    bool temMonstros = ModuloBanco.MonstrosNomes.ContainsKey(personagem.Zona.Nivel + 1);
                     if (temMonstros)
                     {
 
-                        inimigos = personagem.Zona.TrocarZona(personagem.VelocidadeAtaque.Atual, personagem.Zona.Nivel - 1);
+                        inimigos = personagem.Zona.TrocarZona(personagem.VelocidadeAtaque.Atual, personagem.Zona.Nivel + 1);
 
                         await banco.EditJogadorAsync(jogador);
                         await session.CommitTransactionAsync();
@@ -43,7 +43,7 @@ namespace DragonsDiscordRPG.Comandos
                     }
                     else
                     {
-                        await ctx.RespondAsync($"{ctx.User.Mention}, única coisa que você pode voltar agora é do discord!");
+                        await ctx.RespondAsync($"{ctx.User.Mention}, não existe mais zonas para avançar!");
                     }
 
                 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace DragonsDiscordRPG.Entidades
 {
+    [BsonIgnoreExtraElements]
     public class Monstro
     {
         public string Nome { get; set; }
@@ -12,7 +13,7 @@ namespace DragonsDiscordRPG.Entidades
         public double Dano { get; set; }
         public double Evasao { get; set; }
         public double Precisao { get; set; }
-        public double Acao { get; set; }
+        public double PontosAacao { get; set; }
         public double Exp { get; set; }
         public double Vida { get; set; }
 
@@ -26,10 +27,21 @@ namespace DragonsDiscordRPG.Entidades
             Dano = CalcularDano();
             Evasao = CalcularEvasao();
             Precisao = CalcularPrecisao();
-            Acao = 0;
+            PontosAacao = 0;
             Exp = CalcularExp();
             Vida = CalcularVida();
             VelocidadeAtaque = 1;
+        }
+
+        public bool Acao(double pontosAcaoTotal)
+        {
+            PontosAacao += VelocidadeAtaque;
+            if (PontosAacao >= pontosAcaoTotal)
+            {
+                PontosAacao = 0;
+                return true;
+            }
+            return false;
         }
 
         public double CalcularExp()

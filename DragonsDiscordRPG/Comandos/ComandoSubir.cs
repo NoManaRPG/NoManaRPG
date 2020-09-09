@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace DragonsDiscordRPG.Comandos
 {
-    public class ComandoAvancar : BaseCommandModule
+    public class ComandoSubir : BaseCommandModule
     {
-        [Command("avancar")]
-        public async Task ComandoAvancarAsync(CommandContext ctx)
+        [Command("subir")]
+        public async Task ComandoSubirAsync(CommandContext ctx)
         {
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
             if (jogadorNaoExisteAsync) return;
@@ -27,25 +27,31 @@ namespace DragonsDiscordRPG.Comandos
 
                     if (personagem.Zona.Monstros != null)
                     {
-                        await ctx.RespondAsync($"{ctx.User.Mention}, você precisa eliminar todos os montros para avançar!");
+                        await ctx.RespondAsync($"{ctx.User.Mention}, você precisa eliminar todos os montros para subir!");
                         return;
                     }
 
-                    bool temMonstros = ModuloBanco.MonstrosNomes.ContainsKey(personagem.Zona.Nivel + 1);
+                    bool temMonstros = ModuloBanco.MonstrosNomes.ContainsKey(personagem.Zona.Nivel - 1);
                     if (temMonstros)
                     {
 
-                        inimigos = personagem.Zona.TrocarZona(personagem.VelocidadeAtaque.Atual, personagem.Zona.Nivel + 1);
+                        inimigos = personagem.Zona.TrocarZona(personagem.VelocidadeAtaque.Atual, personagem.Zona.Nivel - 1);
 
                         await banco.EditJogadorAsync(jogador);
                         await session.CommitTransactionAsync();
                         await ctx.RespondAsync($"{ctx.User.Mention}, apareceu {inimigos} monstro na sua frente!");
                     }
-                    else
+                    else if (personagem.Zona.Nivel - 1 == 0)
                     {
-                        await ctx.RespondAsync($"{ctx.User.Mention}, não existe mais zonas para avançar!");
+                        foreach (var item in personagem.Pocoes)
+                            item.AddCarga(double.MaxValue);
+                        personagem.Efeitos = new List<RPEfeito>();
+                        await banco.EditJogadorAsync(jogador);
+                        await session.CommitTransactionAsync();
+                        await ctx.RespondAsync($"{ctx.User.Mention}, você chegou na base!");
                     }
-
+                    else
+                        await ctx.RespondAsync($"{ctx.User.Mention}, você só pode subir para o céu morrendo!");
                 }
             }
             catch (Exception ex)

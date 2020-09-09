@@ -47,7 +47,7 @@ namespace DragonsDiscordRPG.Comandos
                 return;
             }
 
-            string classeFormatada = RemoveDiacritics(classe);
+            string classeFormatada = RemoveDiacritics(classe).ToLower();
 
             switch (classeFormatada)
             {
@@ -72,8 +72,10 @@ namespace DragonsDiscordRPG.Comandos
                 case "herdeira":
                     await CriarJogador(ctx, new RPPersonagem("Herdeira", nomePersonagem, new RPAtributo(20, 20, 20), new RPDano(2, 6)));
                     break;
+                default:
+                    await ctx.RespondAsync($"{ctx.User.Mention}, você informou uma classe que não existe!");
+                    break;
             }
-
         }
 
         static string RemoveDiacritics(string text)
@@ -92,6 +94,7 @@ namespace DragonsDiscordRPG.Comandos
 
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
+
 
         private async Task<bool> JogadorExisteAsync(CommandContext ctx)
         {
@@ -115,10 +118,9 @@ namespace DragonsDiscordRPG.Comandos
                 }
                 await ctx.RespondAsync($"{ctx.User.Mention}, o seu personagem foi criado!");
             }
-            catch (Exception ex)
+            catch (MongoDB.Driver.MongoCommandException)
             {
                 await MensagensStrings.ComandoSendoProcessado(ctx);
-                throw ex;
             }
         }
     }

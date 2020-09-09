@@ -1,12 +1,16 @@
-﻿using System;
+﻿using DragonsDiscordRPG.Extensoes;
+using DSharpPlus.Entities;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace DragonsDiscordRPG.Entidades
 {
+    [BsonIgnoreExtraElements]
     public class RPPersonagem
     {
-        public RPPersonagem(string nome, string classe, RPAtributo atributos, RPDano danoBase)
+        public RPPersonagem(string classe, string nome, RPAtributo atributos, RPDano danoBase)
         {
             Nome = nome;
             Classe = classe;
@@ -22,8 +26,6 @@ namespace DragonsDiscordRPG.Entidades
             VelocidadeAtaque = new RPPontoEstatico(1.2);
 
             DanoFisico = danoBase;
-            MaoPrincipal = new RPItem();
-            MaoSecundaria = new RPItem();
 
             Efeitos = new List<RPEfeito>();
 
@@ -33,6 +35,13 @@ namespace DragonsDiscordRPG.Entidades
             CalcMana();
             CalcEvasao();
             CalcPrecisao();
+
+            Vida.Adicionar(double.MaxValue);
+            Mana.Adicionar(double.MaxValue);
+
+            Pocoes = new List<RPItem>();
+            Pocoes.Add(Itens.Pocoes.RPPocoes.PocoesVida[0]);
+            Pocoes[0].AddCarga(50);
         }
 
         public string Nome { get; set; }
@@ -62,6 +71,27 @@ namespace DragonsDiscordRPG.Entidades
         public RPZona Zona { get; set; }
         public int ZonasDescoberta { get; set; }
 
+        public List<RPItem> Pocoes { get; set; }
+
+
+        public double ReceberDanoFisico(double danoFisico)
+        {
+            double porcentagemReducao = Math.Clamp(Armadura.Atual / (Armadura.Atual + 10 * danoFisico), 0, 0.9) * danoFisico;
+            double danoReduzido = danoFisico - porcentagemReducao;
+            Vida.Diminuir(danoReduzido);
+            return danoReduzido;
+        }
+
+        public bool Acao(double pontosAcaoTotal)
+        {
+            PontosDeAcao += VelocidadeAtaque.Atual;
+            if (PontosDeAcao >= pontosAcaoTotal)
+            {
+                PontosDeAcao = 0;
+                return true;
+            }
+            return false;
+        }
 
         public void CalcVida()
         {
@@ -97,6 +127,31 @@ namespace DragonsDiscordRPG.Entidades
                 Mana.Adicionar(double.MaxValue);
             }
             return quantEvoluiu;
+        }
+
+        public void CalcEfeitos(StringBuilder ataquesInimigos)
+        {
+            // Os efeitos só podem ser ativados 1 vez.
+            bool regen = false;
+
+            // For ao contrario para poder remover o efeito sem dar erro.
+            for (int i = Efeitos.Count - 1; i >= 0; i--)
+            {
+                switch (Efeitos[i].Tipo)
+                {
+                    // Efeito poção de vida.
+                    case Enuns.RPTipo.PocaoVida:
+                        if (regen) continue;
+                        Vida.Adicionar(Efeitos[i].Quantidade);
+                        ataquesInimigos.AppendLine($"{Efeitos[i].Quantidade} de vida regenerado.");
+                        if (Efeitos[i].Usar())
+                        {
+                            Efeitos.RemoveAt(i);
+                            ataquesInimigos.AppendLine($"Regen de vida acabou.");
+                        }
+                        break;
+                }
+            }
         }
     }
 }

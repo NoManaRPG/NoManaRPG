@@ -17,9 +17,9 @@ namespace DragonsDiscordRPG
             return 1;
         }
 
-        public static double ChanceAcertar(double atacantePrecisao, double defensorEvasao)
+        public static bool DanoFisicoChanceAcerto(double atacantePrecisao, double defensorEvasao)
         {
-            return Math.Clamp(atacantePrecisao / (atacantePrecisao + Math.Pow(defensorEvasao / 4, 0.8)), 0.05, 0.95);
+            return Chance(Math.Clamp(atacantePrecisao / (atacantePrecisao + Math.Pow(defensorEvasao / 4, 0.8)), 0.05, 0.95));
         }
 
         public static bool Chance(double probabilidade)
@@ -34,7 +34,7 @@ namespace DragonsDiscordRPG
             return armadura / (armadura + 10 * dano);
         }
 
-        public static double CalcularDano(double dano, double armadura)
+        public static double DanoFisicoCalcular(double dano, double armadura)
         {
             double porcentagemReducao = Math.Clamp(ReduzirDanoFisico(dano, armadura), 0, 0.9);
             porcentagemReducao = dano * porcentagemReducao;
