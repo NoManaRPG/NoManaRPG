@@ -83,9 +83,8 @@ namespace DragonsDiscordRPG.Entidades
             return 0;
         }
 
-        public StringBuilder CalcAtaquesInimigos(RPPersonagem personagem)
+        public void CalcAtaquesInimigos(RPPersonagem personagem, StringBuilder resumoBatalha)
         {
-            StringBuilder resumoBatalha = new StringBuilder();
             do
             {
                 foreach (var mob in Monstros)
@@ -110,7 +109,6 @@ namespace DragonsDiscordRPG.Entidades
                     break;
                 }
             } while (personagem.Vida.Atual > 0);
-            return resumoBatalha;
         }
     }
 }

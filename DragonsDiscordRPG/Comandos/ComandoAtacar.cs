@@ -47,11 +47,13 @@ namespace DragonsDiscordRPG.Comandos
                     // Limita o id.
                     id = Math.Clamp(id, 0, personagem.Zona.Monstros.Count - 1);
 
-                    // Executa os ataques do inimigo.
-                    StringBuilder resumoBatalha = personagem.Zona.CalcAtaquesInimigos(personagem);
+                    StringBuilder resumoBatalha = new StringBuilder();
 
                     // Executa os efeitos ativos no personagem.
                     personagem.CalcEfeitos(resumoBatalha);
+
+                    // Executa os ataques do inimigo.
+                    personagem.Zona.CalcAtaquesInimigos(personagem, resumoBatalha);
 
                     // Exibimos a vida/mana do personagem no começo da mensagem.
                     DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
