@@ -85,7 +85,7 @@ namespace DragonsDiscordRPG.Comandos
                             // Dropa itens
                             personagem.Zona.SortearItem();
 
-                          
+
                             // Remove monstro morto.
                             personagem.Zona.Monstros.Remove(personagem.Zona.Monstros[id]);
                             int inimigosNovos = personagem.Zona.NovaOnda(personagem.VelocidadeAtaque.Atual);
@@ -96,11 +96,12 @@ namespace DragonsDiscordRPG.Comandos
                     else // Caso ele erre o ataque
                         resumoBatalha.AppendLine($"\nVocê errou o ataque!");
 
-                    // Informações complementares.
+                    // Informações complementares
                     embed.WithDescription($"Onda {personagem.Zona.OndaAtual.Bold()}/{personagem.Zona.OndaTotal.Bold()}.\n" +
-                        $"Turno {personagem.Zona.Turno}\n");
-                    embed.WithColor(DiscordColor.Blue);
+    $"Turno {personagem.Zona.Turno}\n" +
+    $"Inimigos {personagem.Zona.Monstros.Count.Bold()}");
 
+                    embed.WithColor(DiscordColor.Blue);
                     // Se o personagem morrer, reseta ele.
                     if (personagem.Vida.Atual <= 0)
                     {
