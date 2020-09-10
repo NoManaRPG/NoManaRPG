@@ -13,12 +13,8 @@ namespace DragonsDiscordRPG.Entidades
         public static Dictionary<int, MonstroNomes> GetMonstros()
         {
             Dictionary<int, MonstroNomes> lista = new Dictionary<int, MonstroNomes>();
-            lista.Add(1, new MonstroNomes
-            {
-                Nomes = new List<string> {
-                "Afogado", "Destruidor",},
-                Chefoes = new List<string> { "Demolidor" }
-            });
+            lista.Add(1, new MonstroNomes { Nomes = new List<string> { "Zombie afogado", "Zombie faminto", "Cuspidor de areia" } });
+            lista.Add(2, new MonstroNomes { Nomes = new List<string> { "Fogo furioso", "Canibal", "Comedor de terra", "Carangueiro gigante","Casca murcha" } });
 
             return lista;
         }
