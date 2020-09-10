@@ -153,6 +153,7 @@ namespace DragonsDiscordRPG.Entidades
                     // Efeito poção de vida.
                     case Enuns.RPTipo.PocaoVida:
                         if (regen) continue;
+                        regen = true;
                         Vida.Adicionar(Efeitos[i].Quantidade);
                         ataquesInimigos.AppendLine($"{Efeitos[i].Quantidade} de vida regenerado.");
                         if (Efeitos[i].Usar())
