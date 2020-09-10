@@ -80,7 +80,7 @@ namespace DragonsDiscordRPG.Comandos
 
                             // Recarrega os frascos
                             foreach (var item in personagem.Pocoes)
-                                item.CargasAtual += 1;
+                                item.AddCarga(1);
 
                             // Dropa itens
                             personagem.Zona.SortearItem();
