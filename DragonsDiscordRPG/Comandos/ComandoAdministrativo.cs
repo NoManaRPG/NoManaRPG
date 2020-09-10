@@ -4,6 +4,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -57,6 +58,33 @@ namespace DragonsDiscordRPG.Comandos
 
             var cfx = ctx.CommandsNext.CreateFakeContext(member, ctx.Channel, "", "!", cmd, args);
             await ctx.CommandsNext.ExecuteCommandAsync(cfx);
+        }
+
+        [Command("restaurarPot")]
+        [RequireOwner]
+        public async Task GivePot(CommandContext ctx, DiscordUser member)
+        {
+            try
+            {
+                using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+                {
+                    BancoSession banco = new BancoSession(session);
+                    RPJogador jogador = await banco.GetJogadorAsync(ctx);
+                    RPPersonagem personagem = jogador.Personagem;
+
+                    personagem.Pocoes[0].AddCarga(double.MaxValue);
+
+                    await banco.EditJogadorAsync(jogador);
+                    await session.CommitTransactionAsync();
+                    await ctx.RespondAsync($"Poções restaurada para {member.Mention}!");
+
+                }
+            }
+            catch (Exception ex)
+            {
+                await MensagensStrings.ComandoSendoProcessado(ctx);
+                throw ex;
+            }
         }
     }
 }

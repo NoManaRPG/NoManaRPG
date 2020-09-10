@@ -45,9 +45,10 @@ namespace DragonsDiscordRPG.Comandos
                         foreach (var item in personagem.Pocoes)
                             item.AddCarga(double.MaxValue);
                         personagem.Efeitos = new List<RPEfeito>();
+                        personagem.Zona.Nivel = 0;
                         await banco.EditJogadorAsync(jogador);
                         await session.CommitTransactionAsync();
-                        await ctx.RespondAsync($"{ctx.User.Mention}, você chegou na base!");
+                        await ctx.RespondAsync($"{ctx.User.Mention}, você saiu da torre!");
                     }
                     else
                         await ctx.RespondAsync($"{ctx.User.Mention}, você só pode subir para o céu morrendo!");

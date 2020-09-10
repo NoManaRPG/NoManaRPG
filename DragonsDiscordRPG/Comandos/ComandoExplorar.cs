@@ -31,7 +31,7 @@ namespace DragonsDiscordRPG.Comandos
 
                     if(personagem.Zona.Nivel == 0)
                     {
-                        await ctx.RespondAsync($"{ctx.User.Mention}, você explora a base, mas encontra só ratos..!");
+                        await ctx.RespondAsync($"{ctx.User.Mention}, você somente pode explorar os níveis inferiores da torre!");
                         return;
                     }
 
