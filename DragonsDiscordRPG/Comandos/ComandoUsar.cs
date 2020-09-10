@@ -51,7 +51,7 @@ namespace DragonsDiscordRPG.Comandos
                     }
                     else
                     {
-                        await ctx.RespondAsync($"{ctx.User.Mention}, você não tem cargas o suficiente para usar este frasco!");
+                        await ctx.RespondAsync($"{ctx.User.Mention}, o frasco não tem cargas o suficiente!");
                         return;
                     }
 
