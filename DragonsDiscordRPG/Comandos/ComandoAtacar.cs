@@ -98,8 +98,8 @@ namespace DragonsDiscordRPG.Comandos
 
                     // Informações complementares
                     embed.WithDescription($"Onda {personagem.Zona.OndaAtual.Bold()}/{personagem.Zona.OndaTotal.Bold()}.\n" +
-    $"Turno {personagem.Zona.Turno}\n" +
-    $"Inimigos {personagem.Zona.Monstros.Count.Bold()}");
+                     $"Turno {personagem.Zona.Turno}\n" +
+                      $"Inimigos {(personagem.Zona.Monstros == null ? 0 : personagem.Zona.Monstros.Count)}");
 
                     embed.WithColor(DiscordColor.Blue);
                     // Se o personagem morrer, reseta ele.
