@@ -42,6 +42,7 @@ namespace DragonsDiscordRPG.Comandos
                         switch (personagem.Pocoes[posicao].Tipo)
                         {
                             case Enuns.RPTipo.PocaoVida:
+                                personagem.Pocoes[posicao].RemoverCarga(personagem.Pocoes[posicao].CargasUso);
                                 double duracao = personagem.Pocoes[posicao].Tempo / personagem.VelocidadeAtaque.Atual;
                                 personagem.Efeitos.Add(new RPEfeito(Enuns.RPTipo.PocaoVida, "Regeneração de vida", duracao, personagem.Pocoes[posicao].LifeRegen / duracao, personagem.VelocidadeAtaque.Atual));
                                 await ctx.RespondAsync($"{ctx.User.Mention}, você acabou de usar { personagem.Pocoes[posicao].CargasUso} cargas para recuperar {personagem.Pocoes[posicao].LifeRegen / duracao} pontos de vida por segundo.");
