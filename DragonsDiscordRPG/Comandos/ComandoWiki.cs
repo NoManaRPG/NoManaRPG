@@ -44,6 +44,7 @@ namespace DragonsDiscordRPG.Comandos
                 await ctx.RespondAsync("Você precisa informar uma wiki pelo o ID");
                 return;
             }
+
             var wikipedia = await ModuloBanco.ColecaoWiki.Find(x => x.Id == wiki).FirstOrDefaultAsync();
             if (wikipedia == null)
             {

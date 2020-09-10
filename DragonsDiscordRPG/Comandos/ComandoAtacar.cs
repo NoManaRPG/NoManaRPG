@@ -32,7 +32,7 @@ namespace DragonsDiscordRPG.Comandos
 
                     if (personagem.Zona.Monstros == null)
                     {
-                        await ctx.RespondAsync($"{ctx.User.Mention}, porque atacar o vento? Explore uma zona!");
+                        await ctx.RespondAsync($"{ctx.User.Mention}, porque atacar o vento? Explore um andar!");
                         return;
                     }
 
