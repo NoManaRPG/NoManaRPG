@@ -15,6 +15,8 @@ namespace DragonsDiscordRPG.Comandos
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
             if (jogadorNaoExisteAsync) return;
 
+            bool usouPocao = false;
+
             try
             {
                 using (var session = await ModuloBanco.Cliente.StartSessionAsync())
@@ -42,10 +44,10 @@ namespace DragonsDiscordRPG.Comandos
                         switch (personagem.Pocoes[posicao].Tipo)
                         {
                             case Enuns.RPTipo.PocaoVida:
+                                usouPocao = true;
                                 personagem.Pocoes[posicao].RemoverCarga(personagem.Pocoes[posicao].CargasUso);
                                 double duracao = personagem.Pocoes[posicao].Tempo / personagem.VelocidadeAtaque.Atual;
                                 personagem.Efeitos.Add(new RPEfeito(Enuns.RPTipo.PocaoVida, "Regeneração de vida", duracao, personagem.Pocoes[posicao].LifeRegen / duracao, personagem.VelocidadeAtaque.Atual));
-                                await ctx.RespondAsync($"{ctx.User.Mention}, você acabou de usar { personagem.Pocoes[posicao].CargasUso} cargas para recuperar {personagem.Pocoes[posicao].LifeRegen / duracao} pontos de vida por segundo.");
                                 break;
                         }
                     }
@@ -55,15 +57,17 @@ namespace DragonsDiscordRPG.Comandos
                         return;
                     }
 
-
                     await banco.EditJogadorAsync(jogador);
                     await session.CommitTransactionAsync();
 
+                    if (usouPocao)
+                        await ctx.RespondAsync($"{ctx.User.Mention}, você acabou de usar { personagem.Pocoes[posicao].Nome.Titulo().Bold()}!");
                 }
             }
             catch (MongoDB.Driver.MongoCommandException)
             {
                 await MensagensStrings.ComandoSendoProcessado(ctx);
+                await ctx.RespondAsync("Erro na pot");
             }
         }
 

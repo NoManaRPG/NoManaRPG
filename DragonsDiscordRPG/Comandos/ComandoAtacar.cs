@@ -74,7 +74,7 @@ namespace DragonsDiscordRPG.Comandos
                         {
                             double expGanha = Calculo.CalcularEfetividadeXP(personagem.Nivel.Atual, personagem.Zona.Monstros[id].Nivel) * personagem.Zona.Monstros[id].Exp;
                             embed.AddField("Mortos".Titulo(), $"{Emoji.CrossBone} {personagem.Zona.Monstros[id].Nome.Bold()} ️{Emoji.CrossBone}\n" +
-                                $"+{expGanha} exp.");
+                                $"+{expGanha.Text()} exp.");
 
                             int evoluiu = personagem.AddExp(expGanha);
                             if (evoluiu != 0)
@@ -121,7 +121,7 @@ namespace DragonsDiscordRPG.Comandos
                     await banco.EditJogadorAsync(jogador);
                     await session.CommitTransactionAsync();
 
-                    await ctx.RespondAsync(embed: embed.Build());
+                    await ctx.RespondAsync(ctx.User.Mention, embed: embed.Build());
                 }
             }
             catch (MongoDB.Driver.MongoCommandException)
