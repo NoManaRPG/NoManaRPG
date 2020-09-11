@@ -67,7 +67,6 @@ namespace DragonsDiscordRPG.Comandos
             catch (MongoDB.Driver.MongoCommandException)
             {
                 await MensagensStrings.ComandoSendoProcessado(ctx);
-                await ctx.RespondAsync("Erro na pot");
             }
         }
 
