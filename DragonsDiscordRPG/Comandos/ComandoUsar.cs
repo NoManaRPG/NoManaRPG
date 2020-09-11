@@ -30,6 +30,7 @@ namespace DragonsDiscordRPG.Comandos
                         await ctx.RespondAsync($"{ctx.User.Mention}, você só pode usar poções em batalha.");
                         return;
                     }
+
                     posicao = Math.Clamp(posicao, 0, 4);
 
                     if (personagem.Pocoes.Count - 1 < posicao)
