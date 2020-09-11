@@ -38,7 +38,6 @@ namespace DragonsDiscordRPG
                 LogLevel = LogLevel.Info,
 #endif
             });
-
             ModuloComandos todosOsComandos = new ModuloComandos(new CommandsNextConfiguration
             {
 #if DEBUG
