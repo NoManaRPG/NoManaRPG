@@ -33,9 +33,9 @@ namespace DragonsDiscordRPG.Comandos
 
                     posicao = Math.Clamp(posicao, 0, 4);
 
-                    if (personagem.Pocoes[posicao] == null)
+                    if (personagem.Pocoes.Count - 1 < posicao)
                     {
-                        await ctx.RespondAsync($"{ctx.User.Mention}, o slot não tem um frasco equipado!");
+                        await ctx.RespondAsync($"{ctx.User.Mention}, o slot **{posicao}** não tem um frasco equipado!");
                         return;
                     }
 
