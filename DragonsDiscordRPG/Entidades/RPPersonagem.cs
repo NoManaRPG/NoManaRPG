@@ -40,7 +40,6 @@ namespace DragonsDiscordRPG.Entidades
             Mana.Adicionar(double.MaxValue);
 
             Pocoes = new List<RPItem>();
-            Pocoes.Add(Itens.Pocoes.RPPocoes.PocoesVida[0]);
             Pocoes[0].AddCarga(50);
         }
 
@@ -151,7 +150,7 @@ namespace DragonsDiscordRPG.Entidades
                 switch (Efeitos[i].Tipo)
                 {
                     // Efeito poção de vida.
-                    case Enuns.RPTipo.PocaoVida:
+                    case Enuns.RPItemTipo.PocaoVida:
                         if (regen) continue;
                         regen = true;
                         Vida.Adicionar(Efeitos[i].Quantidade);
@@ -169,4 +168,3 @@ namespace DragonsDiscordRPG.Entidades
 }
 
 
-//[BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]

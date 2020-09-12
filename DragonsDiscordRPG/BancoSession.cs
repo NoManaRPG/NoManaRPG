@@ -1,6 +1,7 @@
 ﻿using DragonsDiscordRPG.Entidades;
 using DragonsDiscordRPG.Extensoes;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,9 @@ namespace DragonsDiscordRPG
 
         public Task<RPJogador> GetJogadorAsync(CommandContext ctx)
             => ColecaoJogador.Find(session, x => x.Id == ctx.User.Id).FirstOrDefaultAsync();
+
+        public Task<RPJogador> GetJogadorAsync(DiscordUser user)
+            => ColecaoJogador.Find(session, x => x.Id == user.Id).FirstOrDefaultAsync();
 
         public Task EditJogadorAsync(RPJogador jogador)
             => ColecaoJogador.ReplaceOneAsync(session, x => x.Id == jogador.Id, jogador);

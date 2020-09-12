@@ -6,18 +6,25 @@ namespace DragonsDiscordRPG.Entidades
     [BsonIgnoreExtraElements]
     public class RPItem
     {
-        public RPItem(RPTipo tipo, string nome, int nivel, string urlImage)
+        public RPItem(RPItemTipo tipo, string nome, int nivel, int espaco)
         {
             Tipo = tipo;
             Nome = nome;
             Nivel = nivel;
-            UrlImage = urlImage;
+            Espaco = espaco;
+            Quantidade = 1;
         }
 
-        public RPTipo Tipo { get; set; }
+        public RPItemTipo Tipo { get; set; }
         public string Nome { get; set; }
         public int Nivel { get; set; }
-        public string UrlImage { get; set; }
+
+        public int Inteligencia { get; set; }
+        public int Destreza { get; set; }
+        public int Forca { get; set; }
+        public int Espaco { get; set; }
+        public int Pilha { get; set; }
+        public int Quantidade { get; set; }
 
         #region Poção
 
@@ -44,6 +51,14 @@ namespace DragonsDiscordRPG.Entidades
             return false;
         }
 
+
+        #endregion
+
+        #region Arma
+
+        public RPDano DanoFisico { get; set; }
+        public double ChanceCritico { get; set; }
+        public double VelocidadeAtaque { get; set; }
 
         #endregion
     }

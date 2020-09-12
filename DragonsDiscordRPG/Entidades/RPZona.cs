@@ -16,7 +16,7 @@ namespace DragonsDiscordRPG.Entidades
         public int Turno { get; set; } // Reseta em outra onda
         public double PontosAcaoTotal { get; set; }
         public List<RPItem> ItensNoChao { get; set; }
-        public List<Monstro> Monstros { get; set; }
+        public List<RPMonstro> Monstros { get; set; }
 
         public RPZona()
         {
@@ -25,7 +25,7 @@ namespace DragonsDiscordRPG.Entidades
 
         public int TrocarZona(double velocidadeAtaquePersonagem, int nivel)
         {
-            Monstros = new List<Monstro>();
+            Monstros = new List<RPMonstro>();
             ItensNoChao = new List<RPItem>();
             Turno = 0;
             Nivel = nivel;
@@ -37,7 +37,7 @@ namespace DragonsDiscordRPG.Entidades
                 var f = ModuloBanco.MonstrosNomes[Nivel];
                 var sorteio = Calculo.SortearValor(0, f.Nomes.Count - 1);
                 var g = f.Nomes[sorteio];
-                Monstro m = new Monstro(g, nivel);
+                RPMonstro m = new RPMonstro(g, nivel);
                 Monstros.Add(m);
             }
 
@@ -59,7 +59,7 @@ namespace DragonsDiscordRPG.Entidades
                 if (OndaAtual < OndaTotal)
                 {
                     Turno = 0;
-                    Monstros = new List<Monstro>();
+                    Monstros = new List<RPMonstro>();
                     OndaAtual++;
 
                     int quantidadeInimigo = Calculo.SortearValor(1, 2);
@@ -67,7 +67,7 @@ namespace DragonsDiscordRPG.Entidades
                     {
                         var listaNomes = ModuloBanco.MonstrosNomes[Nivel];
                         var nomeSorteado = listaNomes.Nomes[Calculo.SortearValor(0, listaNomes.Nomes.Count - 1)];
-                        Monstro m = new Monstro(nomeSorteado, Nivel);
+                        RPMonstro m = new RPMonstro(nomeSorteado, Nivel);
                         Monstros.Add(m);
                     }
 

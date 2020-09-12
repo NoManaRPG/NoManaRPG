@@ -1,12 +1,14 @@
-﻿using DragonsDiscordRPG.Enuns;
+﻿using DragonsDiscordRPG.BancoItens;
+using DragonsDiscordRPG.Enuns;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DragonsDiscordRPG.Entidades
 {
     [BsonIgnoreExtraElements]
-    public class Monstro
+    public class RPMonstro
     {
         public string Nome { get; set; }
         public int Nivel { get; set; }
@@ -20,7 +22,7 @@ namespace DragonsDiscordRPG.Entidades
         public double VelocidadeAtaque { get; set; }
         public Raridade Tipo { get; set; }
 
-        public Monstro(string nome, int nivel)
+        public RPMonstro(string nome, int nivel)
         {
             Nome = nome;
             Nivel = nivel;
@@ -69,30 +71,45 @@ namespace DragonsDiscordRPG.Entidades
             return 0.0015 * Math.Pow(Nivel, 6) + 0.2 * Nivel + 15;
         }
 
-        //Pode dropar equipamento ou dinheiro
-        //Se for equipamento pode dropar um dos varios tipos
-        //Se for dinheiro pode dropar um dos varios tipos
 
-        public int ChanceDropTotal { get; set; }
-        public List<MobItemDropRPG> Drops { get; set; }
-
-        public MobItemDropRPG SortearDrop()
+        public RPItem SortearItem(int nivel)
         {
-            var rand = Calculo.SortearValor(0, ChanceDropTotal);
-            var top = 0;
-            for (int i = 0; i < Drops.Count; i++)
-            {
-                top += Drops[i].ChanceDrop;
-                if (rand <= top)
-                    return Drops[i];
-            }
-            return null;
-        }
-    }
+            // Separa os itens por nivel
+            var niveisSeparados = RPBancoItens.Itens.Where(x => x.Key <= nivel);
 
-    [BsonIgnoreExtraElements]
-    public class MobItemDropRPG
-    {
-        public int ChanceDrop { get; set; }
+            Random r = new Random();
+            var itens = niveisSeparados.ElementAt(r.Next(0, niveisSeparados.Count()));
+
+            var itemSorteado = itens.ElementAt(r.Next(0, itens.Count()));
+
+            return itemSorteado;
+        }
+
+        //    //Pode dropar equipamento ou dinheiro
+        //    //Se for equipamento pode dropar um dos varios tipos
+        //    //Se for dinheiro pode dropar um dos varios tipos
+
+        //    public int ChanceDropTotal { get; set; }
+        //    public List<MobItemDropRPG> Drops { get; set; }
+
+        //    public MobItemDropRPG SortearDrop()
+        //    {
+        //        var rand = Calculo.SortearValor(0, ChanceDropTotal);
+        //        var top = 0;
+        //        for (int i = 0; i < Drops.Count; i++)
+        //        {
+        //            top += Drops[i].ChanceDrop;
+        //            if (rand <= top)
+        //                return Drops[i];
+        //        }
+        //        return null;
+        //    }
+        //}
+
+        //[BsonIgnoreExtraElements]
+        //public class MobItemDropRPG
+        //{
+        //    public int ChanceDrop { get; set; }
+        //}
     }
 }
