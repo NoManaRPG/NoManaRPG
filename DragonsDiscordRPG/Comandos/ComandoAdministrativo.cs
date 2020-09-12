@@ -38,6 +38,9 @@ namespace DragonsDiscordRPG.Comandos
 
                     foreach (RPJogador user in usuarios)
                     {
+                        user.Personagem.Zona.ItensNoChao = null;
+                        user.Personagem.Zona.ItensNoChao = new List<RPItem>();
+                        user.Personagem.Mochila = new RPMochila();
                         await ModuloBanco.ColecaoJogador.ReplaceOneAsync(x => x.Id == user.Id, user);
                     }
                 }

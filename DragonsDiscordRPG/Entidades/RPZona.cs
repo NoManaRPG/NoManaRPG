@@ -1,5 +1,6 @@
 ﻿using DragonsDiscordRPG.Extensoes;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.Options;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -47,13 +48,25 @@ namespace DragonsDiscordRPG.Entidades
             return quantidadeInimigo;
         }
 
-        public void SortearItem()
+        public bool SortearItem(RPMonstro monstro, double chancePersonagem, out int drops)
         {
+            drops = 0;
+            Monstros.Remove(monstro);
 
+            if (monstro.SortearItens(monstro.Nivel, chancePersonagem, out List<RPItem> itens))
+            {
+                foreach (var item in itens)
+                    ItensNoChao.Add(item);
+                drops = itens.Count;
+                return true;
+            }
+
+            return false;
         }
 
-        public int NovaOnda(double velocidadeAtaquePersonagem)
+        public bool NovaOnda(double velocidadeAtaquePersonagem, out int quantidadeMonstros)
         {
+            quantidadeMonstros = 0;
             if (Monstros.Count == 0)
             {
                 if (OndaAtual < OndaTotal)
@@ -62,9 +75,11 @@ namespace DragonsDiscordRPG.Entidades
                     Monstros = new List<RPMonstro>();
                     OndaAtual++;
 
-                    int quantidadeInimigo = Calculo.SortearValor(1, 2);
-                    for (int i = 0; i < quantidadeInimigo; i++)
+                    quantidadeMonstros = Calculo.SortearValor(1, 2);
+                    for (int i = 0; i < quantidadeMonstros; i++)
                     {
+
+                        // Sorteia os monstros
                         var listaNomes = ModuloBanco.MonstrosNomes[Nivel];
                         var nomeSorteado = listaNomes.Nomes[Calculo.SortearValor(0, listaNomes.Nomes.Count - 1)];
                         RPMonstro m = new RPMonstro(nomeSorteado, Nivel);
@@ -75,12 +90,10 @@ namespace DragonsDiscordRPG.Entidades
                     foreach (var item in Monstros)
                         PontosAcaoTotal += item.VelocidadeAtaque;
                     PontosAcaoTotal += velocidadeAtaquePersonagem;
-                    return quantidadeInimigo;
+                    return true;
                 }
-
-                Monstros = null;
             }
-            return 0;
+            return false;
         }
 
         public void CalcAtaquesInimigos(RPPersonagem personagem, StringBuilder resumoBatalha)

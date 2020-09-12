@@ -85,13 +85,10 @@ namespace DragonsDiscordRPG.Comandos
                                 item.AddCarga(1);
 
                             // Dropa itens
-                            personagem.Zona.SortearItem();
+                            if (personagem.Zona.SortearItem(personagem.Zona.Monstros[id], personagem.ChanceDrop, out int drops))
+                                embed.AddField("Drops".Titulo(), $"Caiu {drops} itens!");
 
-
-                            // Remove monstro morto.
-                            personagem.Zona.Monstros.Remove(personagem.Zona.Monstros[id]);
-                            int inimigosNovos = personagem.Zona.NovaOnda(personagem.VelocidadeAtaque.Atual);
-                            if (inimigosNovos != 0)
+                            if (personagem.Zona.NovaOnda(personagem.VelocidadeAtaque.Atual, out int inimigosNovos))
                                 embed.AddField("Nova onda".Titulo(), $"Apareceu {inimigosNovos} monstros!");
                         }
                     }

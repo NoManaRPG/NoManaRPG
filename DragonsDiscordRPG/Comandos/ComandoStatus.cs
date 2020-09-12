@@ -40,7 +40,7 @@ namespace DragonsDiscordRPG.Comandos
             embed.WithAuthor($"{user.Username} - Nível {personagem.Nivel.Atual} - {personagem.Classe} - {personagem.Nome}", iconUrl: user.AvatarUrl);
 
             embed.WithDescription($"Tem {personagem.Nivel.ExpAtual.Text().Bold()} pontos de experiencia e precisa de {personagem.Nivel.ExpMax.Text().Bold()} para evoluir.\n" +
-                $"Está carregando **{0}** itens.\n" +
+                $"Está carregando **{personagem.Mochila.Itens.Count}** itens.\n" +
                 $"Regenera {personagem.Vida.RegenPorSegundo.Text().Bold()} pontos vida por segundo.\n" +
                 $"Regenera {personagem.Mana.RegenPorSegundo.Text().Bold()} pontos mana por segundo.\n" +
                 $"Tem {personagem.Evasao.Atual.Text().Bold()} pontos de evasão.\n" +

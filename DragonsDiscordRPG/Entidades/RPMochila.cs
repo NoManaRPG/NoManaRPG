@@ -2,31 +2,28 @@
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.Options;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DragonsDiscordRPG.Entidades
 {
     [BsonIgnoreExtraElements]
     public class RPMochila
     {
-        [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
-        public SortedDictionary<string, RPItem> Itens { get; set; }
+        public List<RPItem> Itens { get; set; }
 
         public int Espaco { get; set; } // Max 64
 
-        //public string AdicionarItem(RPGItem item, int quantidade = 1) => AdicionarItem(item.Nome, quantidade);
+        public RPMochila()
+        {
+            Itens = new List<RPItem>();
+        }
 
         public bool AddItem(RPItem item, int quantidade = 1)
         {
             if (Espaco + (item.Espaco * quantidade) <= 64)
             {
-                int index = 1;
-                while (true)
-                {
-                    // Adicionar na pilha fazer codigo
-                    string nome = $"{item.Tipo.ToString().ToLower()}:{index}";
-                    if (Itens.TryAdd(nome, item)) return true;
-                    index++;
-                }
+                Itens.Add(item);
+                return true;
             }
             return false;
         }
@@ -37,17 +34,17 @@ namespace DragonsDiscordRPG.Entidades
         /// <param name="nome"></param>
         /// <param name="quantidade"></param>
         /// <returns></returns>
-        public RPItem RemoveItem(string nome, int quantidade = 1)
+        public RPItem RemoveItem(int index, int quantidade = 1)
         {
-            nome = nome.ToLower();
-            if (Itens.TryGetValue(nome, out RPItem item))
+            var item = Itens.ElementAtOrDefault(index);
+            if (item != null)
             {
                 //   3 > 3
                 if (quantidade > item.Quantidade)
                     return null;
                 item.Quantidade -= quantidade;
                 if (item.Quantidade == 0)
-                    Itens.Remove(nome);
+                    Itens.RemoveAt(index);
                 var itemClone = item.Clone();
                 itemClone.Quantidade = quantidade;
                 return itemClone;

@@ -40,7 +40,7 @@ namespace DragonsDiscordRPG.Entidades
             Mana.Adicionar(double.MaxValue);
 
             Pocoes = new List<RPItem>();
-            Pocoes[0].AddCarga(50);
+            Mochila = new RPMochila();
         }
 
         public string Nome { get; set; }
@@ -71,6 +71,10 @@ namespace DragonsDiscordRPG.Entidades
         public int ZonasDescoberta { get; set; }
 
         public List<RPItem> Pocoes { get; set; }
+
+        public double ChanceDrop { get; set; }
+
+        public RPMochila Mochila { get; set; }
 
 
         public double ReceberDanoFisico(double danoFisico)

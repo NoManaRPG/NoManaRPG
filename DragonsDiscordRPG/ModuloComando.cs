@@ -25,7 +25,7 @@ namespace DragonsDiscordRPG
             Comandos.RegisterCommands<ComandoDescer>();
             Comandos.RegisterCommands<ComandoSubir>();
             Comandos.RegisterCommands<ComandoExplorar>();
-            Comandos.RegisterCommands<ComandoCombate>();
+            Comandos.RegisterCommands<ComandoOlhar>();
             Comandos.RegisterCommands<ComandoUsar>();
         }
     }

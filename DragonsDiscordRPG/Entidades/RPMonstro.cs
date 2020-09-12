@@ -72,7 +72,7 @@ namespace DragonsDiscordRPG.Entidades
         }
 
 
-        public RPItem SortearItem(int nivel)
+        private RPItem SortearItem(int nivel)
         {
             // Separa os itens por nivel
             var niveisSeparados = RPBancoItens.Itens.Where(x => x.Key <= nivel);
@@ -83,6 +83,26 @@ namespace DragonsDiscordRPG.Entidades
             var itemSorteado = itens.ElementAt(r.Next(0, itens.Count()));
 
             return itemSorteado;
+        }
+
+        public bool SortearItens(int nivel, double chancePersonagem, out List<RPItem> itens)
+        {
+            itens = new List<RPItem>();
+            //Add a raridade do monstro aqui tmb
+            double chance = (chancePersonagem + 0.16);
+            double integerPart = Math.Truncate(chance);
+            double fractionalPart = chance - Math.Truncate(chance);
+            while (integerPart >= 1)
+            {
+                itens.Add(SortearItem(nivel));
+                integerPart--;
+            }
+
+            if (Calculo.Chance(fractionalPart))
+                itens.Add(SortearItem(nivel));
+
+            if (itens.Count == 0) return false;
+            return true;
         }
 
         //    //Pode dropar equipamento ou dinheiro
