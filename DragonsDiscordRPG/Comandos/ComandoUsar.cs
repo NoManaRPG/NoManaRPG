@@ -51,7 +51,6 @@ namespace DragonsDiscordRPG.Comandos
                             default:
                                 await ctx.RespondAsync("Frasco não usavel ainda!");
                                 return;
-                                break;
                         }
                     }
                     else
