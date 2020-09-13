@@ -29,6 +29,8 @@ namespace DragonsDiscordRPG
             Comandos.RegisterCommands<ComandoUsar>();
             Comandos.RegisterCommands<ComandoPegar>();
             Comandos.RegisterCommands<ComandoMochila>();
+            Comandos.RegisterCommands<ComandoEquipamentos>();
+            Comandos.RegisterCommands<ComandoEquipar>();
         }
     }
 }

@@ -18,12 +18,12 @@ namespace DragonsDiscordRPG.Entidades
             Itens = new List<RPItem>();
         }
 
-        public bool AddItem(RPItem item, int quantidade = 1)
+        public bool TryAddItem(RPItem item, int quantidade = 1)
         {
             if (Espaco + (item.Espaco * quantidade) <= 64)
             {
                 Itens.Add(item);
-                Espaco += item.Espaco;
+                Espaco += item.Espaco * quantidade;
                 return true;
             }
             return false;
@@ -35,7 +35,7 @@ namespace DragonsDiscordRPG.Entidades
         /// <param name="nome"></param>
         /// <param name="quantidade"></param>
         /// <returns></returns>
-        public RPItem RemoveItem(int index, int quantidade = 1)
+        public RPItem TryRemoveItem(int index, int quantidade = 1)
         {
             var item = Itens.ElementAtOrDefault(index);
             if (item != null)
@@ -48,6 +48,7 @@ namespace DragonsDiscordRPG.Entidades
                     Itens.RemoveAt(index);
                 var itemClone = item.Clone();
                 itemClone.Quantidade = quantidade;
+                Espaco -= item.Espaco * quantidade;
                 return itemClone;
             }
             return null;

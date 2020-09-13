@@ -43,11 +43,9 @@ namespace DragonsDiscordRPG.Comandos
                     var item = personagem.Zona.ItensNoChao.ElementAtOrDefault(id);
                     if (item != null)
                     {
-                        if (personagem.Mochila.AddItem(item))
+                        if (personagem.Mochila.TryAddItem(item))
                         {
                             personagem.Zona.ItensNoChao.RemoveAt(id);
-                            if (personagem.Zona.ItensNoChao.Count == 0)
-                                personagem.Zona.ItensNoChao = null;
 
                             await banco.EditJogadorAsync(jogador);
                             await session.CommitTransactionAsync();
