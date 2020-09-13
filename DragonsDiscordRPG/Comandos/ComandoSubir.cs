@@ -24,7 +24,7 @@ namespace DragonsDiscordRPG.Comandos
                     RPJogador jogador = await banco.GetJogadorAsync(ctx);
                     RPPersonagem personagem = jogador.Personagem;
 
-                    if (personagem.Zona.Monstros != null)
+                    if (personagem.Zona.Monstros.Count != 0)
                     {
                         await ctx.RespondAsync($"{ctx.User.Mention}, você precisa eliminar todos os montros para subir!");
                         return;

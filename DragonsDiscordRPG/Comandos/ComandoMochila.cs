@@ -22,7 +22,7 @@ namespace DragonsDiscordRPG.Comandos
             RPPersonagem personagem = jogador.Personagem;
 
             StringBuilder str = new StringBuilder();
-            for (int i = 0; i < personagem.Mochila.Itens.Count - 1; i++)
+            for (int i = 0; i < personagem.Mochila.Itens.Count; i++)
                 str.AppendLine($"*#{i}* - {personagem.Mochila.Itens[i].Nome.Titulo().Bold()} ");
 
 

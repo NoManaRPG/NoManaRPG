@@ -30,7 +30,7 @@ namespace DragonsDiscordRPG.Comandos
                     RPJogador jogador = await banco.GetJogadorAsync(ctx);
                     RPPersonagem personagem = jogador.Personagem;
 
-                    if (personagem.Zona.Monstros == null)
+                    if (personagem.Zona.Monstros.Count == 0)
                     {
                         await ctx.RespondAsync($"{ctx.User.Mention}, porque atacar o vento? Explore um andar!");
                         return;
@@ -98,7 +98,7 @@ namespace DragonsDiscordRPG.Comandos
                     // Informações complementares
                     embed.WithDescription($"Onda {personagem.Zona.OndaAtual.Bold()}/{personagem.Zona.OndaTotal.Bold()}.\n" +
                      $"Turno {personagem.Zona.Turno}\n" +
-                      $"Inimigos {(personagem.Zona.Monstros == null ? 0 : personagem.Zona.Monstros.Count)}");
+                      $"Inimigos { personagem.Zona.Monstros.Count}");
 
                     embed.WithColor(DiscordColor.Blue);
                     // Se o personagem morrer, reseta ele.

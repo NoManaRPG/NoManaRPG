@@ -24,7 +24,7 @@ namespace DragonsDiscordRPG.Comandos
 
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
             embed.WithAuthor($"{ctx.User.Username} - Nível {personagem.Nivel.Atual} - {personagem.Classe}", iconUrl: ctx.User.AvatarUrl);
-            embed.WithDescription($"Batalhando contra {(personagem.Zona.Monstros == null ? 0 : personagem.Zona.Monstros.Count)} monstros.\n" +
+            embed.WithDescription($"Batalhando contra {personagem.Zona.Monstros.Count} monstros.\n" +
                 $"Onda {personagem.Zona.OndaAtual.Bold()}/{personagem.Zona.OndaTotal.Bold()}.\n" +
                 $"Nivel {personagem.Zona.Nivel}\n" +
                 $"Tem {(personagem.Zona.ItensNoChao == null ? 0 : personagem.Zona.ItensNoChao.Count)} no chão\n\n" +

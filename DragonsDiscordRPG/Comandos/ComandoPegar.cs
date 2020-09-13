@@ -18,33 +18,50 @@ namespace DragonsDiscordRPG.Comandos
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
             if (jogadorNaoExisteAsync) return;
 
-            RPJogador jogador = await ModuloBanco.GetJogadorAsync(ctx);
-            RPPersonagem personagem = jogador.Personagem;
-
-            if (personagem.Zona.ItensNoChao == null)
+            try
             {
-                await ctx.RespondAsync($"{ctx.User.Mention}, você não tem itens para pegar!");
-                return;
-            }
-
-            // Converte o id informado.
-            bool converteu = int.TryParse(idEscolhido.Replace("#", string.Empty), out int id);
-            if (!converteu)
-            {
-                await ctx.RespondAsync($"{ctx.User.Mention}, você informou um #ID válido?");
-                return;
-            }
-
-            var item = personagem.Zona.ItensNoChao.ElementAtOrDefault(id);
-            if (item != null)
-            {
-                if (personagem.Mochila.AddItem(item))
+                using (var session = await ModuloBanco.Cliente.StartSessionAsync())
                 {
-                    personagem.Zona.ItensNoChao.RemoveAt(id);
-                    await ctx.RespondAsync($"{ctx.User.Mention}, você pegou {item.Nome.Titulo().Bold()}!");
+                    BancoSession banco = new BancoSession(session);
+                    RPJogador jogador = await banco.GetJogadorAsync(ctx);
+                    RPPersonagem personagem = jogador.Personagem;
+
+                    if (personagem.Zona.ItensNoChao == null)
+                    {
+                        await ctx.RespondAsync($"{ctx.User.Mention}, você não tem itens no chão para pegar!");
+                        return;
+                    }
+
+                    // Converte o id informado.
+                    bool converteu = int.TryParse(idEscolhido.Replace("#", string.Empty), out int id);
+                    if (!converteu)
+                    {
+                        await ctx.RespondAsync($"{ctx.User.Mention}, você informou um #ID válido?");
+                        return;
+                    }
+
+                    var item = personagem.Zona.ItensNoChao.ElementAtOrDefault(id);
+                    if (item != null)
+                    {
+                        if (personagem.Mochila.AddItem(item))
+                        {
+                            personagem.Zona.ItensNoChao.RemoveAt(id);
+                            if (personagem.Zona.ItensNoChao.Count == 0)
+                                personagem.Zona.ItensNoChao = null;
+
+                            await banco.EditJogadorAsync(jogador);
+                            await session.CommitTransactionAsync();
+
+                            await ctx.RespondAsync($"{ctx.User.Mention}, você pegou {item.Nome.Titulo().Bold()}!");
+                        }
+                        else
+                            await ctx.RespondAsync($"{ctx.User.Mention}, você não tem espaço o suficiente!");
+                    }
                 }
-                else
-                    await ctx.RespondAsync($"{ctx.User.Mention}, você não tem espaço o suficiente!");
+            }
+            catch (MongoDB.Driver.MongoCommandException)
+            {
+                await MensagensStrings.ComandoSendoProcessado(ctx);
             }
         }
     }
