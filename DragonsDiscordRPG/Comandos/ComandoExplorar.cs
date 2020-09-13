@@ -23,23 +23,23 @@ namespace DragonsDiscordRPG.Comandos
                     RPJogador jogador = await banco.GetJogadorAsync(ctx);
                     RPPersonagem personagem = jogador.Personagem;
 
-                    if (personagem.Zona.Monstros != null)
+                    if (personagem.Zona.Monstros.Count != 0)
                     {
                         await ctx.RespondAsync($"{ctx.User.Mention}, você precisa eliminar todos os montros para explorar!");
                         return;
                     }
 
-                    if(personagem.Zona.Nivel == 0)
+                    if (personagem.Zona.Nivel == 0)
                     {
                         await ctx.RespondAsync($"{ctx.User.Mention}, você somente pode explorar os níveis inferiores da torre!");
                         return;
                     }
 
-                        inimigos = personagem.Zona.TrocarZona(personagem.VelocidadeAtaque.Atual, personagem.Zona.Nivel);
+                    inimigos = personagem.Zona.TrocarZona(personagem.VelocidadeAtaque.Atual, personagem.Zona.Nivel);
 
-                        await banco.EditJogadorAsync(jogador);
-                        await session.CommitTransactionAsync();
-                        await ctx.RespondAsync($"{ctx.User.Mention}, apareceu {inimigos} monstro na sua frente!");
+                    await banco.EditJogadorAsync(jogador);
+                    await session.CommitTransactionAsync();
+                    await ctx.RespondAsync($"{ctx.User.Mention}, apareceu {inimigos} monstro na sua frente!");
                 }
             }
             catch (Exception ex)
