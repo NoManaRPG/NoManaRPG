@@ -17,8 +17,12 @@ namespace DragonsDiscordRPG.Comandos
         [Cooldown(1, 10, CooldownBucketType.User)]
         public async Task ComandoStatusAb(CommandContext ctx, DiscordUser discordUser)
         {
-            var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
-            if (jogadorNaoExisteAsync) return;
+            RPJogador jogador = await ModuloBanco.GetJogadorAsync(discordUser);
+            if (jogador == null)
+            {
+                await ctx.RespondAsync($"{ctx.User.Mention}, este jogador não tem um personagem ainda! Peça-o para criar um!");
+                return;
+            }
             await ctx.RespondAsync(embed: (await GerarStatusAsync(discordUser)).Build());
         }
 
