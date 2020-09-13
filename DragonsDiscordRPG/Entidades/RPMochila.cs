@@ -23,6 +23,7 @@ namespace DragonsDiscordRPG.Entidades
             if (Espaco + (item.Espaco * quantidade) <= 64)
             {
                 Itens.Add(item);
+                Espaco += item.Espaco;
                 return true;
             }
             return false;
