@@ -130,7 +130,7 @@ namespace DragonsDiscordRPG.Comandos
                 {
                     case RPItemTipo.PocaoVida:
                         embed.WithDescription("Frascos de Vida\n" +
-                            $"Ocupa {item.Espaco} de espaço" +
+                            $"Ocupa {item.Espaco} de espaço\n" +
                             $"Recupera {item.LifeRegen} de vida por {item.Tempo} segundos\n" +
                             $"Consome {item.CargasUso} de {item.CargasMax} cargas na utilização\n" +
                             $"Atualmente tem 0 carga\n" +
@@ -146,7 +146,7 @@ namespace DragonsDiscordRPG.Comandos
                         if (item.Forca != 0)
                             str.Append($"{item.Forca} for");
                         embed.WithDescription("Arcos\n" +
-                            $"Ocupa {item.Espaco} de espaço" +
+                            $"Ocupa {item.Espaco} de espaço\n" +
                             $"Dano físico: {item.DanoFisico.Minimo}-{item.DanoFisico.Maximo}\n" +
                             $"Chance de crítico: {item.ChanceCritico * 100}%\n" +
                             $"Ataques por segundo: {item.VelocidadeAtaque}\n" +
