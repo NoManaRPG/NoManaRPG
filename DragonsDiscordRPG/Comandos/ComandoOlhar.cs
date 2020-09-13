@@ -76,7 +76,7 @@ namespace DragonsDiscordRPG.Comandos
             RPJogador jogador = await ModuloBanco.GetJogadorAsync(ctx);
             RPPersonagem personagem = jogador.Personagem;
 
-            if (personagem.Zona.ItensNoChao == null)
+            if (personagem.Zona.ItensNoChao.Count == 0)
             {
                 await ctx.RespondAsync($"{ctx.User.Mention}, você não tem itens para olhar!");
                 return;
@@ -105,7 +105,7 @@ namespace DragonsDiscordRPG.Comandos
             RPJogador jogador = await ModuloBanco.GetJogadorAsync(ctx);
             RPPersonagem personagem = jogador.Personagem;
 
-            if (personagem.Zona.ItensNoChao == null)
+            if (personagem.Zona.ItensNoChao.Count == 0)
             {
                 await ctx.RespondAsync($"{ctx.User.Mention}, você não tem itens para olhar!");
                 return;

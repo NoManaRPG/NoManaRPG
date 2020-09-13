@@ -99,11 +99,11 @@ namespace DragonsDiscordRPG.Entidades
         public void Resetar()
         {
             Zona = new RPZona();
+            Efeitos = new List<RPEfeito>();
             Vida.Adicionar(double.MaxValue);
             Mana.Adicionar(double.MaxValue);
             foreach (var item in Pocoes)
                 item.AddCarga(double.MaxValue);
-            Efeitos = new List<RPEfeito>();
             Nivel.PersonagemMorreu();
         }
 

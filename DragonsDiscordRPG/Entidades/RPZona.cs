@@ -22,6 +22,8 @@ namespace DragonsDiscordRPG.Entidades
         public RPZona()
         {
             Nivel = 0;
+            ItensNoChao = new List<RPItem>();
+            Monstros = new List<RPMonstro>();
         }
 
         public int TrocarZona(double velocidadeAtaquePersonagem, int nivel)
