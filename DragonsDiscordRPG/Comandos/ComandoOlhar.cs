@@ -91,7 +91,7 @@ namespace DragonsDiscordRPG.Comandos
                 var item = personagem.Zona.ItensNoChao[i];
                 str.AppendLine($"*#{i}* - {item.Nome.Titulo().Bold()} ");
             }
-            embed.WithDescription(str.ToString());
+            embed.WithDescription("Você está olhando para os itens no chão! Pegue-os para poder estar equipando!\n" + str.ToString());
             await ctx.RespondAsync(embed: embed.Build());
         }
 

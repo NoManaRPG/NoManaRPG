@@ -34,7 +34,7 @@ namespace DragonsDiscordRPG.Entidades
             Nivel = nivel;
             OndaAtual = 1;
             OndaTotal = Convert.ToInt64(Math.Pow(Nivel, 2) * 2);
-            int quantidadeInimigo = Calculo.SortearValor(1, 4);
+            int quantidadeInimigo = Math.Clamp(Convert.ToInt32(Math.Pow(1, nivel)), 0, 1);
             for (int i = 0; i < quantidadeInimigo; i++)
             {
                 var f = ModuloBanco.MonstrosNomes[Nivel];

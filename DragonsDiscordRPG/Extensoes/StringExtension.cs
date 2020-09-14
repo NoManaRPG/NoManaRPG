@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DSharpPlus.CommandsNext;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -27,6 +28,17 @@ namespace DragonsDiscordRPG.Extensoes
 #endif
         }
 
+        //public static bool TryParseID(this string texto, CommandContext ctx, out int id)
+        //{
+        //    id = 0;
+        //    bool converteu = int.TryParse(idItem.Replace("#", string.Empty), out int id);
+        //    if (!converteu)
+        //    {
+        //        await ctx.RespondAsync($"{ctx.User.Mention}, você informou um #ID válido?");
+        //        return;
+        //    }
+        //}
+
         public static string Titulo(this string titulo)
             => "**⌈" + titulo + "⌋**";
 
@@ -37,8 +49,8 @@ namespace DragonsDiscordRPG.Extensoes
             => $"__{texto}__";
 
         public static string Bold(this string texto)
-           => $"**{texto}**";     
-        
+           => $"**{texto}**";
+
         public static string Bold(this long texto)
            => $"**{texto}**";
 

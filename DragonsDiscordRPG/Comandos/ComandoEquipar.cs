@@ -77,7 +77,7 @@ namespace DragonsDiscordRPG.Comandos
                                 else
                                 {
                                     await ctx.RespondAsync($"{ctx.User.Mention}, você não tem espaço o suficiente para guardar a poção equipada no cinto!");
-                                    await session.AbortTransactionAsync();
+                                    return;
                                 }
                             }
                             else
@@ -90,13 +90,13 @@ namespace DragonsDiscordRPG.Comandos
                         else
                         {
                             await ctx.RespondAsync($"{ctx.User.Mention}, este item não é uma poção de vida ou de mana para voce equipar no cinto!");
-                            await session.AbortTransactionAsync();
+                            return;
                         }
                     }
                     else
                     {
                         await ctx.RespondAsync($"{ctx.User.Mention}, #ID não encontrado!");
-                        await session.AbortTransactionAsync();
+                        return;
                     }
 
                     if (personagem.Zona.Nivel == 0)
@@ -113,10 +113,6 @@ namespace DragonsDiscordRPG.Comandos
             {
                 await MensagensStrings.ComandoSendoProcessado(ctx);
             }
-
-
-
         }
-
     }
 }

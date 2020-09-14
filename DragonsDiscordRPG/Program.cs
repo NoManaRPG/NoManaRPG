@@ -13,7 +13,12 @@ namespace DragonsDiscordRPG
 
         public async Task RodarOBotAsync()
         {
+
+#if DEBUG
             configFile = ConfigFile.LoadFromFile(StringExtension.EntrarPasta("") + "Config.json");
+#else
+            configFile = ConfigFile.LoadFromFile("Config.json");
+#endif
             if (configFile == null)
             {
                 Console.WriteLine("O arquivo config.json não existe!");

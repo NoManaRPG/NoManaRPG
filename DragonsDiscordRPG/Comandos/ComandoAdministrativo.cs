@@ -120,16 +120,13 @@ namespace DragonsDiscordRPG.Comandos
 
         [Command("teste")]
         [RequireOwner]
-        public async Task testeCalc(CommandContext ctx, int nivel)
+        public async Task testeCalc(CommandContext ctx)
         {
-            var niveisSeparados = RPBancoItens.Itens.Where(x => x.Key <= nivel);
 
-            Random r = new Random();
-            var itens = niveisSeparados.ElementAt(r.Next(0, niveisSeparados.Count()));
-
-            var itemSorteado = itens.ElementAt(r.Next(0, itens.Count()));
-
-            await ctx.RespondAsync($"Item: {itemSorteado.Nome}");
+            var jog = await ModuloBanco.GetJogadorAsync(ctx);
+            jog.Personagem.Zona = null;
+            ModuloBanco.ColecaoJogador.ReplaceOne(x => x.Id == ctx.User.Id, jog);
+            await ctx.RespondAsync("Atualiado");
             //var numeroRandom = Calculo.SortearValor(0, 100.0);
             //switch (numeroRandom)
             //{

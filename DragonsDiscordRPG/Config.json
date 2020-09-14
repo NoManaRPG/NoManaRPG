@@ -1,0 +1,9 @@
+{
+  "clientToken": "Seu token...",
+  "clientTokenTeste": "Seu token de teste...",
+  "prefix": "O prefix do seu bot...",
+  "prefixTeste": "O prefix de teste do seu bot...",
+  "clientSecret": "Seu Client Secret...",
+  "clientId": "Seu Client ID...",
+  "discordBotsKey": "Sua key do DiscordBots"
+}

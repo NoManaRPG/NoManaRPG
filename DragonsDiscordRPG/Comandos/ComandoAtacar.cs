@@ -121,9 +121,10 @@ namespace DragonsDiscordRPG.Comandos
                     await ctx.RespondAsync(ctx.User.Mention, embed: embed.Build());
                 }
             }
-            catch (MongoDB.Driver.MongoCommandException)
+            catch (Exception ex)
             {
                 await MensagensStrings.ComandoSendoProcessado(ctx);
+                throw ex;
             }
         }
     }

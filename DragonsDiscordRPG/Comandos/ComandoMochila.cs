@@ -28,7 +28,7 @@ namespace DragonsDiscordRPG.Comandos
 
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
             embed.WithAuthor($"{ctx.User.Username} - Nível {personagem.Nivel.Atual} - {personagem.Classe}", iconUrl: ctx.User.AvatarUrl);
-            embed.WithDescription($"**Espaço: {personagem.Mochila.Espaco}/64**\n{str}");
+            embed.WithDescription($"**Espaço da mochila: {personagem.Mochila.Espaco}/64**\n\n{str}");
 
             await ctx.RespondAsync(embed: embed.Build());
         }
