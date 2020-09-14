@@ -35,23 +35,25 @@ namespace DragonsDiscordRPG.Entidades
         /// <param name="nome"></param>
         /// <param name="quantidade"></param>
         /// <returns></returns>
-        public RPItem TryRemoveItem(int index, int quantidade = 1)
+        public bool TryRemoveItem(int index, out RPItem item, int quantidade = 1)
         {
-            var item = Itens.ElementAtOrDefault(index);
-            if (item != null)
+            var itemMochila = Itens.ElementAtOrDefault(index);
+            item = null;
+            if (itemMochila != null)
             {
                 //   3 > 3
-                if (quantidade > item.Quantidade)
-                    return null;
-                item.Quantidade -= quantidade;
-                if (item.Quantidade == 0)
+                if (quantidade > itemMochila.Quantidade)
+                    return false;
+                itemMochila.Quantidade -= quantidade;
+                if (itemMochila.Quantidade == 0)
                     Itens.RemoveAt(index);
-                var itemClone = item.Clone();
-                itemClone.Quantidade = quantidade;
-                Espaco -= item.Espaco * quantidade;
-                return itemClone;
+
+                item = itemMochila.Clone();
+                item.Quantidade = quantidade;
+                Espaco -= itemMochila.Espaco * quantidade;
+                return true;
             }
-            return null;
+            return false;
         }
     }
 }
