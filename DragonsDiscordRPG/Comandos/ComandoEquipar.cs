@@ -25,6 +25,10 @@ namespace DragonsDiscordRPG.Comandos
         }
 
         [Command("pocao")]
+        [Aliases("p")]
+        [Description("Permite equipar uma poção no cinto para uso futuro.")]
+        [ComoUsar("equipar pocao [#ID Mochila] [0-4]")]
+        [Exemplo("equipar pocao #24 0")]
         public async Task ComandoEquiparAsync(CommandContext ctx, string idItem = "", string idPosicao = "")
         {
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();

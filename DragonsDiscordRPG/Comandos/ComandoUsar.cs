@@ -1,4 +1,5 @@
-﻿using DragonsDiscordRPG.Entidades;
+﻿using DragonsDiscordRPG.Atributos;
+using DragonsDiscordRPG.Entidades;
 using DragonsDiscordRPG.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -10,6 +11,9 @@ namespace DragonsDiscordRPG.Comandos
     public class ComandoUsar : BaseCommandModule
     {
         [Command("usar")]
+        [Description("Permite usar uma poção que foi equipada no cinto.")]
+        [ComoUsar("usar [#ID cinto]")]
+        [Exemplo("usar #0")]
         public async Task ComandoUsarAsync(CommandContext ctx, int posicao = 0)
         {
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
