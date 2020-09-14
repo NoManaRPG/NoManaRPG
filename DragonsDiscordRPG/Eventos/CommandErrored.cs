@@ -5,6 +5,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.Exceptions;
+using MongoDB.Driver;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +18,11 @@ namespace DragonsDiscordRPG.Eventos
         public static async Task EventAsync(CommandErrorEventArgs e)
         {
             CommandContext ctx = e.Context;
+            await NewMethod(e, ctx);
+        }
+
+        private static async Task NewMethod(CommandErrorEventArgs e, CommandContext ctx)
+        {
             switch (e.Exception)
             {
                 case ChecksFailedException cfe:
@@ -52,6 +58,9 @@ namespace DragonsDiscordRPG.Eventos
                     break;
                 case UnauthorizedException ux:
                     break;
+                case MongoCommandException mce:
+                   await ctx.RespondAsync($"{ctx.User.Mention}, o último comando não foi processado corretamente! Tente executar os comandos mais lentamente!");
+                    break;
                 //case ArgumentException ax:
                 //    //await ctx.ExecutarComandoAsync("ajuda " + e.Command.Name);
                 //    break;
@@ -66,6 +75,7 @@ namespace DragonsDiscordRPG.Eventos
 
                     DiscordChannel channel = await ctx.Client.GetChannelAsync(742778666509008956);
                     await ctx.Client.SendMessageAsync(channel, embed: embed.Build());
+                    await ctx.RespondAsync("Aconteceu um erro!", embed: embed.Build());
                     break;
             }
         }

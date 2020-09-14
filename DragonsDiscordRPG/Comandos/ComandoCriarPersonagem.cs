@@ -100,7 +100,7 @@ namespace DragonsDiscordRPG.Comandos
             await ctx.TriggerTypingAsync();
             RPJogador jogador = await ModuloBanco.GetJogadorAsync(ctx);
             if (jogador == null) return false;
-            await MensagensStrings.PersonagemJaExiste(ctx);
+            await ctx.RespondAsync($"{ctx.User.Mention}, você já criou um personagem e por isso não pode usar este comando novamente!");
             return true;
         }
 

@@ -21,9 +21,7 @@ namespace DragonsDiscordRPG
             Client.Ready += (e) => Ready.Event(e, Client);
             Client.GuildAvailable += (e) => GuildAvailable.Event(e, Bot);
             Client.ClientErrored += ClientErrored.Event;
-            Client.GuildMemberAdded += GuildMemberAdded.Event;
             Client.MessageCreated += MessageCreated.EventAsync;
-            Client.VoiceStateUpdated += VoiceStateUpdated.EventAsync;
         }
     }
 }

@@ -38,8 +38,7 @@ namespace DragonsDiscordRPG.Comandos
 
                     foreach (RPJogador user in usuarios)
                     {
-                        user.Personagem.Zona.Monstros = new List<RPMonstro>();
-                        user.Personagem.Zona.ItensNoChao = new List<RPItem>();
+                        user.Personagem.Zona = new RPZona();
                         await ModuloBanco.ColecaoJogador.ReplaceOneAsync(x => x.Id == user.Id, user);
                     }
                 }
@@ -68,26 +67,18 @@ namespace DragonsDiscordRPG.Comandos
         [RequireOwner]
         public async Task GivePot(CommandContext ctx, DiscordUser member)
         {
-            try
+            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
             {
-                using (var session = await ModuloBanco.Cliente.StartSessionAsync())
-                {
-                    BancoSession banco = new BancoSession(session);
-                    RPJogador jogador = await banco.GetJogadorAsync(member);
-                    RPPersonagem personagem = jogador.Personagem;
+                BancoSession banco = new BancoSession(session);
+                RPJogador jogador = await banco.GetJogadorAsync(member);
+                RPPersonagem personagem = jogador.Personagem;
 
-                    personagem.Pocoes[0].AddCarga(double.MaxValue);
+                personagem.Pocoes[0].AddCarga(double.MaxValue);
 
-                    await banco.EditJogadorAsync(jogador);
-                    await session.CommitTransactionAsync();
-                    await ctx.RespondAsync($"Poções restaurada para {member.Mention}!");
+                await banco.EditJogadorAsync(jogador);
+                await session.CommitTransactionAsync();
+                await ctx.RespondAsync($"Poções restaurada para {member.Mention}!");
 
-                }
-            }
-            catch (Exception ex)
-            {
-                await MensagensStrings.ComandoSendoProcessado(ctx);
-                throw ex;
             }
         }
 
@@ -95,26 +86,18 @@ namespace DragonsDiscordRPG.Comandos
         [RequireOwner]
         public async Task matar(CommandContext ctx, DiscordUser member)
         {
-            try
+            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
             {
-                using (var session = await ModuloBanco.Cliente.StartSessionAsync())
-                {
-                    BancoSession banco = new BancoSession(session);
-                    RPJogador jogador = await banco.GetJogadorAsync(member);
-                    RPPersonagem personagem = jogador.Personagem;
+                BancoSession banco = new BancoSession(session);
+                RPJogador jogador = await banco.GetJogadorAsync(member);
+                RPPersonagem personagem = jogador.Personagem;
 
-                    personagem.Zona.Monstros = new List<RPMonstro>();
+                personagem.Zona.Monstros = new List<RPMonstro>();
 
-                    await banco.EditJogadorAsync(jogador);
-                    await session.CommitTransactionAsync();
-                    await ctx.RespondAsync($"Inimigos mortos para {member.Mention}!");
+                await banco.EditJogadorAsync(jogador);
+                await session.CommitTransactionAsync();
+                await ctx.RespondAsync($"Inimigos mortos para {member.Mention}!");
 
-                }
-            }
-            catch (Exception ex)
-            {
-                await MensagensStrings.ComandoSendoProcessado(ctx);
-                throw ex;
             }
         }
 

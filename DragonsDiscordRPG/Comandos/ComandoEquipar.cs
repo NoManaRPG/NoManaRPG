@@ -48,76 +48,68 @@ namespace DragonsDiscordRPG.Comandos
                 return;
             }
 
-            try
+            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
             {
-                using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+                BancoSession banco = new BancoSession(session);
+                RPJogador jogador = await banco.GetJogadorAsync(ctx);
+                RPPersonagem personagem = jogador.Personagem;
+
+                // Limita o id.
+                posicao = Math.Clamp(posicao, 0, 4);
+
+                bool equipou = false;
+                // Pega o item
+                var pocaoEscolhida = personagem.Mochila.TryRemoveItem(id);
+                if (pocaoEscolhida != null)
                 {
-                    BancoSession banco = new BancoSession(session);
-                    RPJogador jogador = await banco.GetJogadorAsync(ctx);
-                    RPPersonagem personagem = jogador.Personagem;
-
-                    // Limita o id.
-                    posicao = Math.Clamp(posicao, 0, 4);
-
-                    bool equipou = false;
-                    // Pega o item
-                    var pocaoEscolhida = personagem.Mochila.TryRemoveItem(id);
-                    if (pocaoEscolhida != null)
+                    if (pocaoEscolhida.Tipo == Enuns.RPItemTipo.PocaoVida)
                     {
-                        if (pocaoEscolhida.Tipo == Enuns.RPItemTipo.PocaoVida)
+                        // Tem poção equipada na posição escolhida?
+                        var pocaoEquipada = personagem.Pocoes.ElementAtOrDefault(posicao);
+                        if (pocaoEquipada != null)
                         {
-                            // Tem poção equipada na posição escolhida?
-                            var pocaoEquipada = personagem.Pocoes.ElementAtOrDefault(posicao);
-                            if (pocaoEquipada != null)
+                            // Tenta guardar essa poção 
+                            pocaoEquipada.Quantidade = 1;
+                            pocaoEquipada.CargasAtual = 0;
+                            if (personagem.Mochila.TryAddItem(pocaoEquipada))
                             {
-                                // Tenta guardar essa poção 
-                                pocaoEquipada.Quantidade = 1;
-                                pocaoEquipada.CargasAtual = 0;
-                                if (personagem.Mochila.TryAddItem(pocaoEquipada))
-                                {
-                                    //Equipa a poção nova na posição
-                                    personagem.Pocoes[posicao] = pocaoEscolhida;
-                                    equipou = true;
-                                }
-                                else
-                                {
-                                    await ctx.RespondAsync($"{ctx.User.Mention}, você não tem espaço o suficiente para guardar a poção equipada no cinto!");
-                                    return;
-                                }
+                                //Equipa a poção nova na posição
+                                personagem.Pocoes[posicao] = pocaoEscolhida;
+                                equipou = true;
                             }
                             else
                             {
-                                //Equipa a poção nova na posição
-                                personagem.Pocoes.Add(pocaoEscolhida);
-                                equipou = true;
+                                await ctx.RespondAsync($"{ctx.User.Mention}, você não tem espaço o suficiente para guardar a poção equipada no cinto!");
+                                return;
                             }
                         }
                         else
                         {
-                            await ctx.RespondAsync($"{ctx.User.Mention}, este item não é uma poção de vida ou de mana para voce equipar no cinto!");
-                            return;
+                            //Equipa a poção nova na posição
+                            personagem.Pocoes.Add(pocaoEscolhida);
+                            equipou = true;
                         }
                     }
                     else
                     {
-                        await ctx.RespondAsync($"{ctx.User.Mention}, #ID não encontrado!");
+                        await ctx.RespondAsync($"{ctx.User.Mention}, este item não é uma poção de vida ou de mana para voce equipar no cinto!");
                         return;
                     }
-
-                    if (personagem.Zona.Nivel == 0)
-                        pocaoEscolhida.CargasAtual = pocaoEscolhida.CargasMax;
-
-                    await banco.EditJogadorAsync(jogador);
-                    await session.CommitTransactionAsync();
-
-                    if (equipou)
-                        await ctx.RespondAsync($"{ctx.User.Mention}, poção {pocaoEscolhida.Nome.Titulo().Bold()} equipada no slot {posicao}!");
                 }
-            }
-            catch (Exception ex)
-            {
-                await MensagensStrings.ComandoSendoProcessado(ctx);
-                throw ex;
+                else
+                {
+                    await ctx.RespondAsync($"{ctx.User.Mention}, #ID não encontrado!");
+                    return;
+                }
+
+                if (personagem.Zona.Nivel == 0)
+                    pocaoEscolhida.CargasAtual = pocaoEscolhida.CargasMax;
+
+                await banco.EditJogadorAsync(jogador);
+                await session.CommitTransactionAsync();
+
+                if (equipou)
+                    await ctx.RespondAsync($"{ctx.User.Mention}, poção {pocaoEscolhida.Nome.Titulo().Bold()} equipada no slot {posicao}!");
             }
         }
     }

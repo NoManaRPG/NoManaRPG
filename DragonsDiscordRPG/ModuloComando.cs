@@ -18,7 +18,6 @@ namespace DragonsDiscordRPG
             Comandos.SetHelpFormatter<IAjudaComando>();
 
             Comandos.RegisterCommands<ComandoAjuda>();
-            Comandos.RegisterCommands<ComandoTeste>();
             Comandos.RegisterCommands<ComandoStatus>();
             Comandos.RegisterCommands<ComandoAdministrativo>();
             Comandos.RegisterCommands<ComandoWiki>();

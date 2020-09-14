@@ -21,59 +21,51 @@ namespace DragonsDiscordRPG.Comandos
 
             bool usouPocao = false;
 
-            try
+            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
             {
-                using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+                BancoSession banco = new BancoSession(session);
+                RPJogador jogador = await banco.GetJogadorAsync(ctx);
+                RPPersonagem personagem = jogador.Personagem;
+
+                if (personagem.Zona.Monstros.Count == 0)
                 {
-                    BancoSession banco = new BancoSession(session);
-                    RPJogador jogador = await banco.GetJogadorAsync(ctx);
-                    RPPersonagem personagem = jogador.Personagem;
-
-                    if (personagem.Zona.Monstros.Count == 0)
-                    {
-                        await ctx.RespondAsync($"{ctx.User.Mention}, você só pode usar poções em batalha.");
-                        return;
-                    }
-                    posicao = Math.Clamp(posicao, 0, 4);
-
-                    if (personagem.Pocoes.Count - 1 < posicao)
-                    {
-                        await ctx.RespondAsync($"{ctx.User.Mention}, o slot **{posicao}** não tem um frasco equipado!");
-                        return;
-                    }
-
-                    if (personagem.Pocoes[posicao].CargasAtual >= personagem.Pocoes[posicao].CargasUso)
-                    {
-                        switch (personagem.Pocoes[posicao].Tipo)
-                        {
-                            case Enuns.RPItemTipo.PocaoVida:
-                                usouPocao = true;
-                                personagem.Pocoes[posicao].RemoverCarga(personagem.Pocoes[posicao].CargasUso);
-                                double duracao = personagem.Pocoes[posicao].Tempo / personagem.VelocidadeAtaque.Atual;
-                                personagem.Efeitos.Add(new RPEfeito(Enuns.RPItemTipo.PocaoVida, "Regeneração de vida", duracao, personagem.Pocoes[posicao].LifeRegen / duracao, personagem.VelocidadeAtaque.Atual));
-                                break;
-                            default:
-                                await ctx.RespondAsync("Frasco não usavel ainda!");
-                                return;
-                        }
-                    }
-                    else
-                    {
-                        await ctx.RespondAsync($"{ctx.User.Mention}, o frasco não tem cargas o suficiente!");
-                        return;
-                    }
-
-                    await banco.EditJogadorAsync(jogador);
-                    await session.CommitTransactionAsync();
-
-                    if (usouPocao)
-                        await ctx.RespondAsync($"{ctx.User.Mention}, você acabou de usar { personagem.Pocoes[posicao].Nome.Titulo().Bold()}!");
+                    await ctx.RespondAsync($"{ctx.User.Mention}, você só pode usar poções em batalha.");
+                    return;
                 }
-            }
-            catch (Exception ex)
-            {
-                await MensagensStrings.ComandoSendoProcessado(ctx);
-                throw ex;
+                posicao = Math.Clamp(posicao, 0, 4);
+
+                if (personagem.Pocoes.Count - 1 < posicao)
+                {
+                    await ctx.RespondAsync($"{ctx.User.Mention}, o slot **{posicao}** não tem um frasco equipado!");
+                    return;
+                }
+
+                if (personagem.Pocoes[posicao].CargasAtual >= personagem.Pocoes[posicao].CargasUso)
+                {
+                    switch (personagem.Pocoes[posicao].Tipo)
+                    {
+                        case Enuns.RPItemTipo.PocaoVida:
+                            usouPocao = true;
+                            personagem.Pocoes[posicao].RemoverCarga(personagem.Pocoes[posicao].CargasUso);
+                            double duracao = personagem.Pocoes[posicao].Tempo / personagem.VelocidadeAtaque.Atual;
+                            personagem.Efeitos.Add(new RPEfeito(Enuns.RPItemTipo.PocaoVida, "Regeneração de vida", duracao, personagem.Pocoes[posicao].LifeRegen / duracao, personagem.VelocidadeAtaque.Atual));
+                            break;
+                        default:
+                            await ctx.RespondAsync("Frasco não usavel ainda!");
+                            return;
+                    }
+                }
+                else
+                {
+                    await ctx.RespondAsync($"{ctx.User.Mention}, o frasco não tem cargas o suficiente!");
+                    return;
+                }
+
+                await banco.EditJogadorAsync(jogador);
+                await session.CommitTransactionAsync();
+
+                if (usouPocao)
+                    await ctx.RespondAsync($"{ctx.User.Mention}, você acabou de usar { personagem.Pocoes[posicao].Nome.Titulo().Bold()}!");
             }
         }
 
