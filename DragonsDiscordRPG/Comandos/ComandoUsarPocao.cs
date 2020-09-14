@@ -63,11 +63,5 @@ namespace DragonsDiscordRPG.Comandos
                     await ctx.RespondAsync($"{ctx.User.Mention}, você acabou de usar { personagem.Pocoes[stringPosicao].Nome.Titulo().Bold()}!");
             }
         }
-
-        [Command("usar")]
-        public async Task ComandoUsarAsync(CommandContext ctx, string item)
-        {
-            await ctx.RespondAsync($"{ctx.User.Mention}, as posições são de 0 a 4!");
-        }
     }
 }
