@@ -1,12 +1,8 @@
 ﻿using DragonsDiscordRPG.Entidades;
-using DragonsDiscordRPG.Enuns;
 using DragonsDiscordRPG.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DragonsDiscordRPG.Comandos
@@ -14,10 +10,17 @@ namespace DragonsDiscordRPG.Comandos
     public class ComandoPegar : BaseCommandModule
     {
         [Command("pegar")]
-        public async Task ComandoPegarAsync(CommandContext ctx, string idEscolhido)
+        public async Task ComandoPegarAsync(CommandContext ctx, string stringIndexItem = "")
         {
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
             if (jogadorNaoExisteAsync) return;
+
+            // Converte o id informado.
+            if (!stringIndexItem.TryParseID(out int indexItem))
+            {
+                await ctx.RespondAsync($"{ctx.User.Mention}, o #ID é numérico!");
+                return;
+            }
 
             using (var session = await ModuloBanco.Cliente.StartSessionAsync())
             {
@@ -31,20 +34,12 @@ namespace DragonsDiscordRPG.Comandos
                     return;
                 }
 
-                // Converte o id informado.
-                bool converteu = int.TryParse(idEscolhido.Replace("#", string.Empty), out int id);
-                if (!converteu)
-                {
-                    await ctx.RespondAsync($"{ctx.User.Mention}, você informou um #ID válido?");
-                    return;
-                }
-
-                var item = personagem.Zona.ItensNoChao.ElementAtOrDefault(id);
+                var item = personagem.Zona.ItensNoChao.ElementAtOrDefault(indexItem);
                 if (item != null)
                 {
                     if (personagem.Mochila.TryAddItem(item))
                     {
-                        personagem.Zona.ItensNoChao.RemoveAt(id);
+                        personagem.Zona.ItensNoChao.RemoveAt(indexItem);
 
                         await banco.EditJogadorAsync(jogador);
                         await session.CommitTransactionAsync();

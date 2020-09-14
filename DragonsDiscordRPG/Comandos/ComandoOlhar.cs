@@ -45,7 +45,7 @@ namespace DragonsDiscordRPG.Comandos
 
             if (personagem.Zona.Monstros == null)
             {
-                await ctx.RespondAsync($"{ctx.User.Mention}, você não está em combate!");
+                await ctx.RespondAsync($"{ctx.User.Mention}, você não tem monstros para olhar!");
                 return;
             }
 
@@ -78,7 +78,7 @@ namespace DragonsDiscordRPG.Comandos
 
             if (personagem.Zona.ItensNoChao.Count == 0)
             {
-                await ctx.RespondAsync($"{ctx.User.Mention}, você não tem itens para olhar!");
+                await ctx.RespondAsync($"{ctx.User.Mention}, você não tem itens no chão para olhar!");
                 return;
             }
 

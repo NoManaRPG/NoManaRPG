@@ -17,5 +17,12 @@ namespace DragonsDiscordRPG.Extensoes
             }
             return false;
         }
+
+        public static async Task ExecutarAjudaAsync(this CommandContext ctx)
+        {
+            var cmd = ctx.CommandsNext.FindCommand($"ajuda {ctx.Command.Name}", out var args);
+            var cfx = ctx.CommandsNext.CreateContext(ctx.Message, "!", cmd, args);
+            await ctx.CommandsNext.ExecuteCommandAsync(cfx);
+        }
     }
 }

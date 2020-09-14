@@ -2,7 +2,6 @@
 using DragonsDiscordRPG.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using System;
 using System.Threading.Tasks;
 
 namespace DragonsDiscordRPG.Comandos
@@ -38,7 +37,7 @@ namespace DragonsDiscordRPG.Comandos
 
                 await banco.EditJogadorAsync(jogador);
                 await session.CommitTransactionAsync();
-                await ctx.RespondAsync($"{ctx.User.Mention}, apareceu {inimigos} monstro na sua frente!");
+                await ctx.RespondAsync($"{ctx.User.Mention}, apareceu monstro [{inimigos.Bold()}] na sua frente!");
             }
         }
     }

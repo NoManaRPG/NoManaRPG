@@ -5,9 +5,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DragonsDiscordRPG.Comandos
@@ -26,27 +24,26 @@ namespace DragonsDiscordRPG.Comandos
 
         [Command("pocao")]
         [Aliases("p")]
-        [Description("Permite equipar uma poção no cinto para uso futuro.")]
-        [ComoUsar("equipar pocao [#ID Mochila] [0-4]")]
+        [Description("Permite equipar uma poção no cinto para uso futuro.\nO #ID se contra na mochila!")]
+        [ComoUsar("equipar pocao [#ID Item] [0-4]")]
         [Exemplo("equipar pocao #24 0")]
-        public async Task ComandoEquiparAsync(CommandContext ctx, string idItem = "", string idPosicao = "")
+        public async Task ComandoEquiparAsync(CommandContext ctx, string stringIndexItem = "", string stringPosicao = "0")
         {
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
             if (jogadorNaoExisteAsync) return;
 
-            bool converteu = int.TryParse(idItem.Replace("#", string.Empty), out int id);
-            if (!converteu)
+            if (!stringIndexItem.TryParseID(out int indexItem))
             {
-                await ctx.RespondAsync($"{ctx.User.Mention}, você informou um #ID válido?");
+                await ctx.ExecutarAjudaAsync();
                 return;
             }
 
-            converteu = int.TryParse(idPosicao.Replace("#", string.Empty), out int posicao);
-            if (!converteu)
+            if (!stringPosicao.TryParseID(out int posicao))
             {
-                await ctx.RespondAsync($"{ctx.User.Mention}, você informou uma posição válida?");
+                await ctx.ExecutarAjudaAsync();
                 return;
             }
+            posicao = Math.Clamp(posicao, 0, 4);
 
             using (var session = await ModuloBanco.Cliente.StartSessionAsync())
             {
@@ -55,11 +52,10 @@ namespace DragonsDiscordRPG.Comandos
                 RPPersonagem personagem = jogador.Personagem;
 
                 // Limita o id.
-                posicao = Math.Clamp(posicao, 0, 4);
 
                 bool equipou = false;
                 // Pega o item
-                var pocaoEscolhida = personagem.Mochila.TryRemoveItem(id);
+                var pocaoEscolhida = personagem.Mochila.TryRemoveItem(indexItem);
                 if (pocaoEscolhida != null)
                 {
                     if (pocaoEscolhida.Tipo == Enuns.RPItemTipo.PocaoVida)

@@ -18,7 +18,7 @@ namespace DragonsDiscordRPG.Comandos
         [ComoUsar("atacar [#ID]")]
         [ComoUsar("atacar")]
         [Exemplo("atacar #1")]
-        public async Task ComandoAtacarAsync(CommandContext ctx, string alvo = "#0")
+        public async Task ComandoAtacarAsync(CommandContext ctx, string stringIndexAlvo = "#0")
         {
             // Verifica se existe o jogador,
             // Caso não exista avisar no chat e finaliza o metodo.
@@ -32,24 +32,21 @@ namespace DragonsDiscordRPG.Comandos
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);
                 RPPersonagem personagem = jogador.Personagem;
 
-                await Task.Delay(1000);
-
                 if (personagem.Zona.Monstros.Count == 0)
                 {
-                    await ctx.RespondAsync($"{ctx.User.Mention}, porque atacar o vento? Explore um andar!");
+                    await ctx.RespondAsync($"{ctx.User.Mention}, você precisa explorar um andar na torre para poder estar atacando monstros!");
                     return;
                 }
 
                 // Converte o id informado.
-                bool converteu = int.TryParse(alvo.Replace("#", string.Empty), out int id);
-                if (!converteu)
+                if (!stringIndexAlvo.TryParseID(out int indexAlvo))
                 {
-                    await ctx.RespondAsync($"{ctx.User.Mention}, você informou um #ID válido?");
+                    await ctx.RespondAsync($"{ctx.User.Mention}, o #ID é numérico!");
                     return;
                 }
 
                 // Limita o id.
-                id = Math.Clamp(id, 0, personagem.Zona.Monstros.Count - 1);
+                indexAlvo = Math.Clamp(indexAlvo, 0, personagem.Zona.Monstros.Count - 1);
 
                 StringBuilder resumoBatalha = new StringBuilder();
 
@@ -65,19 +62,19 @@ namespace DragonsDiscordRPG.Comandos
                 embed.AddField($"{Emoji.OrbMana} {"Mana".Titulo()}", $"{personagem.Mana.Atual.Text()}/{personagem.Mana.Maximo.Text()}", true);
 
                 // Verifica se o personagem vai acertar o monstro
-                var chanceAcertoPersonagem = Calculo.DanoFisicoChanceAcerto(personagem.Precisao.Atual, personagem.Zona.Monstros[id].Evasao);
+                var chanceAcertoPersonagem = Calculo.DanoFisicoChanceAcerto(personagem.Precisao.Atual, personagem.Zona.Monstros[indexAlvo].Evasao);
                 if (chanceAcertoPersonagem)
                 {
                     // Randomizamos um dano médio com base no minimo e max da arma equipada.
                     double danoPersonagem = personagem.DanoFisico.Sortear;
-                    personagem.Zona.Monstros[id].Vida -= danoPersonagem;
-                    resumoBatalha.AppendLine($"\nVocê causou {danoPersonagem.Text()} de dano no {personagem.Zona.Monstros[id].Nome}!");
+                    personagem.Zona.Monstros[indexAlvo].Vida -= danoPersonagem;
+                    resumoBatalha.AppendLine($"\nVocê causou {danoPersonagem.Text()} de dano no {personagem.Zona.Monstros[indexAlvo].Nome}!");
 
                     // Se o monstro morrer.
-                    if (personagem.Zona.Monstros[id].Vida <= 0)
+                    if (personagem.Zona.Monstros[indexAlvo].Vida <= 0)
                     {
-                        double expGanha = Calculo.CalcularEfetividadeXP(personagem.Nivel.Atual, personagem.Zona.Monstros[id].Nivel) * personagem.Zona.Monstros[id].Exp;
-                        embed.AddField("Mortos".Titulo(), $"{Emoji.CrossBone} {personagem.Zona.Monstros[id].Nome.Bold()} ️{Emoji.CrossBone}\n" +
+                        double expGanha = Calculo.CalcularEfetividadeXP(personagem.Nivel.Atual, personagem.Zona.Monstros[indexAlvo].Nivel) * personagem.Zona.Monstros[indexAlvo].Exp;
+                        embed.AddField("Mortos".Titulo(), $"{Emoji.CrossBone} {personagem.Zona.Monstros[indexAlvo].Nome.Bold()} ️{Emoji.CrossBone}\n" +
                             $"+{expGanha.Text()} exp.");
 
                         int evoluiu = personagem.AddExp(expGanha);
@@ -89,7 +86,7 @@ namespace DragonsDiscordRPG.Comandos
                             item.AddCarga(1);
 
                         // Dropa itens
-                        if (personagem.Zona.SortearItem(personagem.Zona.Monstros[id], personagem.ChanceDrop, out int drops))
+                        if (personagem.Zona.SortearItem(personagem.Zona.Monstros[indexAlvo], personagem.ChanceDrop, out int drops))
                             embed.AddField("Drops".Titulo(), $"Caiu {drops} itens!");
 
                         if (personagem.Zona.NovaOnda(personagem.VelocidadeAtaque.Atual, out int inimigosNovos))

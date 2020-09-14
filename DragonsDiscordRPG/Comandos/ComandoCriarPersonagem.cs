@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace DragonsDiscordRPG.Comandos
 {
-
     public class ComandoCriarPersonagem : BaseCommandModule
     {
         [Command("criar-personagem")]
@@ -40,7 +39,7 @@ namespace DragonsDiscordRPG.Comandos
                 return;
             }
 
-            if (nomePersonagem.Length > 12)
+            if (nomePersonagem.Length >= 12)
             {
                 await ctx.RespondAsync($"{ctx.User.Mention}, o nome do seu personagem precisa ter menos de 12 caracteres!");
                 return;
@@ -93,7 +92,6 @@ namespace DragonsDiscordRPG.Comandos
 
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
-
 
         private async Task<bool> JogadorExisteAsync(CommandContext ctx)
         {
