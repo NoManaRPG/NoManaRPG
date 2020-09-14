@@ -66,9 +66,10 @@ namespace DragonsDiscordRPG.Comandos
                         await ctx.RespondAsync($"{ctx.User.Mention}, você acabou de usar { personagem.Pocoes[posicao].Nome.Titulo().Bold()}!");
                 }
             }
-            catch (MongoDB.Driver.MongoCommandException)
+            catch (Exception ex)
             {
                 await MensagensStrings.ComandoSendoProcessado(ctx);
+                throw ex;
             }
         }
 

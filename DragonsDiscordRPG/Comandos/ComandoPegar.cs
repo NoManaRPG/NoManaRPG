@@ -4,6 +4,7 @@ using DragonsDiscordRPG.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,9 +58,10 @@ namespace DragonsDiscordRPG.Comandos
                     }
                 }
             }
-            catch (MongoDB.Driver.MongoCommandException)
+            catch (Exception ex)
             {
                 await MensagensStrings.ComandoSendoProcessado(ctx);
+                throw ex;
             }
         }
     }

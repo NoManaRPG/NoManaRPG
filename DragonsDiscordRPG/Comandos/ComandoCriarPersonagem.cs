@@ -117,9 +117,10 @@ namespace DragonsDiscordRPG.Comandos
                 }
                 await ctx.RespondAsync($"{ctx.User.Mention}, o seu personagem foi criado!");
             }
-            catch (MongoDB.Driver.MongoCommandException)
+            catch (Exception ex)
             {
                 await MensagensStrings.ComandoSendoProcessado(ctx);
+                throw ex;
             }
         }
     }

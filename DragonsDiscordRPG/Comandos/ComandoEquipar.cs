@@ -109,9 +109,10 @@ namespace DragonsDiscordRPG.Comandos
                         await ctx.RespondAsync($"{ctx.User.Mention}, poção {pocaoEscolhida.Nome.Titulo().Bold()} equipada no slot {posicao}!");
                 }
             }
-            catch (MongoDB.Driver.MongoCommandException)
+            catch (Exception ex)
             {
                 await MensagensStrings.ComandoSendoProcessado(ctx);
+                throw ex;
             }
         }
     }
