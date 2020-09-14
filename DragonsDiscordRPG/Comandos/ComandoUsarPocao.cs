@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace DragonsDiscordRPG.Comandos
 {
-    public class ComandoUsar : BaseCommandModule
+    public class ComandoUsarPocao : BaseCommandModule
     {
-        [Command("usar")]
+        [Command("usar-pocao")]
+        [Aliases("usarp")]
         [Description("Permite usar uma poção que foi equipada no cinto.")]
-        [ComoUsar("usar [0 - 4]")]
-        [Exemplo("usar 0")]
-        public async Task ComandoUsarAsync(CommandContext ctx, int stringPosicao = 0)
+        [ComoUsar("usar-pocao [0 - 4]")]
+        [Exemplo("usar-porcao 0")]
+        public async Task ComandoUsarPocaoAsync(CommandContext ctx, int stringPosicao = 0)
         {
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
             if (jogadorNaoExisteAsync) return;
