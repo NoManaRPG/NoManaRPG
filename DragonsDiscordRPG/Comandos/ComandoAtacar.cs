@@ -1,4 +1,5 @@
-﻿using DragonsDiscordRPG.Entidades;
+﻿using DragonsDiscordRPG.Atributos;
+using DragonsDiscordRPG.Entidades;
 using DragonsDiscordRPG.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -12,7 +13,11 @@ namespace DragonsDiscordRPG.Comandos
     public class ComandoAtacar : BaseCommandModule
     {
         [Command("atacar")]
-        [Cooldown(1, 65, CooldownBucketType.User)]
+        [Aliases("at")]
+        [Description("Permite atacar um monstro a sua frente.")]
+        [ComoUsar("atacar [#ID]")]
+        [ComoUsar("atacar")]
+        [Exemplo("atacar #1")]
         public async Task ComandoAtacarAsync(CommandContext ctx, string alvo = "#0")
         {
             // Verifica se existe o jogador,

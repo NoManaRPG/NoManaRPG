@@ -14,8 +14,10 @@ namespace DragonsDiscordRPG
             Comandos = client.UseCommandsNext(ccfg);
             Comandos.CommandExecuted += CommandExecuted.Event;
             Comandos.CommandErrored += CommandErrored.EventAsync;
-            // Comandos.SetHelpFormatter<IAjudaComando>();
 
+            Comandos.SetHelpFormatter<IAjudaComando>();
+
+            Comandos.RegisterCommands<ComandoAjuda>();
             Comandos.RegisterCommands<ComandoTeste>();
             Comandos.RegisterCommands<ComandoStatus>();
             Comandos.RegisterCommands<ComandoAdministrativo>();
