@@ -12,7 +12,8 @@ namespace DragonsDiscordRPG.Comandos
     public class ComandoAtacar : BaseCommandModule
     {
         [Command("atacar")]
-        public async Task ComandoAtacarAsync(CommandContext ctx, string idEscolhido = "0")
+        [Cooldown(1, 65, CooldownBucketType.User)]
+        public async Task ComandoAtacarAsync(CommandContext ctx, string alvo = "#0")
         {
             // Verifica se existe o jogador,
             // Caso não exista avisar no chat e finaliza o metodo.
@@ -37,7 +38,7 @@ namespace DragonsDiscordRPG.Comandos
                     }
 
                     // Converte o id informado.
-                    bool converteu = int.TryParse(idEscolhido.Replace("#", string.Empty), out int id);
+                    bool converteu = int.TryParse(alvo.Replace("#", string.Empty), out int id);
                     if (!converteu)
                     {
                         await ctx.RespondAsync($"{ctx.User.Mention}, você informou um #ID válido?");

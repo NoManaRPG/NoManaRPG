@@ -106,22 +106,14 @@ namespace DragonsDiscordRPG.Comandos
 
         private async Task CriarJogador(CommandContext ctx, RPPersonagem personagem)
         {
-            try
+            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
             {
-                using (var session = await ModuloBanco.Cliente.StartSessionAsync())
-                {
-                    BancoSession banco = new BancoSession(session);
-                    RPJogador jogador = new RPJogador(ctx, personagem);
-                    await banco.AddJogadorAsync(jogador);
-                    await session.CommitTransactionAsync();
-                }
-                await ctx.RespondAsync($"{ctx.User.Mention}, o seu personagem foi criado!");
+                BancoSession banco = new BancoSession(session);
+                RPJogador jogador = new RPJogador(ctx, personagem);
+                await banco.AddJogadorAsync(jogador);
+                await session.CommitTransactionAsync();
             }
-            catch (Exception ex)
-            {
-                await MensagensStrings.ComandoSendoProcessado(ctx);
-                throw ex;
-            }
+            await ctx.RespondAsync($"{ctx.User.Mention}, o seu personagem foi criado!");
         }
     }
 }

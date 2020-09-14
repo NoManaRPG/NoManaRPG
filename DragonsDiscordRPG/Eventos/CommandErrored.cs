@@ -19,42 +19,53 @@ namespace DragonsDiscordRPG.Eventos
             CommandContext ctx = e.Context;
             switch (e.Exception)
             {
-                case ChecksFailedException ex:
-                    if (!(ex.FailedChecks.FirstOrDefault(x => x is CooldownAttribute) is CooldownAttribute my))
-                        return;
-                    else
+                case ChecksFailedException cfe:
+                    if (cfe.FailedChecks.FirstOrDefault(x => x is CooldownAttribute) is CooldownAttribute ca)
                     {
-                        TimeSpan t = TimeSpan.FromSeconds(my.GetRemainingCooldown(ctx).TotalSeconds);
-                        if (t.Days >= 1)
-                            await ctx.RespondAsync($"Aguarde {t.Days} dias e ({t.Hours} horas para usar este comando! {ctx.Member.Mention}.");
-                        else if (t.Hours >= 1)
-                            await ctx.RespondAsync($"Aguarde {t.Hours} horas e {t.Minutes} minutos para usar este comando! {ctx.Member.Mention}.");
-                        else if (t.Minutes >= 1)
-                            await ctx.RespondAsync($"Aguarde {t.Minutes} minutos e {t.Seconds} segundos para usar este comando! {ctx.Member.Mention}.");
-                        else
-                            await ctx.RespondAsync($"Aguarde {t.Seconds} segundos para usar este comando! {ctx.Member.Mention}.");
-                    }
-                    return;
-                case CommandNotFoundException cf:
-                    if (e.Command != null)
-                        if (e.Command.Name == "ajuda")
+                        TimeSpan tempo = TimeSpan.FromSeconds(ca.GetRemainingCooldown(ctx).TotalSeconds);
+                        switch (tempo)
                         {
-                            DiscordEmoji x = DiscordEmoji.FromName(ctx.Client, ":no_entry_sign:");
-                            await ctx.RespondAsync($"{x} | {ctx.User.Mention} o comando {e.Context.RawArgumentString} não existe.*");
-                        }
-                    return;
-                case NotFoundException nx:
-                    await ctx.RespondAsync($"{ctx.User.Mention}, usuario não encontrado.");
+                            case TimeSpan n when (n.Days >= 1):
+                                await ctx.RespondAsync($"Aguarde {tempo.Days} dias e {tempo.Hours} horas para usar este comando! {ctx.Member.Mention}.");
+                                break;
+                            case TimeSpan n when (n.Hours >= 1):
+                                await ctx.RespondAsync($"Aguarde {tempo.Hours} horas e {tempo.Minutes} minutos para usar este comando! {ctx.Member.Mention}.");
+                                break;
+                            case TimeSpan n when (n.Minutes >= 1):
+                                await ctx.RespondAsync($"Aguarde {tempo.Minutes} minutos e {tempo.Seconds} segundos para usar este comando! {ctx.Member.Mention}.");
+                                break;
+                            default:
+                                await ctx.RespondAsync($"Aguarde {tempo.Seconds} segundos para usar este comando! {ctx.Member.Mention}.");
+                                break;
+                        };
+                    }
+                    break;
+                case CommandNotFoundException cnfe:
+                    if (e.Command.Name == "ajuda")
+                    {
+                        DiscordEmoji x = DiscordEmoji.FromName(ctx.Client, ":no_entry_sign:");
+                        await ctx.RespondAsync($"{x} | {ctx.User.Mention} o comando {e.Context.RawArgumentString} não existe.*");
+                    }
+                    break;
+                case NotFoundException nfe:
+                    await ctx.RespondAsync($"{ctx.User.Mention}, o usuario informado não foi encontrado.");
                     break;
                 case UnauthorizedException ux:
                     break;
-                case ArgumentException ax:
-                    //await ctx.ExecutarComandoAsync("ajuda " + e.Command.Name);
-                    break;
+                //case ArgumentException ax:
+                //    //await ctx.ExecutarComandoAsync("ajuda " + e.Command.Name);
+                //    break;
                 default:
-                    e.Context.Client.DebugLogger.LogMessage(LogLevel.Debug, "Erro", $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception.ToString()}\nstack:{e.Exception.StackTrace}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
+                    e.Context.Client.DebugLogger.LogMessage(LogLevel.Debug, "Erro", $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
+
+                    DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
+                    embed.WithAuthor($"{e.Context.User.Username}({e.Context.User.Id})", null, e.Context.User.AvatarUrl);
+                    embed.WithTitle($"{e.Command?.QualifiedName ?? "<comando desconhecido>"}");
+                    embed.WithDescription($"[{e.Exception}]({e.Context.Message.JumpLink})");
+                    embed.WithTimestamp(DateTime.Now);
+
                     DiscordChannel channel = await ctx.Client.GetChannelAsync(742778666509008956);
-                    await ctx.Client.SendMessageAsync(channel, $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception.ToString()}\nstack:{e.Exception.StackTrace}\ninner:{e.Exception?.InnerException}.\n{e.Context.Message.JumpLink}");
+                    await ctx.Client.SendMessageAsync(channel, embed: embed.Build());
                     break;
             }
         }

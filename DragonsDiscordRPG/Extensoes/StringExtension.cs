@@ -28,16 +28,8 @@ namespace DragonsDiscordRPG.Extensoes
 #endif
         }
 
-        //public static bool TryParseID(this string texto, CommandContext ctx, out int id)
-        //{
-        //    id = 0;
-        //    bool converteu = int.TryParse(idItem.Replace("#", string.Empty), out int id);
-        //    if (!converteu)
-        //    {
-        //        await ctx.RespondAsync($"{ctx.User.Mention}, você informou um #ID válido?");
-        //        return;
-        //    }
-        //}
+        public static bool TryParseID(this string texto, out int id)
+            => int.TryParse(texto.Replace("#", string.Empty), out id);
 
         public static string Titulo(this string titulo)
             => "**⌈" + titulo + "⌋**";
