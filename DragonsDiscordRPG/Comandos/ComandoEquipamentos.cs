@@ -11,6 +11,7 @@ namespace DragonsDiscordRPG.Comandos
     public class ComandoEquipamentos : BaseCommandModule
     {
         [Command("equipamentos")]
+        [Aliases("eq")]
         public async Task ComandoEquipamentosAsync(CommandContext ctx)
         {
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
