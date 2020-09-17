@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace TorreRPG.Entidades.Itens
 {
     [BsonIgnoreExtraElements]
-    [BsonKnownTypes(typeof(RPFrasco), typeof(RPArma), typeof(RPArco), typeof(RPFrascoVida))]
+    [BsonKnownTypes(typeof(RPFrasco), typeof(RPArma), typeof(RPArco), typeof(RPFrascoVida), typeof(RPItemEquipavel))]
     public class RPItem
     {
         public int DropLevel { get; set; } // Nível que começa a cair
@@ -13,11 +13,6 @@ namespace TorreRPG.Entidades.Itens
         public string TipoBaseModificado { get; set; } // Nome base + prefixos
         public RPClasse Classe { get; set; }
         public RPRaridade Raridade { get; set; }
-
-        // Requer
-        public int Inteligencia { get; set; }
-        public int Destreza { get; set; }
-        public int Forca { get; set; }
 
         // Ocupa
         public int Espaco { get; set; }

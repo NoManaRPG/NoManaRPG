@@ -1,7 +1,9 @@
-﻿using TorreRPG.Enuns;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using TorreRPG.Enuns;
 
 namespace TorreRPG.Entidades.Itens
 {
+    [BsonIgnoreExtraElements]
     public class RPFrasco : RPItem
     {
         public RPFrasco(int dropLevel, string tipoBase, RPClasse classe, int espaco, double regen,

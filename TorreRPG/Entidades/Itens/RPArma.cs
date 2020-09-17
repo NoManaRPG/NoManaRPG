@@ -1,8 +1,10 @@
-﻿using TorreRPG.Enuns;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using TorreRPG.Enuns;
 
 namespace TorreRPG.Entidades.Itens
 {
-    public class RPArma : RPItem
+    [BsonIgnoreExtraElements]
+    public class RPArma : RPItemEquipavel
     {
         public RPDano DanoFisico { get; set; }
         public double ChanceCritico { get; set; }

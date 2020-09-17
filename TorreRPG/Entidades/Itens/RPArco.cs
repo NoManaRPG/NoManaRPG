@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MongoDB.Bson.Serialization.Attributes;
 using TorreRPG.Enuns;
 
 namespace TorreRPG.Entidades.Itens
 {
+    [BsonIgnoreExtraElements]
     public class RPArco : RPArma
     {
         public RPArco(int dropLevel, string tipoBase, RPClasse classe, int espaco, RPDano danoFisico,
