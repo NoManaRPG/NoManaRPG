@@ -39,6 +39,8 @@ namespace TorreRPG.Comandos
                     foreach (RPJogador user in usuarios)
                     {
                         user.Personagem.Zona = new RPZona();
+                        user.Personagem.Mochila = new RPMochila();
+                        user.Personagem.Frascos = new List<Entidades.Itens.RPFrasco>(); 
                         await ModuloBanco.ColecaoJogador.ReplaceOneAsync(x => x.Id == user.Id, user);
                     }
                 }
