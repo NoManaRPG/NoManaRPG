@@ -6,7 +6,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using System;
 using System.Threading.Tasks;
 
-namespace DragonsDiscordRPG.Comandos
+namespace DragonsDiscordRPG.Comandos.Acao
 {
     public class ComandoUsarPocao : BaseCommandModule
     {

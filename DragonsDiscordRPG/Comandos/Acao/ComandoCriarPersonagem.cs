@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DragonsDiscordRPG.Comandos
+namespace DragonsDiscordRPG.Comandos.Acao
 {
     public class ComandoCriarPersonagem : BaseCommandModule
     {

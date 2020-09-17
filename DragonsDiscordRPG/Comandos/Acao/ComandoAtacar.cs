@@ -8,7 +8,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DragonsDiscordRPG.Comandos
+namespace DragonsDiscordRPG.Comandos.Acao
 {
     public class ComandoAtacar : BaseCommandModule
     {

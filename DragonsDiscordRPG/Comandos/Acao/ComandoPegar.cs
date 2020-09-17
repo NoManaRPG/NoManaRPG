@@ -5,7 +5,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DragonsDiscordRPG.Comandos
+namespace DragonsDiscordRPG.Comandos.Acao
 {
     public class ComandoPegar : BaseCommandModule
     {
