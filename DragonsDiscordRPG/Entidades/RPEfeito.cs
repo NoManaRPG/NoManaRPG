@@ -9,13 +9,13 @@ namespace DragonsDiscordRPG.Entidades
     [BsonIgnoreExtraElements]
     public class RPEfeito
     {
-        public Enuns.RPItemTipo Tipo { get; set; }
+        public Enuns.RPTipo Tipo { get; set; }
         public string Nome { get; set; }
         public double Duracao { get; set; }
         public double DuracaoSubtrair { get; set; }
         public double Quantidade { get; set; }
 
-        public RPEfeito(Enuns.RPItemTipo tipo, string nome, double duracao, double quantidade, double duracaoSubtrair)
+        public RPEfeito(Enuns.RPTipo tipo, string nome, double duracao, double quantidade, double duracaoSubtrair)
         {
             Tipo = tipo;
             Nome = nome;

@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static DSharpPlus.CommandsNext.CommandsNextExtension;
 
-namespace DragonsDiscordRPG.Comandos
+namespace DragonsDiscordRPG.Comandos.Exibir
 {
     public class ComandoAjuda : BaseCommandModule
     {

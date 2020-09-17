@@ -6,7 +6,7 @@ namespace DragonsDiscordRPG.Entidades
     [BsonIgnoreExtraElements]
     public class RPItem
     {
-        public RPItem(RPItemTipo tipo, string nome, int nivel, int espaco)
+        public RPItem(RPTipo tipo, string nome, int nivel, int espaco)
         {
             Tipo = tipo;
             Nome = nome;
@@ -15,7 +15,7 @@ namespace DragonsDiscordRPG.Entidades
             Quantidade = 1;
         }
 
-        public RPItemTipo Tipo { get; set; }
+        public RPTipo Tipo { get; set; }
         public string Nome { get; set; }
         public int Nivel { get; set; }
 

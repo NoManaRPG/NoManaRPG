@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DragonsDiscordRPG.Comandos
+namespace DragonsDiscordRPG.Comandos.Exibir
 {
     [Group("olhar")]
     public class ComandoOlhar : BaseCommandModule
@@ -128,7 +128,7 @@ namespace DragonsDiscordRPG.Comandos
                 embed.WithTitle($"*#{id}* - {item.Nome.Titulo().Bold()}");
                 switch (item.Tipo)
                 {
-                    case RPItemTipo.PocaoVida:
+                    case RPTipo.PocaoVida:
                         embed.WithDescription("Frascos de Vida\n" +
                             $"Ocupa {item.Espaco} de espaço\n" +
                             $"Recupera {item.LifeRegen} de vida por {item.Tempo} segundos\n" +
@@ -137,7 +137,7 @@ namespace DragonsDiscordRPG.Comandos
                             $"------\n" +
                             "Só é possível manter cargas no cinto. Recarrega conforme você mata monstros.");
                         break;
-                    case RPItemTipo.Arco:
+                    case RPTipo.Arco:
                         StringBuilder str = new StringBuilder();
                         if (item.Destreza != 0)
                             str.Append($"{item.Destreza} des, ");

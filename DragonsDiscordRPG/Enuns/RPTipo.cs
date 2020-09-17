@@ -1,6 +1,6 @@
 ﻿namespace DragonsDiscordRPG.Enuns
 {
-    public enum RPItemTipo
+    public enum RPTipo
     {
         PocaoVida,
         PocaoMana,

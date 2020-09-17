@@ -1,5 +1,6 @@
 ﻿using DragonsDiscordRPG.Atributos;
 using DragonsDiscordRPG.Entidades;
+using DragonsDiscordRPG.Enuns;
 using DragonsDiscordRPG.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -22,7 +23,7 @@ namespace DragonsDiscordRPG.Comandos
 
             if (!stringIndexItem.TryParseID(out int indexItem))
             {
-                await ctx.ExecutarAjudaAsync();
+                await ctx.RespondAsync($"{ctx.User.Mention}, #ID não encontrado na mochila!");
                 return;
             }
 
@@ -38,13 +39,13 @@ namespace DragonsDiscordRPG.Comandos
                 {
                     switch (item.Tipo)
                     {
-                        case Enuns.RPItemTipo.PocaoVida:
+                        case RPTipo.PocaoVida:
                             // Todas os slots estão equipados?
                             var pocaoEquipada = personagem.Pocoes.ElementAtOrDefault(4);
                             if (pocaoEquipada != null)
                             {
                                 // Avisa
-                                await ctx.RespondAsync($"{ctx.User.Mention}, você somente pode ter 4 poções equipadas! Guarde algumas na mochila para equipar mais!");
+                                await ctx.RespondAsync($"{ctx.User.Mention}, você precisa remover uma poção antes de tentar equipar outra!");
                                 return;
                             }
                             else
@@ -56,8 +57,12 @@ namespace DragonsDiscordRPG.Comandos
                                 equipou = true;
                             }
                             break;
+                        case RPTipo.Arco:
+                            //if (personagem.MaoPrincipal == null && personagem.MaoSecundaria == null)
+                                // Todos os slots estão equipados?
+                                break;
                         default:
-                            await ctx.RespondAsync($"{ctx.User.Mention}, este item não é uma poção de vida ou de mana para voce equipar no cinto!");
+                            await ctx.RespondAsync($"{ctx.User.Mention}, este item não é equipável!");
                             return;
                     }
                 }

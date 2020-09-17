@@ -39,11 +39,11 @@ namespace DragonsDiscordRPG.Comandos
                 {
                     switch (personagem.Pocoes[stringPosicao].Tipo)
                     {
-                        case Enuns.RPItemTipo.PocaoVida:
+                        case Enuns.RPTipo.PocaoVida:
                             usouPocao = true;
                             personagem.Pocoes[stringPosicao].RemoverCarga(personagem.Pocoes[stringPosicao].CargasUso);
                             double duracao = personagem.Pocoes[stringPosicao].Tempo / personagem.VelocidadeAtaque.Atual;
-                            personagem.Efeitos.Add(new RPEfeito(Enuns.RPItemTipo.PocaoVida, "Regeneração de vida", duracao, personagem.Pocoes[stringPosicao].LifeRegen / duracao, personagem.VelocidadeAtaque.Atual));
+                            personagem.Efeitos.Add(new RPEfeito(Enuns.RPTipo.PocaoVida, "Regeneração de vida", duracao, personagem.Pocoes[stringPosicao].LifeRegen / duracao, personagem.VelocidadeAtaque.Atual));
                             break;
                         default:
                             await ctx.RespondAsync("Frasco não usavel ainda!");

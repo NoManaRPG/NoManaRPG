@@ -6,7 +6,7 @@ using DSharpPlus.Entities;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DragonsDiscordRPG.Comandos
+namespace DragonsDiscordRPG.Comandos.Exibir
 {
     public class ComandoEquipamentos : BaseCommandModule
     {

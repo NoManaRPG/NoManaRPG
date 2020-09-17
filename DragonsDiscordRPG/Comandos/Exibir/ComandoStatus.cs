@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DragonsDiscordRPG.Comandos
+namespace DragonsDiscordRPG.Comandos.Exibir
 {
     public class ComandoStatus : BaseCommandModule
     {

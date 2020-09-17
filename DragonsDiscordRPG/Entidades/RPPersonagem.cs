@@ -154,7 +154,7 @@ namespace DragonsDiscordRPG.Entidades
                 switch (Efeitos[i].Tipo)
                 {
                     // Efeito poção de vida.
-                    case Enuns.RPItemTipo.PocaoVida:
+                    case Enuns.RPTipo.PocaoVida:
                         if (regen) continue;
                         regen = true;
                         Vida.Adicionar(Efeitos[i].Quantidade);
