@@ -26,7 +26,10 @@ namespace TorreRPG.Entidades
             Armadura = new RPPontoEstatico();
             VelocidadeAtaque = new RPPontoEstatico(1.2);
 
-            DanoFisico = danoBase;
+            DanoFisicoModificado = danoBase;
+            DanoFisicoBase = danoBase;
+            DanoFisicoPorcentagem = 1;
+            DanoFisicoExtra = new RPDano(0, 0);
 
             Efeitos = new List<RPEfeito>();
 
@@ -61,7 +64,13 @@ namespace TorreRPG.Entidades
 
         public double PorcentagemDesviar { get; set; }
 
-        public RPDano DanoFisico { get; set; }
+        public double PorcentagemCritico { get; set; } = 0;
+        public double PorcentagemCriticoDano { get; set; } = 1.5;
+
+        public RPDano DanoFisicoModificado { get; set; }
+        public RPDano DanoFisicoExtra { get; set; }
+        public double DanoFisicoPorcentagem { get; set; }
+        public RPDano DanoFisicoBase { get; set; }
 
         public RPItem MaoPrincipal { get; set; }
         public RPItem MaoSecundaria { get; set; }
@@ -80,7 +89,7 @@ namespace TorreRPG.Entidades
 
         public double ReceberDanoFisico(double danoFisico)
         {
-            double porcentagemReducao = Math.Clamp(Armadura.Atual / (Armadura.Atual + 10 * danoFisico), 0, 0.9) * danoFisico;
+            double porcentagemReducao = Math.Clamp(Armadura.Modificado / (Armadura.Modificado + 10 * danoFisico), 0, 0.9) * danoFisico;
             double danoReduzido = danoFisico - porcentagemReducao;
             Vida.Diminuir(danoReduzido);
             return danoReduzido;
@@ -88,7 +97,7 @@ namespace TorreRPG.Entidades
 
         public bool Acao(double pontosAcaoTotal)
         {
-            PontosDeAcao += VelocidadeAtaque.Atual;
+            PontosDeAcao += VelocidadeAtaque.Modificado;
             if (PontosDeAcao >= pontosAcaoTotal)
             {
                 PontosDeAcao = 0;
@@ -108,6 +117,26 @@ namespace TorreRPG.Entidades
                 frasco.Resetar();
         }
 
+        public void Equipar(RPItem item)
+        {
+            switch (item)
+            {
+                case RPArma arma:
+                    DanoFisicoExtra.Minimo += arma.DanoFisicoModificado.Minimo;
+                    DanoFisicoExtra.Maximo += arma.DanoFisicoModificado.Maximo;
+                    MaoPrincipal = arma;
+                    break;
+            }
+
+            CalcDano();
+        }
+
+        public void CalcDano()
+        {
+            DanoFisicoModificado.Minimo = (DanoFisicoBase.Minimo + DanoFisicoExtra.Minimo) * DanoFisicoPorcentagem;
+            DanoFisicoModificado.Maximo = (DanoFisicoBase.Maximo + DanoFisicoExtra.Maximo) * DanoFisicoPorcentagem;
+        }
+
         public void CalcVida()
         {
             Vida.Maximo = (38 + (Nivel.Atual * 12) + (Atributos.Forca / 2)) * Vida.PorcentagemAdicional;
@@ -121,12 +150,14 @@ namespace TorreRPG.Entidades
 
         public void CalcEvasao()
         {
-            Evasao.Atual = (53 + (Nivel.Atual * 3)) * (((Atributos.Destreza / 5) * 0.01) + 1) * Evasao.PorcentagemAdicional;
+            Evasao.Base = (53 + (Nivel.Atual * 3)) * ((Atributos.Destreza / 5 * 0.01) + 1);
+            Evasao.Modificado = (Evasao.Base + Evasao.Extra) * Evasao.PorcentagemAdicional;
         }
 
         public void CalcPrecisao()
         {
-            Precisao.Atual = ((Atributos.Destreza * 2) + ((Nivel.Atual - 1) * 2)) * Precisao.PorcentagemAdicional;
+            Precisao.Base = (Atributos.Destreza * 2) + ((Nivel.Atual - 1) * 2);
+            Precisao.Modificado = (Precisao.Base + Precisao.Extra) * Precisao.PorcentagemAdicional;
         }
 
         public int AddExp(double exp)

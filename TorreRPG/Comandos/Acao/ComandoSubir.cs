@@ -34,7 +34,7 @@ namespace TorreRPG.Comandos.Acao
                 if (temMonstros)
                 {
 
-                    inimigos = personagem.Zona.TrocarZona(personagem.VelocidadeAtaque.Atual, personagem.Zona.Nivel - 1);
+                    inimigos = personagem.Zona.TrocarZona(personagem.VelocidadeAtaque.Modificado, personagem.Zona.Nivel - 1);
 
                     await banco.EditJogadorAsync(jogador);
                     await session.CommitTransactionAsync();

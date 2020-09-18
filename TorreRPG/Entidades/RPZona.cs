@@ -108,7 +108,7 @@ namespace TorreRPG.Entidades
                     if (mob.Acao(PontosAcaoTotal))
                     {
                         Turno++;
-                        if (Calculo.DanoFisicoChanceAcerto(mob.Precisao, personagem.Evasao.Atual))
+                        if (Calculo.DanoFisicoChanceAcerto(mob.Precisao, personagem.Evasao.Modificado))
                         {
                             double dano = personagem.ReceberDanoFisico(mob.Dano);
                             resumoBatalha.AppendLine($"{mob.Nome} causou {dano.Text()} de dano físico.");

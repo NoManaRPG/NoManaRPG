@@ -24,7 +24,7 @@ namespace TorreRPG.Comandos.Acao
 
             if (!stringIndexItem.TryParseID(out int indexItem))
             {
-                await ctx.RespondAsync($"{ctx.User.Mention}, #ID não encontrado na mochila!");
+                await ctx.RespondAsync($"{ctx.User.Mention}, informe um #ID que se encontra na mochila!");
                 return;
             }
 
@@ -34,10 +34,18 @@ namespace TorreRPG.Comandos.Acao
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);
                 RPPersonagem personagem = jogador.Personagem;
 
-                // Pega o item
                 bool equipou = false;
+                // Tenta remover o item
                 if (personagem.Mochila.TryRemoveItem(indexItem, out RPItem item))
                 {
+                    // Verifica se o nível do item
+                    if (item.ILevel > personagem.Nivel.Atual)
+                    {
+                        await ctx.RespondAsync($"{ctx.User.Mention}, o seu personagem não tem o nível {item.ILevel.Bold()} para equipar este item!");
+                        return;
+                    }
+
+                    // Verifica o tipo do item
                     switch (item)
                     {
                         case RPFrascoVida frascoVida:
@@ -46,26 +54,40 @@ namespace TorreRPG.Comandos.Acao
                             if (pocaoEquipada != null)
                             {
                                 // Avisa
-                                await ctx.RespondAsync($"{ctx.User.Mention}, você precisa remover um frasco antes de tentar equipar outro!");
+                                await ctx.RespondAsync($"{ctx.User.Mention}, você precisa retirar um frasco que está equipado, antes de tentar equipar outro!");
                                 return;
                             }
-                            else
-                            {
-                                // Equipa
-                                personagem.Frascos.Add(frascoVida);
-                                if (personagem.Zona.Nivel == 0)
-                                    frascoVida.Resetar();
-                                equipou = true;
-                            }
+
+                            // Equipa
+                            personagem.Frascos.Add(frascoVida);
+                            if (personagem.Zona.Nivel == 0)
+                                frascoVida.Resetar();
+                            equipou = true;
                             break;
                         case RPArco arco:
-                            //if (personagem.MaoPrincipal == null && personagem.MaoSecundaria == null)
-                            // Todos os slots estão equipados?
+                            // Verifica se as duas mão estão equipadas
+                            if (personagem.MaoPrincipal != null)
+                            {
+                                // Avisa
+                                await ctx.RespondAsync($"{ctx.User.Mention}, as suas duas mãos já estão ocupadas segurando outro item!");
+                                return;
+                            }
+                            else if (personagem.MaoSecundaria != null)
+                            {
+                                // Avisa
+                                await ctx.RespondAsync($"{ctx.User.Mention}, as suas duas mãos já estão ocupadas segurando outro item!");
+                                return;
+                            }
+
+                            // Equipa
+                            personagem.Equipar(arco);
+                            equipou = true;
                             break;
                         default:
                             await ctx.RespondAsync($"{ctx.User.Mention}, este item não é equipável!");
                             return;
                     }
+
                 }
                 else
                 {
@@ -77,7 +99,7 @@ namespace TorreRPG.Comandos.Acao
                 await session.CommitTransactionAsync();
 
                 if (equipou)
-                    await ctx.RespondAsync($"{ctx.User.Mention}, o item {item.TipoBaseModificado.Titulo().Bold()} foi equipado!");
+                    await ctx.RespondAsync($"{ctx.User.Mention}, você equipou {item.TipoBaseModificado.Titulo().Bold()}!");
             }
         }
     }

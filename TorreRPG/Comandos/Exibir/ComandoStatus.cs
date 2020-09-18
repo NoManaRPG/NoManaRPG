@@ -47,14 +47,14 @@ namespace TorreRPG.Comandos.Exibir
                 $"Mochila com **{personagem.Mochila.Espaco}/64** de espaço.\n" +
                 $"Regenera {personagem.Vida.RegenPorSegundo.Text().Bold()} pontos vida por segundo.\n" +
                 $"Regenera {personagem.Mana.RegenPorSegundo.Text().Bold()} pontos mana por segundo.\n" +
-                $"Tem {personagem.Evasao.Atual.Text().Bold()} pontos de evasão.\n" +
-                $"Tem {personagem.Precisao.Atual.Text().Bold()} pontos de precisão.\n" +
-                $"Tem {personagem.Armadura.Atual.Text().Bold()} pontos de armadura.\n");
+                $"Tem {personagem.Evasao.Modificado.Text().Bold()} pontos de evasão.\n" +
+                $"Tem {personagem.Precisao.Modificado.Text().Bold()} pontos de precisão.\n" +
+                $"Tem {personagem.Armadura.Modificado.Text().Bold()} pontos de armadura.\n");
 
             embed.AddField($"{Emoji.OrbVida} {"Vida".Titulo()}", $"{personagem.Vida.Atual.Text()}/{personagem.Vida.Maximo.Text()}", true);
             embed.AddField($"{Emoji.OrbMana} {"Mana".Titulo()}", $"{personagem.Mana.Atual.Text()}/{personagem.Mana.Maximo.Text()}", true);
-            embed.AddField("Dano por segundo".Titulo(), $"{((personagem.DanoFisico.Maximo + personagem.DanoFisico.Minimo / 2) * personagem.VelocidadeAtaque.Atual).Text()}");
-            embed.AddField("Dano físico combinado".Titulo(), $"{personagem.DanoFisico.Minimo} - {personagem.DanoFisico.Maximo}", true);
+            embed.AddField("Dano por segundo".Titulo(), $"{((personagem.DanoFisicoModificado.Maximo + personagem.DanoFisicoModificado.Minimo / 2) * personagem.VelocidadeAtaque.Modificado).Text()}");
+            embed.AddField("Dano físico combinado".Titulo(), $"{personagem.DanoFisicoModificado.Minimo} - {personagem.DanoFisicoModificado.Maximo}", true);
 
             return embed;
         }

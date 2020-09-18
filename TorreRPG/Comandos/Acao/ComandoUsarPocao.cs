@@ -42,8 +42,8 @@ namespace TorreRPG.Comandos.Acao
                         case Enuns.RPClasse.FrascoVida:
                             usouPocao = true;
                             personagem.Frascos[stringPosicao].RemoverCarga(personagem.Frascos[stringPosicao].CargasUso);
-                            double duracao = personagem.Frascos[stringPosicao].Tempo / personagem.VelocidadeAtaque.Atual;
-                            personagem.Efeitos.Add(new RPEfeito(Enuns.RPClasse.FrascoVida, "Regeneração de vida", duracao, personagem.Frascos[stringPosicao].Regen / duracao, personagem.VelocidadeAtaque.Atual));
+                            double duracao = personagem.Frascos[stringPosicao].Tempo / personagem.VelocidadeAtaque.Modificado;
+                            personagem.Efeitos.Add(new RPEfeito(Enuns.RPClasse.FrascoVida, "Regeneração de vida", duracao, personagem.Frascos[stringPosicao].Regen / duracao, personagem.VelocidadeAtaque.Modificado));
                             break;
                         default:
                             await ctx.RespondAsync("Frasco não usavel ainda!");

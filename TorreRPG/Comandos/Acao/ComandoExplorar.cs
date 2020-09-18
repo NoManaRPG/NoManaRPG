@@ -33,7 +33,7 @@ namespace TorreRPG.Comandos.Acao
                     return;
                 }
 
-                inimigos = personagem.Zona.TrocarZona(personagem.VelocidadeAtaque.Atual, personagem.Zona.Nivel);
+                inimigos = personagem.Zona.TrocarZona(personagem.VelocidadeAtaque.Modificado, personagem.Zona.Nivel);
 
                 await banco.EditJogadorAsync(jogador);
                 await session.CommitTransactionAsync();

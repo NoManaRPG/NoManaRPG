@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TorreRPG.Extensoes;
 
 namespace TorreRPG.Comandos
 {
@@ -38,9 +39,8 @@ namespace TorreRPG.Comandos
 
                     foreach (RPJogador user in usuarios)
                     {
-                        user.Personagem.Zona = new RPZona();
-                        user.Personagem.Mochila = new RPMochila();
-                        user.Personagem.Frascos = new List<Entidades.Itens.RPFrasco>(); 
+                        user.Personagem.VelocidadeAtaque.Base = 1.2;
+                        user.Personagem.VelocidadeAtaque.Modificado = 1.2;
                         await ModuloBanco.ColecaoJogador.ReplaceOneAsync(x => x.Id == user.Id, user);
                     }
                 }
@@ -81,6 +81,33 @@ namespace TorreRPG.Comandos
                 await session.CommitTransactionAsync();
                 await ctx.RespondAsync($"Poções restaurada para {member.Mention}!");
 
+            }
+        }
+
+
+        [Command("random-item")]
+        [RequireOwner]
+        public async Task RandomItemAsync(CommandContext ctx, int nivel = 1, [RemainingText] DiscordUser member = null)
+        {
+            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+            {
+                BancoSession banco = new BancoSession(session);
+                if (member == null) member = ctx.User;
+                RPJogador jogador = await banco.GetJogadorAsync(member);
+                RPPersonagem personagem = jogador.Personagem;
+
+                var niveisSeparados = RPBancoItens.Itens.Where(x => x.Key <= nivel);
+
+                Random r = new Random();
+                var itens = niveisSeparados.ElementAt(r.Next(0, niveisSeparados.Count()));
+                var itemSorteado = itens.ElementAt(r.Next(0, itens.Count()));
+                itemSorteado.ILevel = nivel;
+
+                personagem.Mochila.TryAddItem(itemSorteado);
+
+                await banco.EditJogadorAsync(jogador);
+                await session.CommitTransactionAsync();
+                await ctx.RespondAsync($"{member.Mention} recebeu {itemSorteado.TipoBaseModificado.Titulo().Bold()}!");
             }
         }
 

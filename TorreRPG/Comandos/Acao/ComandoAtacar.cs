@@ -62,11 +62,11 @@ namespace TorreRPG.Comandos.Acao
                 embed.AddField($"{Emoji.OrbMana} {"Mana".Titulo()}", $"{personagem.Mana.Atual.Text()}/{personagem.Mana.Maximo.Text()}", true);
 
                 // Verifica se o personagem vai acertar o monstro
-                var chanceAcertoPersonagem = Calculo.DanoFisicoChanceAcerto(personagem.Precisao.Atual, personagem.Zona.Monstros[indexAlvo].Evasao);
+                var chanceAcertoPersonagem = Calculo.DanoFisicoChanceAcerto(personagem.Precisao.Modificado, personagem.Zona.Monstros[indexAlvo].Evasao);
                 if (chanceAcertoPersonagem)
                 {
                     // Randomizamos um dano médio com base no minimo e max da arma equipada.
-                    double danoPersonagem = personagem.DanoFisico.Sortear;
+                    double danoPersonagem = personagem.DanoFisicoModificado.Sortear;
                     personagem.Zona.Monstros[indexAlvo].Vida -= danoPersonagem;
                     resumoBatalha.AppendLine($"\nVocê causou {danoPersonagem.Text()} de dano no {personagem.Zona.Monstros[indexAlvo].Nome}!");
 
@@ -89,7 +89,7 @@ namespace TorreRPG.Comandos.Acao
                         if (personagem.Zona.SortearItem(personagem.Zona.Monstros[indexAlvo], personagem.ChanceDrop, out int drops))
                             embed.AddField("Drops".Titulo(), $"Caiu {drops} itens!");
 
-                        if (personagem.Zona.NovaOnda(personagem.VelocidadeAtaque.Atual, out int inimigosNovos))
+                        if (personagem.Zona.NovaOnda(personagem.VelocidadeAtaque.Modificado, out int inimigosNovos))
                             embed.AddField("Nova onda".Titulo(), $"Apareceu {inimigosNovos} monstros!");
                     }
                 }
