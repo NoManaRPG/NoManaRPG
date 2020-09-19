@@ -48,7 +48,7 @@ namespace TorreRPG.Comandos.Acao
                     personagem.Mana.Adicionar(double.MaxValue);
                     personagem.Efeitos = new List<RPEfeito>();
                     personagem.Zona.Nivel = 0;
-                    personagem.Zona.ItensNoChao = new List<RPItem>();
+                    personagem.Zona.ItensNoChao = new List<RPBaseItem>();
                     await banco.EditJogadorAsync(jogador);
                     await session.CommitTransactionAsync();
                     await ctx.RespondAsync($"{ctx.User.Mention}, você saiu da torre!");

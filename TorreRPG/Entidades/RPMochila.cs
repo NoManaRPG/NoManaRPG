@@ -9,16 +9,16 @@ namespace TorreRPG.Entidades
     [BsonIgnoreExtraElements]
     public class RPMochila
     {
-        public List<RPItem> Itens { get; set; }
+        public List<RPBaseItem> Itens { get; set; }
 
         public int Espaco { get; set; } // Max 64
 
         public RPMochila()
         {
-            Itens = new List<RPItem>();
+            Itens = new List<RPBaseItem>();
         }
 
-        public bool TryAddItem(RPItem item, int quantidade = 1)
+        public bool TryAddItem(RPBaseItem item, int quantidade = 1)
         {
             if (Espaco + (item.Espaco * quantidade) <= 64)
             {
@@ -35,7 +35,7 @@ namespace TorreRPG.Entidades
         /// <param name="nome"></param>
         /// <param name="quantidade"></param>
         /// <returns></returns>
-        public bool TryRemoveItem(int index, out RPItem item, int quantidade = 1)
+        public bool TryRemoveItem(int index, out RPBaseItem item, int quantidade = 1)
         {
             var im = Itens.ElementAtOrDefault(index);
             item = null;

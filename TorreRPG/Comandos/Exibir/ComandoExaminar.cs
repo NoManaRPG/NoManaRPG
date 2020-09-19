@@ -31,7 +31,7 @@ namespace TorreRPG.Comandos.Exibir
                 return;
             }
 
-            if (personagem.Mochila.TryRemoveItem(id, out RPItem item))
+            if (personagem.Mochila.TryRemoveItem(id, out RPBaseItem item))
             {
                 DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
                 embed.WithAuthor($"{ctx.User.Username} - Nível {personagem.Nivel.Atual} - {personagem.Classe}", iconUrl: ctx.User.AvatarUrl);
@@ -44,7 +44,7 @@ namespace TorreRPG.Comandos.Exibir
                 await ctx.RespondAsync($"{ctx.User.Mention}, #ID não encontrado na mochila!");
         }
 
-        public static StringBuilder ExaminarItem(RPItem item)
+        public static StringBuilder ExaminarItem(RPBaseItem item)
         {
             StringBuilder str = new StringBuilder();
             //switch (item.Tipo)

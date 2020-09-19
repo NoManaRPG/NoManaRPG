@@ -11,11 +11,11 @@ namespace TorreRPG.BancoItens
 {
     public static class RPBancoItens
     {
-        public static IEnumerable<IGrouping<int, RPItem>> Itens;
+        public static IEnumerable<IGrouping<int, RPBaseItem>> Itens;
 
         public static void Carregar()
         {
-            var i = new List<RPItem>();
+            var i = new List<RPBaseItem>();
             i.AddRange(new Arcos().ArcosAb());
             i.AddRange(new FrascosVida().FrascosVidaAb());
             i.AddRange(new MachadosUmaMao().MachadosUmaMaoAb());

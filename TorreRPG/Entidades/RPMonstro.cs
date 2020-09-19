@@ -73,7 +73,7 @@ namespace TorreRPG.Entidades
         }
 
 
-        private RPItem SortearItem(int nivel)
+        private RPBaseItem SortearItem(int nivel)
         {
             // Separa os itens por nivel
             var niveisSeparados = RPBancoItens.Itens.Where(x => x.Key <= nivel);
@@ -86,9 +86,9 @@ namespace TorreRPG.Entidades
             return itemSorteado;
         }
 
-        public bool SortearItens(int nivel, double chancePersonagem, out List<RPItem> itens)
+        public bool SortearItens(int nivel, double chancePersonagem, out List<RPBaseItem> itens)
         {
-            itens = new List<RPItem>();
+            itens = new List<RPBaseItem>();
             //Add a raridade do monstro aqui tmb
             double chance = (chancePersonagem + 0.16);
             double integerPart = Math.Truncate(chance);

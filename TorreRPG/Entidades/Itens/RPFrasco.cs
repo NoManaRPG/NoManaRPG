@@ -4,7 +4,7 @@ using TorreRPG.Enuns;
 namespace TorreRPG.Entidades.Itens
 {
     [BsonIgnoreExtraElements]
-    public class RPFrasco : RPItem
+    public class RPFrasco : RPBaseItem
     {
         public RPFrasco(int dropLevel, string tipoBase, RPClasse classe, int espaco, double regen,
             double tempo, double cargasUso, double cargasMax) :

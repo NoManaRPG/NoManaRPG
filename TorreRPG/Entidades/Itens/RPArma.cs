@@ -4,7 +4,7 @@ using TorreRPG.Enuns;
 namespace TorreRPG.Entidades.Itens
 {
     [BsonIgnoreExtraElements]
-    public class RPArma : RPItemEquipavel
+    public class RPArma : RPBaseItemEquipavel
     {
         public RPDano DanoFisicoBase { get; set; }
         public RPDano DanoFisicoModificado { get; set; }

@@ -5,8 +5,8 @@ namespace TorreRPG.Entidades.Itens
 {
     [BsonIgnoreExtraElements]
     [BsonKnownTypes(typeof(RPArco), typeof(RPArma), typeof(RPFrasco), typeof(RPFrascoVida),
-        typeof(RPItemEquipavel), typeof(RPMacaUmaMao), typeof(RPMachadoUmaMao), typeof(RPVarinha))]
-    public class RPItem
+        typeof(RPBaseItemEquipavel), typeof(RPMacaUmaMao), typeof(RPMachadoUmaMao), typeof(RPVarinha))]
+    public class RPBaseItem
     {
         public int DropLevel { get; set; } // Nível que começa a cair
         public int ILevel { get; set; } // Zona de onde caiu, tudo baseado nisso
@@ -18,7 +18,7 @@ namespace TorreRPG.Entidades.Itens
         // Ocupa
         public int Espaco { get; set; }
 
-        public RPItem(int dropLevel, string tipoBase, RPClasse classe, int espaco)
+        public RPBaseItem(int dropLevel, string tipoBase, RPClasse classe, int espaco)
         {
             DropLevel = dropLevel;
             TipoBase = tipoBase;

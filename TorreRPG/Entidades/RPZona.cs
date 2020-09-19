@@ -17,20 +17,20 @@ namespace TorreRPG.Entidades
         public long OndaAtual { get; set; }
         public int Turno { get; set; } // Reseta em outra onda
         public double PontosAcaoTotal { get; set; }
-        public List<RPItem> ItensNoChao { get; set; }
+        public List<RPBaseItem> ItensNoChao { get; set; }
         public List<RPMonstro> Monstros { get; set; }
 
         public RPZona()
         {
             Nivel = 0;
-            ItensNoChao = new List<RPItem>();
+            ItensNoChao = new List<RPBaseItem>();
             Monstros = new List<RPMonstro>();
         }
 
         public int TrocarZona(double velocidadeAtaquePersonagem, int nivel)
         {
             Monstros = new List<RPMonstro>();
-            ItensNoChao = new List<RPItem>();
+            ItensNoChao = new List<RPBaseItem>();
             Turno = 0;
             Nivel = nivel;
             OndaAtual = 1;
@@ -56,7 +56,7 @@ namespace TorreRPG.Entidades
             drops = 0;
             Monstros.Remove(monstro);
 
-            if (monstro.SortearItens(monstro.Nivel, chancePersonagem, out List<RPItem> itens))
+            if (monstro.SortearItens(monstro.Nivel, chancePersonagem, out List<RPBaseItem> itens))
             {
                 foreach (var item in itens)
                     ItensNoChao.Add(item);

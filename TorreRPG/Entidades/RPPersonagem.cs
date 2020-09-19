@@ -73,8 +73,8 @@ namespace TorreRPG.Entidades
         public double DanoFisicoPorcentagem { get; set; }
         public RPDano DanoFisicoBase { get; set; }
 
-        public RPItem MaoPrincipal { get; set; }
-        public RPItem MaoSecundaria { get; set; }
+        public RPBaseItem MaoPrincipal { get; set; }
+        public RPBaseItem MaoSecundaria { get; set; }
 
         public List<RPEfeito> Efeitos { get; set; }
 
@@ -118,7 +118,7 @@ namespace TorreRPG.Entidades
                 frasco.Resetar();
         }
 
-        public void Equipar(RPItem item)
+        public void Equipar(RPBaseItem item)
         {
             switch (item)
             {

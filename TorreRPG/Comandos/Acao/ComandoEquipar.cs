@@ -36,7 +36,7 @@ namespace TorreRPG.Comandos.Acao
 
                 bool equipou = false;
                 // Tenta remover o item
-                if (personagem.Mochila.TryRemoveItem(indexItem, out RPItem item))
+                if (personagem.Mochila.TryRemoveItem(indexItem, out RPBaseItem item))
                 {
                     // Verifica se o nível do item
                     if (item.ILevel > personagem.Nivel.Atual)
