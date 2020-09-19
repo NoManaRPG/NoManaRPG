@@ -38,7 +38,7 @@ namespace TorreRPG.Entidades.Itens
             return false;
         }
 
-        public void Resetar()
+        public void ResetarCargas()
             => CargasAtual = CargasMax;
     }
 }

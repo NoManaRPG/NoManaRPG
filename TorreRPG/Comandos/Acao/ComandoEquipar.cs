@@ -24,7 +24,7 @@ namespace TorreRPG.Comandos.Acao
 
             if (!stringIndexItem.TryParseID(out int indexItem))
             {
-                await ctx.RespondAsync($"{ctx.User.Mention}, informe um #ID que se encontra na mochila!");
+                await ctx.RespondAsync($"{ctx.User.Mention}, informe um `#ID` que se encontra na mochila!");
                 return;
             }
 
@@ -38,7 +38,7 @@ namespace TorreRPG.Comandos.Acao
                 // Tenta remover o item
                 if (personagem.Mochila.TryRemoveItem(indexItem, out RPBaseItem item))
                 {
-                    // Verifica se o nível do item
+                    // Verifica se tem o nível suficiente para equipar.
                     if (item.ILevel > personagem.Nivel.Atual)
                     {
                         await ctx.RespondAsync($"{ctx.User.Mention}, o seu personagem não tem o nível {item.ILevel.Bold()} para equipar este item!");
@@ -54,14 +54,14 @@ namespace TorreRPG.Comandos.Acao
                             if (pocaoEquipada != null)
                             {
                                 // Avisa
-                                await ctx.RespondAsync($"{ctx.User.Mention}, você precisa retirar um frasco que está equipado, antes de tentar equipar outro!");
+                                await ctx.RespondAsync($"{ctx.User.Mention}, você precisa retirar um frasco equipados, antes de tentar equipar outro!");
                                 return;
                             }
 
                             // Equipa
                             personagem.Frascos.Add(item as RPFrasco);
                             if (personagem.Zona.Nivel == 0)
-                                (item as RPFrasco).Resetar();
+                                (item as RPFrasco).ResetarCargas();
                             equipou = true;
                             break;
                         case RPClasse.DuasMaoArma:
@@ -69,14 +69,14 @@ namespace TorreRPG.Comandos.Acao
                             if (personagem.MaoPrincipal != null)
                             {
                                 // Avisa
-                                await ctx.RespondAsync($"{ctx.User.Mention}, as suas duas mãos já estão ocupadas segurando outro item!");
+                                await ctx.RespondAsync($"{ctx.User.Mention}, as duas mãos já estão ocupadas segurando outro item!");
                                 return;
                             }
 
                             if (personagem.MaoSecundaria != null)
                             {
                                 // Avisa
-                                await ctx.RespondAsync($"{ctx.User.Mention}, as suas duas mãos já estão ocupadas segurando outro item!");
+                                await ctx.RespondAsync($"{ctx.User.Mention}, as duas mãos já estão ocupadas segurando outro item!");
                                 return;
                             }
 
@@ -86,7 +86,7 @@ namespace TorreRPG.Comandos.Acao
                             equipou = true;
                             break;
                         case RPClasse.UmaMaoArma:
-                            // Verifica se a primeira mão estão vazias.
+                            // Verificar se a primeira mão está vazias.
                             if (personagem.MaoPrincipal == null)
                             {
                                 // Equipa
@@ -104,6 +104,7 @@ namespace TorreRPG.Comandos.Acao
                                 equipou = true;
                                 break;
                             }
+
                             // As duas estão ocupadas? Avisa
                             await ctx.RespondAsync($"{ctx.User.Mention}, as suas duas mãos já estão ocupadas segurando outro item!");
                             return;
@@ -114,7 +115,7 @@ namespace TorreRPG.Comandos.Acao
                 }
                 else
                 {
-                    await ctx.RespondAsync($"{ctx.User.Mention}, #ID não encontrado!");
+                    await ctx.RespondAsync($"{ctx.User.Mention}, `#ID` não encontrado!");
                     return;
                 }
 

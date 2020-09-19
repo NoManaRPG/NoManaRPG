@@ -115,7 +115,7 @@ namespace TorreRPG.Entidades
             Mana.Adicionar(double.MaxValue);
             Nivel.PersonagemMorreu();
             foreach (var frasco in Frascos)
-                frasco.Resetar();
+                frasco.ResetarCargas();
         }
 
         public void Equipar(RPBaseItem item)
