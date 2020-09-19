@@ -49,6 +49,7 @@ namespace TorreRPG.Comandos.Acao
                     switch (item.Classe)
                     {
                         case RPClasse.Frasco:
+                            #region Frascos
                             // Todas os slots estão equipados?
                             var pocaoEquipada = personagem.Frascos.ElementAtOrDefault(4);
                             if (pocaoEquipada != null)
@@ -85,7 +86,9 @@ namespace TorreRPG.Comandos.Acao
                             personagem.MaoPrincipal = item;
                             equipou = true;
                             break;
+                        #endregion
                         case RPClasse.UmaMaoArma:
+                            #region Armas de uma mão
                             // Verificar se a primeira mão está vazias.
                             if (personagem.MaoPrincipal == null)
                             {
@@ -108,6 +111,7 @@ namespace TorreRPG.Comandos.Acao
                             // As duas estão ocupadas? Avisa
                             await ctx.RespondAsync($"{ctx.User.Mention}, as suas duas mãos já estão ocupadas segurando outro item!");
                             return;
+                        #endregion
                         default:
                             await ctx.RespondAsync($"{ctx.User.Mention}, este item não é equipável!");
                             return;
