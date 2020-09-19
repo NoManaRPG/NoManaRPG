@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using TorreRPG.Entidades;
 using TorreRPG.Entidades.Itens;
 using TorreRPG.Enuns;
