@@ -31,7 +31,7 @@ namespace TorreRPG.Comandos.Exibir
             for (int i = 0; i < personagem.Frascos.Count; i++)
             {
                 var pocao = personagem.Frascos[i];
-                str.AppendLine($"*#{i}* - {pocao.TipoBaseModificado}: {pocao.CargasAtual}/{pocao.CargasMax}");
+                str.AppendLine($"`#{i}` {pocao.TipoBaseModificado}: {pocao.CargasAtual}/{pocao.CargasMax}");
             }
             embed.AddField("Poções".Titulo().Bold(), $"{(personagem.Frascos.Count == 0 ? "Nada equipado" : str.ToString())}");
 

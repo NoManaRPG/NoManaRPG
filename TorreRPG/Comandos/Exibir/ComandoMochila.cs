@@ -23,7 +23,7 @@ namespace TorreRPG.Comandos.Exibir
 
             StringBuilder str = new StringBuilder();
             for (int i = 0; i < personagem.Mochila.Itens.Count; i++)
-                str.AppendLine($"*#{i}* - {personagem.Mochila.Itens[i].TipoBaseModificado.Titulo().Bold()} ");
+                str.AppendLine($"`#{i}` {personagem.Mochila.Itens[i].TipoBaseModificado.Titulo().Bold()} ");
 
 
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();

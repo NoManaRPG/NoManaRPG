@@ -90,7 +90,7 @@ namespace TorreRPG.Comandos.Exibir
             for (int i = 0; i < personagem.Zona.ItensNoChao.Count; i++)
             {
                 var item = personagem.Zona.ItensNoChao[i];
-                str.AppendLine($"*#{i}* - {item.TipoBaseModificado.Titulo().Bold()} ");
+                str.AppendLine($"`#{i}` {item.TipoBaseModificado.Titulo().Bold()} ");
             }
             embed.WithDescription("Você está olhando para os itens no chão! Pegue-os para poder estar equipando!\n" + str.ToString());
             await ctx.RespondAsync(embed: embed.Build());

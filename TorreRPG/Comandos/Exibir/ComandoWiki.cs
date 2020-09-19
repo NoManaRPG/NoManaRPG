@@ -32,7 +32,7 @@ namespace TorreRPG.Comandos.Exibir
             StringBuilder str = new StringBuilder();
             for (int i = 0; i < list.Count; i++)
                 str.AppendLine($"{list[i].Nome} - ID: {list[i].Id}");
-            await ctx.RespondAsync(str.ToString());
+            await ctx.RespondAsync($"Utilize `!wiki ler [#ID] para ler`\n{str.ToString()}");
         }
 
         [Command("ler")]
