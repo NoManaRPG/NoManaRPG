@@ -46,9 +46,9 @@ namespace TorreRPG.Comandos.Acao
                     }
 
                     // Verifica o tipo do item
-                    switch (item)
+                    switch (item.Classe)
                     {
-                        case RPFrascoVida frascoVida:
+                        case RPClasse.Frasco:
                             // Todas os slots estão equipados?
                             var pocaoEquipada = personagem.Frascos.ElementAtOrDefault(4);
                             if (pocaoEquipada != null)
@@ -59,12 +59,12 @@ namespace TorreRPG.Comandos.Acao
                             }
 
                             // Equipa
-                            personagem.Frascos.Add(frascoVida);
+                            personagem.Frascos.Add(item as RPFrasco);
                             if (personagem.Zona.Nivel == 0)
-                                frascoVida.Resetar();
+                                (item as RPFrasco).Resetar();
                             equipou = true;
                             break;
-                        case RPArco arco:
+                        case RPClasse.DuasMaoArma:
                             // Verifica se as duas mão estão equipadas
                             if (personagem.MaoPrincipal != null)
                             {
@@ -72,7 +72,8 @@ namespace TorreRPG.Comandos.Acao
                                 await ctx.RespondAsync($"{ctx.User.Mention}, as suas duas mãos já estão ocupadas segurando outro item!");
                                 return;
                             }
-                            else if (personagem.MaoSecundaria != null)
+
+                            if (personagem.MaoSecundaria != null)
                             {
                                 // Avisa
                                 await ctx.RespondAsync($"{ctx.User.Mention}, as suas duas mãos já estão ocupadas segurando outro item!");
@@ -80,14 +81,36 @@ namespace TorreRPG.Comandos.Acao
                             }
 
                             // Equipa
-                            personagem.Equipar(arco);
+                            personagem.Equipar(item);
+                            personagem.MaoPrincipal = item;
                             equipou = true;
                             break;
+                        case RPClasse.UmaMaoArma:
+                            // Verifica se a primeira mão estão vazias.
+                            if (personagem.MaoPrincipal == null)
+                            {
+                                // Equipa
+                                personagem.Equipar(item);
+                                personagem.MaoPrincipal = item;
+                                equipou = true;
+                                break;
+                            }
+                            // Verifica se a segunda mão está vazia
+                            if (personagem.MaoSecundaria == null && personagem.MaoPrincipal.Classe != RPClasse.DuasMaoArma)
+                            {
+                                // Equipa
+                                personagem.Equipar(item);
+                                personagem.MaoSecundaria = item;
+                                equipou = true;
+                                break;
+                            }
+                            // As duas estão ocupadas? Avisa
+                            await ctx.RespondAsync($"{ctx.User.Mention}, as suas duas mãos já estão ocupadas segurando outro item!");
+                            return;
                         default:
                             await ctx.RespondAsync($"{ctx.User.Mention}, este item não é equipável!");
                             return;
                     }
-
                 }
                 else
                 {
