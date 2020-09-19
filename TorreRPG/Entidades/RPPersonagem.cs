@@ -5,6 +5,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TorreRPG.Enuns;
 
 namespace TorreRPG.Entidades
 {
@@ -124,7 +125,6 @@ namespace TorreRPG.Entidades
                 case RPArma arma:
                     DanoFisicoExtra.Minimo += arma.DanoFisicoModificado.Minimo;
                     DanoFisicoExtra.Maximo += arma.DanoFisicoModificado.Maximo;
-                    MaoPrincipal = arma;
                     break;
             }
 
@@ -186,7 +186,7 @@ namespace TorreRPG.Entidades
                 switch (Efeitos[i].Tipo)
                 {
                     // Efeito poção de vida.
-                    case Enuns.RPClasse.FrascoVida:
+                    case Enuns.RPClasse.Frasco:
                         if (regen) continue;
                         regen = true;
                         Vida.Adicionar(Efeitos[i].Quantidade);
