@@ -3,7 +3,7 @@ using TorreRPG.Entidades;
 using TorreRPG.Entidades.Itens;
 using TorreRPG.Enuns;
 
-namespace TorreRPG.Metadata.Itens.Armas.DuasMaoArmas.Arcos
+namespace TorreRPG.Metadata.Itens.Armas.DuasMaoArmas
 {
     public class Arcos
     {
