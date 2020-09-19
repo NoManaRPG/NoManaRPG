@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TorreRPG.Metadata.Itens.Armas.DuasMaoArmas.Arcos;
 using TorreRPG.Metadata.Itens.Frascos;
+using TorreRPG.Metadata.Itens.Armas.UmaMaoArmas;
 
 namespace TorreRPG.BancoItens
 {
@@ -17,6 +18,7 @@ namespace TorreRPG.BancoItens
             var i = new List<RPItem>();
             i.AddRange(new Arcos().ArcosAb());
             i.AddRange(new FrascosVida().FrascosVidaAb());
+            i.AddRange(new UmaMaoMachados().UmaMaoMachadosAb());
 
             Itens = i.GroupBy(x => x.DropLevel);
 

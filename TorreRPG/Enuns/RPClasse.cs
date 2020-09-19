@@ -10,5 +10,7 @@ namespace TorreRPG.Enuns
         PocoesMana,
         [Description("Arco")]
         Arcos,
+        [Description("Machados de Uma Mão")]
+        MachadoUmaMao,
     }
 }
