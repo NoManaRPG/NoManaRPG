@@ -18,7 +18,8 @@ namespace TorreRPG.BancoItens
             var i = new List<RPItem>();
             i.AddRange(new Arcos().ArcosAb());
             i.AddRange(new FrascosVida().FrascosVidaAb());
-            i.AddRange(new UmaMaoMachados().UmaMaoMachadosAb());
+            i.AddRange(new MachadosUmaMao().MachadosUmaMaoAb());
+            i.AddRange(new MacasUmaMao().MacasUmaMaoAb());
 
             Itens = i.GroupBy(x => x.DropLevel);
 

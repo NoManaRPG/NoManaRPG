@@ -5,9 +5,9 @@ using TorreRPG.Enuns;
 
 namespace TorreRPG.Metadata.Itens.Armas.UmaMaoArmas
 {
-    public class UmaMaoMachados
+    public class MachadosUmaMao
     {
-        public List<RPMachadoUmaMao> UmaMaoMachadosAb()
+        public List<RPMachadoUmaMao> MachadosUmaMaoAb()
         {
             var machados = new List<RPMachadoUmaMao>();
             machados.Add(UmaMaoMachado1());
