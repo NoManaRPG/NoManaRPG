@@ -7,7 +7,7 @@ namespace TorreRPG.Metadata.Itens.Armas.UmaMaoArmas
 {
     public class Adagas
     {
-        public List<RPAdaga> AdagaAb()
+        public List<RPAdaga> AdagasAb()
         {
             var arma = new List<RPAdaga>();
             arma.Add(Adaga1());

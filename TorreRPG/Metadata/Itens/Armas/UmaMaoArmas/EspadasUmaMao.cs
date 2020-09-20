@@ -7,7 +7,7 @@ namespace TorreRPG.Metadata.Itens.Armas.UmaMaoArmas
 {
     public class EspadasUmaMao
     {
-        public List<RPEspada> EspadaAb()
+        public List<RPEspada> EspadasAb()
         {
             var arma = new List<RPEspada>();
             arma.Add(Espada1());
