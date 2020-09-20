@@ -5,7 +5,7 @@ using TorreRPG.Enuns;
 
 namespace TorreRPG.Metadata.Itens.Armas.UmaMaoArmas
 {
-    public class EspadaUmaMao
+    public class EspadasUmaMao
     {
         public List<RPEspada> EspadaAb()
         {
@@ -22,7 +22,7 @@ namespace TorreRPG.Metadata.Itens.Armas.UmaMaoArmas
 
         public RPEspada Espada2()
         => new RPEspada(5, "Espada de Cobre", RPClasse.UmaMaoArma, 3, new RPDano(6, 14), 0.05, 1.5, 14, 14);
-
+         
         public RPEspada Espada3()
         => new RPEspada(10, "Sabre", RPClasse.UmaMaoArma, 3, new RPDano(5, 22), 0.05, 1.55, 18, 26);
 

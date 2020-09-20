@@ -17,8 +17,8 @@ namespace TorreRPG.BancoItens
             i.AddRange(new MacasUmaMao().MacasUmaMaoAb());
             i.AddRange(new Arcos().ArcosAb());
             i.AddRange(new MachadosUmaMao().MachadosUmaMaoAb());
-            i.AddRange(new Adaga().AdagaAb());
-            i.AddRange(new EspadaUmaMao().EspadaAb());
+            i.AddRange(new Adagas().AdagaAb());
+            i.AddRange(new EspadasUmaMao().EspadaAb());
             i.AddRange(new FrascosVida().FrascosVidaAb());
 
             Itens = i.GroupBy(x => x.DropLevel);

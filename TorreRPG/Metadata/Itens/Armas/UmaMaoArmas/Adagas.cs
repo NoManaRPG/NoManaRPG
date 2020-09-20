@@ -5,7 +5,7 @@ using TorreRPG.Enuns;
 
 namespace TorreRPG.Metadata.Itens.Armas.UmaMaoArmas
 {
-    public class Adaga
+    public class Adagas
     {
         public List<RPAdaga> AdagaAb()
         {
