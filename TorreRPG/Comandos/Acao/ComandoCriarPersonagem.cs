@@ -39,7 +39,7 @@ namespace TorreRPG.Comandos.Acao
                 return;
             }
 
-            if (nomePersonagem.Length >= 12)
+            if (nomePersonagem.Length > 12)
             {
                 await ctx.RespondAsync($"{ctx.User.Mention}, o nome do seu personagem precisa ter menos de 12 caracteres!");
                 return;
