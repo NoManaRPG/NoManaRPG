@@ -126,14 +126,14 @@ namespace TorreRPG.Comandos.Exibir
                 DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
                 embed.WithAuthor($"{ctx.User.Username} - Nível {personagem.Nivel.Atual} - {personagem.Classe}", iconUrl: ctx.User.AvatarUrl);
 
-                embed.WithTitle($"*#{id}* - {item.TipoBaseModificado.Titulo().Bold()}");
+                embed.WithTitle($"`#{id}` {item.TipoBaseModificado.Titulo().Bold()}");
                 switch (item)
                 {
-                    case RPFrascoVida frasco:
-                        embed.WithDescription("Só é possível manter cargas no cinto. Recarrega conforme você mata monstros.");
+                    case RPFrascoVida frascoVida:
+                        embed.WithDescription(frascoVida.Descricao());
                         break;
-                    case RPArco arco:
-                        embed.WithDescription(arco.Descricao());
+                    case RPArma arma:
+                        embed.WithDescription(arma.Descricao());
                         break;
                 }
                 await ctx.RespondAsync(embed: embed.Build());
