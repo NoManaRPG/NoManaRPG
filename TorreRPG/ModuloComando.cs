@@ -34,6 +34,7 @@ namespace TorreRPG
             Comandos.RegisterCommands<ComandoMochila>();
             Comandos.RegisterCommands<ComandoEquipamentos>();
             Comandos.RegisterCommands<ComandoEquipar>();
+            Comandos.RegisterCommands<ComandoDesequipar>();
         }
     }
 }
