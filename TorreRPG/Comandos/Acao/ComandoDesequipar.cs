@@ -5,6 +5,8 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System.Threading.Tasks;
 using TorreRPG.Atributos;
+using System.Linq;
+using System;
 
 namespace TorreRPG.Comandos.Acao
 {
@@ -29,9 +31,40 @@ namespace TorreRPG.Comandos.Acao
                 RPBaseItem item = null;
                 switch (itemString.RemoverAcentos().ToLower())
                 {
+                    case "0":
+                    case "#0":
+                        item = await RemoverFrascoAsync(personagem, ctx, 0);
+                        if (item == null)
+                            return;
+                        break;
+                    case "1":
+                    case "#1":
+                        item = await RemoverFrascoAsync(personagem, ctx, 1);
+                        if (item == null)
+                            return;
+                        break;
+                    case "2":
+                    case "#2":
+                        item = await RemoverFrascoAsync(personagem, ctx, 2);
+                        if (item == null)
+                            return;
+                        break;
+                    case "3":
+                    case "#3":
+                        item = await RemoverFrascoAsync(personagem, ctx, 3);
+                        if (item == null)
+                            return;
+                        break;
+                    case "4":
+                    case "#4":
+                        item = await RemoverFrascoAsync(personagem, ctx, 4);
+                        if (item == null)
+                            return;
+                        break;
                     case "primeira mao":
                     case "mao principal":
                     case "primeira":
+                    case "principal":
                         // Verifica se tem algo equipado
                         if (personagem.MaoPrincipal == null)
                         {
@@ -57,13 +90,22 @@ namespace TorreRPG.Comandos.Acao
                         item = personagem.MaoSecundaria;
                         personagem.MaoSecundaria = null;
                         break;
+                    default:
+                        await ctx.RespondAsync($"{ctx.User.Mention}, não foi encontrado o {"SLOT".Titulo().Bold()} que você pediu! Use `!equipamentos` para ver os {"SLOT".Titulo().Bold()} disponíveis.");
+                        return;
                 }
 
                 // Tenta guardar na mochila
                 if (personagem.Mochila.TryAddItem(item))
                 {
                     // Remove os atributos
-                    RemoverItemAtributos(personagem, item);
+                    switch (item)
+                    {
+                        case RPBaseItemArma arma:
+                            personagem.DanoFisicoExtra.Subtrair(arma.DanoFisicoModificado);
+                            personagem.CalcDano();
+                            break;
+                    }
                 }
                 else
                 {
@@ -78,15 +120,20 @@ namespace TorreRPG.Comandos.Acao
             }
         }
 
-        private void RemoverItemAtributos(RPPersonagem personagem, RPBaseItem item)
+        public async Task<RPBaseItem> RemoverFrascoAsync(RPPersonagem personagem, CommandContext ctx, int index)
         {
-            switch (item)
+            // Verifica se tem algo equipado
+            index = Math.Clamp(index, 0, 4);
+            var item = personagem.Frascos.ElementAtOrDefault(index);
+            if (item == null)
             {
-                case RPBaseItemArma arma:
-                    personagem.DanoFisicoExtra.Subtrair(arma.DanoFisicoModificado);
-                    break;
+                // Avisa
+                await ctx.RespondAsync($"{ctx.User.Mention}, você não tem nada equipado no slot `#{index}` do cinto de poções.");
+                return null;
             }
-            personagem.CalcDano();
+            // Desequipa
+            personagem.Frascos.RemoveAt(index);
+            return item;
         }
     }
 }
