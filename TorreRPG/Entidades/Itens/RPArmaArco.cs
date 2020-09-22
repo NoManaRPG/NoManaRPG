@@ -1,9 +1,7 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using TorreRPG.Enuns;
+﻿using TorreRPG.Enuns;
 
 namespace TorreRPG.Entidades.Itens
 {
-    [BsonIgnoreExtraElements]
     public class RPArmaArco : RPBaseItemArma
     {
         public RPArmaArco(int dropLevel, string tipoBase, RPClasse classe, int espaco, RPDano danoFisico,

@@ -1,9 +1,7 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using TorreRPG.Enuns;
+﻿using TorreRPG.Enuns;
 
 namespace TorreRPG.Entidades.Itens
 {
-    [BsonIgnoreExtraElements]
     public class RPBaseItemEquipavel : RPBaseItem
     {
         // Requer

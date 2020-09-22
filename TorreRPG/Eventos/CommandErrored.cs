@@ -18,11 +18,6 @@ namespace TorreRPG.Eventos
         public static async Task EventAsync(CommandErrorEventArgs e)
         {
             CommandContext ctx = e.Context;
-            await NewMethod(e, ctx);
-        }
-
-        private static async Task NewMethod(CommandErrorEventArgs e, CommandContext ctx)
-        {
             switch (e.Exception)
             {
                 case ChecksFailedException cfe:
@@ -59,7 +54,7 @@ namespace TorreRPG.Eventos
                 case UnauthorizedException ux:
                     break;
                 case MongoCommandException mce:
-                   await ctx.RespondAsync($"{ctx.User.Mention}, o último comando não foi processado corretamente! Tente executar os comandos mais lentamente!");
+                    await ctx.RespondAsync($"{ctx.User.Mention}, o último comando não foi processado corretamente! Tente executar os comandos mais lentamente!");
                     break;
                 //case ArgumentException ax:
                 //    //await ctx.ExecutarComandoAsync("ajuda " + e.Command.Name);

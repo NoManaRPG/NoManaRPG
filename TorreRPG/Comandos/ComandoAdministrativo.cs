@@ -43,7 +43,11 @@ namespace TorreRPG.Comandos
                         user.Personagem.Mochila.Espaco = 0;
                         for (int i = user.Personagem.Mochila.Itens.Count - 1; i >= 0; i--)
                         {
-                            user.Personagem.Mochila.Espaco += user.Personagem.Mochila.Itens[i].Espaco;
+                            user.Personagem.Mochila = new RPMochila();
+                            user.Personagem.DanoFisicoExtra = new RPDano(0, 0);
+                            user.Personagem.CalcDano();
+                            user.Personagem.MaoPrincipal = null;
+                            user.Personagem.MaoSecundaria = null;
                         };
                         await ModuloBanco.ColecaoJogador.ReplaceOneAsync(x => x.Id == user.Id, user);
                     }
