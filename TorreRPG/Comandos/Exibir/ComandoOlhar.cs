@@ -132,7 +132,7 @@ namespace TorreRPG.Comandos.Exibir
                     case RPFrascoVida frascoVida:
                         embed.WithDescription(frascoVida.Descricao());
                         break;
-                    case RPArma arma:
+                    case RPBaseItemArma arma:
                         embed.WithDescription(arma.Descricao());
                         break;
                 }

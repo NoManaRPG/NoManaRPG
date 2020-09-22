@@ -4,14 +4,14 @@ using TorreRPG.Enuns;
 namespace TorreRPG.Entidades.Itens
 {
     [BsonIgnoreExtraElements]
-    public class RPArma : RPBaseItemEquipavel
+    public class RPBaseItemArma : RPBaseItemEquipavel
     {
         public RPDano DanoFisicoBase { get; set; }
         public RPDano DanoFisicoModificado { get; set; }
         public double ChanceCritico { get; set; }
         public double VelocidadeAtaque { get; set; }
 
-        public RPArma(int dropLevel, string tipoBase, RPClasse classe, int espaco, RPDano danoFisico,
+        public RPBaseItemArma(int dropLevel, string tipoBase, RPClasse classe, int espaco, RPDano danoFisico,
             double chanceCritico, double velocidadeAtaque) : base(dropLevel, tipoBase, classe, espaco)
         {
             DanoFisicoBase = danoFisico;

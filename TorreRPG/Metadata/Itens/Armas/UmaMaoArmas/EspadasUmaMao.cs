@@ -7,9 +7,9 @@ namespace TorreRPG.Metadata.Itens.Armas.UmaMaoArmas
 {
     public class EspadasUmaMao
     {
-        public List<RPEspada> EspadasAb()
+        public List<RPArmaEspada> EspadasAb()
         {
-            var arma = new List<RPEspada>();
+            var arma = new List<RPArmaEspada>();
             arma.Add(Espada1());
             arma.Add(Espada2());
             arma.Add(Espada3());
@@ -17,16 +17,16 @@ namespace TorreRPG.Metadata.Itens.Armas.UmaMaoArmas
             return arma;
         }
 
-        public RPEspada Espada1()
-        => new RPEspada(1, "Espada Enferrujada", RPClasse.UmaMaoArma, 3, new RPDano(4, 9), 0.05, 1.55, 8, 8);
+        public RPArmaEspada Espada1()
+        => new RPArmaEspada(1, "Espada Enferrujada", RPClasse.UmaMao, 3, new RPDano(4, 9), 0.05, 1.55, 8, 8);
 
-        public RPEspada Espada2()
-        => new RPEspada(5, "Espada de Cobre", RPClasse.UmaMaoArma, 3, new RPDano(6, 14), 0.05, 1.5, 14, 14);
+        public RPArmaEspada Espada2()
+        => new RPArmaEspada(5, "Espada de Cobre", RPClasse.UmaMao, 3, new RPDano(6, 14), 0.05, 1.5, 14, 14);
          
-        public RPEspada Espada3()
-        => new RPEspada(10, "Sabre", RPClasse.UmaMaoArma, 3, new RPDano(5, 22), 0.05, 1.55, 18, 26);
+        public RPArmaEspada Espada3()
+        => new RPArmaEspada(10, "Sabre", RPClasse.UmaMao, 3, new RPDano(5, 22), 0.05, 1.55, 18, 26);
 
-        public RPEspada Espada4()
-        => new RPEspada(15, "Espada Larga", RPClasse.UmaMaoArma, 3, new RPDano(15, 21), 0.05, 1.45, 30, 30);
+        public RPArmaEspada Espada4()
+        => new RPArmaEspada(15, "Espada Larga", RPClasse.UmaMao, 3, new RPDano(15, 21), 0.05, 1.45, 30, 30);
     }
 }

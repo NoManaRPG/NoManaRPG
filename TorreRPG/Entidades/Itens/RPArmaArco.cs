@@ -4,9 +4,9 @@ using TorreRPG.Enuns;
 namespace TorreRPG.Entidades.Itens
 {
     [BsonIgnoreExtraElements]
-    public class RPArco : RPArma
+    public class RPArmaArco : RPBaseItemArma
     {
-        public RPArco(int dropLevel, string tipoBase, RPClasse classe, int espaco, RPDano danoFisico,
+        public RPArmaArco(int dropLevel, string tipoBase, RPClasse classe, int espaco, RPDano danoFisico,
             double chanceCritico, double velocidadeAtaque, int destreza) :
             base(dropLevel, tipoBase, classe, espaco, danoFisico, chanceCritico, velocidadeAtaque)
         {

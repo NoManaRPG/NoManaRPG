@@ -7,9 +7,9 @@ namespace TorreRPG.Metadata.Itens.Armas.UmaMaoArmas
 {
     public class MachadosUmaMao
     {
-        public List<RPMachadoUmaMao> MachadosUmaMaoAb()
+        public List<RPArmaMachadoUmaMao> MachadosUmaMaoAb()
         {
-            var machados = new List<RPMachadoUmaMao>();
+            var machados = new List<RPArmaMachadoUmaMao>();
             machados.Add(Machado1());
             machados.Add(Machado2());
             machados.Add(Machado3());
@@ -20,25 +20,25 @@ namespace TorreRPG.Metadata.Itens.Armas.UmaMaoArmas
             return machados;
         }
 
-        public RPMachadoUmaMao Machado1()
-        => new RPMachadoUmaMao(2, "Machadinha Enferrujada", RPClasse.UmaMaoArma, 6, new RPDano(6, 11), 0.05, 1.5, 12, 6);
+        public RPArmaMachadoUmaMao Machado1()
+        => new RPArmaMachadoUmaMao(2, "Machadinha Enferrujada", RPClasse.UmaMao, 6, new RPDano(6, 11), 0.05, 1.5, 12, 6);
 
-        public RPMachadoUmaMao Machado2()
-        => new RPMachadoUmaMao(6, "Machadinha de Jade", RPClasse.UmaMaoArma, 6, new RPDano(10, 15), 0.05, 1.45, 21, 10);
+        public RPArmaMachadoUmaMao Machado2()
+        => new RPArmaMachadoUmaMao(6, "Machadinha de Jade", RPClasse.UmaMao, 6, new RPDano(10, 15), 0.05, 1.45, 21, 10);
 
-        public RPMachadoUmaMao Machado3()
-        => new RPMachadoUmaMao(11, "Machado Revestido", RPClasse.UmaMaoArma, 6, new RPDano(11, 21), 0.05, 1.5, 28, 19);
+        public RPArmaMachadoUmaMao Machado3()
+        => new RPArmaMachadoUmaMao(11, "Machado Revestido", RPClasse.UmaMao, 6, new RPDano(11, 21), 0.05, 1.5, 28, 19);
 
-        public RPMachadoUmaMao Machado4()
-        => new RPMachadoUmaMao(16, "Cutelo", RPClasse.UmaMaoArma, 6, new RPDano(12, 35), 0.05, 1.30, 48, 14);
+        public RPArmaMachadoUmaMao Machado4()
+        => new RPArmaMachadoUmaMao(16, "Cutelo", RPClasse.UmaMao, 6, new RPDano(12, 35), 0.05, 1.30, 48, 14);
 
-        public RPMachadoUmaMao Machado5()
-        => new RPMachadoUmaMao(21, "Machado Largo", RPClasse.UmaMaoArma, 6, new RPDano(19, 34), 0.05, 1.35, 54, 25);
+        public RPArmaMachadoUmaMao Machado5()
+        => new RPArmaMachadoUmaMao(21, "Machado Largo", RPClasse.UmaMao, 6, new RPDano(19, 34), 0.05, 1.35, 54, 25);
 
-        public RPMachadoUmaMao Machado6()
-        => new RPMachadoUmaMao(25, "Machado Armado", RPClasse.UmaMaoArma, 6, new RPDano(14, 42), 0.05, 1.4, 58, 33);
+        public RPArmaMachadoUmaMao Machado6()
+        => new RPArmaMachadoUmaMao(25, "Machado Armado", RPClasse.UmaMao, 6, new RPDano(14, 42), 0.05, 1.4, 58, 33);
 
-        public RPMachadoUmaMao Machado7()
-        => new RPMachadoUmaMao(29, "Machado Decorativo", RPClasse.UmaMaoArma, 6, new RPDano(27, 50), 0.05, 1.2, 80, 23);
+        public RPArmaMachadoUmaMao Machado7()
+        => new RPArmaMachadoUmaMao(29, "Machado Decorativo", RPClasse.UmaMao, 6, new RPDano(27, 50), 0.05, 1.2, 80, 23);
     }
 }

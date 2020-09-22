@@ -7,8 +7,8 @@ namespace TorreRPG.Enuns
         [Description("Frasco")]
         Frasco,
         [Description("Arma de Duas Mãos")]
-        DuasMaoArma,
+        DuasMao,
         [Description("Arma de Uma Mão")]
-        UmaMaoArma,
+        UmaMao,
     }
 }

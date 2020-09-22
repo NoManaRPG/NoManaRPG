@@ -44,7 +44,7 @@ namespace TorreRPG.Entidades
             Vida.Adicionar(double.MaxValue);
             Mana.Adicionar(double.MaxValue);
 
-            Frascos = new List<RPFrasco>();
+            Frascos = new List<RPBaseFrasco>();
             Mochila = new RPMochila();
         }
 
@@ -68,9 +68,21 @@ namespace TorreRPG.Entidades
         public double PorcentagemCritico { get; set; } = 0;
         public double PorcentagemCriticoDano { get; set; } = 1.5;
 
+        /// <summary>
+        /// Dano fisico final, após toda as somas.
+        /// </summary>
         public RPDano DanoFisicoModificado { get; set; }
+        /// <summary>
+        /// Dano físico extra, como de uma arma.
+        /// </summary>
         public RPDano DanoFisicoExtra { get; set; }
+        /// <summary>
+        /// Porcetagem que será multiplicada no dano final.
+        /// </summary>
         public double DanoFisicoPorcentagem { get; set; }
+        /// <summary>
+        /// Dano físico base, não alterar.
+        /// </summary>
         public RPDano DanoFisicoBase { get; set; }
 
         public RPBaseItem MaoPrincipal { get; set; }
@@ -81,7 +93,7 @@ namespace TorreRPG.Entidades
         public RPZona Zona { get; set; }
         public int ZonasDescoberta { get; set; }
 
-        public List<RPFrasco> Frascos { get; set; }
+        public List<RPBaseFrasco> Frascos { get; set; }
 
         public double ChanceDrop { get; set; }
 
@@ -122,7 +134,7 @@ namespace TorreRPG.Entidades
         {
             switch (item)
             {
-                case RPArma arma:
+                case RPBaseItemArma arma:
                     DanoFisicoExtra.Minimo += arma.DanoFisicoModificado.Minimo;
                     DanoFisicoExtra.Maximo += arma.DanoFisicoModificado.Maximo;
                     break;

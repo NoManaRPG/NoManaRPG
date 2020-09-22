@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TorreRPG.Extensoes;
+using TorreRPG.Entidades.Itens;
 
 namespace TorreRPG.Comandos
 {
@@ -39,8 +40,11 @@ namespace TorreRPG.Comandos
 
                     foreach (RPJogador user in usuarios)
                     {
-                        user.Personagem.VelocidadeAtaque.Base = 1.2;
-                        user.Personagem.VelocidadeAtaque.Modificado = 1.2;
+                        user.Personagem.Mochila.Espaco = 0;
+                        for (int i = user.Personagem.Mochila.Itens.Count - 1; i >= 0; i--)
+                        {
+                            user.Personagem.Mochila.Espaco += user.Personagem.Mochila.Itens[i].Espaco;
+                        };
                         await ModuloBanco.ColecaoJogador.ReplaceOneAsync(x => x.Id == user.Id, user);
                     }
                 }

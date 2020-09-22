@@ -2,9 +2,9 @@
 
 namespace TorreRPG.Entidades.Itens
 {
-    public class RPMacaUmaMao : RPArma
+    public class RPArmaMacaUmaMao : RPBaseItemArma
     {
-        public RPMacaUmaMao(int dropLevel, string tipoBase, RPClasse classe, int espaco, RPDano danoFisico,
+        public RPArmaMacaUmaMao(int dropLevel, string tipoBase, RPClasse classe, int espaco, RPDano danoFisico,
             double chanceCritico, double velocidadeAtaque, int forca) :
             base(dropLevel, tipoBase, classe, espaco, danoFisico, chanceCritico, velocidadeAtaque)
         {

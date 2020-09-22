@@ -60,12 +60,12 @@ namespace TorreRPG.Comandos.Acao
                             }
 
                             // Equipa
-                            personagem.Frascos.Add(item as RPFrasco);
+                            personagem.Frascos.Add(item as RPBaseFrasco);
                             if (personagem.Zona.Nivel == 0)
-                                (item as RPFrasco).ResetarCargas();
+                                (item as RPBaseFrasco).ResetarCargas();
                             equipou = true;
                             break;
-                        case RPClasse.DuasMaoArma:
+                        case RPClasse.DuasMao:
                             // Verifica se as duas mão estão equipadas
                             if (personagem.MaoPrincipal != null)
                             {
@@ -87,7 +87,7 @@ namespace TorreRPG.Comandos.Acao
                             equipou = true;
                             break;
                         #endregion
-                        case RPClasse.UmaMaoArma:
+                        case RPClasse.UmaMao:
                             #region Armas de uma mão
                             // Verificar se a primeira mão está vazias.
                             if (personagem.MaoPrincipal == null)
@@ -99,7 +99,7 @@ namespace TorreRPG.Comandos.Acao
                                 break;
                             }
                             // Verifica se a segunda mão está vazia
-                            if (personagem.MaoSecundaria == null && personagem.MaoPrincipal.Classe != RPClasse.DuasMaoArma)
+                            if (personagem.MaoSecundaria == null && personagem.MaoPrincipal.Classe != RPClasse.DuasMao)
                             {
                                 // Equipa
                                 personagem.Equipar(item);

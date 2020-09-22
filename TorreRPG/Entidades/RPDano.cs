@@ -14,5 +14,17 @@ namespace TorreRPG.Entidades
             Minimo = minimo;
             Maximo = maximo;
         }
+
+        public void Somar(RPDano dano)
+        {
+            Minimo += dano.Minimo;
+            Maximo += dano.Maximo;
+        }
+
+        public void Subtrair(RPDano dano)
+        {
+            Minimo -= dano.Minimo;
+            Maximo -= dano.Maximo;
+        }
     }
 }
