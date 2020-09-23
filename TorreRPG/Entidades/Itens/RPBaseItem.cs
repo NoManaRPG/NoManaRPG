@@ -11,7 +11,7 @@ namespace TorreRPG.Entidades.Itens
     {
         public int DropLevel { get; set; } // Nível que começa a cair
         public int ILevel { get; set; } // Zona de onde caiu, tudo baseado nisso
-        private string TipoBase { get; set; } // Nome base
+        public string TipoBase { get; private set; } // Nome base
         public string TipoBaseModificado { get; set; } // Nome base + prefixos
         public RPClasse Classe { get; set; }
         public RPRaridade Raridade { get; set; }
