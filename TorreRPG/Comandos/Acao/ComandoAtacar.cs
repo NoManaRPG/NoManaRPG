@@ -100,12 +100,14 @@ namespace TorreRPG.Comandos.Acao
 
                 embed.WithColor(DiscordColor.Blue);
                 // Se o personagem morrer, reseta ele.
+                bool jogadorMorreu = false;
                 if (personagem.Vida.Atual <= 0)
                 {
                     personagem.Resetar();
 
                     resumoBatalha.AppendLine($"{Emoji.CrossBone} Você morreu!!! {Emoji.CrossBone}".Bold());
                     embed.WithColor(DiscordColor.Red);
+                    jogadorMorreu = true;
                 }
 
                 // Exibe o resumo da batalha.. Regens e ataques.
@@ -122,10 +124,11 @@ namespace TorreRPG.Comandos.Acao
                     if (personagem.Zona.NovaOnda(personagem.VelocidadeAtaque.Modificado, out int inimigosNovos))
                         embed.AddField("Nova onda".Titulo(), $"Apareceu {inimigosNovos} monstros!");
                 }
-
-                embed.AddField($"{Emoji.OrbVida} {"Vida".Titulo()}", $"{personagem.Vida.Atual.Text()}/{personagem.Vida.Maximo.Text()}", true);
-                embed.AddField($"{Emoji.OrbMana} {"Mana".Titulo()}", $"{personagem.Mana.Atual.Text()}/{personagem.Mana.Maximo.Text()}", true);
-
+                if (!jogadorMorreu)
+                {
+                    embed.AddField($"{Emoji.OrbVida} {"Vida".Titulo()}", $"{personagem.Vida.Atual.Text()}/{personagem.Vida.Maximo.Text()}", true);
+                    embed.AddField($"{Emoji.OrbMana} {"Mana".Titulo()}", $"{personagem.Mana.Atual.Text()}/{personagem.Mana.Maximo.Text()}", true);
+                }
 
                 // Salvamos.
                 await banco.EditJogadorAsync(jogador);
