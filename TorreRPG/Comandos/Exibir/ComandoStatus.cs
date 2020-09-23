@@ -3,17 +3,18 @@ using TorreRPG.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using TorreRPG.Atributos;
 
 namespace TorreRPG.Comandos.Exibir
 {
     public class ComandoStatus : BaseCommandModule
     {
         [Command("status")]
-        [Description("Permite exibir os status do personagem.")]
+        [Description("Permite exibir os status do personagem ou de outro usuário.")]
+        [ComoUsar("status")]
+        [ComoUsar("status [@USUARIO]")]
+        [Exemplo("status @Imain")]
         [Cooldown(1, 10, CooldownBucketType.User)]
         public async Task ComandoStatusAb(CommandContext ctx, DiscordUser discordUser)
         {
