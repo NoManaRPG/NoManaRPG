@@ -17,7 +17,7 @@ namespace TorreRPG.Comandos.Acao
         [ComoUsar("desequipar [SLOT]")]
         [Exemplo("desequipar mão principal")]
         [Exemplo("desequipar segunda mão")]
-        public async Task ComandoDesequiparAsync(CommandContext ctx, [RemainingText] string itemString)
+        public async Task ComandoDesequiparAsync(CommandContext ctx, [RemainingText] string itemString = "")
         {
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
             if (jogadorNaoExisteAsync) return;
@@ -95,7 +95,7 @@ namespace TorreRPG.Comandos.Acao
                         personagem.MaoSecundaria = null;
                         break;
                     default:
-                        await ctx.RespondAsync($"{ctx.User.Mention}, não foi encontrado o {"SLOT".Titulo().Bold()} que você pediu! Use `!equipamentos` para ver os {"SLOT".Titulo().Bold()} disponíveis.");
+                        await ctx.RespondAsync($"{ctx.User.Mention}, não foi encontrado o {"SLOT".Titulo().Bold()} que você pediu! Digite `!equipamentos` para ver os {"SLOT".Titulo().Bold()} disponíveis.");
                         return;
                 }
 
