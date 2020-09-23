@@ -38,7 +38,7 @@ namespace TorreRPG.Comandos.Acao
 
                 await banco.EditJogadorAsync(jogador);
                 await session.CommitTransactionAsync();
-                await ctx.RespondAsync($"{ctx.User.Mention}, apareceu monstro [{inimigos.Bold()}] na sua frente!");
+                await ctx.RespondAsync($"{ctx.User.Mention}, apareceu [{inimigos.Bold()}] monstro na sua frente!");
             }
         }
     }
