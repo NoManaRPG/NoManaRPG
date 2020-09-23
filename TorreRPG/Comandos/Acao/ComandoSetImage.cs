@@ -9,6 +9,7 @@ namespace TorreRPG.Comandos.Acao
     public class ComandoSetImage : BaseCommandModule
     {
         [Command("setimage")]
+        [Description("Altera a foto do retrato, indique um número de 0 a 13...")]
         public async Task SetImageAsync(CommandContext ctx, int numero = 1)
         {
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
@@ -60,10 +61,9 @@ namespace TorreRPG.Comandos.Acao
                     case 13:
                         jogador.UrlFoto = "https://cdn.discordapp.com/attachments/758139402219159562/758145622636232704/e56d4f7cbfb4d2551caf2f38ef9dc94d.png";
                         break;
-
                     default:
                         await ctx.RespondAsync($"{ctx.User.Mention}, id do retrato não foi encontrado.");
-                        break;
+                        return;
                 }
                 await banco.EditJogadorAsync(jogador);
                 await session.CommitTransactionAsync();
