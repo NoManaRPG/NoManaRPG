@@ -11,6 +11,7 @@ namespace TorreRPG.Entidades
         public ulong Id { get; private set; }
         public RPPersonagem Personagem { get; private set; }
         public DateTime Criacao { get; private set; }
+        public string UrlFoto { get; set; }
 
         public RPJogador(CommandContext ctx, RPPersonagem personagem)
         {

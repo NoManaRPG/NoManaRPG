@@ -42,7 +42,7 @@ namespace TorreRPG.Comandos.Exibir
 
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
             embed.WithAuthor($"{user.Username} - Nível {personagem.Nivel.Atual} - {personagem.Classe} - {personagem.Nome}", iconUrl: user.AvatarUrl);
-
+            embed.WithThumbnail(jogador.UrlFoto);
             embed.WithDescription($"Tem {personagem.Nivel.ExpAtual.Text().Bold()} pontos de experiencia e precisa de {personagem.Nivel.ExpMax.Text().Bold()} para evoluir.\n" +
                 $"Mochila com **{personagem.Mochila.Espaco}/64** de espaço.\n" +
                 $"Regenera {personagem.Vida.RegenPorSegundo.Text().Bold()} pontos vida por segundo.\n" +
