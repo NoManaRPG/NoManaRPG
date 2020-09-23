@@ -12,6 +12,7 @@ namespace TorreRPG.Comandos.Acao
     public class ComandoSubir : BaseCommandModule
     {
         [Command("subir")]
+        [Description("Permite subir um andar da torre. Encontra novos inimigos!")]
         public async Task ComandoSubirAsync(CommandContext ctx)
         {
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
