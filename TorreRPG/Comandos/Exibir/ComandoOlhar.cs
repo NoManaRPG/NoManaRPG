@@ -1,5 +1,4 @@
 ﻿using TorreRPG.Entidades;
-using TorreRPG.Enuns;
 using TorreRPG.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -12,6 +11,7 @@ using TorreRPG.Entidades.Itens;
 namespace TorreRPG.Comandos.Exibir
 {
     [Group("olhar")]
+    [Description("Permite olhar os itens no chão, ou para os inimigos.")]
     public class ComandoOlhar : BaseCommandModule
     {
         [GroupCommand]
