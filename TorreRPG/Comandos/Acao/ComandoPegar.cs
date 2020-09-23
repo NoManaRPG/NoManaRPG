@@ -4,13 +4,17 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System.Linq;
 using System.Threading.Tasks;
+using TorreRPG.Atributos;
 
 namespace TorreRPG.Comandos.Acao
 {
     public class ComandoPegar : BaseCommandModule
     {
         [Command("pegar")]
-        public async Task ComandoPegarAsync(CommandContext ctx, string stringIndexItem = "")
+        [Description("Permite pegar um item que se encontra no chão. `#ID` se encontra no comando `olhar item`.")]
+        [ComoUsar("pegar [#ID]")]
+        [Exemplo("pegar #1")]
+        public async Task ComandoPegarAsync(CommandContext ctx, string stringIndexItem = "0")
         {
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
             if (jogadorNaoExisteAsync) return;
@@ -18,7 +22,7 @@ namespace TorreRPG.Comandos.Acao
             // Converte o id informado.
             if (!stringIndexItem.TryParseID(out int indexItem))
             {
-                await ctx.RespondAsync($"{ctx.User.Mention}, o #ID é numérico!");
+                await ctx.RespondAsync($"{ctx.User.Mention}, o #ID precisa ser numérico!");
                 return;
             }
 
@@ -47,7 +51,7 @@ namespace TorreRPG.Comandos.Acao
                         await ctx.RespondAsync($"{ctx.User.Mention}, você pegou {item.TipoBaseModificado.Titulo().Bold()}!");
                     }
                     else
-                        await ctx.RespondAsync($"{ctx.User.Mention}, você não tem espaço o suficiente!");
+                        await ctx.RespondAsync($"{ctx.User.Mention}, você não tem espaço o suficiente para pegar {item.TipoBaseModificado.Titulo().Bold()}!!");
                 }
             }
         }
