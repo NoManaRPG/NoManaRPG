@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using static DSharpPlus.CommandsNext.CommandsNextExtension;
+using System;
 
 namespace TorreRPG.Comandos.Exibir
 {
@@ -100,16 +101,22 @@ namespace TorreRPG.Comandos.Exibir
                 _embed.WithColor(DiscordColor.CornflowerBlue);
                 return new CommandHelpMessage(embed: _embed.Build());
             }
-            return new CommandHelpMessage(content: MensagemAjuda());
+            return new CommandHelpMessage(embed: MensagemAjuda());
         }
 
-        public string MensagemAjuda()
+        public DiscordEmbed MensagemAjuda()
         {
-            return "```css\nLista de comandos```\n" +
-            "Use `!ajuda [comando]` para obter mais ajuda sobre o comando específico, por exemplo: `!ajuda status` \n\n" +
-            "`ajuda`, `atacar`, `criar-personagem`, `descer`, `equipamentos`, `equipar`, `explorar`, `mochila`, `olhar`, " +
-            "`pegar`, `status`, `subir`, `usar`\n" +
-            "```csharp\n# Não inclua os colchetes do exemplo quando for utilizar o comando!```";
+            DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
+            embed.WithDescription("Utilize `!ajuda [COMANDO]` para obter mais ajuda sobre o comando específico, por exemplo: `!ajuda ajuda`");
+            embed.AddField("Comando principal".Titulo().Bold(), "`!criar-personagem\n!status`", true);
+            embed.AddField("Itens".Titulo().Bold(), "`!mochila\n!equipamentos\n!equipar\n!desequipar`", true);
+            embed.AddField("Ajuda".Titulo().Bold(), "`!wiki\n!ajuda`", true);
+            embed.AddField("Combate".Titulo().Bold(), "`!atacar\n!explorar\n!descer\n!subir\n!usar-pocao\n!olhar\n!pegar`", true);
+            embed.AddField("Outros".Titulo().Bold(), "`setimage`", true);
+            embed.WithImageUrl("https://cdn.discordapp.com/attachments/750081991046856814/755886689523859536/VaalTower.jpg");
+            embed.WithColor(DiscordColor.Violet);
+            embed.WithTimestamp(DateTime.Now);
+            return embed.Build();
         }
     }
 }
