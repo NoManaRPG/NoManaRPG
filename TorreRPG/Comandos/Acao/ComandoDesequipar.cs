@@ -13,7 +13,7 @@ namespace TorreRPG.Comandos.Acao
     public class ComandoDesequipar : BaseCommandModule
     {
         [Command("desequipar")]
-        [Description("Permite desequipar um item. Veja no equipamentos os ⌈SLOTS⌋ disponíveis.")]
+        [Description("Permite desequipar um item. Veja no equipamentos os `⌈SLOTS⌋` disponíveis.")]
         [ComoUsar("desequipar [SLOT]")]
         [Exemplo("desequipar mão principal")]
         [Exemplo("desequipar segunda mão")]

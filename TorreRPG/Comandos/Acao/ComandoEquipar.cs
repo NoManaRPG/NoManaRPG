@@ -14,9 +14,9 @@ namespace TorreRPG.Comandos.Acao
     {
         [Command("equipar")]
         [Aliases("e")]
-        [Description("Permite equipar um item.\n#ID se contra na mochila.")]
-        [ComoUsar("equipar [Item #ID]")]
-        [Exemplo("equipar #24")]
+        [Description("Permite equipar um item.\n`#ID` se contra na mochila.")]
+        [ComoUsar("equipar [#ID]")]
+        [Exemplo("equipar #1")]
         public async Task ComandoEquiparAsync(CommandContext ctx, string stringIndexItem = "")
         {
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
