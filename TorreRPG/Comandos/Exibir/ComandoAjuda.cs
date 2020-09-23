@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static DSharpPlus.CommandsNext.CommandsNextExtension;
 using System;
+using DSharpPlus;
 
 namespace TorreRPG.Comandos.Exibir
 {
@@ -107,16 +108,39 @@ namespace TorreRPG.Comandos.Exibir
         public DiscordEmbed MensagemAjuda()
         {
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
-            embed.WithDescription("Utilize `!ajuda [COMANDO]` para obter mais ajuda sobre o comando específico, por exemplo: `!ajuda ajuda`");
-            embed.AddField("Comando principal".Titulo().Bold(), "`!criar-personagem\n!status`", true);
-            embed.AddField("Itens".Titulo().Bold(), "`!mochila\n!equipamentos\n!equipar\n!desequipar`", true);
-            embed.AddField("Ajuda".Titulo().Bold(), "`!wiki\n!ajuda`", true);
-            embed.AddField("Combate".Titulo().Bold(), "`!atacar\n!explorar\n!descer\n!subir\n!usar-pocao\n!olhar\n!pegar`", true);
-            embed.AddField("Outros".Titulo().Bold(), "`setimage`", true);
+            //!equipamentos!equipar!desequipar
+            embed.WithDescription("Escreva `!ajuda [comando]` para mais ajuda. Por exemplo: `!ajuda status`");
+
+            embed.AddField("Comando principal".Titulo().Bold(), FormatarURL("criar-personagem", "Permite criar o seu personagem escolhendo uma das 7 classes disponíveis") +
+                FormatarURL("status", "Permite ver o seu status ou a de outra pessoa"), true);
+
+            embed.AddField("Itens".Titulo().Bold(), FormatarURL("mochila", "Permite ver os itens da mochila") +
+                FormatarURL("equipamentos", "Permite ver os itens equipados") +
+                FormatarURL("equipar", "Permite equipar itens") +
+                FormatarURL("desequipar", "Permite desequipr itens equipados"), true);
+
+            embed.AddField("Ajuda".Titulo().Bold(), FormatarURL("wiki", "Wiki oficial do bot") +
+                FormatarURL("ajuda", "Mostra todos os comandos e ajuda do comando especificado"), true);
+
+            embed.AddField("Combate".Titulo().Bold(), FormatarURL("atacar", "Permite atacar um monstro que encontra na sua frente\nAtalhos: !at") +
+                FormatarURL("explorar", "Permite explorar o andar por mais monstros") +
+                FormatarURL("descer", "Permite descer um andar") +
+                FormatarURL("subir", "Permite subir um andar") +
+                FormatarURL("usar-pocao", "Permite usar uma poção que se encontra no cinto") +
+                FormatarURL("olhar", "Permite olhar os itens no chão") +
+                FormatarURL("pegar", "Permite pegar um item que está no chão"), true);
+
+            embed.AddField("Outros".Titulo().Bold(), FormatarURL("setimage", "Permite escolher uma imagem para o retrato"), true);
+
             embed.WithImageUrl("https://cdn.discordapp.com/attachments/750081991046856814/755886689523859536/VaalTower.jpg");
+            embed.WithThumbnail("https://cdn.discordapp.com/attachments/736163626934861845/742671714386968576/help_animated_x4_1.gif");
             embed.WithColor(DiscordColor.Violet);
             embed.WithTimestamp(DateTime.Now);
+            embed.WithFooter("Passe o mouse em cima para mais info!");
             return embed.Build();
         }
+
+        public string FormatarURL(string comando, string hover)
+            => Formatter.MaskedUrl($"`!{comando}` ", new Uri("https://discord.gg/MAR4NFq"), hover);
     }
 }
