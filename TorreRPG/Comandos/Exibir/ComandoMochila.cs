@@ -1,10 +1,8 @@
 ﻿using TorreRPG.Entidades;
-using TorreRPG.Enuns;
 using TorreRPG.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +11,7 @@ namespace TorreRPG.Comandos.Exibir
     public class ComandoMochila : BaseCommandModule
     {
         [Command("mochila")]
+        [Description("Permite ver os itens que estão na mochila. Você consegue itens de monstros, vendendo e trocando com outros jogadores.")]
         public async Task ComandoMochilaAsync(CommandContext ctx)
         {
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
