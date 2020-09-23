@@ -202,12 +202,9 @@ namespace TorreRPG.Entidades
                         if (regen) continue;
                         regen = true;
                         Vida.Adicionar(Efeitos[i].Quantidade);
-                        ataquesInimigos.AppendLine($"{Efeitos[i].Quantidade.Text()} de vida regenerado.");
+                        ataquesInimigos.AppendLine($":sparkling_heart:+{Efeitos[i].Quantidade.Text()}.".Bold());
                         if (Efeitos[i].Usar())
-                        {
                             Efeitos.RemoveAt(i);
-                            ataquesInimigos.AppendLine($"Regen de vida acabou.".Bold());
-                        }
                         break;
                 }
             }

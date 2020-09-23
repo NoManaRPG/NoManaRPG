@@ -51,20 +51,14 @@ namespace TorreRPG.Entidades
             return quantidadeInimigo;
         }
 
-        public bool SortearItem(RPMonstro monstro, double chancePersonagem, out int drops)
+        public void SortearItem(RPMonstro monstro, double chancePersonagem)
         {
-            drops = 0;
             Monstros.Remove(monstro);
-
             if (monstro.SortearItens(monstro.Nivel, chancePersonagem, out List<RPBaseItem> itens))
             {
                 foreach (var item in itens)
                     ItensNoChao.Add(item);
-                drops = itens.Count;
-                return true;
             }
-
-            return false;
         }
 
         public bool NovaOnda(double velocidadeAtaquePersonagem, out int quantidadeMonstros)

@@ -49,6 +49,7 @@ namespace TorreRPG.Comandos.Acao
                 indexAlvo = Math.Clamp(indexAlvo, 0, personagem.Zona.Monstros.Count - 1);
 
                 StringBuilder resumoBatalha = new StringBuilder();
+                bool monstroMorreu = false;
 
                 // Executa os efeitos ativos no personagem.
                 personagem.CalcEfeitos(resumoBatalha);
@@ -58,8 +59,7 @@ namespace TorreRPG.Comandos.Acao
 
                 // Exibimos a vida/mana do personagem no começo da mensagem.
                 DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
-                embed.AddField($"{Emoji.OrbVida} {"Vida".Titulo()}", $"{personagem.Vida.Atual.Text()}/{personagem.Vida.Maximo.Text()}", true);
-                embed.AddField($"{Emoji.OrbMana} {"Mana".Titulo()}", $"{personagem.Mana.Atual.Text()}/{personagem.Mana.Maximo.Text()}", true);
+
 
                 // Verifica se o personagem vai acertar o monstro
                 var chanceAcertoPersonagem = Calculo.DanoFisicoChanceAcerto(personagem.Precisao.Modificado, personagem.Zona.Monstros[indexAlvo].Evasao);
@@ -73,9 +73,11 @@ namespace TorreRPG.Comandos.Acao
                     // Se o monstro morrer.
                     if (personagem.Zona.Monstros[indexAlvo].Vida <= 0)
                     {
+                        DiscordEmoji xp = DiscordEmoji.FromGuildEmote(ctx.Client, 758439721016885308);
                         double expGanha = Calculo.CalcularEfetividadeXP(personagem.Nivel.Atual, personagem.Zona.Monstros[indexAlvo].Nivel) * personagem.Zona.Monstros[indexAlvo].Exp;
-                        embed.AddField("Mortos".Titulo(), $"{Emoji.CrossBone} {personagem.Zona.Monstros[indexAlvo].Nome.Bold()} ️{Emoji.CrossBone}\n" +
-                            $"+{expGanha.Text()} exp.");
+                        resumoBatalha.AppendLine($"{Emoji.CrossBone} {personagem.Zona.Monstros[indexAlvo].Nome.Bold()} ️{Emoji.CrossBone}\n" +
+                            $"{xp}+{expGanha.Text()}.");
+                        monstroMorreu = true;
 
                         int evoluiu = personagem.AddExp(expGanha);
                         if (evoluiu != 0)
@@ -84,22 +86,17 @@ namespace TorreRPG.Comandos.Acao
                         // Recarrega os frascos
                         foreach (var item in personagem.Frascos)
                             item.AddCarga(1);
-
                         // Dropa itens
-                        if (personagem.Zona.SortearItem(personagem.Zona.Monstros[indexAlvo], personagem.ChanceDrop, out int drops))
-                            embed.AddField("Drops".Titulo(), $"Caiu {drops} itens!");
-
-                        if (personagem.Zona.NovaOnda(personagem.VelocidadeAtaque.Modificado, out int inimigosNovos))
-                            embed.AddField("Nova onda".Titulo(), $"Apareceu {inimigosNovos} monstros!");
+                        personagem.Zona.SortearItem(personagem.Zona.Monstros[indexAlvo], personagem.ChanceDrop);
                     }
                 }
                 else // Caso ele erre o ataque
                     resumoBatalha.AppendLine($"\nVocê errou o ataque!");
 
                 // Informações complementares
-                embed.WithDescription($"Onda {personagem.Zona.OndaAtual.Bold()}/{personagem.Zona.OndaTotal.Bold()}.\n" +
-                 $"Turno {personagem.Zona.Turno}\n" +
-                  $"Inimigos { personagem.Zona.Monstros.Count}");
+                embed.WithDescription($"**Ondas restantes {personagem.Zona.OndaTotal - personagem.Zona.OndaAtual}.** " +
+                 $"**Turno {personagem.Zona.Turno}.**\n" +
+                  $"**Inimigo restante {personagem.Zona.Monstros.Count} .**");
 
                 embed.WithColor(DiscordColor.Blue);
                 // Se o personagem morrer, reseta ele.
@@ -114,6 +111,21 @@ namespace TorreRPG.Comandos.Acao
                 // Exibe o resumo da batalha.. Regens e ataques.
                 embed.AddField("Resumo da batalha".Titulo(), resumoBatalha.ToString());
                 embed.WithAuthor($"{ctx.User.Username} - Nível {personagem.Nivel.Atual} - {personagem.Classe} - {personagem.Nome}", iconUrl: ctx.User.AvatarUrl);
+                embed.WithThumbnail("https://cdn.discordapp.com/attachments/758139402219159562/758425473541341214/sword-and-shield-icon-17.png");
+
+                if (personagem.Zona.ItensNoChao.Count != 0)
+                    embed.AddField("Itens no chão".Titulo().Bold(), $":mag: {personagem.Zona.ItensNoChao.Count.Bold()} item. ");
+
+                // Adiciona nova onda.
+                if (monstroMorreu)
+                {
+                    if (personagem.Zona.NovaOnda(personagem.VelocidadeAtaque.Modificado, out int inimigosNovos))
+                        embed.AddField("Nova onda".Titulo(), $"Apareceu {inimigosNovos} monstros!");
+                }
+
+                embed.AddField($"{Emoji.OrbVida} {"Vida".Titulo()}", $"{personagem.Vida.Atual.Text()}/{personagem.Vida.Maximo.Text()}", true);
+                embed.AddField($"{Emoji.OrbMana} {"Mana".Titulo()}", $"{personagem.Mana.Atual.Text()}/{personagem.Mana.Maximo.Text()}", true);
+
 
                 // Salvamos.
                 await banco.EditJogadorAsync(jogador);
