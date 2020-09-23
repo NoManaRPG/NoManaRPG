@@ -33,6 +33,11 @@ namespace TorreRPG.Comandos.Acao
                     await ctx.RespondAsync($"{ctx.User.Mention}, você só pode usar poções em batalha.");
                     return;
                 }
+                if(personagem.Frascos.Count == 0)
+                {
+                    await ctx.RespondAsync($"{ctx.User.Mention}, você não tem frascos equipados para usar.");
+                    return;
+                }
                 stringPosicao = Math.Clamp(stringPosicao, 0, personagem.Frascos.Count - 1);
 
                 if (personagem.Frascos[stringPosicao].CargasAtual >= personagem.Frascos[stringPosicao].CargasUso)
