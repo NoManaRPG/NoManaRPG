@@ -42,7 +42,7 @@ namespace TorreRPG.Eventos
                     }
                     break;
                 case CommandNotFoundException cnfe:
-                    if (e.Command.Name == "ajuda")
+                    if (e.Command?.Name == "ajuda")
                     {
                         DiscordEmoji x = DiscordEmoji.FromName(ctx.Client, ":no_entry_sign:");
                         await ctx.RespondAsync($"{x} | {ctx.User.Mention} o comando {e.Context.RawArgumentString} não existe.*");
