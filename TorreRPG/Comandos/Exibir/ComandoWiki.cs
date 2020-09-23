@@ -7,11 +7,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using TorreRPG.Atributos;
 
 namespace TorreRPG.Comandos.Exibir
 {
     [Group("wiki")]
-    [Cooldown(1, 5, CooldownBucketType.User)]
+    [Description("Permite ver a wiki oficial.")]
+    [ComoUsar("wiki ler [#ID]")]
+    [Exemplo("wiki ler axd")]
     public class ComandoWiki : BaseCommandModule
     {
 
