@@ -65,6 +65,8 @@ namespace TorreRPG.Comandos.Acao
                     case "mao principal":
                     case "primeira":
                     case "principal":
+                    case "mao1":
+                    case "m1":
                         // Verifica se tem algo equipado
                         if (personagem.MaoPrincipal == null)
                         {
@@ -79,6 +81,8 @@ namespace TorreRPG.Comandos.Acao
                     case "segunda mao":
                     case "segunda":
                     case "mao secundaria":
+                    case "mao2":
+                    case "m2":
                         // Verifica se tem algo equipado
                         if (personagem.MaoSecundaria == null)
                         {
