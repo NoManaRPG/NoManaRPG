@@ -3,15 +3,18 @@ using TorreRPG.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using System.Globalization;
-using System.Text;
 using System.Threading.Tasks;
+using TorreRPG.Atributos;
 
 namespace TorreRPG.Comandos.Acao
 {
     public class ComandoCriarPersonagem : BaseCommandModule
     {
         [Command("criar-personagem")]
+        [Aliases("cp")]
+        [Description("Permite criar um personagem com uma das 7 classes disponíveis e com um nome personalizado.")]
+        [ComoUsar("criar-personagem [CLASSE] [NOME DO PERSONAGEM]")]
+        [Exemplo("criar-personagem Caçadora Arqueiro Verde")]
         [Cooldown(1, 10, CooldownBucketType.User)]
         public async Task CriarPersonagemAsync(CommandContext ctx, string classe = null, [RemainingText] string nomePersonagem = null)
         {
@@ -22,6 +25,7 @@ namespace TorreRPG.Comandos.Acao
             {
                 DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
                 embed.WithColor(DiscordColor.Gold);
+                embed.WithDescription($"Escolha uma classe com o comando `criar-personagem [classe] [nome do personagem]`.");
                 embed.AddField("Caçadora".Titulo(), "Foco em: Destreza", true);
                 embed.AddField("Berserker".Titulo(), "Foco em: Força", true);
                 embed.AddField("Bruxa".Titulo(), "Foco em: Inteligência", true);
@@ -29,7 +33,7 @@ namespace TorreRPG.Comandos.Acao
                 embed.AddField("Templário".Titulo(), "Foco em: Força e Inteligência", true);
                 embed.AddField("Sombra".Titulo(), "Foco em: Destreza e Inteligência", true);
                 embed.AddField("Herdeira".Titulo(), "Foco em : Força, Destreza e Inteligência", true);
-                await ctx.RespondAsync("Escolha uma classe com o comando `criar-personagem [classe] [nome do personagem]`. Não utilize colchetes!", embed: embed.Build());
+                await ctx.RespondAsync(embed: embed.Build());
                 return;
             }
 
