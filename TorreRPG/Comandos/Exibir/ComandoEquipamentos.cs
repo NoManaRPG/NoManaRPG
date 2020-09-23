@@ -12,6 +12,7 @@ namespace TorreRPG.Comandos.Exibir
     {
         [Command("equipamentos")]
         [Aliases("eq")]
+        [Description("Permite todos os itens equipados no seu personagem. Cada item está separado por `⌈SLOT⌋`.")]
         public async Task ComandoEquipamentosAsync(CommandContext ctx)
         {
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
