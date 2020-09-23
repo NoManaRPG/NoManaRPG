@@ -9,6 +9,7 @@ namespace TorreRPG.Comandos.Acao
     public class ComandoExplorar : BaseCommandModule
     {
         [Command("explorar")]
+        [Description("Permite procurar por novos inimigos no andar atual!")]
         public async Task ComandoExplorarAsync(CommandContext ctx)
         {
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
