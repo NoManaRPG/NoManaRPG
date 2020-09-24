@@ -37,7 +37,8 @@ namespace TorreRPG.Comandos.Exibir
                 var item = personagem.Mochila.Itens.ElementAtOrDefault(id);
                 if (item != null)
                 {
-                    var embed = ItemDescricao(item);
+                    DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
+                    ItemDescricao(embed, item);
                     embed.WithAuthor($"{ctx.User.Username} - {personagem.Nome}", iconUrl: ctx.User.AvatarUrl);
                     embed.WithTitle($"`#{id}` {item.TipoBaseModificado.Titulo().Bold()}");
                     embed.WithColor(DiscordColor.Yellow);
@@ -49,9 +50,8 @@ namespace TorreRPG.Comandos.Exibir
             else
                 await ctx.RespondAsync($"{ctx.User.Mention}, o `#ID` precisa ser numérico. Digite `!mochila` para encontrar `#ID`s.");
         }
-        public static DiscordEmbedBuilder ItemDescricao(RPBaseItem item)
+        public static void ItemDescricao(DiscordEmbedBuilder embed, RPBaseItem item)
         {
-            DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
             switch (item)
             {
                 case RPFrascoVida frascoVida:
@@ -61,7 +61,6 @@ namespace TorreRPG.Comandos.Exibir
                     embed.WithDescription(arma.Descricao());
                     break;
             }
-            return embed;
         }
     }
 }

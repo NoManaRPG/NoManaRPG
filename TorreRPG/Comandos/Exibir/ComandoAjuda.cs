@@ -125,10 +125,12 @@ namespace TorreRPG.Comandos.Exibir
 
             embed.AddField("Combate".Titulo().Bold(), FormatarURL("atacar", "Permite atacar um monstro que encontra na sua frente\nAtalhos: !at") +
                 FormatarURL("explorar", "Permite explorar o andar por mais monstros") +
+                FormatarURL("monstros", "Permite ver os monstros que estão na sua frente") +
+                FormatarURL("zona", "Permite ver informações sobre a zona atual") +
                 FormatarURL("descer", "Permite descer um andar") +
                 FormatarURL("subir", "Permite subir um andar") +
                 FormatarURL("usar-pocao", "Permite usar uma poção que se encontra no cinto") +
-                FormatarURL("olhar", "Permite olhar os itens no chão") +
+                FormatarURL("chao", "Permite olhar os itens que estão no chão") +
                 FormatarURL("pegar", "Permite pegar um item que está no chão"), true);
 
             embed.AddField("Outros".Titulo().Bold(), FormatarURL("setimage", "Permite escolher uma imagem para o retrato"), true);

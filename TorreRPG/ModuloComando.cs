@@ -28,7 +28,7 @@ namespace TorreRPG
             Comandos.RegisterCommands<ComandoDescer>();
             Comandos.RegisterCommands<ComandoSubir>();
             Comandos.RegisterCommands<ComandoExplorar>();
-            Comandos.RegisterCommands<ComandoOlhar>();
+            Comandos.RegisterCommands<ComandoZona>();
             Comandos.RegisterCommands<ComandoUsarPocao>();
             Comandos.RegisterCommands<ComandoPegar>();
             Comandos.RegisterCommands<ComandoMochila>();
@@ -37,6 +37,8 @@ namespace TorreRPG
             Comandos.RegisterCommands<ComandoDesequipar>();
             Comandos.RegisterCommands<ComandoSetImage>();
             Comandos.RegisterCommands<ComandoExaminar>();
+            Comandos.RegisterCommands<ComandoChao>();
+            Comandos.RegisterCommands<ComandoMonstros>();
         }
     }
 }
