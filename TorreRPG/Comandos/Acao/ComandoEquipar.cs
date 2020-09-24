@@ -70,14 +70,14 @@ namespace TorreRPG.Comandos.Acao
                             if (personagem.MaoPrincipal != null)
                             {
                                 // Avisa
-                                await ctx.RespondAsync($"{ctx.User.Mention}, as duas mãos já estão ocupadas segurando outro item!");
+                                await ctx.RespondAsync($"{ctx.User.Mention}, este item precisa das duas mãos livres!");
                                 return;
                             }
 
                             if (personagem.MaoSecundaria != null)
                             {
                                 // Avisa
-                                await ctx.RespondAsync($"{ctx.User.Mention}, as duas mãos já estão ocupadas segurando outro item!");
+                                await ctx.RespondAsync($"{ctx.User.Mention}, este item precisa das duas mãos livres!");
                                 return;
                             }
 
