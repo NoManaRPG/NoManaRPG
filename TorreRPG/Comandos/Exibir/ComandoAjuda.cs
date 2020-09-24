@@ -116,6 +116,7 @@ namespace TorreRPG.Comandos.Exibir
 
             embed.AddField("Itens".Titulo().Bold(), FormatarURL("mochila", "Permite ver os itens da mochila") +
                 FormatarURL("equipamentos", "Permite ver os itens equipados") +
+                FormatarURL("examinar", "Permite ver a descrição de um item") +
                 FormatarURL("equipar", "Permite equipar itens") +
                 FormatarURL("desequipar", "Permite desequipr itens equipados"), true);
 

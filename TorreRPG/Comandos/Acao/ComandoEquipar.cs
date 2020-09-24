@@ -17,14 +17,14 @@ namespace TorreRPG.Comandos.Acao
         [Description("Permite equipar um item.\n`#ID` se contra na mochila.")]
         [ComoUsar("equipar [#ID]")]
         [Exemplo("equipar #1")]
-        public async Task ComandoEquiparAsync(CommandContext ctx, string stringIndexItem = "")
+        public async Task ComandoEquiparAsync(CommandContext ctx, string stringIndexItem = "0")
         {
             var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
             if (jogadorNaoExisteAsync) return;
 
             if (!stringIndexItem.TryParseID(out int indexItem))
             {
-                await ctx.RespondAsync($"{ctx.User.Mention}, informe um `#ID` que se encontra na mochila!");
+                await ctx.RespondAsync($"{ctx.User.Mention}, o `#ID` precisa ser numérico. Digite `!mochila` para encontrar `#ID`s.");
                 return;
             }
 

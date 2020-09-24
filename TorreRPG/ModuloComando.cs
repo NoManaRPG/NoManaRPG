@@ -36,6 +36,7 @@ namespace TorreRPG
             Comandos.RegisterCommands<ComandoEquipar>();
             Comandos.RegisterCommands<ComandoDesequipar>();
             Comandos.RegisterCommands<ComandoSetImage>();
+            Comandos.RegisterCommands<ComandoExaminar>();
         }
     }
 }
