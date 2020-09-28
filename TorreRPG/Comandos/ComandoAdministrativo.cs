@@ -11,6 +11,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using TorreRPG.Extensoes;
 using TorreRPG.Entidades.Itens;
+using System.Drawing;
+using System.IO;
+using System.Drawing.Imaging;
+using System.Drawing.Text;
+using System.Drawing.Drawing2D;
 
 namespace TorreRPG.Comandos
 {
@@ -138,15 +143,49 @@ namespace TorreRPG.Comandos
             }
         }
 
+        private static ImageCodecInfo GetEncoder(System.Drawing.Imaging.ImageFormat format)
+        {
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
+            foreach (ImageCodecInfo codec in codecs)
+                if (codec.FormatID == format.Guid)
+                    return codec;
+            return null;
+        }
+
         [Command("teste")]
         [RequireOwner]
-        public async Task testeCalc(CommandContext ctx)
+        public async Task testeCalc(CommandContext ctx, [RemainingText] string text)
         {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                ImageCodecInfo jpgEncoder = GetEncoder(System.Drawing.Imaging.ImageFormat.Jpeg);
+                Encoder myEncoder = Encoder.Quality;
+                EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 70L);
+                EncoderParameters myEncoderParameters = new EncoderParameters(1);
 
-            var jog = await ModuloBanco.GetJogadorAsync(ctx);
-            jog.Personagem.Zona = null;
-            ModuloBanco.ColecaoJogador.ReplaceOne(x => x.Id == ctx.User.Id, jog);
-            await ctx.RespondAsync("Atualiado");
+                myEncoderParameters.Param[0] = myEncoderParameter;
+
+                PointF firstLocation = new PointF(90f, 289f);
+
+                string imageFilePath = @"C:\Users\Talion\Desktop\template.png";
+                Bitmap bitmap = (Bitmap)Image.FromFile(imageFilePath);//load the image file
+
+                using (Graphics graphics = Graphics.FromImage(bitmap))
+                {
+                    graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                    graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+                    using (Font arialFont = new Font("Arial", 89, FontStyle.Italic | FontStyle.Bold))
+                    {
+                        graphics.DrawString(text, arialFont, Brushes.White, firstLocation);
+                    }
+                }
+                bitmap.Save(@"C:\Users\Talion\Desktop\teste.png");
+
+                new Bitmap(bitmap).Save(memoryStream, jpgEncoder, myEncoderParameters); //save the image file
+                memoryStream.Position = 0;
+                await ctx.RespondWithFileAsync("Perfil.jpeg", memoryStream);
+            }
+
             //var numeroRandom = Calculo.SortearValor(0, 100.0);
             //switch (numeroRandom)
             //{

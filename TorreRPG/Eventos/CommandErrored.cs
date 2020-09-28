@@ -9,6 +9,7 @@ using MongoDB.Driver;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace TorreRPG.Eventos
 {
@@ -60,7 +61,7 @@ namespace TorreRPG.Eventos
                 //    //await ctx.ExecutarComandoAsync("ajuda " + e.Command.Name);
                 //    break;
                 default:
-                    e.Context.Client.DebugLogger.LogMessage(LogLevel.Debug, "Erro", $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
+                    e.Context.Client.Logger.Log(LogLevel.Debug, "Erro", $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
 
                     DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
                     embed.WithAuthor($"{e.Context.User.Username}({e.Context.User.Id})", null, e.Context.User.AvatarUrl);

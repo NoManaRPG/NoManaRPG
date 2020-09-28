@@ -1,6 +1,7 @@
 ﻿using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ namespace TorreRPG.Eventos
     {
         public static Task Event(ReadyEventArgs e, DiscordClient client)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "Dragon", "Cliente está pronto.", DateTime.Now);
+            e.Client.Logger.Log(LogLevel.Information, "Dragon", "Cliente está pronto.", DateTime.Now);
             client.UpdateStatusAsync(new DiscordActivity($"!ajuda", ActivityType.Playing), UserStatus.Online);
             return Task.CompletedTask;
         }

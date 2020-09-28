@@ -3,6 +3,7 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace TorreRPG
 {
@@ -34,10 +35,9 @@ namespace TorreRPG
                 ReconnectIndefinitely = true,
                 GatewayCompressionLevel = GatewayCompressionLevel.Stream,
                 AutoReconnect = true,
-                UseInternalLogHandler = true,
 #if DEBUG
                 Token = configFile.TokenTeste,
-                LogLevel = LogLevel.Debug,
+                MinimumLogLevel = LogLevel.Debug,
 #else
                 Token = configFile.Token,
                 LogLevel = LogLevel.Info,

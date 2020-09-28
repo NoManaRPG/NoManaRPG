@@ -6,10 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00709" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00709" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00709" />
+    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00728" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00728" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00728" />
     <PackageReference Include="MongoDB.Driver" Version="2.10.4" />
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
   </ItemGroup>
 
 </Project>
