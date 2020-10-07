@@ -5,6 +5,8 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System.Text;
 using System.Threading.Tasks;
+using TorreRPG.Entidades.Itens.Currency;
+using TorreRPG.Entidades.Itens;
 
 namespace TorreRPG.Comandos.Exibir
 {
@@ -22,8 +24,17 @@ namespace TorreRPG.Comandos.Exibir
 
             StringBuilder str = new StringBuilder();
             for (int i = 0; i < personagem.Mochila.Itens.Count; i++)
-                str.AppendLine($"`#{i}` {personagem.Mochila.Itens[i].TipoBaseModificado.Titulo().Bold()} ");
-
+            {
+                var item = personagem.Mochila.Itens[i];
+                str.Append($"`#{i}` {item.TipoBaseModificado.Titulo().Bold()} ");
+                switch (item)
+                {
+                    case RPBaseCurrency rcp:
+                        str.Append($"*x{rcp.PilhaAtual}*");
+                        break;
+                }
+                str.AppendLine();
+            }
 
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
             embed.WithAuthor($"{ctx.User.Username} - Nível {personagem.Nivel.Atual} - {personagem.Classe}", iconUrl: ctx.User.AvatarUrl);

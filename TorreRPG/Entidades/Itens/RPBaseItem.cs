@@ -1,12 +1,13 @@
 ﻿using TorreRPG.Enuns;
 using MongoDB.Bson.Serialization.Attributes;
+using TorreRPG.Entidades.Itens.Currency;
 
 namespace TorreRPG.Entidades.Itens
 {
     [BsonIgnoreExtraElements]
     [BsonKnownTypes(typeof(RPArmaAdaga), typeof(RPArmaArco), typeof(RPBaseItemArma), typeof(RPBaseItemEquipavel), typeof(RPArmaCetro),
        typeof(RPArmaEspada), typeof(RPBaseFrasco), typeof(RPFrascoVida), typeof(RPArmaMacaUmaMao), typeof(RPArmaMachadoUmaMao),
-        typeof(RPArmaVarinha))]
+        typeof(RPArmaVarinha), typeof(RPBaseCurrency), typeof(RPCurrencyPergaminho))]
     public class RPBaseItem
     {
         public int DropLevel { get; set; } // Nível que começa a cair

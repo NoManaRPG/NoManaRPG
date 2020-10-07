@@ -40,7 +40,7 @@ namespace TorreRPG
                 MinimumLogLevel = LogLevel.Debug,
 #else
                 Token = configFile.Token,
-                LogLevel = LogLevel.Info,
+                MinimumLogLevel = LogLevel.Information,
 #endif
             });
             ModuloComandos todosOsComandos = new ModuloComandos(new CommandsNextConfiguration

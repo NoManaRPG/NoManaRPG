@@ -7,7 +7,7 @@ using TorreRPG.Enuns;
 namespace TorreRPG.Metadata.Itens.Frascos
 {
     public class FrascosVida
-    {
+    {   
         public List<RPFrascoVida> FrascosVidaAb()
         {
             var frask = new List<RPFrascoVida>();

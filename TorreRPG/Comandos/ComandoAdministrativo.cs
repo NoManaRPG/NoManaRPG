@@ -45,15 +45,6 @@ namespace TorreRPG.Comandos
 
                     foreach (RPJogador user in usuarios)
                     {
-                        user.Personagem.Mochila.Espaco = 0;
-                        for (int i = user.Personagem.Mochila.Itens.Count - 1; i >= 0; i--)
-                        {
-                            user.Personagem.Mochila = new RPMochila();
-                            user.Personagem.DanoFisicoExtra = new RPDano(0, 0);
-                            user.Personagem.CalcDano();
-                            user.Personagem.MaoPrincipal = null;
-                            user.Personagem.MaoSecundaria = null;
-                        };
                         await ModuloBanco.ColecaoJogador.ReplaceOneAsync(x => x.Id == user.Id, user);
                     }
                 }
@@ -139,6 +130,26 @@ namespace TorreRPG.Comandos
                 await banco.EditJogadorAsync(jogador);
                 await session.CommitTransactionAsync();
                 await ctx.RespondAsync($"Inimigos mortos para {member.Mention}!");
+
+            }
+        }
+
+
+        [Command("currency")]
+        [RequireOwner]
+        public async Task Currency(CommandContext ctx)
+        {
+            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+            {
+                BancoSession banco = new BancoSession(session);
+                RPJogador jogador = await banco.GetJogadorAsync(ctx.User);
+                RPPersonagem personagem = jogador.Personagem;
+
+                personagem.Mochila.TryAddItem(new TorreRPG.Metadata.Itens.Currency.CurrencyPergaminho().PergaminhoFragmento1());
+
+                await banco.EditJogadorAsync(jogador);
+                await session.CommitTransactionAsync();
+                await ctx.RespondAsync($"Adicionado!");
 
             }
         }

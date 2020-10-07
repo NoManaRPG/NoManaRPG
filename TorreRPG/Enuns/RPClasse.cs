@@ -10,5 +10,9 @@ namespace TorreRPG.Enuns
         DuasMao,
         [Description("Arma de Uma Mão")]
         UmaMao,
+        [Description("Fragmento de Pergaminho")]
+        FragmentoPergaminho,
+        [Description("Pergaminho")]
+        Pergaminho,
     }
 }

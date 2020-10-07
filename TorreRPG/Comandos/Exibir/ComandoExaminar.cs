@@ -7,6 +7,7 @@ using DSharpPlus.Entities;
 using System.Linq;
 using System.Threading.Tasks;
 using TorreRPG.Atributos;
+using TorreRPG.Entidades.Itens.Currency;
 
 namespace TorreRPG.Comandos.Exibir
 {
@@ -59,6 +60,9 @@ namespace TorreRPG.Comandos.Exibir
                     break;
                 case RPBaseItemArma arma:
                     embed.WithDescription(arma.Descricao());
+                    break;
+                case RPCurrencyPergaminho pergaminho:
+                    embed.WithDescription(pergaminho.Descricao());
                     break;
             }
         }
