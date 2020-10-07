@@ -1,5 +1,4 @@
 ﻿using DSharpPlus;
-using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,10 +8,10 @@ namespace TorreRPG.Eventos
 {
     public static class ClientErrored
     {
-        public static Task Event(ClientErrorEventArgs e)
+        public static Task Event(DiscordClient client, ClientErrorEventArgs e)
         {
             string erro = $"{e.Exception.GetType()}: {e.Exception.Message}";
-            e.Client.Logger.Log(LogLevel.Error, "Dragon", erro, DateTime.Now);
+            client.Logger.Log(LogLevel.Error, "Dragon", erro, DateTime.Now);
             return Task.CompletedTask;
         }
     }

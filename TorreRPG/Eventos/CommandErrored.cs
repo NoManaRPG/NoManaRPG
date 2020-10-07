@@ -1,5 +1,4 @@
 ﻿using TorreRPG.Extensoes;
-using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
@@ -16,7 +15,7 @@ namespace TorreRPG.Eventos
     public static class CommandErrored
     {
         //Envia mensagem ao receber um erro.
-        public static async Task EventAsync(CommandErrorEventArgs e)
+        public static async Task EventAsync(CommandsNextExtension cnt, CommandErrorEventArgs e)
         {
             CommandContext ctx = e.Context;
             switch (e.Exception)

@@ -18,8 +18,8 @@ namespace TorreRPG
 #endif
 
             Client = new DiscordClient(discordConfiguration);
-            Client.Ready += (e) => Ready.Event(e, Client);
-            Client.GuildAvailable += (e) => GuildAvailable.Event(e, Bot);
+            Client.Ready += Ready.Event;
+            Client.GuildAvailable += (c, e) => GuildAvailable.Event(c, e, Bot);
             Client.ClientErrored += ClientErrored.Event;
             Client.MessageCreated += MessageCreated.EventAsync;
         }

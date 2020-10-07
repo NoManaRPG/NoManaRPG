@@ -1,5 +1,4 @@
 ﻿using TorreRPG.Extensoes;
-using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using System;
 using System.Threading.Tasks;
@@ -9,9 +8,9 @@ namespace TorreRPG.Eventos
 {
     public static class CommandExecuted
     {
-        public static Task Event(CommandExecutionEventArgs e)
+        public static Task Event(CommandsNextExtension cne, CommandExecutionEventArgs e)
         {
-            e.Context.Client.Logger.Log(LogLevel.Information, $"({e.Context.Guild.Id}) " +
+            cne.Client.Logger.Log(LogLevel.Information, $"({e.Context.Guild.Id}) " +
                 $"{e.Context.Guild.Name.RemoverAcentos()}", $"({e.Context.User.Id}) " +
                 $"{e.Context.User.Username.RemoverAcentos()} executou '{e.Command.QualifiedName}'", DateTime.Now);
             return Task.CompletedTask;
