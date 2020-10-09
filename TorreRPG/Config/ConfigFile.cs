@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
 
-namespace TorreRPG
+namespace TorreRPG.Config
 {
     public class ConfigFile
     {

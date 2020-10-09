@@ -3,20 +3,25 @@ using TorreRPG.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System.Threading.Tasks;
+using TorreRPG.Services;
+using System;
 
 namespace TorreRPG.Comandos.Acao
 {
     public class ComandoExplorar : BaseCommandModule
     {
+        public Banco banco { private get; set; }
+
         [Command("explorar")]
         [Description("Permite procurar por novos inimigos no andar atual!")]
         public async Task ComandoExplorarAsync(CommandContext ctx)
         {
-            var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
-            if (jogadorNaoExisteAsync) return;
+            // Verifica se existe o jogador,
+            var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
+            if (naoCriouPersonagem) return;
 
             int inimigos = 0;
-            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+            using (var session = await banco.Cliente.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);

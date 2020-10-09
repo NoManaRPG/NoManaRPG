@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace TorreRPG
+namespace TorreRPG.Config
 {
     public class BotInfo
     {

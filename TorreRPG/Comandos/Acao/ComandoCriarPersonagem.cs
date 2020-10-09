@@ -5,11 +5,14 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System.Threading.Tasks;
 using TorreRPG.Atributos;
+using TorreRPG.Services;
 
 namespace TorreRPG.Comandos.Acao
 {
     public class ComandoCriarPersonagem : BaseCommandModule
     {
+        public Banco banco { private get; set; }
+
         [Command("criar-personagem")]
         [Aliases("cp")]
         [Description("Permite criar um personagem com uma das 7 classes disponíveis e com um nome personalizado.")]
@@ -111,7 +114,7 @@ namespace TorreRPG.Comandos.Acao
         private async Task<bool> JogadorExisteAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            RPJogador jogador = await ModuloBanco.GetJogadorAsync(ctx);
+            RPJogador jogador = await banco.GetJogadorAsync(ctx);
             if (jogador == null) return false;
             await ctx.RespondAsync($"{ctx.User.Mention}, você já criou um personagem e por isso não pode usar este comando novamente!");
             return true;
@@ -119,7 +122,7 @@ namespace TorreRPG.Comandos.Acao
 
         private async Task CriarJogador(CommandContext ctx, RPPersonagem personagem)
         {
-            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+            using (var session = await banco.Cliente.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = new RPJogador(ctx, personagem);

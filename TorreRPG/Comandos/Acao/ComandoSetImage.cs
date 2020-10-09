@@ -1,21 +1,26 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using System;
 using System.Threading.Tasks;
 using TorreRPG.Entidades;
 using TorreRPG.Extensoes;
+using TorreRPG.Services;
 
 namespace TorreRPG.Comandos.Acao
 {
     public class ComandoSetImage : BaseCommandModule
     {
+        public Banco banco { private get; set; }
+
         [Command("setimage")]
         [Description("Altera a foto do retrato, indique um número de 0 a 13...")]
         public async Task SetImageAsync(CommandContext ctx, int numero = 1)
         {
-            var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
-            if (jogadorNaoExisteAsync) return;
+            // Verifica se existe o jogador,
+            var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
+            if (naoCriouPersonagem) return;
 
-            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+            using (var session = await banco.Cliente.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);

@@ -6,20 +6,25 @@ using DSharpPlus.CommandsNext.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TorreRPG.Services;
+using TorreRPG.BancoItens;
 
 namespace TorreRPG.Comandos.Acao
 {
     public class ComandoSubir : BaseCommandModule
     {
+        public Banco banco { private get; set; }
+
         [Command("subir")]
         [Description("Permite subir um andar da torre. Encontra novos inimigos!")]
         public async Task ComandoSubirAsync(CommandContext ctx)
         {
-            var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
-            if (jogadorNaoExisteAsync) return;
+            // Verifica se existe o jogador,
+            var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
+            if (naoCriouPersonagem) return;
 
             int inimigos = 0;
-            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+            using (var session = await banco.Cliente.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);
@@ -31,7 +36,7 @@ namespace TorreRPG.Comandos.Acao
                     return;
                 }
 
-                bool temMonstros = ModuloBanco.MonstrosNomes.ContainsKey(personagem.Zona.Nivel - 1);
+                bool temMonstros = RPMetadata.MonstrosNomes.ContainsKey(personagem.Zona.Nivel - 1);
                 if (temMonstros)
                 {
 

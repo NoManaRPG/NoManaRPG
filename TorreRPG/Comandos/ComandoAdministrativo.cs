@@ -16,41 +16,18 @@ using System.IO;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Drawing.Drawing2D;
+using TorreRPG.Services;
 
 namespace TorreRPG.Comandos
 {
     public class ComandoAdministrativo : BaseCommandModule
     {
+        public Banco banco { private get; set; }
+
         [Command("purge")]
         [RequireUserPermissions(Permissions.Administrator)]
         public async Task PurgeAsync(CommandContext ctx, int quantidade)
             => await ctx.Channel.DeleteMessagesAsync(await ctx.Channel.GetMessagesAsync(quantidade + 1));
-
-        [Command("atualizar")]
-        [RequireUserPermissions(Permissions.Administrator)]
-        public async Task Atualizar(CommandContext ctx)
-        {
-            FilterDefinition<RPJogador> filter = FilterDefinition<RPJogador>.Empty;
-            FindOptions<RPJogador> options = new FindOptions<RPJogador>
-            {
-                BatchSize = 8,
-                NoCursorTimeout = false
-            };
-
-            using (IAsyncCursor<RPJogador> cursor = await ModuloBanco.ColecaoJogador.FindAsync(filter, options))
-            {
-                while (await cursor.MoveNextAsync())
-                {
-                    IEnumerable<RPJogador> usuarios = cursor.Current;
-
-                    foreach (RPJogador user in usuarios)
-                    {
-                        await ModuloBanco.ColecaoJogador.ReplaceOneAsync(x => x.Id == user.Id, user);
-                    }
-                }
-            }
-            await ctx.RespondAsync("Banco foi atualizado com sucesso!");
-        }
 
         [Command("sudo")]
         [RequireOwner]
@@ -64,43 +41,32 @@ namespace TorreRPG.Comandos
                 await ctx.RespondAsync("Comando não encontrado");
                 return;
             }
-
             var cfx = ctx.CommandsNext.CreateFakeContext(member, ctx.Channel, "", "!", cmd, args);
             await ctx.CommandsNext.ExecuteCommandAsync(cfx);
         }
 
-        [Command("restaurarpot")]
+        [Command("deletar-user")]
         [RequireOwner]
-        public async Task GivePot(CommandContext ctx, DiscordUser member)
+        public async Task DeletarUsuarioAsync(CommandContext ctx, [RemainingText] DiscordUser user = null)
         {
-            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
-            {
-                BancoSession banco = new BancoSession(session);
-                RPJogador jogador = await banco.GetJogadorAsync(member);
-                RPPersonagem personagem = jogador.Personagem;
-
-                personagem.Frascos[0].AddCarga(double.MaxValue);
-
-                await banco.EditJogadorAsync(jogador);
-                await session.CommitTransactionAsync();
-                await ctx.RespondAsync($"Poções restaurada para {member.Mention}!");
-
-            }
+            await ctx.TriggerTypingAsync();
+            if (user == null) user = ctx.User;
+            await banco.Jogadores.DeleteOneAsync(x => x.Id == user.Id);
+            await ctx.RespondAsync($"{user} deletado do banco de dados!");
         }
-
 
         [Command("random-item")]
         [RequireOwner]
         public async Task RandomItemAsync(CommandContext ctx, int nivel = 1, [RemainingText] DiscordUser member = null)
         {
-            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+            using (var session = await banco.Cliente.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 if (member == null) member = ctx.User;
                 RPJogador jogador = await banco.GetJogadorAsync(member);
                 RPPersonagem personagem = jogador.Personagem;
 
-                var niveisSeparados = RPBancoItens.Itens.Where(x => x.Key <= nivel);
+                var niveisSeparados = RPMetadata.Itens.Where(x => x.Key <= nivel);
 
                 Random r = new Random();
                 var itens = niveisSeparados.ElementAt(r.Next(0, niveisSeparados.Count()));
@@ -115,11 +81,37 @@ namespace TorreRPG.Comandos
             }
         }
 
+        [Command("atualizar")]
+        [RequireUserPermissions(Permissions.Administrator)]
+        public async Task Atualizar(CommandContext ctx)
+        {
+            FilterDefinition<RPJogador> filter = FilterDefinition<RPJogador>.Empty;
+            FindOptions<RPJogador> options = new FindOptions<RPJogador>
+            {
+                BatchSize = 8,
+                NoCursorTimeout = false
+            };
+
+            using (IAsyncCursor<RPJogador> cursor = await banco.Jogadores.FindAsync(filter, options))
+            {
+                while (await cursor.MoveNextAsync())
+                {
+                    IEnumerable<RPJogador> usuarios = cursor.Current;
+
+                    foreach (RPJogador user in usuarios)
+                    {
+                        await banco.Jogadores.ReplaceOneAsync(x => x.Id == user.Id, user);
+                    }
+                }
+            }
+            await ctx.RespondAsync("Banco foi atualizado com sucesso!");
+        }
+
         [Command("matarinimigos")]
         [RequireOwner]
         public async Task matar(CommandContext ctx, DiscordUser member)
         {
-            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+            using (var session = await banco.Cliente.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(member);
@@ -139,7 +131,7 @@ namespace TorreRPG.Comandos
         [RequireOwner]
         public async Task Currency(CommandContext ctx)
         {
-            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+            using (var session = await banco.Cliente.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(ctx.User);

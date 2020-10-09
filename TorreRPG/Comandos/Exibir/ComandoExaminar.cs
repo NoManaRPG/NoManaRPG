@@ -8,11 +8,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using TorreRPG.Atributos;
 using TorreRPG.Entidades.Itens.Currency;
+using TorreRPG.Services;
+using System;
 
 namespace TorreRPG.Comandos.Exibir
 {
     public class ComandoExaminar : BaseCommandModule
     {
+        public Banco banco { private get; set; }
+
         [Command("examinar")]
         [Aliases("ex")]
         [Description("Permite examinar um item.\n`#ID` se contra na mochila.")]
@@ -20,10 +24,11 @@ namespace TorreRPG.Comandos.Exibir
         [Exemplo("examinar #1")]
         public async Task ComandoExaminarAsync(CommandContext ctx, string idEscolhido = "0")
         {
-            var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
-            if (jogadorNaoExisteAsync) return;
+            // Verifica se existe o jogador,
+            var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
+            if (naoCriouPersonagem) return;
 
-            RPJogador jogador = await ModuloBanco.GetJogadorAsync(ctx);
+            RPJogador jogador = await banco.GetJogadorAsync(ctx);
             RPPersonagem personagem = jogador.Personagem;
 
             if (personagem.Mochila.Itens.Count == 0)

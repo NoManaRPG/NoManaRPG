@@ -7,11 +7,14 @@ using DSharpPlus.Entities;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using TorreRPG.Services;
 
 namespace TorreRPG.Comandos.Acao
 {
     public class ComandoAtacar : BaseCommandModule
     {
+        public Banco banco { private get; set; }
+
         [Command("atacar")]
         [Aliases("at")]
         [Description("Permite atacar um monstro a sua frente.")]
@@ -21,29 +24,28 @@ namespace TorreRPG.Comandos.Acao
         public async Task ComandoAtacarAsync(CommandContext ctx, string stringIndexAlvo = "#0")
         {
             // Verifica se existe o jogador,
-            // Caso não exista avisar no chat e finaliza o metodo.
-            var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
-            if (jogadorNaoExisteAsync) return;
+            var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
+            if (naoCriouPersonagem) return;
+
+            if (personagemNaoModificar.Zona.Monstros.Count == 0)
+            {
+                await ctx.RespondAsync($"{ctx.User.Mention}, você não tem vê monstros para atacar!");
+                return;
+            }
+
+            // Converte o id informado.
+            if (!stringIndexAlvo.TryParseID(out int indexAlvo))
+            {
+                await ctx.RespondAsync($"{ctx.User.Mention}, o `#ID` precisa ser numérico!");
+                return;
+            }
 
             // Inicia uma sessão do Mongo para não ter alteração duplicada.
-            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+            using (var session = await banco.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);
                 RPPersonagem personagem = jogador.Personagem;
-
-                if (personagem.Zona.Monstros.Count == 0)
-                {
-                    await ctx.RespondAsync($"{ctx.User.Mention}, você precisa explorar um andar na torre para poder estar atacando monstros!");
-                    return;
-                }
-
-                // Converte o id informado.
-                if (!stringIndexAlvo.TryParseID(out int indexAlvo))
-                {
-                    await ctx.RespondAsync($"{ctx.User.Mention}, o #ID é numérico!");
-                    return;
-                }
 
                 // Limita o id.
                 indexAlvo = Math.Clamp(indexAlvo, 0, personagem.Zona.Monstros.Count - 1);
@@ -62,7 +64,7 @@ namespace TorreRPG.Comandos.Acao
 
 
                 // Verifica se o personagem vai acertar o monstro
-                var chanceAcertoPersonagem = Calculo.DanoFisicoChanceAcerto(personagem.Precisao.Modificado, personagem.Zona.Monstros[indexAlvo].Evasao);
+                bool chanceAcertoPersonagem = Calculo.DanoFisicoChanceAcerto(personagem.Precisao.Modificado, personagem.Zona.Monstros[indexAlvo].Evasao);
                 if (chanceAcertoPersonagem)
                 {
                     // Randomizamos um dano médio com base no minimo e max da arma equipada.

@@ -5,6 +5,8 @@ using MongoDB.Bson.Serialization.Options;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TorreRPG.BancoItens;
+using TorreRPG.Services;
 
 namespace TorreRPG.Entidades
 {
@@ -38,7 +40,7 @@ namespace TorreRPG.Entidades
             int quantidadeInimigo = Math.Clamp(Convert.ToInt32(Math.Pow(1, nivel)), 0, 1);
             for (int i = 0; i < quantidadeInimigo; i++)
             {
-                var f = ModuloBanco.MonstrosNomes[Nivel];
+                var f = RPMetadata.MonstrosNomes[Nivel];
                 var sorteio = Calculo.SortearValor(0, f.Nomes.Count - 1);
                 var g = f.Nomes[sorteio];
                 RPMonstro m = new RPMonstro(g, nivel);
@@ -77,7 +79,7 @@ namespace TorreRPG.Entidades
                     {
 
                         // Sorteia os monstros
-                        var listaNomes = ModuloBanco.MonstrosNomes[Nivel];
+                        var listaNomes = RPMetadata.MonstrosNomes[Nivel];
                         var nomeSorteado = listaNomes.Nomes[Calculo.SortearValor(0, listaNomes.Nomes.Count - 1)];
                         RPMonstro m = new RPMonstro(nomeSorteado, Nivel);
                         Monstros.Add(m);

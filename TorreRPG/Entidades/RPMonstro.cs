@@ -5,6 +5,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TorreRPG.Services;
 
 namespace TorreRPG.Entidades
 {
@@ -76,7 +77,7 @@ namespace TorreRPG.Entidades
         private RPBaseItem SortearItem(int nivel)
         {
             // Separa os itens por nivel
-            var niveisSeparados = RPBancoItens.Itens.Where(x => x.Key <= nivel);
+            var niveisSeparados = RPMetadata.Itens.Where(x => x.Key <= nivel);
 
             Random r = new Random();
             var itens = niveisSeparados.ElementAt(r.Next(0, niveisSeparados.Count()));

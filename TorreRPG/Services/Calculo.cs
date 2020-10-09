@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TorreRPG
+namespace TorreRPG.Services
 {
     public static class Calculo
     {

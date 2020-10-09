@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using TorreRPG.Services;
 
 namespace TorreRPG.Entidades
 {

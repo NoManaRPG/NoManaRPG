@@ -7,11 +7,15 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System.Linq;
 using System.Threading.Tasks;
+using TorreRPG.Services;
+using System;
 
 namespace TorreRPG.Comandos.Acao
 {
     public class ComandoEquipar : BaseCommandModule
     {
+        public Banco banco { private get; set; }
+
         [Command("equipar")]
         [Aliases("e")]
         [Description("Permite equipar um item.\n`#ID` se contra na mochila.")]
@@ -19,8 +23,9 @@ namespace TorreRPG.Comandos.Acao
         [Exemplo("equipar #1")]
         public async Task ComandoEquiparAsync(CommandContext ctx, string stringIndexItem = "0")
         {
-            var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
-            if (jogadorNaoExisteAsync) return;
+            // Verifica se existe o jogador,
+            var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
+            if (naoCriouPersonagem) return;
 
             if (!stringIndexItem.TryParseID(out int indexItem))
             {
@@ -28,7 +33,7 @@ namespace TorreRPG.Comandos.Acao
                 return;
             }
 
-            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+            using (var session = await banco.Cliente.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);

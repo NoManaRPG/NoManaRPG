@@ -5,11 +5,15 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System.Threading.Tasks;
 using TorreRPG.Atributos;
+using TorreRPG.Services;
+using System;
 
 namespace TorreRPG.Comandos.Exibir
 {
     public class ComandoStatus : BaseCommandModule
     {
+        public Banco banco { private get; set; }
+
         [Command("status")]
         [Description("Permite exibir os status do personagem ou de outro usuário.")]
         [ComoUsar("status")]
@@ -18,7 +22,7 @@ namespace TorreRPG.Comandos.Exibir
         [Cooldown(1, 10, CooldownBucketType.User)]
         public async Task ComandoStatusAb(CommandContext ctx, DiscordUser discordUser)
         {
-            RPJogador jogador = await ModuloBanco.GetJogadorAsync(discordUser);
+            RPJogador jogador = await banco.GetJogadorAsync(discordUser);
             if (jogador == null)
             {
                 await ctx.RespondAsync($"{ctx.User.Mention}, este jogador não tem um personagem ainda! Peça-o para criar um!");
@@ -31,14 +35,15 @@ namespace TorreRPG.Comandos.Exibir
         [Cooldown(1, 10, CooldownBucketType.User)]
         public async Task ComandoStatusAb(CommandContext ctx)
         {
-            var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
-            if (jogadorNaoExisteAsync) return;
+            // Verifica se existe o jogador,
+            var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
+            if (naoCriouPersonagem) return;
             await ctx.RespondAsync(embed: (await GerarStatusAsync(ctx.User)).Build());
         }
 
         public async Task<DiscordEmbedBuilder> GerarStatusAsync(DiscordUser user)
         {
-            RPJogador jogador = await ModuloBanco.GetJogadorAsync(user);
+            RPJogador jogador = await banco.GetJogadorAsync(user);
             RPPersonagem personagem = jogador.Personagem;
 
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();

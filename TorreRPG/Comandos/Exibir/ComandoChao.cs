@@ -7,11 +7,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using TorreRPG.Atributos;
 using System.Text;
+using TorreRPG.Services;
+using System;
 
 namespace TorreRPG.Comandos.Exibir
 {
     public class ComandoChao : BaseCommandModule
     {
+        public Banco banco { private get; set; }
+
         [Command("chao")]
         [Aliases("drop")]
         [Description("Permite examinar um item.\n`#ID` se contra no chão.")]
@@ -19,10 +23,11 @@ namespace TorreRPG.Comandos.Exibir
         [Exemplo("chao #1")]
         public async Task ComandoChaoAsync(CommandContext ctx, string idEscolhido = "")
         {
-            var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
-            if (jogadorNaoExisteAsync) return;
+            // Verifica se existe o jogador,
+            var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
+            if (naoCriouPersonagem) return;
 
-            RPJogador jogador = await ModuloBanco.GetJogadorAsync(ctx);
+            RPJogador jogador = await banco.GetJogadorAsync(ctx);
             RPPersonagem personagem = jogador.Personagem;
 
             if (personagem.Zona.ItensNoChao.Count == 0)

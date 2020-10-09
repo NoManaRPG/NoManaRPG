@@ -4,19 +4,24 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System.Threading.Tasks;
+using TorreRPG.Services;
+using System;
 
 namespace TorreRPG.Comandos.Exibir
 {
     public class ComandoMonstros : BaseCommandModule
     {
+        public Banco banco { private get; set; }
+
         [Command("monstros")]
         [Description("Permite ver os monstros que estão na sua frente.")]
         public async Task ComandoMonstrosAsync(CommandContext ctx)
         {
-            var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
-            if (jogadorNaoExisteAsync) return;
+            // Verifica se existe o jogador,
+            var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
+            if (naoCriouPersonagem) return;
 
-            RPJogador jogador = await ModuloBanco.GetJogadorAsync(ctx);
+            RPJogador jogador = await banco.GetJogadorAsync(ctx);
             RPPersonagem personagem = jogador.Personagem;
 
             if (personagem.Zona.Monstros == null)

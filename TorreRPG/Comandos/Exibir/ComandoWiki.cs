@@ -8,15 +8,17 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using TorreRPG.Atributos;
+using TorreRPG.Services;
 
 namespace TorreRPG.Comandos.Exibir
-{
+{ 
     [Group("wiki")]
     [Description("Permite ver a wiki oficial.")]
     [ComoUsar("wiki ler [#ID]")]
     [Exemplo("wiki ler axd")]
     public class ComandoWiki : BaseCommandModule
     {
+        public Banco banco { private get; set; }
 
         [GroupCommand()]
         public async Task ExecuteGroupAsync(CommandContext ctx)
@@ -25,11 +27,11 @@ namespace TorreRPG.Comandos.Exibir
             int currentPage = (int)1;
             if (currentPage != 0)
                 currentPage = currentPage - 1;
-            double totalDocuments = await ModuloBanco.ColecaoWiki.CountDocumentsAsync(FilterDefinition<Wiki>.Empty);
+            double totalDocuments = await banco.Wikis.CountDocumentsAsync(FilterDefinition<Wiki>.Empty);
             double totalPages = Math.Ceiling(totalDocuments / pageSize);
 
             List<Wiki> list = new List<Wiki>
-                (ModuloBanco.ColecaoWiki.Find(FilterDefinition<Wiki>.Empty)
+                (banco.Wikis.Find(FilterDefinition<Wiki>.Empty)
                .Skip(currentPage * pageSize)
                .Limit(pageSize).ToList());
             StringBuilder str = new StringBuilder();
@@ -48,7 +50,7 @@ namespace TorreRPG.Comandos.Exibir
                 return;
             }
 
-            var wikipedia = await ModuloBanco.ColecaoWiki.Find(x => x.Id == wiki).FirstOrDefaultAsync();
+            var wikipedia = await banco.Wikis.Find(x => x.Id == wiki).FirstOrDefaultAsync();
             if (wikipedia == null)
             {
                 await ctx.RespondAsync("Wiki não encontrada, você informou o ID corretamente?");
@@ -70,7 +72,7 @@ namespace TorreRPG.Comandos.Exibir
             wiki.Texto = new List<string>();
             wiki.Texto.Add("wiki");
             wiki.Texto.Add("wiki");
-            await ModuloBanco.ColecaoWiki.InsertOneAsync(wiki);
+            await banco.Wikis.InsertOneAsync(wiki);
             await ctx.RespondAsync("Criado!");
         }
     }

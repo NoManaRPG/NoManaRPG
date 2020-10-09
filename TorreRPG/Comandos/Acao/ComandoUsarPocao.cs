@@ -5,11 +5,14 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System;
 using System.Threading.Tasks;
+using TorreRPG.Services;
 
 namespace TorreRPG.Comandos.Acao
 {
     public class ComandoUsarPocao : BaseCommandModule
     {
+        public Banco banco { private get; set; }
+
         [Command("usar-pocao")]
         [Aliases("usarp")]
         [Description("Permite usar uma poção que foi equipada no cinto.")]
@@ -17,12 +20,13 @@ namespace TorreRPG.Comandos.Acao
         [Exemplo("usar-porcao 0")]
         public async Task ComandoUsarPocaoAsync(CommandContext ctx, string stringId = "0")
         {
-            var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
-            if (jogadorNaoExisteAsync) return;
+            // Verifica se existe o jogador,
+            var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
+            if (naoCriouPersonagem) return;
 
             bool usouPocao = false;
 
-            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+            using (var session = await banco.Cliente.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);

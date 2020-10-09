@@ -10,11 +10,14 @@ using TorreRPG.Entidades.Itens;
 using TorreRPG.Entidades.Itens.Currency;
 using TorreRPG.Enuns;
 using TorreRPG.Extensoes;
+using TorreRPG.Services;
 
 namespace TorreRPG.Comandos.Acao
 {
     class ComandoVender : BaseCommandModule
     {
+        public Banco banco { private get; set; }
+
         [Command("vender")]
         [Description("Permite vender um item.")]
         [ComoUsar("vender [#ID]")]
@@ -23,9 +26,8 @@ namespace TorreRPG.Comandos.Acao
         public async Task ComandoVenderAsync(CommandContext ctx, string stringId = "")
         {
             // Verifica se existe o jogador,
-            // Caso não exista avisar no chat e finaliza o metodo.
-            var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
-            if (jogadorNaoExisteAsync) return;
+            var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
+            if (naoCriouPersonagem) return;
 
             if (string.IsNullOrEmpty(stringId))
             {
@@ -40,7 +42,7 @@ namespace TorreRPG.Comandos.Acao
                 return;
             }
 
-            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+            using (var session = await banco.Cliente.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);

@@ -5,19 +5,24 @@ using DSharpPlus.CommandsNext.Attributes;
 using System.Linq;
 using System.Threading.Tasks;
 using TorreRPG.Atributos;
+using TorreRPG.Services;
+using System;
 
 namespace TorreRPG.Comandos.Acao
 {
     public class ComandoPegar : BaseCommandModule
     {
+        public Banco banco { private get; set; }
+
         [Command("pegar")]
         [Description("Permite pegar um item que se encontra no chão. `#ID` se encontra no comando `olhar item`.")]
         [ComoUsar("pegar [#ID]")]
         [Exemplo("pegar #1")]
         public async Task ComandoPegarAsync(CommandContext ctx, string stringIndexItem = "0")
         {
-            var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
-            if (jogadorNaoExisteAsync) return;
+            // Verifica se existe o jogador,
+            var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
+            if (naoCriouPersonagem) return;
 
             // Converte o id informado.
             if (!stringIndexItem.TryParseID(out int indexItem))
@@ -26,7 +31,7 @@ namespace TorreRPG.Comandos.Acao
                 return;
             }
 
-            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+            using (var session = await banco.Cliente.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);

@@ -4,15 +4,19 @@ using DSharpPlus.CommandsNext;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using TorreRPG.BancoItens;
+using TorreRPG.Config;
+using TorreRPG.Services;
 
 namespace TorreRPG
 {
     public class Program
     {
         public static ConfigFile configFile;
-        static void Main(string[] args) => new Program().RodarOBotAsync().GetAwaiter().GetResult();
+        static void Main(string[] args) => new Program().RodarBotAsync().GetAwaiter().GetResult();
 
-        public async Task RodarOBotAsync()
+        public async Task RodarBotAsync()
         {
 
 #if DEBUG
@@ -29,7 +33,7 @@ namespace TorreRPG
                 Environment.Exit(0);
             }
 
-            ModuloCliente cliente = new ModuloCliente(new DiscordConfiguration
+            Bot bot = new Bot(new DiscordConfiguration
             {
                 TokenType = TokenType.Bot,
                 ReconnectIndefinitely = true,
@@ -43,7 +47,13 @@ namespace TorreRPG
                 MinimumLogLevel = LogLevel.Information,
 #endif
             });
-            ModuloComandos todosOsComandos = new ModuloComandos(new CommandsNextConfiguration
+
+            // Dependency Injection
+            var services = new ServiceCollection()
+                .AddSingleton<Banco>()
+                .BuildServiceProvider();
+
+            bot.ModuloComando(new CommandsNextConfiguration
             {
 #if DEBUG
                 StringPrefixes = new string[1] { configFile.PrefixTeste },
@@ -55,11 +65,12 @@ namespace TorreRPG
                 EnableDefaultHelp = false,
                 EnableMentionPrefix = true,
                 IgnoreExtraArguments = true,
-            }, ModuloCliente.Client);
+                Services = services,
+            });
 
-            ModuloBanco.Conectar();
+            RPMetadata.Carregar();
 
-            await ModuloCliente.Client.ConnectAsync();
+            await Bot.Cliente.ConnectAsync();
             await Task.Delay(-1);
         }
     }

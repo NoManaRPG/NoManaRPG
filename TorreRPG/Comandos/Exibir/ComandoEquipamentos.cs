@@ -5,20 +5,25 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System.Text;
 using System.Threading.Tasks;
+using TorreRPG.Services;
+using System;
 
 namespace TorreRPG.Comandos.Exibir
 {
     public class ComandoEquipamentos : BaseCommandModule
     {
+        public Banco banco { private get; set; }
+
         [Command("equipamentos")]
         [Aliases("eq")]
         [Description("Permite todos os itens equipados no seu personagem. Cada item está separado por `⌈SLOT⌋`.")]
         public async Task ComandoEquipamentosAsync(CommandContext ctx)
         {
-            var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
-            if (jogadorNaoExisteAsync) return;
+            // Verifica se existe o jogador,
+            var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
+            if (naoCriouPersonagem) return;
 
-            RPJogador jogador = await ModuloBanco.GetJogadorAsync(ctx);
+            RPJogador jogador = await banco.GetJogadorAsync(ctx);
             RPPersonagem personagem = jogador.Personagem;
 
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();

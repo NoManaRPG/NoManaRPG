@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 using TorreRPG.Atributos;
 using System.Linq;
 using System;
+using TorreRPG.Services;
 
 namespace TorreRPG.Comandos.Acao
 {
     public class ComandoDesequipar : BaseCommandModule
     {
+        public Banco banco { private get; set; }
+
         [Command("desequipar")]
         [Description("Permite desequipar um item. Veja no equipamentos os `⌈SLOTS⌋` disponíveis.")]
         [ComoUsar("desequipar [SLOT]")]
@@ -19,10 +22,11 @@ namespace TorreRPG.Comandos.Acao
         [Exemplo("desequipar segunda mão")]
         public async Task ComandoDesequiparAsync(CommandContext ctx, [RemainingText] string itemString = "")
         {
-            var jogadorNaoExisteAsync = await ctx.JogadorNaoExisteAsync();
-            if (jogadorNaoExisteAsync) return;
+            // Verifica se existe o jogador,
+            var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
+            if (naoCriouPersonagem) return;
 
-            using (var session = await ModuloBanco.Cliente.StartSessionAsync())
+            using (var session = await banco.Cliente.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);
