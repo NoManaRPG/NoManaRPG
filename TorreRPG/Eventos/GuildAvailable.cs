@@ -12,7 +12,7 @@ namespace TorreRPG.Eventos
     {
         public static Task Event(DiscordClient client, GuildCreateEventArgs e, BotInfo botInfo)
         {
-            client.Logger.Log(LogLevel.Information, "Dragon", $"Guilda {e.Guild.Name.RemoverAcentos()}", DateTime.Now);
+            client.Logger.LogInformation(new EventId(603, "Nova guilda"), $"Guilda {e.Guild.Name.RemoverAcentos()}", DateTime.Now);
             botInfo.QuantidadeMembros += e.Guild.MemberCount;
             return Task.CompletedTask;
         }

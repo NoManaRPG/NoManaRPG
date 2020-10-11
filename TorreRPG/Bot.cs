@@ -28,7 +28,6 @@ namespace TorreRPG
             Cliente.Ready += Ready.Event;
             Cliente.GuildAvailable += (c, e) => GuildAvailable.Event(c, e, BotInfo);
             Cliente.ClientErrored += ClientErrored.Event;
-            Cliente.MessageCreated += MessageCreated.EventAsync;
         }
 
         public void ModuloComando(CommandsNextConfiguration ccfg)

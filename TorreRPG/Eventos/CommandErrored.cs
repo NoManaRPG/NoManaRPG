@@ -56,11 +56,8 @@ namespace TorreRPG.Eventos
                 case MongoCommandException mce:
                     await ctx.RespondAsync($"{ctx.User.Mention}, o último comando não foi processado corretamente! Tente executar os comandos mais lentamente!");
                     break;
-                //case ArgumentException ax:
-                //    //await ctx.ExecutarComandoAsync("ajuda " + e.Command.Name);
-                //    break;
                 default:
-                    e.Context.Client.Logger.Log(LogLevel.Debug, "Erro", $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
+                    e.Context.Client.Logger.LogDebug(new EventId(601, "Comando Invalido"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
 
                     DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
                     embed.WithAuthor($"{e.Context.User.Username}({e.Context.User.Id})", null, e.Context.User.AvatarUrl);

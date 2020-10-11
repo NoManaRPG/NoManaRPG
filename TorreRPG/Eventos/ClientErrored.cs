@@ -11,7 +11,7 @@ namespace TorreRPG.Eventos
         public static Task Event(DiscordClient client, ClientErrorEventArgs e)
         {
             string erro = $"{e.Exception.GetType()}: {e.Exception.Message}";
-            client.Logger.Log(LogLevel.Error, "Dragon", erro, DateTime.Now);
+            client.Logger.LogError(new EventId(602, "Client Error"), erro, DateTime.Now);
             return Task.CompletedTask;
         }
     }
