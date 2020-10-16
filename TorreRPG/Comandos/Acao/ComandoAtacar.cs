@@ -17,10 +17,11 @@ namespace TorreRPG.Comandos.Acao
 
         [Command("atacar")]
         [Aliases("at")]
-        [Description("Permite atacar um monstro a sua frente.")]
+        [Description("Permite atacar um monstro.")]
         [ComoUsar("atacar [#ID]")]
         [ComoUsar("atacar")]
         [Exemplo("atacar #1")]
+        [Cooldown(1, 2, CooldownBucketType.Channel)]
         public async Task ComandoAtacarAsync(CommandContext ctx, string stringIndexAlvo = "#0")
         {
             // Verifica se existe o jogador,
