@@ -9,6 +9,7 @@ using TorreRPG.Entidades.Itens.Currency;
 using TorreRPG.Entidades.Itens;
 using TorreRPG.Services;
 using System;
+using TorreRPG.Enuns;
 
 namespace TorreRPG.Comandos.Exibir
 {
@@ -31,7 +32,10 @@ namespace TorreRPG.Comandos.Exibir
             for (int i = 0; i < personagem.Mochila.Itens.Count; i++)
             {
                 var item = personagem.Mochila.Itens[i];
-                str.Append($"`#{i}` {item.TipoBaseModificado.Titulo().Bold()} ");
+                str.Append($"`#{i}` ");
+                str.Append(GerarEmojiRaridade(item.Raridade));
+
+                str.Append($" {item.TipoBaseModificado.Titulo().Bold()} ");
                 switch (item)
                 {
                     case RPBaseCurrency rcp:
@@ -46,6 +50,23 @@ namespace TorreRPG.Comandos.Exibir
             embed.WithDescription($"**Espaço da mochila: {personagem.Mochila.Espaco}/64**\n\n{str}");
 
             await ctx.RespondAsync(embed: embed.Build());
+        }
+
+        private DiscordEmoji GerarEmojiRaridade(RPRaridade raridade)
+        {
+            switch (raridade)
+            {
+                case RPRaridade.Normal:
+                    return Emoji.ItemNormal;
+                case RPRaridade.Magico:
+                    return Emoji.ItemMagico;
+                case RPRaridade.Raro:
+                    return Emoji.ItemRaro;
+                case RPRaridade.Unico:
+                    return Emoji.ItemUnico;
+                default:
+                    return null;
+            }
         }
     }
 }

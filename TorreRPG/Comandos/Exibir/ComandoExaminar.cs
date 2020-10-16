@@ -10,6 +10,8 @@ using TorreRPG.Atributos;
 using TorreRPG.Entidades.Itens.Currency;
 using TorreRPG.Services;
 using System;
+using TorreRPG.Enuns;
+using System.Drawing;
 
 namespace TorreRPG.Comandos.Exibir
 {
@@ -46,8 +48,8 @@ namespace TorreRPG.Comandos.Exibir
                     DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
                     ItemDescricao(embed, item);
                     embed.WithAuthor($"{ctx.User.Username} - {personagem.Nome}", iconUrl: ctx.User.AvatarUrl);
-                    embed.WithTitle($"`#{id}` {item.TipoBaseModificado.Titulo().Bold()}");
-                    embed.WithColor(DiscordColor.Yellow);
+                    embed.WithTitle($"`#{id}` {GerarEmojiRaridade(item.Raridade)} {item.TipoBaseModificado.Titulo().Bold()}");
+                    embed.WithColor(GerarColorRaridade(item.Raridade));
                     await ctx.RespondAsync(embed: embed.Build());
                 }
                 else
@@ -56,6 +58,7 @@ namespace TorreRPG.Comandos.Exibir
             else
                 await ctx.RespondAsync($"{ctx.User.Mention}, o `#ID` precisa ser numérico. Digite `!mochila` para encontrar `#ID`s.");
         }
+
         public static void ItemDescricao(DiscordEmbedBuilder embed, RPBaseItem item)
         {
             switch (item)
@@ -69,6 +72,40 @@ namespace TorreRPG.Comandos.Exibir
                 case RPCurrencyPergaminho pergaminho:
                     embed.WithDescription(pergaminho.Descricao());
                     break;
+            }
+        }
+
+        private DiscordEmoji GerarEmojiRaridade(RPRaridade raridade)
+        {
+            switch (raridade)
+            {
+                case RPRaridade.Normal:
+                    return Emoji.ItemNormal;
+                case RPRaridade.Magico:
+                    return Emoji.ItemMagico;
+                case RPRaridade.Raro:
+                    return Emoji.ItemRaro;
+                case RPRaridade.Unico:
+                    return Emoji.ItemUnico;
+                default:
+                    return null;
+            }
+        }
+
+        private DiscordColor GerarColorRaridade(RPRaridade raridade)
+        {
+            switch (raridade)
+            {
+                case RPRaridade.Normal:
+                    return DiscordColor.LightGray;
+                case RPRaridade.Magico:
+                    return DiscordColor.CornflowerBlue;
+                case RPRaridade.Raro:
+                    return DiscordColor.HotPink;
+                case RPRaridade.Unico:
+                    return DiscordColor.Orange;
+                default:
+                    return DiscordColor.Wheat;
             }
         }
     }
