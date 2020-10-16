@@ -37,7 +37,7 @@ namespace TorreRPG.Comandos.Acao
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);
                 RPPersonagem personagem = jogador.Personagem;
 
-                if (personagem.Zona.ItensNoChao == null)
+                if (personagem.Zona.ItensNoChao == null || personagem.Zona.ItensNoChao.Count == 0)
                 {
                     await ctx.RespondAsync($"{ctx.User.Mention}, você não tem itens no chão para pegar!");
                     return;
