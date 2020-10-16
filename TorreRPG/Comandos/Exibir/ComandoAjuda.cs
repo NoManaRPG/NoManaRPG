@@ -109,7 +109,7 @@ namespace TorreRPG.Comandos.Exibir
         {
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
             //!equipamentos!equipar!desequipar
-            embed.WithDescription("Escreva `!ajuda [comando]` para mais ajuda. Por exemplo: `!ajuda status`");
+            embed.WithDescription("Digite `!ajuda [comando]` para mais informações. Por exemplo: `!ajuda status`");
 
             embed.AddField("Comando principal".Titulo().Bold(), FormatarURL("criar-personagem", "Permite criar o seu personagem escolhendo uma das 7 classes disponíveis") +
                 FormatarURL("status", "Permite ver o seu status ou a de outra pessoa"), true);
@@ -135,8 +135,10 @@ namespace TorreRPG.Comandos.Exibir
 
             embed.AddField("Outros".Titulo().Bold(), FormatarURL("setimage", "Permite escolher uma imagem para o retrato"), true);
 
+            embed.AddField("Argumentos", "[Colchete] são argumentos opcionais.\n" +
+                "<Chevron> são argumentos obrigatorios.");
+
             embed.WithImageUrl("https://cdn.discordapp.com/attachments/750081991046856814/755886689523859536/VaalTower.jpg");
-            embed.WithThumbnail("https://cdn.discordapp.com/attachments/736163626934861845/742671714386968576/help_animated_x4_1.gif");
             embed.WithColor(DiscordColor.Violet);
             embed.WithTimestamp(DateTime.Now);
             embed.WithFooter("Passe o mouse em cima para mais info!");

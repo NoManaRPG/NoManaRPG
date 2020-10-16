@@ -16,7 +16,7 @@ namespace TorreRPG.Comandos.Acao
         [Command("criar-personagem")]
         [Aliases("cp")]
         [Description("Permite criar um personagem com uma das 7 classes disponíveis e com um nome personalizado.")]
-        [ComoUsar("criar-personagem [CLASSE] [NOME DO PERSONAGEM]")]
+        [ComoUsar("criar-personagem <CLASSE> <NOME DO PERSONAGEM>")]
         [Exemplo("criar-personagem Caçadora Arqueiro Verde")]
         [Cooldown(1, 10, CooldownBucketType.User)]
         public async Task CriarPersonagemAsync(CommandContext ctx, string classe = null, [RemainingText] string nomePersonagem = null)
@@ -28,7 +28,8 @@ namespace TorreRPG.Comandos.Acao
             {
                 DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
                 embed.WithColor(DiscordColor.Gold);
-                embed.WithDescription($"Escolha uma classe com o comando `criar-personagem [classe] [nome do personagem]`.");
+                embed.WithTitle("Classes disponíveis");
+                embed.WithDescription($"Escolha uma classe digitando `!criar-personagem <classe> <nome do personagem>`.");
                 embed.AddField("Caçadora".Titulo(), "Foco em: Destreza", true);
                 embed.AddField("Berserker".Titulo(), "Foco em: Força", true);
                 embed.AddField("Bruxa".Titulo(), "Foco em: Inteligência", true);
@@ -36,6 +37,7 @@ namespace TorreRPG.Comandos.Acao
                 embed.AddField("Templário".Titulo(), "Foco em: Força e Inteligência", true);
                 embed.AddField("Sombra".Titulo(), "Foco em: Destreza e Inteligência", true);
                 embed.AddField("Herdeira".Titulo(), "Foco em : Força, Destreza e Inteligência", true);
+                embed.WithFooter("Se estiver perdido digite `!ajuda`.", "https://cdn.discordapp.com/attachments/736163626934861845/742671714386968576/help_animated_x4_1.gif");
                 await ctx.RespondAsync(embed: embed.Build());
                 return;
             }
