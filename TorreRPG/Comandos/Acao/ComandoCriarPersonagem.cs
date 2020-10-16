@@ -16,8 +16,8 @@ namespace TorreRPG.Comandos.Acao
         [Command("criar-personagem")]
         [Aliases("cp")]
         [Description("Permite criar um personagem com uma das 7 classes disponíveis e com um nome personalizado.")]
-        [ComoUsar("criar-personagem <CLASSE> <NOME DO PERSONAGEM>")]
-        [Exemplo("criar-personagem Caçadora Arqueiro Verde")]
+        [ComoUsar("criar-personagem <classe> <nome do personagem>")]
+        [Exemplo("criar-personagem caçadora Arqueiro Verde")]
         [Cooldown(1, 10, CooldownBucketType.User)]
         public async Task CriarPersonagemAsync(CommandContext ctx, string classe = null, [RemainingText] string nomePersonagem = null)
         {
@@ -30,13 +30,13 @@ namespace TorreRPG.Comandos.Acao
                 embed.WithColor(DiscordColor.Gold);
                 embed.WithTitle("Classes disponíveis");
                 embed.WithDescription($"Escolha uma classe digitando `!criar-personagem <classe> <nome do personagem>`.");
-                embed.AddField("Caçadora".Titulo(), "Foco em: Destreza", true);
-                embed.AddField("Berserker".Titulo(), "Foco em: Força", true);
-                embed.AddField("Bruxa".Titulo(), "Foco em: Inteligência", true);
-                embed.AddField("Duelista".Titulo(), "Foco em: Força e Destreza", true);
-                embed.AddField("Templário".Titulo(), "Foco em: Força e Inteligência", true);
-                embed.AddField("Sombra".Titulo(), "Foco em: Destreza e Inteligência", true);
-                embed.AddField("Herdeira".Titulo(), "Foco em : Força, Destreza e Inteligência", true);
+                embed.AddField("Caçadora", "Foco em: Destreza", true);
+                embed.AddField("Berserker", "Foco em: Força", true);
+                embed.AddField("Bruxa", "Foco em: Inteligência", true);
+                embed.AddField("Duelista", "Foco em: Força e Destreza", true);
+                embed.AddField("Templário", "Foco em: Força e Inteligência", true);
+                embed.AddField("Sombra", "Foco em: Destreza e Inteligência", true);
+                embed.AddField("Herdeira", "Foco em : Força, Destreza e Inteligência", true);
                 embed.WithFooter("Se estiver perdido digite `!ajuda`.", "https://cdn.discordapp.com/attachments/736163626934861845/742671714386968576/help_animated_x4_1.gif");
                 await ctx.RespondAsync(embed: embed.Build());
                 return;
@@ -130,8 +130,9 @@ namespace TorreRPG.Comandos.Acao
                 RPJogador jogador = new RPJogador(ctx, personagem);
                 await banco.AddJogadorAsync(jogador);
                 await session.CommitTransactionAsync();
+
+                await ctx.RespondAsync($"{ctx.User.Mention}, o seu personagem {jogador.Personagem.Classe.Titulo()} foi criado!");
             }
-            await ctx.RespondAsync($"{ctx.User.Mention}, o seu personagem foi criado!");
         }
     }
 }
