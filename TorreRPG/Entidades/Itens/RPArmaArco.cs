@@ -10,10 +10,5 @@ namespace TorreRPG.Entidades.Itens
         {
             Destreza = destreza;
         }
-
-        public override string Descricao()
-        {
-            return "Arcos\n" + base.Descricao();
-        }
     }
 }

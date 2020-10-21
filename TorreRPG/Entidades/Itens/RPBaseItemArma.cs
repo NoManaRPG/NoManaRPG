@@ -17,14 +17,5 @@ namespace TorreRPG.Entidades.Itens
             ChanceCritico = chanceCritico;
             VelocidadeAtaque = velocidadeAtaque;
         }
-
-        public virtual string Descricao()
-        {
-            return $"Dano Físico: {DanoFisicoBase.Minimo}-{DanoFisicoBase.Maximo}\n" +
-                $"Chance de Crítico: {ChanceCritico * 100}%\n" +
-                $"Ataques por Segundo: {VelocidadeAtaque}\n" +
-                $"---------------\n" +
-                $"Requer Nível {ILevel}, {(Inteligencia == 0 ? "" : $"{Inteligencia} Int,")} {(Destreza == 0 ? "" : $"{Destreza} Des,")} {(Forca == 0 ? "" : $"{Forca} For")}";
-        }
     }
 }

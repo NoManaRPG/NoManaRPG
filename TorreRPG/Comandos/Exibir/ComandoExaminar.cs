@@ -64,6 +64,7 @@ namespace TorreRPG.Comandos.Exibir
                 {
                     case RPFrascoVida frascoVida:
                         str.AppendLine("Frascos de Vida");
+                        str.AppendLine($"Ocupa {item.Espaco} espaço");
                         str.AppendLine($"Recupera {frascoVida.Regen} de Vida por {frascoVida.Tempo} Segundo");
                         str.AppendLine($"Consome {frascoVida.CargasUso} de {frascoVida.CargasMax} Carga na utilização");
                         str.AppendLine($"Atualmente tem {frascoVida.CargasAtual} Carga");
@@ -74,10 +75,36 @@ namespace TorreRPG.Comandos.Exibir
                         str.AppendLine("Só é possível manter cargas no cinto. Recarrega conforme você mata monstros.");
                         break;
                     case RPBaseItemArma arma:
-                        str.AppendLine(arma.Descricao());
+                        switch (arma)
+                        {
+                            case RPArmaAdaga _:
+                                str.AppendLine("Adaga");
+                                break;
+                            case RPArmaArco _:
+                                str.AppendLine("Arco");
+                                break;
+                            case RPArmaCetro _:
+                                str.AppendLine("Cetro");
+                                break;
+                            case RPArmaEspada _:
+                                str.AppendLine("Espada");
+                                break;
+                            case RPArmaVarinha _:
+                                str.AppendLine("Varinha");
+                                break;
+                        }
+                        str.AppendLine($"Ocupa {item.Espaco} espaço");
+                        str.AppendLine($"Dano Físico: {arma.DanoFisicoBase.Minimo}-{arma.DanoFisicoBase.Maximo}");
+                        str.AppendLine($"Chance de Crítico: { arma.ChanceCritico * 100}% ");
+                        str.AppendLine($"Ataques por Segundo: {arma.VelocidadeAtaque}");
+                        str.AppendLine();
+                        str.AppendLine("██████████████");
+                        str.AppendLine();
+                        str.AppendLine($"Requer Nível {arma.ILevel}, {(arma.Inteligencia == 0 ? "" : $"{arma.Inteligencia} Int,")} {(arma.Destreza == 0 ? "" : $"{arma.Destreza} Des,")} {(arma.Forca == 0 ? "" : $"{arma.Forca} For")}");
                         break;
                     case RPMoedaEmpilhavel moeda:
                         str.AppendLine("Moedas Empilháveis");
+                        str.AppendLine($"Ocupa {item.Espaco} espaço");
                         str.AppendLine($"Tamanho da pilha: {moeda.PilhaAtual}/{moeda.PilhaMaxima}");
                         str.AppendLine();
                         str.AppendLine("██████████████");
