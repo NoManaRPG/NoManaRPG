@@ -13,11 +13,11 @@ namespace TorreRPG.Comandos.Acao
 {
     public class ComandoDesequipar : BaseCommandModule
     {
-        public Banco banco { private get; set; }
+        private readonly Banco banco;
 
         [Command("desequipar")]
         [Description("Permite desequipar um item. Veja no equipamentos os `⌈SLOTS⌋` disponíveis.")]
-        [ComoUsar("desequipar [SLOT]")]
+        [ComoUsar("desequipar <slot>")]
         [Exemplo("desequipar mão principal")]
         [Exemplo("desequipar segunda mão")]
         public async Task ComandoDesequiparAsync(CommandContext ctx, [RemainingText] string itemString = "")

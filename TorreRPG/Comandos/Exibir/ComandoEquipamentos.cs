@@ -12,7 +12,7 @@ namespace TorreRPG.Comandos.Exibir
 {
     public class ComandoEquipamentos : BaseCommandModule
     {
-        public Banco banco { private get; set; }
+        public readonly Banco banco;
 
         [Command("equipamentos")]
         [Aliases("eq")]
@@ -23,23 +23,20 @@ namespace TorreRPG.Comandos.Exibir
             var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
             if (naoCriouPersonagem) return;
 
-            RPJogador jogador = await banco.GetJogadorAsync(ctx);
-            RPPersonagem personagem = jogador.Personagem;
-
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
-            embed.WithAuthor($"{ctx.User.Username} - Nível {personagem.Nivel.Atual} - {personagem.Classe} - {personagem.Nome}", iconUrl: ctx.User.AvatarUrl);
+            embed.WithAuthor($"{ctx.User.Username} - Nível {personagemNaoModificar.Nivel.Atual} - {personagemNaoModificar.Classe} - {personagemNaoModificar.Nome}", iconUrl: ctx.User.AvatarUrl);
 
-            embed.AddField("Primeira mão".Titulo().Bold(), $"{(personagem.MaoPrincipal == null ? "Nada equipado" : personagem.MaoPrincipal.TipoBaseModificado)}", true);
-            embed.AddField("Segunda mão".Titulo().Bold(), $"{(personagem.MaoSecundaria == null ? "Nada equipado" : personagem.MaoSecundaria.TipoBaseModificado)}", true);
+            embed.AddField("Primeira mão".Titulo().Bold(), $"{(personagemNaoModificar.MaoPrincipal == null ? "Nada equipado" : personagemNaoModificar.MaoPrincipal.TipoBaseModificado)}", true);
+            embed.AddField("Segunda mão".Titulo().Bold(), $"{(personagemNaoModificar.MaoSecundaria == null ? "Nada equipado" : personagemNaoModificar.MaoSecundaria.TipoBaseModificado)}", true);
 
 
             StringBuilder str = new StringBuilder();
-            for (int i = 0; i < personagem.Frascos.Count; i++)
+            for (int i = 0; i < personagemNaoModificar.Frascos.Count; i++)
             {
-                var pocao = personagem.Frascos[i];
+                var pocao = personagemNaoModificar.Frascos[i];
                 str.AppendLine($"`#{i}` {pocao.TipoBaseModificado}: {pocao.CargasAtual}/{pocao.CargasMax}");
             }
-            embed.AddField("Poções".Titulo().Bold(), $"{(personagem.Frascos.Count == 0 ? "Nada equipado" : str.ToString())}");
+            embed.AddField("Poções".Titulo().Bold(), $"{(personagemNaoModificar.Frascos.Count == 0 ? "Nada equipado" : str.ToString())}");
 
             await ctx.RespondAsync(embed: embed.Build());
         }

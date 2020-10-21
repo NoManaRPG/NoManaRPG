@@ -14,7 +14,7 @@ namespace TorreRPG.Comandos.Exibir
 {
     public class ComandoMochila : BaseCommandModule
     {
-        public Banco banco { private get; set; }
+        public readonly Banco banco;
 
         [Command("mochila")]
         [Description("Permite ver os itens que estão na mochila. Você consegue itens de monstros, vendendo e trocando com outros jogadores.")]
@@ -24,13 +24,10 @@ namespace TorreRPG.Comandos.Exibir
             var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
             if (naoCriouPersonagem) return;
 
-            RPJogador jogador = await banco.GetJogadorAsync(ctx);
-            RPPersonagem personagem = jogador.Personagem;
-
             StringBuilder str = new StringBuilder();
-            for (int i = 0; i < personagem.Mochila.Itens.Count; i++)
+            for (int i = 0; i < personagemNaoModificar.Mochila.Itens.Count; i++)
             {
-                var item = personagem.Mochila.Itens[i];
+                var item = personagemNaoModificar.Mochila.Itens[i];
                 str.Append($"`#{i}` ");
                 str.Append(GerarEmojiRaridade(item.Raridade));
 
@@ -45,8 +42,8 @@ namespace TorreRPG.Comandos.Exibir
             }
 
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
-            embed.WithAuthor($"{ctx.User.Username} - Nível {personagem.Nivel.Atual} - {personagem.Classe}", iconUrl: ctx.User.AvatarUrl);
-            embed.WithDescription($"**Espaço da mochila: {personagem.Mochila.Espaco}/64**\n\n{str}");
+            embed.WithAuthor($"{ctx.User.Username} - Nível {personagemNaoModificar.Nivel.Atual} - {personagemNaoModificar.Classe}", iconUrl: ctx.User.AvatarUrl);
+            embed.WithDescription($"**Espaço da mochila: {personagemNaoModificar.Mochila.Espaco}/64**\n\n{str}");
 
             await ctx.RespondAsync(embed: embed.Build());
         }

@@ -14,7 +14,7 @@ namespace TorreRPG.Comandos.Exibir
 {
     public class ComandoChao : BaseCommandModule
     {
-        public Banco banco { private get; set; }
+        public readonly Banco banco;
 
         [Command("chao")]
         [Aliases("drop")]

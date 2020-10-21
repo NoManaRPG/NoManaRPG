@@ -11,7 +11,7 @@ namespace TorreRPG.Comandos.Acao
 {
     public class ComandoDescer : BaseCommandModule
     {
-        public Banco banco { private get; set; }
+        private readonly Banco banco;
 
         [Command("descer")]
         [Description("Permite descer um andar da torre. Encontra novos inimigos!")]

@@ -16,7 +16,7 @@ namespace TorreRPG.Comandos.Exibir
 {
     public class ComandoExaminar : BaseCommandModule
     {
-        public Banco banco { private get; set; }
+        public readonly Banco banco;
 
         [Command("examinar")]
         [Aliases("ex")]

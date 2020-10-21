@@ -10,7 +10,7 @@ namespace TorreRPG.Comandos.Acao
 {
     public class ComandoSetImage : BaseCommandModule
     {
-        public Banco banco { private get; set; }
+        public readonly Banco banco;
 
         [Command("setimage")]
         [Description("Altera a foto do retrato, indique um número de 0 a 13...")]

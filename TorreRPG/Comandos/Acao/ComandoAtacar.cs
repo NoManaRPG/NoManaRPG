@@ -13,7 +13,7 @@ namespace TorreRPG.Comandos.Acao
 {
     public class ComandoAtacar : BaseCommandModule
     {
-        public Banco banco { private get; set; }
+        private readonly Banco banco;
 
         [Command("atacar")]
         [Aliases("at")]

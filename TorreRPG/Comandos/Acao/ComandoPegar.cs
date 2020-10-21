@@ -12,7 +12,7 @@ namespace TorreRPG.Comandos.Acao
 {
     public class ComandoPegar : BaseCommandModule
     {
-        public Banco banco { private get; set; }
+        public readonly Banco banco;
 
         [Command("pegar")]
         [Description("Permite pegar um item que se encontra no chão. `#ID` se encontra no comando `olhar item`.")]
@@ -31,17 +31,17 @@ namespace TorreRPG.Comandos.Acao
                 return;
             }
 
+            if (personagemNaoModificar.Zona.ItensNoChao == null || personagemNaoModificar.Zona.ItensNoChao.Count == 0)
+            {
+                await ctx.RespondAsync($"{ctx.User.Mention}, você não tem itens no chão para pegar!");
+                return;
+            }
+
             using (var session = await banco.Cliente.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);
                 RPPersonagem personagem = jogador.Personagem;
-
-                if (personagem.Zona.ItensNoChao == null || personagem.Zona.ItensNoChao.Count == 0)
-                {
-                    await ctx.RespondAsync($"{ctx.User.Mention}, você não tem itens no chão para pegar!");
-                    return;
-                }
 
                 var item = personagem.Zona.ItensNoChao.ElementAtOrDefault(indexItem);
                 if (item != null)

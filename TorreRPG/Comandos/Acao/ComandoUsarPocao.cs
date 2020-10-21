@@ -11,7 +11,7 @@ namespace TorreRPG.Comandos.Acao
 {
     public class ComandoUsarPocao : BaseCommandModule
     {
-        public Banco banco { private get; set; }
+        public readonly Banco banco;
 
         [Command("usar-pocao")]
         [Aliases("usarp")]
@@ -24,6 +24,18 @@ namespace TorreRPG.Comandos.Acao
             var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
             if (naoCriouPersonagem) return;
 
+            if (personagemNaoModificar.Zona.Monstros.Count == 0)
+            {
+                await ctx.RespondAsync($"{ctx.User.Mention}, você só pode usar poções em batalha.");
+                return;
+            }
+
+            if (personagemNaoModificar.Frascos.Count == 0)
+            {
+                await ctx.RespondAsync($"{ctx.User.Mention}, você não tem frascos equipados para usar.");
+                return;
+            }
+
             bool usouPocao = false;
 
             using (var session = await banco.Cliente.StartSessionAsync())
@@ -31,17 +43,6 @@ namespace TorreRPG.Comandos.Acao
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);
                 RPPersonagem personagem = jogador.Personagem;
-
-                if (personagem.Zona.Monstros.Count == 0)
-                {
-                    await ctx.RespondAsync($"{ctx.User.Mention}, você só pode usar poções em batalha.");
-                    return;
-                }
-                if (personagem.Frascos.Count == 0)
-                {
-                    await ctx.RespondAsync($"{ctx.User.Mention}, você não tem frascos equipados para usar.");
-                    return;
-                }
 
                 if (stringId.TryParseID(out int id))
                 {

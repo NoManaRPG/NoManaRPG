@@ -11,7 +11,7 @@ namespace TorreRPG.Comandos.Exibir
 {
     public class ComandoZona : BaseCommandModule
     {
-        public Banco banco { private get; set; }
+        public readonly Banco banco;
 
         [Command("zona")]
         [Description("Permite examinar a zona.")]
@@ -21,16 +21,13 @@ namespace TorreRPG.Comandos.Exibir
             var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
             if (naoCriouPersonagem) return;
 
-            RPJogador jogador = await banco.GetJogadorAsync(ctx);
-            RPPersonagem personagem = jogador.Personagem;
-
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
-            embed.WithAuthor($"{ctx.User.Username} - {personagem.Nome}", iconUrl: ctx.User.AvatarUrl);
+            embed.WithAuthor($"{ctx.User.Username} - {personagemNaoModificar.Nome}", iconUrl: ctx.User.AvatarUrl);
             embed.WithColor(DiscordColor.Aquamarine);
-            embed.WithDescription($"Batalhando contra {personagem.Zona.Monstros.Count} monstros.\n" +
-                $"Onda {personagem.Zona.OndaAtual.Bold()}/{personagem.Zona.OndaTotal.Bold()}.\n" +
-                $"Nivel {personagem.Zona.Nivel}\n" +
-                $"Tem {(personagem.Zona.ItensNoChao == null ? 0 : personagem.Zona.ItensNoChao.Count)} itens no chão\n\n" +
+            embed.WithDescription($"Batalhando contra {personagemNaoModificar.Zona.Monstros.Count} monstros.\n" +
+                $"Onda {personagemNaoModificar.Zona.OndaAtual.Bold()}/{personagemNaoModificar.Zona.OndaTotal.Bold()}.\n" +
+                $"Nivel {personagemNaoModificar.Zona.Nivel}\n" +
+                $"Tem {(personagemNaoModificar.Zona.ItensNoChao == null ? 0 : personagemNaoModificar.Zona.ItensNoChao.Count)} itens no chão\n\n" +
                 $"*Digite `!monstros` para ver os inimigos*\n" +
                 $"*Digite `!chao` para ver os itens no chão*");
 

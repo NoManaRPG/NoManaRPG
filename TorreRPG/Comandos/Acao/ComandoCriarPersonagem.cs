@@ -11,7 +11,7 @@ namespace TorreRPG.Comandos.Acao
 {
     public class ComandoCriarPersonagem : BaseCommandModule
     {
-        public Banco banco { private get; set; }
+        private readonly Banco banco;
 
         [Command("criar-personagem")]
         [Aliases("cp")]
