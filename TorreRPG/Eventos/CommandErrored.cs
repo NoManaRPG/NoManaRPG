@@ -53,6 +53,8 @@ namespace TorreRPG.Eventos
                     break;
                 case UnauthorizedException ux:
                     break;
+                case ServerErrorException se:
+                    break;
                 case MongoCommandException mce:
                     await ctx.RespondAsync($"{ctx.User.Mention}, o último comando não foi processado corretamente! Tente executar os comandos mais lentamente!");
                     break;
