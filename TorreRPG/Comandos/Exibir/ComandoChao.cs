@@ -23,14 +23,11 @@ namespace TorreRPG.Comandos.Exibir
         [Exemplo("chao #1")]
         public async Task ComandoChaoAsync(CommandContext ctx, string idEscolhido = "")
         {
-            // Verifica se existe o jogador,
+            //Verifica se existe o jogador,
             var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
             if (naoCriouPersonagem) return;
-
-            RPJogador jogador = await banco.GetJogadorAsync(ctx);
-            RPPersonagem personagem = jogador.Personagem;
-
-            if (personagem.Zona.ItensNoChao.Count == 0)
+         
+            if (personagemNaoModificar.Zona.ItensNoChao.Count == 0)
             {
                 await ctx.RespondAsync($"{ctx.User.Mention}, você precisa de itens no chão para olhar! Elimine alguns monstros!");
                 return;
@@ -41,9 +38,9 @@ namespace TorreRPG.Comandos.Exibir
             if (string.IsNullOrWhiteSpace(idEscolhido))
             {
                 StringBuilder str = new StringBuilder();
-                for (int i = 0; i < personagem.Zona.ItensNoChao.Count; i++)
+                for (int i = 0; i < personagemNaoModificar.Zona.ItensNoChao.Count; i++)
                 {
-                    var item = personagem.Zona.ItensNoChao[i];
+                    var item = personagemNaoModificar.Zona.ItensNoChao[i];
                     str.AppendLine($"`#{i}` {item.TipoBaseModificado.Titulo().Bold()} ");
                 }
                 embed.WithDescription("Você está olhando para os itens no chão! Digite `!pegar` para guarda-los na mochila!\n" + str.ToString());
@@ -54,13 +51,11 @@ namespace TorreRPG.Comandos.Exibir
             // Converte o id informado.
             if (idEscolhido.TryParseID(out int id))
             {
-                var item = personagem.Zona.ItensNoChao.ElementAtOrDefault(id);
-                if (item != null)
+                var descricao = ComandoExaminar.ItemDescricao(personagemNaoModificar, id);
+                if (descricao != null)
                 {
-                    ComandoExaminar.ItemDescricao(embed, item);
-                    embed.WithAuthor($"{ctx.User.Username} - {personagem.Nome}", iconUrl: ctx.User.AvatarUrl);
-                    embed.WithTitle($"`#{id}` {item.TipoBaseModificado.Titulo().Bold()}");
-                    await ctx.RespondAsync(embed: embed.Build());
+                    descricao.WithAuthor($"{ctx.User.Username} - {personagemNaoModificar.Nome}", iconUrl: ctx.User.AvatarUrl);
+                    await ctx.RespondAsync(embed: descricao.Build());
                 }
                 else
                     await ctx.RespondAsync($"{ctx.User.Mention}, `#ID` não encontrado!");

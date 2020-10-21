@@ -7,11 +7,10 @@ using DSharpPlus.Entities;
 using System.Linq;
 using System.Threading.Tasks;
 using TorreRPG.Atributos;
-using TorreRPG.Entidades.Itens.Currency;
 using TorreRPG.Services;
 using System;
 using TorreRPG.Enuns;
-using System.Drawing;
+using System.Text;
 
 namespace TorreRPG.Comandos.Exibir
 {
@@ -30,10 +29,7 @@ namespace TorreRPG.Comandos.Exibir
             var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
             if (naoCriouPersonagem) return;
 
-            RPJogador jogador = await banco.GetJogadorAsync(ctx);
-            RPPersonagem personagem = jogador.Personagem;
-
-            if (personagem.Mochila.Itens.Count == 0)
+            if (personagemNaoModificar.Mochila.Itens.Count == 0)
             {
                 await ctx.RespondAsync($"{ctx.User.Mention}, você precisa de itens na mochila para examinar!");
                 return;
@@ -42,15 +38,11 @@ namespace TorreRPG.Comandos.Exibir
             // Converte o id informado.
             if (idEscolhido.TryParseID(out int id))
             {
-                var item = personagem.Mochila.Itens.ElementAtOrDefault(id);
-                if (item != null)
+                var descricao = ItemDescricao(personagemNaoModificar, id);
+                if (descricao != null)
                 {
-                    DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
-                    ItemDescricao(embed, item);
-                    embed.WithAuthor($"{ctx.User.Username} - {personagem.Nome}", iconUrl: ctx.User.AvatarUrl);
-                    embed.WithTitle($"`#{id}` {GerarEmojiRaridade(item.Raridade)} {item.TipoBaseModificado.Titulo().Bold()}");
-                    embed.WithColor(GerarColorRaridade(item.Raridade));
-                    await ctx.RespondAsync(embed: embed.Build());
+                    descricao.WithAuthor($"{ctx.User.Username} - {personagemNaoModificar.Nome}", iconUrl: ctx.User.AvatarUrl);
+                    await ctx.RespondAsync(embed: descricao.Build());
                 }
                 else
                     await ctx.RespondAsync($"{ctx.User.Mention}, `#ID` não encontrado!");
@@ -59,23 +51,56 @@ namespace TorreRPG.Comandos.Exibir
                 await ctx.RespondAsync($"{ctx.User.Mention}, o `#ID` precisa ser numérico. Digite `!mochila` para encontrar `#ID`s.");
         }
 
-        public static void ItemDescricao(DiscordEmbedBuilder embed, RPBaseItem item)
+        public static DiscordEmbedBuilder ItemDescricao(RPPersonagem personagem, int id)
         {
-            switch (item)
+            var item = personagem.Mochila.Itens.ElementAtOrDefault(id);
+            if (item != null)
             {
-                case RPFrascoVida frascoVida:
-                    embed.WithDescription(frascoVida.Descricao());
-                    break;
-                case RPBaseItemArma arma:
-                    embed.WithDescription(arma.Descricao());
-                    break;
-                case RPCurrencyPergaminho pergaminho:
-                    embed.WithDescription(pergaminho.Descricao());
-                    break;
+                DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
+                embed.WithTitle($"`#{id}` {GerarEmojiRaridade(item.Raridade)} {item.TipoBaseModificado.Titulo().Bold()}");
+                embed.WithColor(GerarColorRaridade(item.Raridade));
+                StringBuilder str = new StringBuilder();
+                switch (item)
+                {
+                    case RPFrascoVida frascoVida:
+                        str.AppendLine("Frascos de Vida");
+                        str.AppendLine($"Recupera {frascoVida.Regen} de Vida por {frascoVida.Tempo} Segundo");
+                        str.AppendLine($"Consome {frascoVida.CargasUso} de {frascoVida.CargasMax} Carga na utilização");
+                        str.AppendLine($"Atualmente tem {frascoVida.CargasAtual} Carga");
+                        str.AppendLine($"Requer nível {frascoVida.ILevel}");
+                        str.AppendLine();
+                        str.AppendLine("██████████████");
+                        str.AppendLine();
+                        str.AppendLine("Só é possível manter cargas no cinto. Recarrega conforme você mata monstros.");
+                        break;
+                    case RPBaseItemArma arma:
+                        str.AppendLine(arma.Descricao());
+                        break;
+                    case RPMoedaEmpilhavel moeda:
+                        str.AppendLine("Moedas Empilháveis");
+                        str.AppendLine($"Tamanho da pilha: {moeda.PilhaAtual}/{moeda.PilhaMaxima}");
+                        str.AppendLine();
+                        str.AppendLine("██████████████");
+                        str.AppendLine();
+                        switch (moeda.Classe)
+                        {
+                            case RPClasse.FragmentoPergaminho:
+                                str.AppendLine("Uma pilha de 5 fragmentos forma um pergaminho de sabedoria.");
+                                break;
+                            case RPClasse.PergaminhoSabedoria:
+                                str.AppendLine("Identifica um item");
+                                str.AppendLine("Digite `!identificar #ID` para identificar.");
+                                break;
+                        }
+                        break;
+                }
+                embed.WithDescription(str.ToString());
+                return embed;
             }
+            return null;
         }
 
-        private DiscordEmoji GerarEmojiRaridade(RPRaridade raridade)
+        private static DiscordEmoji GerarEmojiRaridade(RPRaridade raridade)
         {
             switch (raridade)
             {
@@ -92,7 +117,7 @@ namespace TorreRPG.Comandos.Exibir
             }
         }
 
-        private DiscordColor GerarColorRaridade(RPRaridade raridade)
+        private static DiscordColor GerarColorRaridade(RPRaridade raridade)
         {
             switch (raridade)
             {

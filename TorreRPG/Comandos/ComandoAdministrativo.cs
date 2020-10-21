@@ -17,6 +17,7 @@ using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Drawing.Drawing2D;
 using TorreRPG.Services;
+using TorreRPG.Metadata.Itens.MoedasEmpilhaveis;
 
 namespace TorreRPG.Comandos
 {
@@ -137,7 +138,7 @@ namespace TorreRPG.Comandos
                 RPJogador jogador = await banco.GetJogadorAsync(ctx.User);
                 RPPersonagem personagem = jogador.Personagem;
 
-                personagem.Mochila.TryAddItem(new TorreRPG.Metadata.Itens.Currency.CurrencyPergaminho().PergaminhoFragmento1());
+                personagem.Mochila.TryAddItem(new MoedasEmpilhaveisPergaminhos().PergaminhoFragmento1());
 
                 await banco.EditJogadorAsync(jogador);
                 await session.CommitTransactionAsync();

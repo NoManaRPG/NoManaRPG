@@ -5,7 +5,6 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System.Text;
 using System.Threading.Tasks;
-using TorreRPG.Entidades.Itens.Currency;
 using TorreRPG.Entidades.Itens;
 using TorreRPG.Services;
 using System;
@@ -38,7 +37,7 @@ namespace TorreRPG.Comandos.Exibir
                 str.Append($" {item.TipoBaseModificado.Titulo().Bold()} ");
                 switch (item)
                 {
-                    case RPBaseCurrency rcp:
+                    case RPMoedaEmpilhavel rcp:
                         str.Append($"*x{rcp.PilhaAtual}*");
                         break;
                 }

@@ -12,7 +12,9 @@ namespace TorreRPG.Enuns
         UmaMao,
         [Description("Fragmento de Pergaminho")]
         FragmentoPergaminho,
-        [Description("Pergaminho")]
-        Pergaminho,
+        [Description("Pergaminho de Sabedoria")]
+        PergaminhoSabedoria,
+        [Description("Pergaminho de Portal")]
+        PergaminhoPortal,
     }
 }
