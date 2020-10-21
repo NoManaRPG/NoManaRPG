@@ -18,12 +18,13 @@ using System.Drawing.Text;
 using System.Drawing.Drawing2D;
 using TorreRPG.Services;
 using TorreRPG.Metadata.Itens.MoedasEmpilhaveis;
+using System.Data;
 
 namespace TorreRPG.Comandos
 {
     public class ComandoAdministrativo : BaseCommandModule
     {
-        public Banco banco { private get; set; }
+        public Banco banco;
 
         [Command("purge")]
         [RequireUserPermissions(Permissions.Administrator)]
@@ -101,6 +102,12 @@ namespace TorreRPG.Comandos
 
                     foreach (RPJogador user in usuarios)
                     {
+                        var f = user.Personagem.Mochila.Itens.FindAll(x => x.Classe == Enuns.RPClasse.PergaminhoSabedoria);
+                        foreach (var item in f)
+                        {
+                            if (item.Classe == Enuns.RPClasse.PergaminhoSabedoria)
+                                item.TipoBaseModificado = "Pergaminho de sabedoria";
+                        }
                         await banco.Jogadores.ReplaceOneAsync(x => x.Id == user.Id, user);
                     }
                 }

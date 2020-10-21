@@ -11,7 +11,7 @@ namespace TorreRPG.Comandos.Exibir
 {
     public class ComandoZona : BaseCommandModule
     {
-        public readonly Banco banco;
+        public Banco banco;
 
         [Command("zona")]
         [Description("Permite examinar a zona.")]

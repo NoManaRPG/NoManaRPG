@@ -13,7 +13,7 @@ namespace TorreRPG.Comandos.Acao
 {
     public class ComandoDesequipar : BaseCommandModule
     {
-        private readonly Banco banco;
+        public Banco banco;
 
         [Command("desequipar")]
         [Description("Permite desequipar um item. Veja no equipamentos os `⌈SLOTS⌋` disponíveis.")]

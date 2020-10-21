@@ -12,7 +12,7 @@ namespace TorreRPG.Comandos.Acao
 {
     public class ComandoPegar : BaseCommandModule
     {
-        public readonly Banco banco;
+        public Banco banco;
 
         [Command("pegar")]
         [Description("Permite pegar um item que se encontra no chão. `#ID` se encontra no comando `olhar item`.")]

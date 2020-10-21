@@ -14,7 +14,7 @@ namespace TorreRPG.Comandos.Exibir
 {
     public class ComandoMochila : BaseCommandModule
     {
-        public readonly Banco banco;
+        public Banco banco;
 
         [Command("mochila")]
         [Description("Permite ver os itens que estão na mochila. Você consegue itens de monstros, vendendo e trocando com outros jogadores.")]

@@ -12,7 +12,7 @@ namespace TorreRPG.Comandos.Exibir
 {
     public class ComandoEquipamentos : BaseCommandModule
     {
-        public readonly Banco banco;
+        public Banco banco;
 
         [Command("equipamentos")]
         [Aliases("eq")]

@@ -10,7 +10,7 @@ namespace TorreRPG.Comandos.Acao
 {
     public class ComandoExplorar : BaseCommandModule
     {
-        public readonly Banco banco;
+        public Banco banco;
 
         [Command("explorar")]
         [Description("Permite procurar por novos inimigos no andar atual!")]

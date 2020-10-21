@@ -11,7 +11,7 @@ namespace TorreRPG.Comandos.Acao
 {
     public class ComandoUsarPocao : BaseCommandModule
     {
-        public readonly Banco banco;
+        public Banco banco;
 
         [Command("usar-pocao")]
         [Aliases("usarp")]

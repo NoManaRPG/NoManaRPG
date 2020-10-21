@@ -14,7 +14,7 @@ namespace TorreRPG.Comandos.Acao
 {
     public class ComandoEquipar : BaseCommandModule
     {
-        public readonly Banco banco;
+        public Banco banco;
 
         [Command("equipar")]
         [Aliases("e")]

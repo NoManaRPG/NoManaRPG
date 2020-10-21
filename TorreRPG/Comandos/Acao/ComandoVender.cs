@@ -16,7 +16,7 @@ namespace TorreRPG.Comandos.Acao
 {
     class ComandoVender : BaseCommandModule
     {
-        public readonly Banco banco;
+        public Banco banco;
 
         [Command("vender")]
         [Description("Permite vender um item.")]

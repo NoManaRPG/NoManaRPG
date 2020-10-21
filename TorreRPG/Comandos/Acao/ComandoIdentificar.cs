@@ -13,7 +13,7 @@ namespace TorreRPG.Comandos.Acao
 {
     public class ComandoIdentificar : BaseCommandModule
     {
-        public readonly Banco banco;
+        public Banco banco;
 
         [Command("identificar")]
         [Description("Permite identificar um item.")]

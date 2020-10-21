@@ -18,7 +18,7 @@ namespace TorreRPG.Comandos.Exibir
     [Exemplo("wiki ler axd")]
     public class ComandoWiki : BaseCommandModule
     {
-        public Banco banco { private get; set; }
+        public Banco banco;
 
         [GroupCommand()]
         public async Task ExecuteGroupAsync(CommandContext ctx)

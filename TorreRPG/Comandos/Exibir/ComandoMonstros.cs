@@ -11,7 +11,7 @@ namespace TorreRPG.Comandos.Exibir
 {
     public class ComandoMonstros : BaseCommandModule
     {
-        public readonly Banco banco;
+        public Banco banco;
 
         [Command("monstros")]
         [Description("Permite ver os monstros que estão na sua frente.")]

@@ -13,7 +13,7 @@ namespace TorreRPG.Comandos.Acao
 {
     public class ComandoSubir : BaseCommandModule
     {
-        public readonly Banco banco;
+        public Banco banco;
 
         [Command("subir")]
         [Description("Permite subir um andar da torre. Encontra novos inimigos!")]

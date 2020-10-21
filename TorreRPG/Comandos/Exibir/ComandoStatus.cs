@@ -12,7 +12,7 @@ namespace TorreRPG.Comandos.Exibir
 {
     public class ComandoStatus : BaseCommandModule
     {
-        public readonly Banco banco;
+        public Banco banco;
 
         [Command("status")]
         [Description("Permite exibir os status do personagem ou de outro usuário.")]

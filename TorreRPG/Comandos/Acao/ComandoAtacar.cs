@@ -1,19 +1,19 @@
-﻿using TorreRPG.Atributos;
-using TorreRPG.Entidades;
-using TorreRPG.Extensoes;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using TorreRPG.Atributos;
+using TorreRPG.Entidades;
+using TorreRPG.Extensoes;
 using TorreRPG.Services;
 
 namespace TorreRPG.Comandos.Acao
 {
     public class ComandoAtacar : BaseCommandModule
     {
-        private readonly Banco banco;
+        public Banco banco;
 
         [Command("atacar")]
         [Aliases("at")]
