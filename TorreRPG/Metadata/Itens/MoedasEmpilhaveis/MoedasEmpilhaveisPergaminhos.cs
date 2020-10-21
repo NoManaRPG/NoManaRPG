@@ -15,7 +15,7 @@ namespace TorreRPG.Metadata.Itens.MoedasEmpilhaveis
         }
 
         public RPMoedaEmpilhavel Pergaminho1()
-        => new RPMoedaEmpilhavel(0, "Pergaminho", RPClasse.PergaminhoSabedoria, 1, 40);
+        => new RPMoedaEmpilhavel(0, "Pergaminho de sabedoria", RPClasse.PergaminhoSabedoria, 1, 40);
         public RPMoedaEmpilhavel PergaminhoFragmento1()
         => new RPMoedaEmpilhavel(0, "Fragmento de Pergaminho", RPClasse.FragmentoPergaminho, 1, 5);
     }
