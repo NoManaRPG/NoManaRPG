@@ -52,7 +52,7 @@ namespace TorreRPG.Entidades
                                 var pergaminhoFragmento = Itens.FindAll(x => x.Classe == RPClasse.PergaminhoSabedoria);
                                 // Não achou, adiciona novo
                                 if (pergaminhoFragmento == null)
-                                    return AdicionarNovoItem(new MoedasEmpilhaveisPergaminhos().Pergaminho1(), quantidade);
+                                    return AdicionarNovoItem(new MoedasEmpilhaveis().Pergaminho1(), quantidade);
 
                                 // Achou
                                 // Verifica se o pergaminho está com pilha máxima.
@@ -66,7 +66,7 @@ namespace TorreRPG.Entidades
                                         return true;
                                     }
                                 }
-                                return AdicionarNovoItem(new MoedasEmpilhaveisPergaminhos().Pergaminho1(), quantidade);
+                                return AdicionarNovoItem(new MoedasEmpilhaveis().Pergaminho1(), quantidade);
                             }
                             return true;
                         case RPClasse.PergaminhoSabedoria:
@@ -86,7 +86,7 @@ namespace TorreRPG.Entidades
                                     return true;
                                 }
                             }
-                            return AdicionarNovoItem(new MoedasEmpilhaveisPergaminhos().Pergaminho1(), quantidade);
+                            return AdicionarNovoItem(new MoedasEmpilhaveis().Pergaminho1(), quantidade);
                         case RPClasse.PergaminhoPortal:
                             // Procura na mochila outros pergaminhos
                             var pergaminhoPortal = Itens.FindAll(x => x.Classe == RPClasse.PergaminhoPortal);
@@ -104,7 +104,7 @@ namespace TorreRPG.Entidades
                                     return true;
                                 }
                             }
-                            return AdicionarNovoItem(new MoedasEmpilhaveisPergaminhos().Pergaminho1(), quantidade);
+                            return AdicionarNovoItem(new MoedasEmpilhaveis().Pergaminho1(), quantidade);
                     }
                     break;
             }

@@ -67,7 +67,7 @@ namespace TorreRPG.Comandos.Acao
                                     await ctx.RespondAsync($"{ctx.User.Mention}, você não pode vender este item!");
                                     return;
                                 case RPClasse.PergaminhoSabedoria:
-                                    adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveisPergaminhos().PergaminhoFragmento1());
+                                    adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoFragmento1());
                                     break;
                             }
                             break;
@@ -76,7 +76,7 @@ namespace TorreRPG.Comandos.Acao
                             switch (bi.Raridade)
                             {
                                 case RPRaridade.Normal:
-                                    adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveisPergaminhos().PergaminhoFragmento1());
+                                    adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoFragmento1());
                                     break;
                             }
                             break;
