@@ -48,45 +48,11 @@ namespace TorreRPG.Entidades
                                 Itens.RemoveAt(index);
                                 Espaco -= 1;
 
-                                // Procura na mochila outros pergaminhos
-                                var pergaminhoFragmento = Itens.FindAll(x => x.Classe == RPClasse.PergaminhoSabedoria);
-                                // Não achou, adiciona novo
-                                if (pergaminhoFragmento == null)
-                                    return AdicionarNovoItem(new MoedasEmpilhaveis().Pergaminho1(), quantidade);
-
-                                // Achou
-                                // Verifica se o pergaminho está com pilha máxima.
-                                foreach (var perg in pergaminhoFragmento)
-                                {
-                                    if ((perg as RPMoedaEmpilhavel).PilhaAtual == 40)
-                                        continue;
-                                    else
-                                    {
-                                        (perg as RPMoedaEmpilhavel).PilhaAtual++;
-                                        return true;
-                                    }
-                                }
-                                return AdicionarNovoItem(new MoedasEmpilhaveis().Pergaminho1(), quantidade);
+                                return AdicionarCurrency(item, quantidade);
                             }
                             return true;
                         case RPClasse.PergaminhoSabedoria:
-                            // Procura na mochila outros pergaminhos
-                            var pergaminhoSabedoria = Itens.FindAll(x => x.Classe == RPClasse.PergaminhoSabedoria);
-                            // Não achou
-                            if (pergaminhoSabedoria == null)
-                                return AdicionarNovoItem(item, quantidade);
-                            // Verifica se o pergaminho está com pilha máxima.
-                            foreach (var perg in pergaminhoSabedoria)
-                            {
-                                if ((perg as RPMoedaEmpilhavel).PilhaAtual == 40)
-                                    continue;
-                                else
-                                {
-                                    (perg as RPMoedaEmpilhavel).PilhaAtual++;
-                                    return true;
-                                }
-                            }
-                            return AdicionarNovoItem(new MoedasEmpilhaveis().Pergaminho1(), quantidade);
+                            return AdicionarCurrency(item, quantidade);
                         case RPClasse.PergaminhoPortal:
                             // Procura na mochila outros pergaminhos
                             var pergaminhoPortal = Itens.FindAll(x => x.Classe == RPClasse.PergaminhoPortal);
@@ -104,7 +70,7 @@ namespace TorreRPG.Entidades
                                     return true;
                                 }
                             }
-                            return AdicionarNovoItem(new MoedasEmpilhaveis().Pergaminho1(), quantidade);
+                            return AdicionarNovoItem(item, quantidade);
                     }
                     break;
             }
@@ -153,6 +119,51 @@ namespace TorreRPG.Entidades
             return false;
         }
 
+        public bool TryRemoveItemCurrency(RPClasse classe, out RPBaseItem outItem, int quantidade = 1)
+        {
+            outItem = null;
+            var todosCurrency = Itens.FindAll(x => x.Classe == classe);
+            int quantidadeTotal = 0;
+
+            // Soma todas as currency igual
+            foreach (var item in todosCurrency)
+                quantidadeTotal += (item as RPMoedaEmpilhavel).PilhaAtual;
+
+            if (todosCurrency.Count != 0)
+            {
+                if (quantidadeTotal < quantidade)
+                    return false;
+                var item = (todosCurrency[0] as RPMoedaEmpilhavel).Clone();
+                item.PilhaAtual = quantidade;
+                outItem = item;
+
+                // Subtrai de todas as currency
+                while (quantidade != 0)
+                {
+                    for (int i = todosCurrency.Count - 1; i >= 0; i--)
+                    {
+                        if (quantidade != 0)
+                        {
+                            var itemConvertido = todosCurrency[i] as RPMoedaEmpilhavel;
+                            itemConvertido.PilhaAtual--;
+                            quantidade--;
+                            if (itemConvertido.PilhaAtual == 0)
+                            {
+                                Itens.Remove(itemConvertido);
+                                todosCurrency.RemoveAt(i);
+                                Espaco -= itemConvertido.Espaco;
+                            }
+                            if (quantidade == 0)
+                                return true;
+                        }
+                    }
+                    if (todosCurrency.Count == 0)
+                        break;
+                }
+            }
+            return false;
+        }
+
         private bool AdicionarNovoItem(RPBaseItem item, int quantidade = 1)
         {
             if ((Espaco + item.Espaco) <= 64)
@@ -164,6 +175,38 @@ namespace TorreRPG.Entidades
                 return true;
             }
             return false;
+        }
+
+        private bool AdicionarCurrency(RPBaseItem item, int quantidade)
+        {
+            // Procura na mochila outros pergaminhos
+            var currency = Itens.FindAll(x => x.Classe == item.Classe);
+            // Não achou
+            if (currency == null)
+                return AdicionarNovoItem(item, quantidade);
+            // Verifica se o currency está com pilha máxima.
+            foreach (var perg in currency)
+            {
+                if (quantidade != 0)
+                {
+                    var moedaConvertida = perg as RPMoedaEmpilhavel;
+                    if (moedaConvertida.PilhaAtual == moedaConvertida.PilhaMaxima)
+                        continue;
+                    else
+                    {
+                        while (quantidade != 0)
+                        {
+                            moedaConvertida.PilhaAtual++;
+                            quantidade--;
+                            if (moedaConvertida.PilhaAtual == moedaConvertida.PilhaMaxima)
+                                return AdicionarNovoItem(item, quantidade);
+                            if (quantidade == 0)
+                                return true;
+                        }
+                    }
+                }
+            }
+            return AdicionarNovoItem(item, quantidade);
         }
     }
 }

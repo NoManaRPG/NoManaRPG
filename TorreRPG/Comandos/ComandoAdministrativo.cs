@@ -145,7 +145,7 @@ namespace TorreRPG.Comandos
                 RPJogador jogador = await banco.GetJogadorAsync(ctx.User);
                 RPPersonagem personagem = jogador.Personagem;
 
-                personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoFragmento1());
+                personagem.Mochila.Itens.Add(new MoedasEmpilhaveis().PergaminhoSabedoria());
 
                 await banco.EditJogadorAsync(jogador);
                 await session.CommitTransactionAsync();

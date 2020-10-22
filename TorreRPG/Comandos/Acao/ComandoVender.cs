@@ -67,7 +67,10 @@ namespace TorreRPG.Comandos.Acao
                                     await ctx.RespondAsync($"{ctx.User.Mention}, você não pode vender este item!");
                                     return;
                                 case RPClasse.PergaminhoSabedoria:
-                                    adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoFragmento1());
+                                    adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoFragmento());
+                                    break;
+                                case RPClasse.PergaminhoPortal:
+                                    adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoSabedoria(), 3);
                                     break;
                             }
                             break;
@@ -76,7 +79,7 @@ namespace TorreRPG.Comandos.Acao
                             switch (bi.Raridade)
                             {
                                 case RPRaridade.Normal:
-                                    adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoFragmento1());
+                                    adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoFragmento());
                                     break;
                             }
                             break;
@@ -87,7 +90,7 @@ namespace TorreRPG.Comandos.Acao
                         await banco.EditJogadorAsync(jogador);
                         await session.CommitTransactionAsync();
 
-                        await ctx.RespondAsync($"{ctx.User.Mention}, o item {item.TipoBaseModificado.Titulo().Bold()} foi vendido!");
+                        await ctx.RespondAsync($"{ctx.User.Mention}, você vendeu {1.Bold()} {item.TipoBaseModificado.Titulo()}!");
                         return;
                     }
 
