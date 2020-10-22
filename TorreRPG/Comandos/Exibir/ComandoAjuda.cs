@@ -111,19 +111,19 @@ namespace TorreRPG.Comandos.Exibir
             //!equipamentos!equipar!desequipar
             embed.WithDescription("Digite `!ajuda [comando]` para mais informações. Por exemplo: `!ajuda status`");
 
-            embed.AddField("Comando principal".Titulo().Bold(), FormatarURL("criar-personagem", "Permite criar o seu personagem escolhendo uma das 7 classes disponíveis") +
+            embed.AddField("Comando principal".Titulo(), FormatarURL("criar-personagem", "Permite criar o seu personagem escolhendo uma das 7 classes disponíveis") +
                 FormatarURL("status", "Permite ver o seu status ou a de outra pessoa"), true);
 
-            embed.AddField("Itens".Titulo().Bold(), FormatarURL("mochila", "Permite ver os itens da mochila") +
+            embed.AddField("Itens".Titulo(), FormatarURL("mochila", "Permite ver os itens da mochila") +
                 FormatarURL("equipamentos", "Permite ver os itens equipados") +
                 FormatarURL("examinar", "Permite ver a descrição de um item") +
                 FormatarURL("equipar", "Permite equipar itens") +
                 FormatarURL("desequipar", "Permite desequipr itens equipados"), true);
 
-            embed.AddField("Ajuda".Titulo().Bold(), FormatarURL("wiki", "Wiki oficial do bot") +
+            embed.AddField("Ajuda".Titulo(), FormatarURL("wiki", "Wiki oficial do bot") +
                 FormatarURL("ajuda", "Mostra todos os comandos e ajuda do comando especificado"), true);
 
-            embed.AddField("Combate".Titulo().Bold(), FormatarURL("atacar", "Permite atacar um monstro que encontra na sua frente\nAtalhos: !at") +
+            embed.AddField("Combate".Titulo(), FormatarURL("atacar", "Permite atacar um monstro que encontra na sua frente\nAtalhos: !at") +
                 FormatarURL("explorar", "Permite explorar o andar por mais monstros") +
                 FormatarURL("monstros", "Permite ver os monstros que estão na sua frente") +
                 FormatarURL("zona", "Permite ver informações sobre a zona atual") +
@@ -132,6 +132,9 @@ namespace TorreRPG.Comandos.Exibir
                 FormatarURL("usar-pocao", "Permite usar uma poção que se encontra no cinto") +
                 FormatarURL("chao", "Permite olhar os itens que estão no chão") +
                 FormatarURL("pegar", "Permite pegar um item que está no chão"), true);
+
+            embed.AddField("Mercado".Titulo(), FormatarURL("vender", "Permite vender itens") +
+                FormatarURL("loja", "Permite ver os itens que estão a venda"), true);
 
             embed.AddField("Outros".Titulo().Bold(), FormatarURL("setimage", "Permite escolher uma imagem para o retrato"), true);
 
