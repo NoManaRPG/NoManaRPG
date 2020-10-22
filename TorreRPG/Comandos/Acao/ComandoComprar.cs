@@ -55,7 +55,7 @@ namespace TorreRPG.Comandos.Acao
                 {
                     case "pergaminho de portal":
                     case "portal":
-                        bool tem = personagem.Mochila.TryRemoveItemCurrency(RPClasse.PergaminhoSabedoria, out RPBaseItem pergaminhoSabedoria, 3);
+                        bool tem = personagem.Mochila.TryRemoveItemCurrency(RPClasse.PergaminhoSabedoria, out RPBaseItem pergaminhoSabedoria, 3 * quantidade);
                         if (tem)
                         {
                             var item = new MoedasEmpilhaveis().PergaminhoPortal();
@@ -65,7 +65,7 @@ namespace TorreRPG.Comandos.Acao
                         }
                         else
                         {
-                            await ctx.RespondAsync($"{ctx.User.Mention}, você não tem {3.Bold()} {"Pergaminho de Sabedoria".Titulo()} para comprar este item!");
+                            await ctx.RespondAsync($"{ctx.User.Mention}, você não tem {(3 * quantidade).Bold()} {"Pergaminho de Sabedoria".Titulo()} para comprar este item!");
                             return;
                         }
                         break;
