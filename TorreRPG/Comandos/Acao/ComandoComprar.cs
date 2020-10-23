@@ -28,6 +28,12 @@ namespace TorreRPG.Comandos.Acao
             var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
             if (naoCriouPersonagem) return;
 
+            if(personagemNaoModificar.Zona.Nivel != 0)
+            {
+                await ctx.RespondAsync($"{ctx.User.Mention}, você somente pode comprar itens fora da torre!");
+                return;
+            }
+
             if (quantidade <= 0)
             {
                 await ctx.RespondAsync("Você precisa informar uma quantidade maior que 0!");
