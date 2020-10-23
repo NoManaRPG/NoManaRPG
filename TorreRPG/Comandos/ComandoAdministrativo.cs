@@ -57,6 +57,22 @@ namespace TorreRPG.Comandos
             await ctx.RespondAsync($"{user} deletado do banco de dados!");
         }
 
+        [Command("testm")]
+        [RequireOwner]
+        public async Task ff(CommandContext ctx)
+        {
+            var members = await ctx.Guild.GetAllMembersAsync();
+            foreach (var item in members)
+            {
+                if(item.Id == 87604980344721408)
+                {
+                   var f= await item.CreateDmChannelAsync();
+                  await  f.SendMessageAsync("teste");
+                    break;
+                }
+            }
+        }
+
         [Command("random-item")]
         [RequireOwner]
         public async Task RandomItemAsync(CommandContext ctx, int nivel = 1, [RemainingText] DiscordUser member = null)

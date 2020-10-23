@@ -42,10 +42,10 @@ namespace TorreRPG.Comandos.Acao
                 return;
             }
 
-            //Somente pode vender itens na base. (andar 0)
+            // Somente pode vender itens na base. (andar 0)
             if (personagemNaoModificar.Zona.Nivel != 0)
             {
-                await ctx.RespondAsync($"{ctx.Member.Mention}, você precisa estar fora da torre para poder vender itens.");
+                await ctx.RespondAsync($"{ctx.Member.Mention}, você precisa estar fora da torre para vender itens.");
                 return;
             }
 
@@ -70,7 +70,8 @@ namespace TorreRPG.Comandos.Acao
                                     adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoFragmento());
                                     break;
                                 case RPClasse.PergaminhoPortal:
-                                    adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoSabedoria(), 3);
+                                    for (int i = 0; i < 3; i++)
+                                        adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoSabedoria());
                                     break;
                             }
                             break;
