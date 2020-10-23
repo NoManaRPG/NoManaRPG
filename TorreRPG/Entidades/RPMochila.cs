@@ -21,10 +21,59 @@ namespace TorreRPG.Entidades
             Itens = new List<RPBaseItem>();
         }
 
-        public bool TryAddItem(RPBaseItem item)
+        public bool TryAddItem(RPBaseItem item, int quantidade = 1)
         {
-            if (item is RPMoedaEmpilhavel)
-                return AdicionarMoeda(item as RPMoedaEmpilhavel);
+            switch (item)
+            {
+                case RPMoedaEmpilhavel me:
+                    switch (me.Classe)
+                    {
+                        case RPClasse.FragmentoPergaminho:
+                            // Procura na mochila outros fragmentos
+                            int index = Itens.FindIndex(x => x.Classe == RPClasse.FragmentoPergaminho);
+
+                            // Não achou
+                            if (index == -1)
+                                return AdicionarNovoItem(item, quantidade);
+
+                            // Achou? converte
+                            var fragmentos = (RPMoedaEmpilhavel)Itens[index];
+                            // Adiciona a pilha
+                            fragmentos.PilhaAtual += quantidade;
+
+                            // Se tiver 5 fragmentos
+                            if (fragmentos.PilhaAtual >= fragmentos.PilhaMaxima)
+                            {
+                                // Transformar os fragmentos em pergaminho
+                                Itens.RemoveAt(index);
+                                Espaco -= 1;
+
+                                return AdicionarCurrency(item, quantidade);
+                            }
+                            return true;
+                        case RPClasse.PergaminhoSabedoria:
+                            return AdicionarCurrency(item, quantidade);
+                        case RPClasse.PergaminhoPortal:
+                            // Procura na mochila outros pergaminhos
+                            var pergaminhoPortal = Itens.FindAll(x => x.Classe == RPClasse.PergaminhoPortal);
+                            // Não achou
+                            if (pergaminhoPortal == null)
+                                return AdicionarNovoItem(item, quantidade);
+                            // Verifica se o pergaminho está com pilha máxima.
+                            foreach (var perg in pergaminhoPortal)
+                            {
+                                if ((perg as RPMoedaEmpilhavel).PilhaAtual == 40)
+                                    continue;
+                                else
+                                {
+                                    (perg as RPMoedaEmpilhavel).PilhaAtual++;
+                                    return true;
+                                }
+                            }
+                            return AdicionarNovoItem(item, quantidade);
+                    }
+                    break;
+            }
             return AdicionarNovoItem(item);
         }
 
@@ -115,10 +164,12 @@ namespace TorreRPG.Entidades
             return false;
         }
 
-        private bool AdicionarNovoItem(RPBaseItem item)
+        private bool AdicionarNovoItem(RPBaseItem item, int quantidade = 1)
         {
             if ((Espaco + item.Espaco) <= 64)
             {
+                if (item is RPMoedaEmpilhavel)
+                    (item as RPMoedaEmpilhavel).PilhaAtual = quantidade;
                 Itens.Add(item);
                 Espaco += item.Espaco;
                 return true;
@@ -126,42 +177,36 @@ namespace TorreRPG.Entidades
             return false;
         }
 
-        private bool AdicionarMoeda(RPMoedaEmpilhavel item)
+        private bool AdicionarCurrency(RPBaseItem item, int quantidade)
         {
-            // Procura na mochila outros iguais
-            var todasMoedas = Itens.FindAll(x => x.Classe == item.Classe);
-
-            if (todasMoedas == null)
+            // Procura na mochila outros pergaminhos
+            var currency = Itens.FindAll(x => x.Classe == item.Classe);
+            // Não achou
+            if (currency == null)
+                return AdicionarNovoItem(item, quantidade);
+            // Verifica se o currency está com pilha máxima.
+            foreach (var perg in currency)
             {
-                // Não achou? Adiciona o item com 1 de pilha
-                item.PilhaAtual = 1;
-                return AdicionarNovoItem(item);
-            }
-
-            // Verifica cada moeda
-            foreach (var baseItem in todasMoedas)
-            {
-                var moeda = baseItem as RPMoedaEmpilhavel;
-
-                if ((moeda.PilhaAtual + 1) == moeda.PilhaMaxima)
+                if (quantidade != 0)
                 {
-                    switch (moeda.Classe)
+                    var moedaConvertida = perg as RPMoedaEmpilhavel;
+                    if (moedaConvertida.PilhaAtual == moedaConvertida.PilhaMaxima)
+                        continue;
+                    else
                     {
-                        case RPClasse.FragmentoPergaminho:
-                            Itens.Remove(moeda);
-                            Espaco -= item.Espaco;
-                            return AdicionarMoeda(new MoedasEmpilhaveis().PergaminhoSabedoria());
+                        while (quantidade != 0)
+                        {
+                            moedaConvertida.PilhaAtual++;
+                            quantidade--;
+                            if (moedaConvertida.PilhaAtual == moedaConvertida.PilhaMaxima)
+                                return AdicionarNovoItem(item, quantidade);
+                            if (quantidade == 0)
+                                return true;
+                        }
                     }
-                    moeda.PilhaAtual++;
-                    return true;
-                }
-                else if (moeda.PilhaAtual < moeda.PilhaMaxima)
-                {
-                    moeda.PilhaAtual++;
-                    return true;
                 }
             }
-            return AdicionarNovoItem(item);
+            return AdicionarNovoItem(item, quantidade);
         }
     }
 }
