@@ -52,8 +52,10 @@ namespace TorreRPG.Eventos
                     await ctx.RespondAsync($"{ctx.User.Mention}, o usuario informado não foi encontrado.");
                     break;
                 case UnauthorizedException ux:
+                    e.Context.Client.Logger.LogDebug(new EventId(601, "Comando Invalido"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
                     break;
                 case ServerErrorException se:
+                    e.Context.Client.Logger.LogDebug(new EventId(601, "Comando Invalido"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
                     break;
                 case MongoCommandException mce:
                     await ctx.RespondAsync($"{ctx.User.Mention}, o último comando não foi processado corretamente! Tente executar os comandos mais lentamente!");
