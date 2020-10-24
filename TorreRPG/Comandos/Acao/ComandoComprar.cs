@@ -55,7 +55,7 @@ namespace TorreRPG.Comandos.Acao
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);
                 RPPersonagem personagem = jogador.Personagem;
                 bool vendeu = false;
-                string itemNome = "";
+                RPBaseItem item = null;
 
                 switch (stringItem)
                 {
@@ -64,10 +64,9 @@ namespace TorreRPG.Comandos.Acao
                         bool tem = personagem.Mochila.TryRemoveItemCurrency(RPClasse.PergaminhoSabedoria, out RPBaseItem pergaminhoSabedoria, 3 * quantidade);
                         if (tem)
                         {
-                            var item = new MoedasEmpilhaveis().PergaminhoPortal();
-                            itemNome = item.TipoBaseModificado;
-                            personagem.Mochila.TryAddItem(item);
-                            vendeu = true;
+                            item = new MoedasEmpilhaveis().PergaminhoPortal();
+                            for (int i = 0; i < quantidade; i++)
+                                vendeu = personagem.Mochila.TryAddItem(item);
                         }
                         else
                         {
@@ -83,13 +82,11 @@ namespace TorreRPG.Comandos.Acao
                     await banco.EditJogadorAsync(jogador);
                     await session.CommitTransactionAsync();
 
-                    await ctx.RespondAsync($"{ctx.User.Mention}, você acabou de comprar {quantidade.Bold()} {itemNome.Titulo()}!");
-                    return;
+                    await ctx.RespondAsync($"{ctx.User.Mention}, você acabou de comprar {quantidade.Bold()} {item.TipoBaseModificado.Titulo()}!");
                 }
-
-
+                else
+                    await ctx.RespondAsync($"{ctx.User.Mention}, você não tem espaço o suficiente na mochila para comprar este item!");
             }
-
         }
 
         [Command("comprar")]
