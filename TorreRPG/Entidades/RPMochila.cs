@@ -34,37 +34,16 @@ namespace TorreRPG.Entidades
         /// <param name="nome"></param>
         /// <param name="quantidade"></param>
         /// <returns></returns>
-        public bool TryRemoveItem(int index, out RPBaseItem outItem, int quantidade = 1)
+        public bool TryRemoveItem(int index, out RPBaseItem outItem)
         {
             outItem = null;
             var item = Itens.ElementAtOrDefault(index);
 
             if (item != null)
             {
-                switch (item)
-                {
-                    case RPMoedaEmpilhavel me:
-                        if (me.PilhaAtual < quantidade)
-                            return false;
-                        me.PilhaAtual -= quantidade;
-                        if (me.PilhaAtual == 0)
-                        {
-                            Itens.Remove(item);
-                            Espaco -= item.Espaco;
-                        }
-                        outItem = item;
-                        break;
-                    default:
-                        switch (item.Classe)
-                        {
-                            default:
-                                Itens.Remove(item);
-                                outItem = item;
-                                Espaco -= item.Espaco * quantidade;
-                                break;
-                        }
-                        break;
-                }
+                Itens.Remove(item);
+                outItem = item;
+                Espaco -= item.Espaco;
                 return true;
             }
             return false;
