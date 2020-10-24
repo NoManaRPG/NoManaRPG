@@ -28,7 +28,7 @@ namespace TorreRPG.Comandos.Acao
             var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
             if (naoCriouPersonagem) return;
 
-            if(personagemNaoModificar.Zona.Nivel != 0)
+            if (personagemNaoModificar.Zona.Nivel != 0)
             {
                 await ctx.RespondAsync($"{ctx.User.Mention}, você somente pode comprar itens fora da torre!");
                 return;
@@ -36,13 +36,13 @@ namespace TorreRPG.Comandos.Acao
 
             if (quantidade <= 0)
             {
-                await ctx.RespondAsync("Você precisa informar uma quantidade maior que 0!");
+                await ctx.RespondAsync($"{ctx.User.Mention}, você precisa informar uma quantidade maior que 0!");
                 return;
             }
 
             if (string.IsNullOrEmpty(stringItem))
             {
-                await ctx.RespondAsync("Você precisa informar o nome do item que deseja comprar!");
+                await ctx.RespondAsync($"{ctx.User.Mention}, você precisa informar o nome do item que deseja comprar!");
                 return;
             }
 
@@ -96,7 +96,7 @@ namespace TorreRPG.Comandos.Acao
         [Priority(0)]
         public async Task ComandoComprarAsync(CommandContext ctx, string quantidade = "")
         {
-            await ctx.RespondAsync("Você precisa informar uma quantidade maior que 0!");
+            await ctx.RespondAsync($"{ctx.User.Mention}, você precisa informar uma quantidade maior que 0!");
         }
     }
 }
