@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TorreRPG.Atributos;
 using TorreRPG.Services;
 using System;
+using TorreRPG.Comandos.Acao;
 
 namespace TorreRPG.Comandos.Exibir
 {
@@ -57,10 +58,10 @@ namespace TorreRPG.Comandos.Exibir
                 $"Tem {personagem.Precisao.Modificado.Text().Bold()} pontos de precisão.\n" +
                 $"Tem {personagem.Armadura.Modificado.Text().Bold()} pontos de armadura.\n");
 
-            embed.AddField($"{Emoji.OrbVida} {"Vida".Titulo()}", $"{personagem.Vida.Atual.Text()}/{personagem.Vida.Maximo.Text()}", true);
-            embed.AddField($"{Emoji.OrbMana} {"Mana".Titulo()}", $"{personagem.Mana.Atual.Text()}/{personagem.Mana.Maximo.Text()}", true);
-            embed.AddField("Dano por segundo".Titulo(), $"{((personagem.DanoFisicoModificado.Maximo + personagem.DanoFisicoModificado.Minimo / 2) * personagem.VelocidadeAtaque.Modificado).Text()}");
-            embed.AddField("Dano físico combinado".Titulo(), $"{personagem.DanoFisicoModificado.Minimo} - {personagem.DanoFisicoModificado.Maximo}", true);
+            embed.AddField($"{ComandoAtacar.ConverterVida(personagem.Vida.Atual / personagem.Vida.Maximo)} {"Vida".Titulo()}", $"{personagem.Vida.Atual.Text()}/{personagem.Vida.Maximo.Text()}", true);
+            embed.AddField($"{ComandoAtacar.ConverterMana(personagem.Mana.Atual / personagem.Mana.Maximo)} {"Mana".Titulo()}", $"{personagem.Mana.Atual.Text()}/{personagem.Mana.Maximo.Text()}", true);
+            embed.AddField($"{Emoji.Adaga} {"Dano por segundo".Titulo()}", $"{((personagem.DanoFisicoModificado.Maximo + personagem.DanoFisicoModificado.Minimo / 2) * personagem.VelocidadeAtaque.Modificado).Text()}");
+            embed.AddField($"{Emoji.EspadasCruzadas} {"Dano físico combinado".Titulo()}", $"{personagem.DanoFisicoModificado.Minimo} - {personagem.DanoFisicoModificado.Maximo}", true);
 
             return embed;
         }

@@ -108,10 +108,10 @@ namespace TorreRPG.Entidades
                         if (Calculo.DanoFisicoChanceAcerto(mob.Precisao, personagem.Evasao.Modificado))
                         {
                             double dano = personagem.ReceberDanoFisico(mob.Dano);
-                            resumoBatalha.AppendLine($"{mob.Nome} causou {dano.Text()} de dano físico.");
+                            resumoBatalha.AppendLine($"{Emoji.Escudo} {mob.Nome} causou {dano.Text()} de dano físico.");
                         }
                         else
-                            resumoBatalha.AppendLine($"{mob.Nome} errou o ataque!");
+                            resumoBatalha.AppendLine($"{Emoji.Nervoso} {mob.Nome} errou o ataque!");
                     }
                 }
 

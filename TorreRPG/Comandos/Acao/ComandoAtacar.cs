@@ -78,7 +78,7 @@ namespace TorreRPG.Comandos.Acao
                     // Randomizamos um dano médio com base no minimo e max da arma equipada.
                     double danoPersonagem = personagem.DanoFisicoModificado.Sortear;
                     personagem.Zona.Monstros[indexAlvo].Vida -= danoPersonagem;
-                    resumoBatalha.AppendLine($"\nVocê causou {danoPersonagem.Text()} de dano no {personagem.Zona.Monstros[indexAlvo].Nome}!");
+                    resumoBatalha.AppendLine($"\n{Emoji.Adaga} Você causou {danoPersonagem.Text()} de dano no {personagem.Zona.Monstros[indexAlvo].Nome}!");
 
                     // Se o monstro morrer.
                     if (personagem.Zona.Monstros[indexAlvo].Vida <= 0)
@@ -101,11 +101,10 @@ namespace TorreRPG.Comandos.Acao
                     }
                 }
                 else // Caso ele erre o ataque
-                    resumoBatalha.AppendLine($"\nVocê errou o ataque!");
+                    resumoBatalha.AppendLine($"\n{Emoji.Desapontado} Você errou o ataque!");
 
                 // Informações complementares
-                embed.WithDescription($"**Ondas restantes {personagem.Zona.OndaTotal - personagem.Zona.OndaAtual}.** " +
-                 $"**Turno {personagem.Zona.Turno}.**\n" +
+                embed.WithDescription($"**Turno {personagem.Zona.Turno}.**\n" +
                   $"**Inimigo restante {personagem.Zona.Monstros.Count} .**");
 
                 embed.WithColor(DiscordColor.Blue);
@@ -133,14 +132,14 @@ namespace TorreRPG.Comandos.Acao
                 if (monstroMorreu)
                 {
                     if (personagem.Zona.NovaOnda(personagem.VelocidadeAtaque.Modificado, out int inimigosNovos))
-                        embed.AddField("Nova onda".Titulo(), $"Apareceu {inimigosNovos} monstros!");
+                        embed.AddField("Nova onda".Titulo(), $"{Emoji.ExplacamaoDupla} Apareceu {inimigosNovos} monstros!");
                 }
                 if (!jogadorMorreu)
                 {
                     var porcentagemVida = personagem.Vida.Atual / personagem.Vida.Maximo;
                     var porcenagemMana = personagem.Mana.Atual / personagem.Mana.Maximo;
-                    embed.AddField($"{"Vida atual".Underline()}", $"{ConverterVida(porcentagemVida)} {(porcentagemVida*100).Text()}%", true);
-                    embed.AddField($"{"Mana atual".Underline()}", $"{ConverterMana(porcenagemMana)} {(porcenagemMana*100).Text()}%", true);
+                    embed.AddField($"{"Vida atual".Underline()}", $"{ConverterVida(porcentagemVida)} {(porcentagemVida * 100).Text()}%", true);
+                    embed.AddField($"{"Mana atual".Underline()}", $"{ConverterMana(porcenagemMana)} {(porcenagemMana * 100).Text()}%", true);
                 }
 
                 // Salvamos.
@@ -151,7 +150,7 @@ namespace TorreRPG.Comandos.Acao
             }
         }
 
-        public string ConverterVida(double porcentagem)
+        public static string ConverterVida(double porcentagem)
         {
             switch (porcentagem)
             {
@@ -165,7 +164,7 @@ namespace TorreRPG.Comandos.Acao
             return Emoji.CoracaoVermelho;
         }
 
-        public string ConverterMana(double porcentagem)
+        public static string ConverterMana(double porcentagem)
         {
             switch (porcentagem)
             {

@@ -26,8 +26,16 @@ namespace TorreRPG.Services
         public const string CoracaoPreto = ":black_heart:";
 
         public const string CirculoVerde = ":green_circle:";
-        public const string CirculoAmarelo= ":yellow_circle:";
+        public const string CirculoAmarelo = ":yellow_circle:";
         public const string CirculoLaranja = ":orange_circle:";
         public const string CirculoVermelho = ":red_circle:";
+
+        public const string Adaga = ":dagger:";
+        public const string EspadasCruzadas = ":crossed_swords:";
+        public const string Escudo = ":shield:";
+        public const string Nervoso = ":rage:";
+
+        public const string Desapontado = ":disappointed_relieved:";
+        public const string ExplacamaoDupla = ":bangbang:";
     }
 }
