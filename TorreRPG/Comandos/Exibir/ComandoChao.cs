@@ -47,7 +47,10 @@ namespace TorreRPG.Comandos.Exibir
                 for (int i = 0; i < personagemNaoModificar.Zona.ItensNoChao.Count; i++)
                 {
                     var item = personagemNaoModificar.Zona.ItensNoChao[i];
-                    str.AppendLine($"`#{i}` {item.TipoBaseModificado.Titulo().Bold()} ");
+                    str.Append($"`#{i}` ");
+                    str.Append(ComandoMochila.GerarEmojiRaridade(item.Raridade));
+
+                    str.AppendLine($" {item.TipoBaseModificado.Titulo().Bold()} ");
                 }
                 embed.WithDescription("Você está olhando para os itens no chão! Digite `!pegar` para guarda-los na mochila!\n" + str.ToString());
                 await ctx.RespondAsync(embed: embed.Build());

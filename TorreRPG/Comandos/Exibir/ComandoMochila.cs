@@ -48,7 +48,7 @@ namespace TorreRPG.Comandos.Exibir
             await ctx.RespondAsync(embed: embed.Build());
         }
 
-        private DiscordEmoji GerarEmojiRaridade(RPRaridade raridade)
+        public static DiscordEmoji GerarEmojiRaridade(RPRaridade raridade)
         {
             switch (raridade)
             {
