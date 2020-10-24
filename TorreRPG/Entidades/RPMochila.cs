@@ -34,13 +34,15 @@ namespace TorreRPG.Entidades
         /// <param name="nome"></param>
         /// <param name="quantidade"></param>
         /// <returns></returns>
-        public bool TryRemoveItem(int index, out RPBaseItem outItem)
+        public bool TryRemoveItem(int index, out RPBaseItem outItem, int quantidade = 1)
         {
             outItem = null;
             var item = Itens.ElementAtOrDefault(index);
 
             if (item != null)
             {
+                if (item is RPMoedaEmpilhavel)
+                    return TryRemoveItemCurrency((item as RPMoedaEmpilhavel).Classe, out outItem, quantidade);
                 Itens.Remove(item);
                 outItem = item;
                 Espaco -= item.Espaco;

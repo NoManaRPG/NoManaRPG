@@ -1,8 +1,6 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using TorreRPG.Atributos;
 using TorreRPG.Entidades;
@@ -29,6 +27,13 @@ namespace TorreRPG.Comandos.Acao
             var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
             if (naoCriouPersonagem) return;
 
+            // Somente pode vender itens na base. (andar 0)
+            if (personagemNaoModificar.Zona.Nivel != 0)
+            {
+                await ctx.RespondAsync($"{ctx.Member.Mention}, você precisa estar fora da torre para vender itens.");
+                return;
+            }
+
             if (string.IsNullOrEmpty(stringId))
             {
                 await ctx.RespondAsync($"{ctx.Member.Mention}, você precisa informar um `#ID` de um item para poder estar vendendo. Digite `!mochila` para encontra-los, eles geralmente são os primeiros números de um item!");
@@ -39,13 +44,6 @@ namespace TorreRPG.Comandos.Acao
             if (!stringId.TryParseID(out int index))
             {
                 await ctx.RespondAsync($"{ctx.User.Mention}, o `#ID` é numérico!");
-                return;
-            }
-
-            // Somente pode vender itens na base. (andar 0)
-            if (personagemNaoModificar.Zona.Nivel != 0)
-            {
-                await ctx.RespondAsync($"{ctx.Member.Mention}, você precisa estar fora da torre para vender itens.");
                 return;
             }
 
