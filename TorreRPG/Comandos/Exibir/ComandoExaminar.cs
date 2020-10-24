@@ -112,11 +112,15 @@ namespace TorreRPG.Comandos.Exibir
                         switch (moeda.Classe)
                         {
                             case RPClasse.FragmentoPergaminho:
-                                str.AppendLine("Uma pilha de 5 fragmentos forma um pergaminho de sabedoria.");
+                                str.AppendLine("Uma pilha de 5 fragmentos forma um pergaminho de sabedoria");
                                 break;
                             case RPClasse.PergaminhoSabedoria:
                                 str.AppendLine("Identifica um item");
-                                str.AppendLine("Digite `!identificar #ID` para identificar.");
+                                str.AppendLine("Digite `!identificar #ID` para identificar");
+                                break;
+                            case RPClasse.PergaminhoPortal:
+                                str.AppendLine("Cria um portal");
+                                str.AppendLine("Digite `!portal` para criar um portal");
                                 break;
                         }
                         break;

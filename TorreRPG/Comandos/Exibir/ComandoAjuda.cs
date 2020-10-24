@@ -118,10 +118,10 @@ namespace TorreRPG.Comandos.Exibir
                 FormatarURL("equipamentos", "Permite ver os itens equipados") +
                 FormatarURL("examinar", "Permite ver a descrição de um item") +
                 FormatarURL("equipar", "Permite equipar itens") +
-                FormatarURL("desequipar", "Permite desequipr itens equipados"), true);
+                FormatarURL("desequipar", "Permite desequipr itens equipados") +
+                FormatarURL("portal", "Permite usar o Pergaminho de Portal"), true);
 
-            embed.AddField("Ajuda".Titulo(), FormatarURL("wiki", "Wiki oficial do bot") +
-                FormatarURL("ajuda", "Mostra todos os comandos e ajuda do comando especificado"), true);
+            //embed.AddField("Ajuda".Titulo(), 
 
             embed.AddField("Combate".Titulo(), FormatarURL("atacar", "Permite atacar um monstro que encontra na sua frente\nAtalhos: !at") +
                 FormatarURL("explorar", "Permite explorar o andar por mais monstros") +
@@ -134,9 +134,12 @@ namespace TorreRPG.Comandos.Exibir
                 FormatarURL("pegar", "Permite pegar um item que está no chão"), true);
 
             embed.AddField("Mercado".Titulo(), FormatarURL("vender", "Permite vender itens") +
+                   FormatarURL("comprar", "Permite comprar os itens que estão a venda") +
                 FormatarURL("loja", "Permite ver os itens que estão a venda"), true);
 
-            embed.AddField("Outros".Titulo().Bold(), FormatarURL("setimage", "Permite escolher uma imagem para o retrato"), true);
+            embed.AddField("Outros".Titulo().Bold(), FormatarURL("setimage", "Permite escolher uma imagem para o retrato") +
+                FormatarURL("wiki", "Wiki oficial do bot") +
+                FormatarURL("ajuda", "Mostra todos os comandos e ajuda do comando especificado"), true);
 
             embed.AddField("Argumentos", "[Colchete] são argumentos opcionais.\n" +
                 "<Chevron> são argumentos obrigatorios.");

@@ -21,6 +21,12 @@ namespace TorreRPG.Comandos.Exibir
             var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
             if (naoCriouPersonagem) return;
 
+            if (personagemNaoModificar.IsPortalAberto)
+            {
+                await ctx.RespondAsync($"{ctx.User.Mention}, você não pode usar este comando com o portal aberto!");
+                return;
+            }
+
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
             embed.WithAuthor($"{ctx.User.Username} - {personagemNaoModificar.Nome}", iconUrl: ctx.User.AvatarUrl);
             embed.WithColor(DiscordColor.Aquamarine);

@@ -24,6 +24,12 @@ namespace TorreRPG.Comandos.Acao
             var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
             if (naoCriouPersonagem) return;
 
+            if (personagemNaoModificar.IsPortalAberto)
+            {
+                await ctx.RespondAsync($"{ctx.User.Mention}, você não pode usar este comando com o portal aberto!");
+                return;
+            }
+
             // Converte o id informado.
             if (!stringIndexItem.TryParseID(out int indexItem))
             {

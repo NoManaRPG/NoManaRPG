@@ -61,6 +61,7 @@ namespace TorreRPG
             ComandosNext.RegisterCommands<ComandoVender>();
             ComandosNext.RegisterCommands<ComandoLoja>();
             ComandosNext.RegisterCommands<ComandoComprar>();
+            ComandosNext.RegisterCommands<ComandoPortal>();
         }
     }
 }

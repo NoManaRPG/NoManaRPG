@@ -23,7 +23,9 @@ namespace TorreRPG.Comandos.Acao
             var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
             if (naoCriouPersonagem) return;
 
-            if (personagemNaoModificar.Zona.Monstros.Count != 0)
+            if (personagemNaoModificar.IsPortalAberto)
+                personagemNaoModificar.Zona.Monstros.Clear();
+            else if (personagemNaoModificar.Zona.Monstros.Count != 0)
             {
                 await ctx.RespondAsync($"{ctx.User.Mention}, você precisa eliminar todos os montros para subir!");
                 return;

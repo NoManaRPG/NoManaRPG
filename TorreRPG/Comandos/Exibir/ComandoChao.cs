@@ -26,7 +26,13 @@ namespace TorreRPG.Comandos.Exibir
             //Verifica se existe o jogador,
             var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
             if (naoCriouPersonagem) return;
-         
+
+            if (personagemNaoModificar.IsPortalAberto)
+            {
+                await ctx.RespondAsync($"{ctx.User.Mention}, você não pode usar este comando com o portal aberto!");
+                return;
+            }
+
             if (personagemNaoModificar.Zona.ItensNoChao.Count == 0)
             {
                 await ctx.RespondAsync($"{ctx.User.Mention}, você precisa de itens no chão para olhar! Elimine alguns monstros!");

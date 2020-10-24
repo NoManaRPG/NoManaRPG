@@ -46,6 +46,7 @@ namespace TorreRPG.Entidades
 
             Frascos = new List<RPBaseFrasco>();
             Mochila = new RPMochila();
+
         }
 
         public string Nome { get; set; }
@@ -99,6 +100,7 @@ namespace TorreRPG.Entidades
 
         public RPMochila Mochila { get; set; }
 
+        public bool IsPortalAberto { get; set; }
 
         public double ReceberDanoFisico(double danoFisico)
         {

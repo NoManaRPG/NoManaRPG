@@ -57,6 +57,22 @@ namespace TorreRPG.Comandos
             await ctx.RespondAsync($"{user} deletado do banco de dados!");
         }
 
+        [Command("testm")]
+        [RequireOwner]
+        public async Task ff(CommandContext ctx)
+        {
+            var members = await ctx.Guild.GetAllMembersAsync();
+            foreach (var item in members)
+            {
+                if (item.Id == 87604980344721408)
+                {
+                    var f = await item.CreateDmChannelAsync();
+                    await f.SendMessageAsync("teste");
+                    break;
+                }
+            }
+        }
+
         [Command("random-item")]
         [RequireOwner]
         public async Task RandomItemAsync(CommandContext ctx, int nivel = 1, [RemainingText] DiscordUser member = null)
@@ -137,7 +153,7 @@ namespace TorreRPG.Comandos
 
         [Command("currency")]
         [RequireOwner]
-        public async Task Currency(CommandContext ctx)
+        public async Task Currency(CommandContext ctx, int quantidade = 1)
         {
             using (var session = await banco.Cliente.StartSessionAsync())
             {
@@ -145,11 +161,12 @@ namespace TorreRPG.Comandos
                 RPJogador jogador = await banco.GetJogadorAsync(ctx.User);
                 RPPersonagem personagem = jogador.Personagem;
 
-                personagem.Mochila.Itens.Add(new MoedasEmpilhaveis().PergaminhoSabedoria());
+                for (int i = 0; i < quantidade; i++)
+                    personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoSabedoria());
 
                 await banco.EditJogadorAsync(jogador);
                 await session.CommitTransactionAsync();
-                await ctx.RespondAsync($"Adicionado!");
+                await ctx.RespondAsync($"Adicionado {quantidade}!");
 
             }
         }

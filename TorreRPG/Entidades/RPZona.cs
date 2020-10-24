@@ -15,6 +15,7 @@ namespace TorreRPG.Entidades
     {
 
         public int Nivel { get; set; }
+        public int NivelAnterior { get; set; }
         public long OndaTotal { get; set; }
         public long OndaAtual { get; set; }
         public int Turno { get; set; } // Reseta em outra onda

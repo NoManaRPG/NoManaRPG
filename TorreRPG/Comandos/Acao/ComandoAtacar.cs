@@ -28,6 +28,12 @@ namespace TorreRPG.Comandos.Acao
             var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
             if (naoCriouPersonagem) return;
 
+            if (personagemNaoModificar.IsPortalAberto)
+            {
+                await ctx.RespondAsync($"{ctx.User.Mention}, você não pode usar este comando com o portal aberto!");
+                return;
+            }
+
             if (personagemNaoModificar.Zona.Monstros.Count == 0)
             {
                 await ctx.RespondAsync($"{ctx.User.Mention}, você não tem vê monstros para atacar!");
