@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
 using TorreRPG.Atributos;
@@ -116,6 +117,7 @@ namespace TorreRPG.Comandos.Acao
 
                     resumoBatalha.AppendLine($"{Emoji.CrossBone} Você morreu!!! {Emoji.CrossBone}".Bold());
                     embed.WithColor(DiscordColor.Red);
+                    embed.WithImageUrl("https://cdn.discordapp.com/attachments/758139402219159562/769397084284649472/kisspng-headstone-drawing-royalty-free-clip-art-5afd7eb3d84cb3.625146071526562483886.png");
                     jogadorMorreu = true;
                 }
 
@@ -135,8 +137,10 @@ namespace TorreRPG.Comandos.Acao
                 }
                 if (!jogadorMorreu)
                 {
-                    embed.AddField($"{Emoji.OrbVida} {"Vida".Titulo()}", $"{personagem.Vida.Atual.Text()}/{personagem.Vida.Maximo.Text()}", true);
-                    embed.AddField($"{Emoji.OrbMana} {"Mana".Titulo()}", $"{personagem.Mana.Atual.Text()}/{personagem.Mana.Maximo.Text()}", true);
+                    var porcentagemVida = personagem.Vida.Atual / personagem.Vida.Maximo;
+                    var porcenagemMana = personagem.Mana.Atual / personagem.Mana.Maximo;
+                    embed.AddField($"{"Vida atual".Underline()}", $"{ConverterVida(porcentagemVida)} {(porcentagemVida*100).Text()}%", true);
+                    embed.AddField($"{"Mana atual".Underline()}", $"{ConverterMana(porcenagemMana)} {(porcenagemMana*100).Text()}%", true);
                 }
 
                 // Salvamos.
@@ -145,6 +149,34 @@ namespace TorreRPG.Comandos.Acao
 
                 await ctx.RespondAsync(ctx.User.Mention, embed: embed.Build());
             }
+        }
+
+        public string ConverterVida(double porcentagem)
+        {
+            switch (porcentagem)
+            {
+                case double n when (n > 0.75):
+                    return Emoji.CoracaoVerde;
+                case double n when (n > 0.50):
+                    return Emoji.CoracaoAmarelo;
+                case double n when (n > 0.25):
+                    return Emoji.CoracaoLaranja;
+            }
+            return Emoji.CoracaoVermelho;
+        }
+
+        public string ConverterMana(double porcentagem)
+        {
+            switch (porcentagem)
+            {
+                case double n when (n > 0.75):
+                    return Emoji.CirculoVerde;
+                case double n when (n > 0.50):
+                    return Emoji.CirculoAmarelo;
+                case double n when (n > 0.25):
+                    return Emoji.CirculoLaranja;
+            }
+            return Emoji.CirculoVermelho;
         }
     }
 }

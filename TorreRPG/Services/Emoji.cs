@@ -18,5 +18,16 @@ namespace TorreRPG.Services
         public const string QuadradoSul = ":regional_indicator_s:";
         public const string QuadradoLeste = ":regional_indicator_l:";
         public const string QuadradoOeste = ":regional_indicator_o:";
+
+        public const string CoracaoVerde = ":green_heart:";
+        public const string CoracaoAmarelo = ":yellow_heart:";
+        public const string CoracaoLaranja = ":orange_heart:";
+        public const string CoracaoVermelho = ":heart:";
+        public const string CoracaoPreto = ":black_heart:";
+
+        public const string CirculoVerde = ":green_circle:";
+        public const string CirculoAmarelo= ":yellow_circle:";
+        public const string CirculoLaranja = ":orange_circle:";
+        public const string CirculoVermelho = ":red_circle:";
     }
 }
