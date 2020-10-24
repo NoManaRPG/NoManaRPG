@@ -49,6 +49,13 @@ namespace TorreRPG.Entidades
             return false;
         }
 
+        /// <summary>
+        /// Usar somente para moedas.
+        /// </summary>
+        /// <param name="classe"></param>
+        /// <param name="outItem"></param>
+        /// <param name="quantidade"></param>
+        /// <returns></returns>
         public bool TryRemoveItemCurrency(RPClasse classe, out RPBaseItem outItem, int quantidade = 1)
         {
             outItem = null;
