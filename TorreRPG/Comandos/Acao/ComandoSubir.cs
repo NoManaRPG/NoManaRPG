@@ -23,20 +23,23 @@ namespace TorreRPG.Comandos.Acao
             var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
             if (naoCriouPersonagem) return;
 
-            if (personagemNaoModificar.IsPortalAberto)
-                personagemNaoModificar.Zona.Monstros.Clear();
-            else if (personagemNaoModificar.Zona.Monstros.Count != 0)
-            {
-                await ctx.RespondAsync($"{ctx.User.Mention}, você precisa eliminar todos os montros para subir!");
-                return;
-            }
-
             int inimigos = 0;
             using (var session = await banco.Cliente.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);
                 RPPersonagem personagem = jogador.Personagem;
+
+                if (personagem.IsPortalAberto)
+                {
+                    personagem.Zona.Monstros.Clear();
+                    personagem.IsPortalAberto = false;
+                }
+                else if (personagem.Zona.Monstros.Count != 0)
+                {
+                    await ctx.RespondAsync($"{ctx.User.Mention}, você precisa eliminar todos os montros para subir!");
+                    return;
+                }
 
                 bool temMonstros = RPMetadata.MonstrosNomes.ContainsKey(personagem.Zona.Nivel - 1);
                 if (temMonstros)
