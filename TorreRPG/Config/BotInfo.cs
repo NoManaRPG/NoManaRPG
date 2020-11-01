@@ -7,7 +7,10 @@ namespace TorreRPG.Config
     public class BotInfo
     {
         [JsonIgnore]
-        public int QuantidadeMembros { get; set; }
+        public int Membros { get; set; }
+
+        [JsonIgnore]
+        public int Guildas { get; set; }
 
         [JsonIgnore]
         public DateTime TempoAtivo { get; set; } = DateTime.Now;
@@ -21,19 +24,28 @@ namespace TorreRPG.Config
         [JsonProperty("versaoRevisao")]
         public int VersaoRevisao { get; set; } = 0;
 
+        /// <summary>
+        /// Carrega a config de um arquivo JSON.
+        /// </summary>
+        /// <param name="path">Caminho para o arquivo config.</param>
+        /// <returns></returns>
         public static BotInfo LoadFromFile(string path)
         {
             if (!File.Exists(path))
             {
-                BotInfo config = new BotInfo();
-                config.SaveToFile(path);
-                return null;
+                BotInfo botinfo = new BotInfo();
+                botinfo.SaveToFile(path);
+                return botinfo;
             }
 
             using (var sr = new StreamReader(path))
                 return JsonConvert.DeserializeObject<BotInfo>(sr.ReadToEnd());
         }
 
+        /// <summary>
+        /// Salva as config para um arquivo JSON.
+        /// </summary>
+        /// <param name="path">Caminho para o arquivo config.</param>
         public void SaveToFile(string path)
         {
             using (var sw = new StreamWriter(path))
