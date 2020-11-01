@@ -10,18 +10,15 @@ namespace TorreRPG.Services
 {
     public class Banco
     {
-        public IMongoClient Cliente { get; private set; }
-        public IMongoDatabase Database { get; private set; }
-        public IMongoCollection<RPJogador> Jogadores { get; private set; }
-        public IMongoCollection<Wiki> Wikis { get; private set; }
+        public IMongoClient Cliente { get; }
+        public IMongoDatabase Database { get; }
+        public IMongoCollection<RPJogador> Jogadores { get; }
 
         public Banco()
         {
             Cliente = new MongoClient();
             Database = Cliente.GetDatabase("Dragon");
-
             Jogadores = Database.CriarCollection<RPJogador>();
-            Wikis = Database.CriarCollection<Wiki>();
 
             #region Usar no futuro
             //BsonSerializer.RegisterSerializer(typeof(float),

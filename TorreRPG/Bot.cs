@@ -5,7 +5,6 @@ using TorreRPG.Comandos.Acao;
 using TorreRPG.Comandos.Exibir;
 using TorreRPG.Config;
 using TorreRPG.Eventos;
-using TorreRPG.Extensoes;
 
 namespace TorreRPG
 {
@@ -18,7 +17,6 @@ namespace TorreRPG
         public Bot(DiscordConfiguration discordConfiguration)
         {
             BotInfo = BotInfo.LoadFromFile("BotInfo.json");
-            if (BotInfo == null) BotInfo = new BotInfo();
 #if DEBUG
             BotInfo.VersaoRevisao++;
             BotInfo.SaveToFile("BotInfo.json");
