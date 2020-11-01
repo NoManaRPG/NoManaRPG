@@ -71,7 +71,7 @@ namespace TorreRPG.Eventos
 
                     DiscordChannel channel = await ctx.Client.GetChannelAsync(742778666509008956);
                     await ctx.Client.SendMessageAsync(channel, embed: embed.Build());
-                    await ctx.RespondAsync("Aconteceu um erro!", embed: embed.Build());
+                    await ctx.RespondAsync("Aconteceu um erro! Reporte no servidor oficial!", embed: embed.Build());
                     break;
             }
         }
