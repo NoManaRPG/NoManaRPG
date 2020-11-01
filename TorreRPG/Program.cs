@@ -1,5 +1,4 @@
-﻿using TorreRPG.Extensoes;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using System;
 using System.Threading.Tasks;
@@ -18,12 +17,7 @@ namespace TorreRPG
 
         public async Task RodarBotAsync()
         {
-
-#if DEBUG
-            configFile = ConfigFile.LoadFromFile(StringExtension.EntrarPasta("") + "Config.json");
-#else
             configFile = ConfigFile.LoadFromFile("Config.json");
-#endif
             if (configFile == null)
             {
                 Console.WriteLine("O arquivo config.json não existe!");

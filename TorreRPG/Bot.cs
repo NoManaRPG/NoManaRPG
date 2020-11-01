@@ -17,11 +17,11 @@ namespace TorreRPG
 
         public Bot(DiscordConfiguration discordConfiguration)
         {
-            BotInfo = BotInfo.LoadFromFile(StringExtension.EntrarPasta("") + "BotInfo.json");
+            BotInfo = BotInfo.LoadFromFile("BotInfo.json");
             if (BotInfo == null) BotInfo = new BotInfo();
 #if DEBUG
             BotInfo.VersaoRevisao++;
-            BotInfo.SaveToFile(StringExtension.EntrarPasta("") + "BotInfo.json");
+            BotInfo.SaveToFile("BotInfo.json");
 #endif
 
             Cliente = new DiscordClient(discordConfiguration);
@@ -54,7 +54,6 @@ namespace TorreRPG
             ComandosNext.RegisterCommands<ComandoEquipamentos>();
             ComandosNext.RegisterCommands<ComandoEquipar>();
             ComandosNext.RegisterCommands<ComandoDesequipar>();
-            ComandosNext.RegisterCommands<ComandoSetImage>();
             ComandosNext.RegisterCommands<ComandoExaminar>();
             ComandosNext.RegisterCommands<ComandoChao>();
             ComandosNext.RegisterCommands<ComandoMonstros>();
