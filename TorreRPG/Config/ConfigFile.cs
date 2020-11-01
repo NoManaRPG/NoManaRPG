@@ -42,10 +42,10 @@ namespace TorreRPG.Config
         internal string Client = "Seu Client ID...";
 
         /// <summary>
-        /// A sua key do DiscordBots.org
-        /// </summary>
+        /// A sua key do Top.gg
+        /// /// </summary>
         [JsonProperty("discordBotsKey")]
-        internal string DiscordBotsKey = "Sua key do DiscordBots";
+        internal string TopGG = "Sua key do TopGG";
 
         /// <summary>
         /// Carrega a config de um arquivo JSON.
