@@ -41,7 +41,6 @@ namespace TorreRPG
             ComandosNext.RegisterCommands<ComandoAjuda>();
             ComandosNext.RegisterCommands<ComandoStatus>();
             ComandosNext.RegisterCommands<ComandoAdministrativo>();
-            ComandosNext.RegisterCommands<ComandoWiki>();
             ComandosNext.RegisterCommands<ComandoCriarPersonagem>();
             ComandosNext.RegisterCommands<ComandoAtacar>();
             ComandosNext.RegisterCommands<ComandoDescer>();
