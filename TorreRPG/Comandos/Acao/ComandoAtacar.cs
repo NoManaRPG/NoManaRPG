@@ -84,11 +84,12 @@ namespace TorreRPG.Comandos.Acao
                     if (personagem.Zona.Monstros[indexAlvo].Vida <= 0)
                     {
                         DiscordEmoji xp = DiscordEmoji.FromGuildEmote(ctx.Client, 758439721016885308);
+                       
                         double expGanha = Calculo.CalcularEfetividadeXP(personagem.Nivel.Atual, personagem.Zona.Monstros[indexAlvo].Nivel) * personagem.Zona.Monstros[indexAlvo].Exp;
                         resumoBatalha.AppendLine($"{Emoji.CrossBone} {personagem.Zona.Monstros[indexAlvo].Nome.Bold()} ️{Emoji.CrossBone}\n" +
                             $"{xp}+{expGanha.Text()}.");
                         monstroMorreu = true;
-
+                        //Evento halloween
                         int evoluiu = personagem.AddExp(expGanha);
                         if (evoluiu != 0)
                             embed.AddField("Evolução".Titulo(), $"{Emoji.Up} Você evoluiu de nível!");
