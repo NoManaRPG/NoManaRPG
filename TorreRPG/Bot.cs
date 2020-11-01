@@ -12,7 +12,7 @@ namespace TorreRPG
     {
         public static DiscordClient Cliente { get; private set; }
         public CommandsNextExtension ComandosNext { get; private set; }
-        public BotInfo BotInfo { get; private set; }
+        public static BotInfo BotInfo { get; private set; }
 
         public Bot(DiscordConfiguration discordConfiguration)
         {
@@ -58,6 +58,7 @@ namespace TorreRPG
             ComandosNext.RegisterCommands<ComandoLoja>();
             ComandosNext.RegisterCommands<ComandoComprar>();
             ComandosNext.RegisterCommands<ComandoPortal>();
+            ComandosNext.RegisterCommands<ComandoBot>();
         }
     }
 }

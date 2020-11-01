@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static DSharpPlus.CommandsNext.CommandsNextExtension;
 using System;
-using DSharpPlus;
+using static TorreRPG.Utilities;
 
 namespace TorreRPG.Comandos.Exibir
 {
@@ -108,34 +108,35 @@ namespace TorreRPG.Comandos.Exibir
         public DiscordEmbed MensagemAjuda()
         {
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
-            embed.WithDescription("Digite `!ajuda [comando]` para mais informações. Por exemplo: `!ajuda status`");
+            embed.WithDescription("Digite `!ajuda [comando]` para mais informações. Por exemplo: `!ajuda bot`");
 
-            embed.AddField("Comando principal".Titulo(), FormatarURL("criar-personagem", "Permite criar o seu personagem escolhendo uma das 7 classes disponíveis") +
-                FormatarURL("status", "Permite ver o seu status ou a de outra pessoa"), true);
+            embed.AddField("Comando principal".Titulo(), FormatarURLComando("criar-personagem", "Permite criar o seu personagem escolhendo uma das 7 classes disponíveis") +
+                FormatarURLComando("bot", "Permite informações sobre o bot") +
+                FormatarURLComando("status", "Permite ver o seu status ou a de outra pessoa"), true);
 
-            embed.AddField("Itens".Titulo(), FormatarURL("mochila", "Permite ver os itens da mochila") +
-                FormatarURL("equipamentos", "Permite ver os itens equipados") +
-                FormatarURL("examinar", "Permite ver a descrição de um item") +
-                FormatarURL("equipar", "Permite equipar itens") +
-                FormatarURL("desequipar", "Permite desequipr itens equipados") +
-                FormatarURL("portal", "Permite usar o Pergaminho de Portal"), true);
+            embed.AddField("Itens".Titulo(), FormatarURLComando("mochila", "Permite ver os itens da mochila") +
+                FormatarURLComando("equipamentos", "Permite ver os itens equipados") +
+                FormatarURLComando("examinar", "Permite ver a descrição de um item") +
+                FormatarURLComando("equipar", "Permite equipar itens") +
+                FormatarURLComando("desequipar", "Permite desequipr itens equipados") +
+                FormatarURLComando("portal", "Permite usar o Pergaminho de Portal"), true);
 
-            embed.AddField("Combate".Titulo(), FormatarURL("atacar", "Permite atacar um monstro que encontra na sua frente\nAtalhos: !at") +
-                FormatarURL("explorar", "Permite explorar o andar por mais monstros") +
-                FormatarURL("monstros", "Permite ver os monstros que estão na sua frente") +
-                FormatarURL("zona", "Permite ver informações sobre a zona atual") +
-                FormatarURL("descer", "Permite descer um andar") +
-                FormatarURL("subir", "Permite subir um andar") +
-                FormatarURL("usar-pocao", "Permite usar uma poção que se encontra no cinto") +
-                FormatarURL("chao", "Permite olhar os itens que estão no chão") +
-                FormatarURL("pegar", "Permite pegar um item que está no chão"), true);
+            embed.AddField("Combate".Titulo(), FormatarURLComando("atacar", "Permite atacar um monstro que encontra na sua frente\nAtalhos: !at") +
+                FormatarURLComando("explorar", "Permite explorar o andar por mais monstros") +
+                FormatarURLComando("monstros", "Permite ver os monstros que estão na sua frente") +
+                FormatarURLComando("zona", "Permite ver informações sobre a zona atual") +
+                FormatarURLComando("descer", "Permite descer um andar") +
+                FormatarURLComando("subir", "Permite subir um andar") +
+                FormatarURLComando("usar-pocao", "Permite usar uma poção que se encontra no cinto") +
+                FormatarURLComando("chao", "Permite olhar os itens que estão no chão") +
+                FormatarURLComando("pegar", "Permite pegar um item que está no chão"), true);
 
-            embed.AddField("Mercado".Titulo(), FormatarURL("vender", "Permite vender itens") +
-                   FormatarURL("comprar", "Permite comprar os itens que estão a venda") +
-                FormatarURL("loja", "Permite ver os itens que estão a venda"), true);
+            embed.AddField("Mercado".Titulo(), FormatarURLComando("vender", "Permite vender itens") +
+                   FormatarURLComando("comprar", "Permite comprar os itens que estão a venda") +
+                FormatarURLComando("loja", "Permite ver os itens que estão a venda"), true);
 
             embed.AddField("Outros".Titulo().Bold(),
-                FormatarURL("ajuda", "Mostra todos os comandos e ajuda do comando especificado"), true);
+                FormatarURLComando("ajuda", "Mostra todos os comandos e ajuda do comando especificado"), true);
 
             embed.WithImageUrl("https://cdn.discordapp.com/attachments/750081991046856814/755886689523859536/VaalTower.jpg");
             embed.WithColor(DiscordColor.Violet);
@@ -143,8 +144,5 @@ namespace TorreRPG.Comandos.Exibir
             embed.WithFooter("Passe o mouse em cima para mais info!");
             return embed.Build();
         }
-
-        public string FormatarURL(string comando, string hover)
-            => Formatter.MaskedUrl($"`!{comando}` ", new Uri("https://discord.gg/MAR4NFq"), hover);
     }
 }
