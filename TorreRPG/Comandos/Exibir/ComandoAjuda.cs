@@ -108,7 +108,6 @@ namespace TorreRPG.Comandos.Exibir
         public DiscordEmbed MensagemAjuda()
         {
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
-            //!equipamentos!equipar!desequipar
             embed.WithDescription("Digite `!ajuda [comando]` para mais informações. Por exemplo: `!ajuda status`");
 
             embed.AddField("Comando principal".Titulo(), FormatarURL("criar-personagem", "Permite criar o seu personagem escolhendo uma das 7 classes disponíveis") +
@@ -120,8 +119,6 @@ namespace TorreRPG.Comandos.Exibir
                 FormatarURL("equipar", "Permite equipar itens") +
                 FormatarURL("desequipar", "Permite desequipr itens equipados") +
                 FormatarURL("portal", "Permite usar o Pergaminho de Portal"), true);
-
-            //embed.AddField("Ajuda".Titulo(), 
 
             embed.AddField("Combate".Titulo(), FormatarURL("atacar", "Permite atacar um monstro que encontra na sua frente\nAtalhos: !at") +
                 FormatarURL("explorar", "Permite explorar o andar por mais monstros") +
@@ -137,12 +134,8 @@ namespace TorreRPG.Comandos.Exibir
                    FormatarURL("comprar", "Permite comprar os itens que estão a venda") +
                 FormatarURL("loja", "Permite ver os itens que estão a venda"), true);
 
-            embed.AddField("Outros".Titulo().Bold(), FormatarURL("setimage", "Permite escolher uma imagem para o retrato") +
-                FormatarURL("wiki", "Wiki oficial do bot") +
+            embed.AddField("Outros".Titulo().Bold(),
                 FormatarURL("ajuda", "Mostra todos os comandos e ajuda do comando especificado"), true);
-
-            embed.AddField("Argumentos", "[Colchete] são argumentos opcionais.\n" +
-                "<Chevron> são argumentos obrigatorios.");
 
             embed.WithImageUrl("https://cdn.discordapp.com/attachments/750081991046856814/755886689523859536/VaalTower.jpg");
             embed.WithColor(DiscordColor.Violet);
