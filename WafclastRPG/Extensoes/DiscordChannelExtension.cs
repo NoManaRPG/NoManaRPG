@@ -1,9 +1,9 @@
-﻿using WafclastRPG.Entidades;
+﻿using WafclastRPG.Game.Entidades;
 using DSharpPlus.Entities;
 using MongoDB.Driver;
 using System.Threading.Tasks;
 
-namespace WafclastRPG.Extensoes
+namespace WafclastRPG.Game.Extensoes
 {
     public static class DiscordChannelExtension
     {

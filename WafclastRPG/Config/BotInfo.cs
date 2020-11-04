@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace WafclastRPG.Config
+namespace WafclastRPG.Game.Config
 {
     public class BotInfo
     {

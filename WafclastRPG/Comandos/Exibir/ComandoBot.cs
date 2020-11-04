@@ -1,16 +1,16 @@
-﻿using WafclastRPG.Atributos;
+﻿using WafclastRPG.Game.Atributos;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System.Threading.Tasks;
 using DSharpPlus.Entities;
 using System.Linq;
 using System.Text;
-using static WafclastRPG.Utilities;
+using static WafclastRPG.Game.Utilities;
 using System;
 using System.Drawing;
 using System.Diagnostics;
 
-namespace WafclastRPG.Comandos.Exibir
+namespace WafclastRPG.Game.Comandos.Exibir
 {
     public class ComandoBot : BaseCommandModule
     {

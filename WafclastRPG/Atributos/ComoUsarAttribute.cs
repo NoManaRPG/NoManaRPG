@@ -3,7 +3,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using System;
 using System.Threading.Tasks;
 
-namespace WafclastRPG.Atributos
+namespace WafclastRPG.Game.Atributos
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
     public class ComoUsarAttribute : CheckBaseAttribute

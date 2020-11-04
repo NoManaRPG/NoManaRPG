@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>WafclastRPG.Bot</AssemblyName>
+    <RootNamespace>WafclastRPG.Bot</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="BotInfo.json" />
+    <None Remove="Config.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00745" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00745" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00745" />
+    <PackageReference Include="MongoDB.Driver" Version="2.10.4" />
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,18 +1,18 @@
-﻿using WafclastRPG.Entidades;
-using WafclastRPG.Entidades.Itens;
-using WafclastRPG.Extensoes;
+﻿using WafclastRPG.Game.Entidades;
+using WafclastRPG.Game.Entidades.Itens;
+using WafclastRPG.Game.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System.Linq;
 using System.Threading.Tasks;
-using WafclastRPG.Atributos;
-using WafclastRPG.Services;
+using WafclastRPG.Game.Atributos;
+using WafclastRPG.Game.Services;
 using System;
-using WafclastRPG.Enuns;
+using WafclastRPG.Game.Enuns;
 using System.Text;
 
-namespace WafclastRPG.Comandos.Exibir
+namespace WafclastRPG.Game.Comandos.Exibir
 {
     public class ComandoExaminar : BaseCommandModule
     {

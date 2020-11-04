@@ -1,14 +1,14 @@
-﻿using WafclastRPG.Entidades;
-using WafclastRPG.Extensoes;
+﻿using WafclastRPG.Game.Entidades;
+using WafclastRPG.Game.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System.Text;
 using System.Threading.Tasks;
-using WafclastRPG.Services;
+using WafclastRPG.Game.Services;
 using System;
 
-namespace WafclastRPG.Comandos.Exibir
+namespace WafclastRPG.Game.Comandos.Exibir
 {
     public class ComandoEquipamentos : BaseCommandModule
     {

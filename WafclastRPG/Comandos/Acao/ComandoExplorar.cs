@@ -1,12 +1,12 @@
-﻿using WafclastRPG.Entidades;
-using WafclastRPG.Extensoes;
+﻿using WafclastRPG.Game.Entidades;
+using WafclastRPG.Game.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System.Threading.Tasks;
-using WafclastRPG.Services;
+using WafclastRPG.Game.Services;
 using System;
 
-namespace WafclastRPG.Comandos.Acao
+namespace WafclastRPG.Game.Comandos.Acao
 {
     public class ComandoExplorar : BaseCommandModule
     {
@@ -33,7 +33,7 @@ namespace WafclastRPG.Comandos.Acao
             }
 
             int inimigos = 0;
-            using (var session = await banco.Cliente.StartSessionAsync())
+            using (var session = await banco.Client.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);

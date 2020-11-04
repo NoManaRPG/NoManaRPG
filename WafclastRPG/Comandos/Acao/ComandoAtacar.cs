@@ -4,12 +4,12 @@ using DSharpPlus.Entities;
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using WafclastRPG.Atributos;
-using WafclastRPG.Entidades;
-using WafclastRPG.Extensoes;
-using WafclastRPG.Services;
+using WafclastRPG.Game.Atributos;
+using WafclastRPG.Game.Entidades;
+using WafclastRPG.Game.Extensoes;
+using WafclastRPG.Game.Services;
 
-namespace WafclastRPG.Comandos.Acao
+namespace WafclastRPG.Game.Comandos.Acao
 {
     public class ComandoAtacar : BaseCommandModule
     {

@@ -1,12 +1,12 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
-using WafclastRPG.Comandos;
-using WafclastRPG.Comandos.Acao;
-using WafclastRPG.Comandos.Exibir;
-using WafclastRPG.Config;
-using WafclastRPG.Eventos;
+using WafclastRPG.Game.Comandos;
+using WafclastRPG.Game.Comandos.Acao;
+using WafclastRPG.Game.Comandos.Exibir;
+using WafclastRPG.Game.Config;
+using WafclastRPG.Game.Eventos;
 
-namespace WafclastRPG
+namespace WafclastRPG.Game
 {
     public class Bot
     {

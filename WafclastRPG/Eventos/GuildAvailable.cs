@@ -1,12 +1,12 @@
-﻿using WafclastRPG.Extensoes;
+﻿using WafclastRPG.Game.Extensoes;
 using DSharpPlus;
 using DSharpPlus.EventArgs;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using WafclastRPG.Config;
+using WafclastRPG.Game.Config;
 
-namespace WafclastRPG.Eventos
+namespace WafclastRPG.Game.Eventos
 {
     public static class GuildAvailable
     {

@@ -7,14 +7,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using WafclastRPG.Entidades;
-using WafclastRPG.Entidades.Itens;
-using WafclastRPG.Enuns;
-using WafclastRPG.Extensoes;
-using WafclastRPG.Metadata.Itens.MoedasEmpilhaveis;
-using WafclastRPG.Services;
+using WafclastRPG.Game.Entidades;
+using WafclastRPG.Game.Entidades.Itens;
+using WafclastRPG.Game.Enuns;
+using WafclastRPG.Game.Extensoes;
+using WafclastRPG.Game.Metadata.Itens.MoedasEmpilhaveis;
+using WafclastRPG.Game.Services;
 
-namespace WafclastRPG.Comandos.Acao
+namespace WafclastRPG.Game.Comandos.Acao
 {
     public class ComandoComprar : BaseCommandModule
     {

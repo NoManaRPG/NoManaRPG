@@ -1,4 +1,4 @@
-﻿using WafclastRPG.Extensoes;
+﻿using WafclastRPG.Game.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace WafclastRPG.Eventos
+namespace WafclastRPG.Game.Eventos
 {
     public static class CommandErrored
     {

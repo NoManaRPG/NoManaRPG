@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace WafclastRPG
+namespace WafclastRPG.Game
 {
     public static class Utilities
     {

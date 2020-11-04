@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace WafclastRPG.Eventos
+namespace WafclastRPG.Game.Eventos
 {
     public static class Ready
     {

@@ -2,9 +2,9 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using WafclastRPG.Extensoes;
+using WafclastRPG.Game.Extensoes;
 
-namespace WafclastRPG.Eventos
+namespace WafclastRPG.Game.Eventos
 {
     public static class CommandExecuted
     {

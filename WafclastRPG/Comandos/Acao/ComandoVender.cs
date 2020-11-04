@@ -2,15 +2,15 @@
 using DSharpPlus.CommandsNext.Attributes;
 using System;
 using System.Threading.Tasks;
-using WafclastRPG.Atributos;
-using WafclastRPG.Entidades;
-using WafclastRPG.Entidades.Itens;
-using WafclastRPG.Enuns;
-using WafclastRPG.Extensoes;
-using WafclastRPG.Metadata.Itens.MoedasEmpilhaveis;
-using WafclastRPG.Services;
+using WafclastRPG.Game.Atributos;
+using WafclastRPG.Game.Entidades;
+using WafclastRPG.Game.Entidades.Itens;
+using WafclastRPG.Game.Enuns;
+using WafclastRPG.Game.Extensoes;
+using WafclastRPG.Game.Metadata.Itens.MoedasEmpilhaveis;
+using WafclastRPG.Game.Services;
 
-namespace WafclastRPG.Comandos.Acao
+namespace WafclastRPG.Game.Comandos.Acao
 {
     class ComandoVender : BaseCommandModule
     {
@@ -47,7 +47,7 @@ namespace WafclastRPG.Comandos.Acao
                 return;
             }
 
-            using (var session = await banco.Cliente.StartSessionAsync())
+            using (var session = await banco.Client.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);

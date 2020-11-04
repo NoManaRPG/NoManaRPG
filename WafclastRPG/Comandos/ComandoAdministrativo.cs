@@ -1,5 +1,5 @@
-﻿using WafclastRPG.Entidades;
-using WafclastRPG.BancoItens;
+﻿using WafclastRPG.Game.Entidades;
+using WafclastRPG.Game.BancoItens;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -9,18 +9,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WafclastRPG.Extensoes;
-using WafclastRPG.Entidades.Itens;
+using WafclastRPG.Game.Extensoes;
+using WafclastRPG.Game.Entidades.Itens;
 using System.Drawing;
 using System.IO;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Drawing.Drawing2D;
-using WafclastRPG.Services;
-using WafclastRPG.Metadata.Itens.MoedasEmpilhaveis;
+using WafclastRPG.Game.Services;
+using WafclastRPG.Game.Metadata.Itens.MoedasEmpilhaveis;
 using System.Data;
+using System.Collections.Concurrent;
+using System.Threading;
 
-namespace WafclastRPG.Comandos
+namespace WafclastRPG.Game.Comandos
 {
     public class ComandoAdministrativo : BaseCommandModule
     {
@@ -57,18 +59,44 @@ namespace WafclastRPG.Comandos
             await ctx.RespondAsync($"{user} deletado do banco de dados!");
         }
 
-        [Command("testm")]
+        public static ConcurrentDictionary<ulong, SemaphoreSlim> Buckets = new ConcurrentDictionary<ulong, SemaphoreSlim>();
+
+        [Command("testetravar")]
         [RequireOwner]
         public async Task ff(CommandContext ctx)
         {
-            
+            if (!Buckets.TryGetValue(ctx.User.Id, out var bucket))
+            {
+                bucket = new SemaphoreSlim(1, 1);
+                Buckets.AddOrUpdate(ctx.User.Id, bucket, (k, v) => bucket);
+            }
+
+            await bucket.WaitAsync();
+            await ctx.RespondAsync($"{ctx.User.Username} aguardando 5 segundos");
+            await Task.Delay(TimeSpan.FromSeconds(5));
+            bucket.Release();
+        }
+
+
+        [Command("testedes")]
+        [RequireOwner]
+        public async Task fff(CommandContext ctx)
+        {
+            if (!Buckets.TryGetValue(ctx.User.Id, out var bucket))
+            {
+                bucket = new SemaphoreSlim(1, 1);
+                Buckets.AddOrUpdate(ctx.User.Id, bucket, (k, v) => bucket);
+            }
+
+
+            bucket.Release();
         }
 
         [Command("random-item")]
         [RequireOwner]
         public async Task RandomItemAsync(CommandContext ctx, int nivel = 1, [RemainingText] DiscordUser member = null)
         {
-            using (var session = await banco.Cliente.StartSessionAsync())
+            using (var session = await banco.Client.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 if (member == null) member = ctx.User;
@@ -126,7 +154,7 @@ namespace WafclastRPG.Comandos
         [RequireOwner]
         public async Task matar(CommandContext ctx, DiscordUser member)
         {
-            using (var session = await banco.Cliente.StartSessionAsync())
+            using (var session = await banco.Client.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(member);
@@ -146,7 +174,7 @@ namespace WafclastRPG.Comandos
         [RequireOwner]
         public async Task Currency(CommandContext ctx, int quantidade = 1)
         {
-            using (var session = await banco.Cliente.StartSessionAsync())
+            using (var session = await banco.Client.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(ctx.User);

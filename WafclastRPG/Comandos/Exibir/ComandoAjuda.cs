@@ -1,5 +1,5 @@
-﻿using WafclastRPG.Atributos;
-using WafclastRPG.Extensoes;
+﻿using WafclastRPG.Game.Atributos;
+using WafclastRPG.Game.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Converters;
@@ -10,9 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using static DSharpPlus.CommandsNext.CommandsNextExtension;
 using System;
-using static WafclastRPG.Utilities;
+using static WafclastRPG.Game.Utilities;
 
-namespace WafclastRPG.Comandos.Exibir
+namespace WafclastRPG.Game.Comandos.Exibir
 {
     public class ComandoAjuda : BaseCommandModule
     {

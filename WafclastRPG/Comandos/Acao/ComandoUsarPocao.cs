@@ -1,13 +1,13 @@
-﻿using WafclastRPG.Atributos;
-using WafclastRPG.Entidades;
-using WafclastRPG.Extensoes;
+﻿using WafclastRPG.Game.Atributos;
+using WafclastRPG.Game.Entidades;
+using WafclastRPG.Game.Extensoes;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System;
 using System.Threading.Tasks;
-using WafclastRPG.Services;
+using WafclastRPG.Game.Services;
 
-namespace WafclastRPG.Comandos.Acao
+namespace WafclastRPG.Game.Comandos.Acao
 {
     public class ComandoUsarPocao : BaseCommandModule
     {
@@ -38,7 +38,7 @@ namespace WafclastRPG.Comandos.Acao
 
             bool usouPocao = false;
 
-            using (var session = await banco.Cliente.StartSessionAsync())
+            using (var session = await banco.Client.StartSessionAsync())
             {
                 BancoSession banco = new BancoSession(session);
                 RPJogador jogador = await banco.GetJogadorAsync(ctx);

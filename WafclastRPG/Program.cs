@@ -4,11 +4,11 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
-using WafclastRPG.BancoItens;
-using WafclastRPG.Config;
-using WafclastRPG.Services;
+using WafclastRPG.Game.BancoItens;
+using WafclastRPG.Game.Config;
+using WafclastRPG.Game.Services;
 
-namespace WafclastRPG
+namespace WafclastRPG.Game
 {
     public class Program
     {
