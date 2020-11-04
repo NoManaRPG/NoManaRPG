@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
 
-namespace WafclastRPG.Game.Config
+namespace WafclastRPG.Bot.Config
 {
     public class ConfigFile
     {
@@ -28,18 +28,6 @@ namespace WafclastRPG.Game.Config
         /// </summary>
         [JsonProperty("prefixTeste")]
         internal string PrefixTeste = "O prefix de teste do seu bot...";
-
-        /// <summary>
-        /// O client secret
-        /// </summary>
-        [JsonProperty("clientSecret")]
-        internal string Secret = "Seu Client Secret...";
-
-        /// <summary>
-        /// O client id
-        /// </summary>
-        [JsonProperty("clientId")]
-        internal string Client = "Seu Client ID...";
 
         /// <summary>
         /// A sua key do Top.gg

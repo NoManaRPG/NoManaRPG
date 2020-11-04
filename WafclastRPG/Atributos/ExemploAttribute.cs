@@ -3,7 +3,7 @@ using DSharpPlus.CommandsNext;
 using System;
 using System.Threading.Tasks;
 
-namespace WafclastRPG.Game.Atributos
+namespace WafclastRPG.Bot.Atributos
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
     public class ExemploAttribute : CheckBaseAttribute

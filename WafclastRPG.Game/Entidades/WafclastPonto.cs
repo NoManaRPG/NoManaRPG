@@ -1,11 +1,10 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace WafclastRPG.Game.Entidades
 {
     [BsonIgnoreExtraElements]
+    [BsonKnownTypes(typeof(WafclastPontoRegenerativo))]
     public class WafclastPonto
     {
         [BsonIgnore]
@@ -19,8 +18,11 @@ namespace WafclastRPG.Game.Entidades
             }
         }
 
+        [BsonElement]
         private double Extra { get; set; } = 0;
+        [BsonElement]
         private double Base { get; set; } = 1;
+        [BsonElement]
         private double PorcentagemMultiplicador { get; set; } = 1;
 
         public void WithBase(double valor)

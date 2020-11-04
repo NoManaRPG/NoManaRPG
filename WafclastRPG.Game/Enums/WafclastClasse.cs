@@ -17,6 +17,7 @@ namespace WafclastRPG.Game.Enums
         [Description("Sombra")]
         Sombra,
         [Description("Herdeira")]
-        Herdeira
+        Herdeira,
+        Todas
     }
 }

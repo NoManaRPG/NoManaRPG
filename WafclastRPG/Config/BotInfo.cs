@@ -2,15 +2,15 @@
 using System;
 using System.IO;
 
-namespace WafclastRPG.Game.Config
+namespace WafclastRPG.Bot.Config
 {
     public class BotInfo
     {
         [JsonIgnore]
-        public int Membros { get; set; }
+        public int Membros;
 
         [JsonIgnore]
-        public int Guildas { get; set; }
+        public int Guildas;
 
         [JsonIgnore]
         public DateTime TempoAtivo { get; set; } = DateTime.Now;

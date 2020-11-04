@@ -1,16 +1,10 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using System;
 using System.Threading.Tasks;
-using WafclastRPG.Game.Atributos;
-using WafclastRPG.Game.Entidades;
-using WafclastRPG.Game.Entidades.Itens;
-using WafclastRPG.Game.Enuns;
-using WafclastRPG.Game.Extensoes;
-using WafclastRPG.Game.Metadata.Itens.MoedasEmpilhaveis;
-using WafclastRPG.Game.Services;
+using WafclastRPG.Bot.Atributos;
+using WafclastRPG.Game;
 
-namespace WafclastRPG.Game.Comandos.Acao
+namespace WafclastRPG.Bot.Comandos.Acao
 {
     class ComandoVender : BaseCommandModule
     {
@@ -24,82 +18,82 @@ namespace WafclastRPG.Game.Comandos.Acao
         public async Task ComandoVenderAsync(CommandContext ctx, string stringId = "")
         {
             // Verifica se existe o jogador,
-            var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
-            if (naoCriouPersonagem) return;
+            //var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
+            //if (naoCriouPersonagem) return;
 
-            // Somente pode vender itens na base. (andar 0)
-            if (personagemNaoModificar.Zona.Nivel != 0)
-            {
-                await ctx.RespondAsync($"{ctx.Member.Mention}, você precisa estar fora da torre para vender itens.");
-                return;
-            }
+            //// Somente pode vender itens na base. (andar 0)
+            //if (personagemNaoModificar.Zona.Nivel != 0)
+            //{
+            //    await ctx.RespondAsync($"{ctx.Member.Mention}, você precisa estar fora da torre para vender itens.");
+            //    return;
+            //}
 
-            if (string.IsNullOrEmpty(stringId))
-            {
-                await ctx.RespondAsync($"{ctx.Member.Mention}, você precisa informar um `#ID` de um item para poder estar vendendo. Digite `!mochila` para encontra-los, eles geralmente são os primeiros números de um item!");
-                return;
-            }
+            //if (string.IsNullOrEmpty(stringId))
+            //{
+            //    await ctx.RespondAsync($"{ctx.Member.Mention}, você precisa informar um `#ID` de um item para poder estar vendendo. Digite `!mochila` para encontra-los, eles geralmente são os primeiros números de um item!");
+            //    return;
+            //}
 
-            // Converte o id informado.
-            if (!stringId.TryParseID(out int index))
-            {
-                await ctx.RespondAsync($"{ctx.User.Mention}, o `#ID` é numérico!");
-                return;
-            }
+            //// Converte o id informado.
+            //if (!stringId.TryParseID(out int index))
+            //{
+            //    await ctx.RespondAsync($"{ctx.User.Mention}, o `#ID` é numérico!");
+            //    return;
+            //}
 
-            using (var session = await banco.Client.StartSessionAsync())
-            {
-                BancoSession banco = new BancoSession(session);
-                RPJogador jogador = await banco.GetJogadorAsync(ctx);
-                RPPersonagem personagem = jogador.Personagem;
+            //using (var session = await banco.Client.StartSessionAsync())
+            //{
+            //    BancoSession banco = new BancoSession(session);
+            //    RPJogador jogador = await banco.GetJogadorAsync(ctx);
+            //    RPPersonagem personagem = jogador.Personagem;
 
-                if (personagem.Mochila.TryRemoveItem(index, out RPBaseItem item))
-                {
-                    bool adicionou = false;
-                    switch (item)
-                    {
-                        case RPMoedaEmpilhavel me:
-                            switch (me.Classe)
-                            {
-                                case RPClasse.FragmentoPergaminho:
-                                    await ctx.RespondAsync($"{ctx.User.Mention}, você não pode vender este item!");
-                                    return;
-                                case RPClasse.PergaminhoSabedoria:
-                                    adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoFragmento());
-                                    break;
-                                case RPClasse.PergaminhoPortal:
-                                    for (int i = 0; i < 3; i++)
-                                        adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoSabedoria());
-                                    break;
-                            }
-                            break;
-                        case RPBaseItem bi:
-                            //Verificar a raridade, se for normal, vender por 1 fragmento de pergaminho.
-                            switch (bi.Raridade)
-                            {
-                                case RPRaridade.Normal:
-                                    adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoFragmento());
-                                    break;
-                            }
-                            break;
-                    }
+            //    if (personagem.Mochila.TryRemoveItem(index, out RPBaseItem item))
+            //    {
+            //        bool adicionou = false;
+            //        switch (item)
+            //        {
+            //            case RPMoedaEmpilhavel me:
+            //                switch (me.Classe)
+            //                {
+            //                    case RPClasse.FragmentoPergaminho:
+            //                        await ctx.RespondAsync($"{ctx.User.Mention}, você não pode vender este item!");
+            //                        return;
+            //                    case RPClasse.PergaminhoSabedoria:
+            //                        adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoFragmento());
+            //                        break;
+            //                    case RPClasse.PergaminhoPortal:
+            //                        for (int i = 0; i < 3; i++)
+            //                            adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoSabedoria());
+            //                        break;
+            //                }
+            //                break;
+            //            case RPBaseItem bi:
+            //                //Verificar a raridade, se for normal, vender por 1 fragmento de pergaminho.
+            //                switch (bi.Raridade)
+            //                {
+            //                    case RPRaridade.Normal:
+            //                        adicionou = personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoFragmento());
+            //                        break;
+            //                }
+            //                break;
+            //        }
 
-                    if (adicionou)
-                    {
-                        await banco.EditJogadorAsync(jogador);
-                        await session.CommitTransactionAsync();
+            //        if (adicionou)
+            //        {
+            //            await banco.EditJogadorAsync(jogador);
+            //            await session.CommitTransactionAsync();
 
-                        await ctx.RespondAsync($"{ctx.User.Mention}, você vendeu {1.Bold()} {item.TipoBaseModificado.Titulo()}!");
-                        return;
-                    }
+            //            await ctx.RespondAsync($"{ctx.User.Mention}, você vendeu {1.Bold()} {item.TipoBaseModificado.Titulo()}!");
+            //            return;
+            //        }
 
-                    await ctx.RespondAsync($"{ctx.Member.Mention}, você não tem espaço o suficiente na mochila.");
-                    return;
-                }
+            //        await ctx.RespondAsync($"{ctx.Member.Mention}, você não tem espaço o suficiente na mochila.");
+            //        return;
+            //    }
 
-                await ctx.RespondAsync($"{ctx.Member.Mention}, não existe item com este `#ID` na mochila.");
-                return;
-            }
+            //    await ctx.RespondAsync($"{ctx.Member.Mention}, não existe item com este `#ID` na mochila.");
+            //    return;
+            //}
         }
     }
 

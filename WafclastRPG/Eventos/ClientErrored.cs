@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace WafclastRPG.Game.Eventos
+namespace WafclastRPG.Bot.Eventos
 {
     public static class ClientErrored
     {

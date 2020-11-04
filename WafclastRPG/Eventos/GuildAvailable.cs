@@ -1,20 +1,21 @@
-﻿using WafclastRPG.Game.Extensoes;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.EventArgs;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using WafclastRPG.Game.Config;
+using System.Threading;
+using WafclastRPG.Bot.Config;
+using WafclastRPG.Bot.Extensoes;
 
-namespace WafclastRPG.Game.Eventos
+namespace WafclastRPG.Bot.Eventos
 {
     public static class GuildAvailable
     {
         public static Task Event(DiscordClient client, GuildCreateEventArgs e, BotInfo botInfo)
         {
-            client.Logger.LogInformation(new EventId(603, "Nova guilda"), $"Guilda {e.Guild.Name.RemoverAcentos()}", DateTime.Now);
-            botInfo.Membros += e.Guild.MemberCount;
-            botInfo.Guildas++;
+            client.Logger.LogInformation(new EventId(603, "Nova guilda"), $"Guilda {e.Guild.Name.RemoverAcentos()} : {e.Guild.MemberCount} Membros.", DateTime.Now);
+            Interlocked.Add(ref botInfo.Membros, e.Guild.MemberCount);
+            Interlocked.Increment(ref botInfo.Guildas);
             return Task.CompletedTask;
         }
     }

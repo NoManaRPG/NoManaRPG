@@ -42,7 +42,7 @@ namespace WafclastRPG.Game.Entidades
         private void Evoluir()
         {
             Atual++;
-            ExpMax *= 1.0777;
+            ExpMax *= 1.07;
             ExpAtual = 0;
         }
     }

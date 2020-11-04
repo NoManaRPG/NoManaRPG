@@ -1,9 +1,7 @@
 ﻿using DSharpPlus;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace WafclastRPG.Game
+namespace WafclastRPG.Bot
 {
     public static class Utilities
     {

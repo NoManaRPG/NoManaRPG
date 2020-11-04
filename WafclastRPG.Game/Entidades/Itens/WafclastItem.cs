@@ -4,29 +4,18 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace WafclastRPG.Game.Entidades.Itens
 {
     [BsonIgnoreExtraElements]
-    [BsonKnownTypes(typeof(RPArmaAdaga), typeof(RPArmaArco), typeof(RPBaseItemArma), typeof(RPBaseItemEquipavel), typeof(RPArmaCetro),
-       typeof(RPArmaEspada), typeof(RPBaseFrasco), typeof(RPFrascoVida), typeof(RPArmaMacaUmaMao), typeof(RPArmaMachadoUmaMao),
-        typeof(RPArmaVarinha), typeof(RPMoedaEmpilhavel))]
+    [BsonKnownTypes(typeof(WafclastItemArma), typeof(WafclastItemEmpilhavel))]
     public class WafclastItem
     {
-        public int DropLevel { get; set; } // Nível que começa a cair
-        public int ILevel { get; set; } // Zona de onde caiu, tudo baseado nisso
-        public string TipoBase { get; private set; } // Nome base
-        public string TipoBaseModificado { get; set; } // Nome base + prefixos
-        public RPClasse Classe { get; set; }
-        public RPRaridade Raridade { get; set; }
+        public string Nome { get; private set; }
+        public WafclastTipo Tipo { get; private set; }
+        public int OcupaEspaco { get; private set; }
 
-        // Ocupa
-        public int Espaco { get; set; }
-
-        public WafclastItem(int dropLevel, string tipoBase, RPClasse classe, int espaco)
+        public WafclastItem(string nome, WafclastTipo tipo, int ocupaEspaco)
         {
-            DropLevel = dropLevel;
-            TipoBase = tipoBase;
-            TipoBaseModificado = tipoBase;
-            Classe = classe;
-            Espaco = espaco;
-            Raridade = RPRaridade.Normal;
+            this.Nome = nome;
+            this.Tipo = tipo;
+            this.OcupaEspaco = ocupaEspaco;
         }
     }
 }

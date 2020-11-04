@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using WafclastRPG.Game.Entidades.Itens;
 
 namespace WafclastRPG.Game.Entidades
 {
@@ -11,12 +12,8 @@ namespace WafclastRPG.Game.Entidades
         public double Dano { get; set; }
         public double Evasao { get; set; }
         public double Precisao { get; set; }
-        public double PontosAacao { get; set; }
         public double Exp { get; set; }
         public double Vida { get; set; }
-
-        public double VelocidadeAtaque { get; set; }
-        public RPRaridade Tipo { get; set; }
 
         public WafclastMonstro(string nome, int nivel)
         {
@@ -25,21 +22,8 @@ namespace WafclastRPG.Game.Entidades
             Dano = CalcularDano();
             Evasao = CalcularEvasao();
             Precisao = CalcularPrecisao();
-            PontosAacao = 0;
             Exp = CalcularExp();
             Vida = CalcularVida();
-            VelocidadeAtaque = 1;
-        }
-
-        public bool Acao(double pontosAcaoTotal)
-        {
-            PontosAacao += VelocidadeAtaque;
-            if (PontosAacao >= pontosAcaoTotal)
-            {
-                PontosAacao = 0;
-                return true;
-            }
-            return false;
         }
 
         public double CalcularExp()
@@ -68,38 +52,38 @@ namespace WafclastRPG.Game.Entidades
         }
 
 
-        private RPBaseItem SortearItem(int nivel)
-        {
-            // Separa os itens por nivel
-            var niveisSeparados = RPMetadata.Itens.Where(x => x.Key <= nivel);
+        //private RPBaseItem SortearItem(int nivel)
+        //{
+        //    // Separa os itens por nivel
+        //    var niveisSeparados = RPMetadata.Itens.Where(x => x.Key <= nivel);
 
-            Random r = new Random();
-            var itens = niveisSeparados.ElementAt(r.Next(0, niveisSeparados.Count()));
+        //    Random r = new Random();
+        //    var itens = niveisSeparados.ElementAt(r.Next(0, niveisSeparados.Count()));
 
-            var itemSorteado = itens.ElementAt(r.Next(0, itens.Count()));
-            itemSorteado.ILevel = nivel;
-            return itemSorteado;
-        }
+        //    var itemSorteado = itens.ElementAt(r.Next(0, itens.Count()));
+        //    itemSorteado.ILevel = nivel;
+        //    return itemSorteado;
+        //}
 
-        public bool SortearItens(int nivel, double chancePersonagem, out List<RPBaseItem> itens)
-        {
-            itens = new List<RPBaseItem>();
-            //Add a raridade do monstro aqui tmb
-            double chance = (chancePersonagem + 0.16);
-            double integerPart = Math.Truncate(chance);
-            double fractionalPart = chance - Math.Truncate(chance);
-            while (integerPart >= 1)
-            {
-                itens.Add(SortearItem(nivel));
-                integerPart--;
-            }
+        //public bool SortearItens(int nivel, double chancePersonagem, out WafclastItem item)
+        //{
+        //    //itens = new List<RPBaseItem>();
+        //    ////Add a raridade do monstro aqui tmb
+        //    //double chance = (chancePersonagem + 0.16);
+        //    //double integerPart = Math.Truncate(chance);
+        //    //double fractionalPart = chance - Math.Truncate(chance);
+        //    //while (integerPart >= 1)
+        //    //{
+        //    //    itens.Add(SortearItem(nivel));
+        //    //    integerPart--;
+        //    //}
 
-            if (Calculo.Chance(fractionalPart))
-                itens.Add(SortearItem(nivel));
+        //    //if (Calculo.Chance(fractionalPart))
+        //    //    itens.Add(SortearItem(nivel));
 
-            if (itens.Count == 0) return false;
-            return true;
-        }
+        //    //if (itens.Count == 0) return false;
+        //    return true;
+        //}
 
         //    //Pode dropar equipamento ou dinheiro
         //    //Se for equipamento pode dropar um dos varios tipos

@@ -1,15 +1,16 @@
-﻿using WafclastRPG.Game.Entidades;
-using WafclastRPG.Game.Extensoes;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using System.Threading.Tasks;
-using WafclastRPG.Game.Atributos;
-using WafclastRPG.Game.Services;
 using System;
-using WafclastRPG.Game.Comandos.Acao;
+using System.Text;
+using System.Threading.Tasks;
+using WafclastRPG.Bot.Atributos;
+using WafclastRPG.Bot.Comandos.Acao;
+using WafclastRPG.Bot.Extensoes;
+using WafclastRPG.Game;
+using WafclastRPG.Game.Entidades;
 
-namespace WafclastRPG.Game.Comandos.Exibir
+namespace WafclastRPG.Bot.Comandos.Exibir
 {
     public class ComandoStatus : BaseCommandModule
     {
@@ -20,48 +21,49 @@ namespace WafclastRPG.Game.Comandos.Exibir
         [ComoUsar("status")]
         [ComoUsar("status [@USUARIO]")]
         [Exemplo("status @Imain")]
-        [Cooldown(1, 10, CooldownBucketType.User)]
-        public async Task ComandoStatusAb(CommandContext ctx, DiscordUser discordUser)
+       // [Cooldown(1, 10, CooldownBucketType.User)]
+        public async Task ComandoStatusAb(CommandContext ctx, DiscordUser user)
         {
-            RPJogador jogador = await banco.GetJogadorAsync(discordUser);
+            var jogador = await banco.GetJogadorAsync(user);
             if (jogador == null)
             {
                 await ctx.RespondAsync($"{ctx.User.Mention}, este jogador não tem um personagem ainda! Peça-o para criar um!");
                 return;
             }
-            await ctx.RespondAsync(embed: (await GerarStatusAsync(discordUser)).Build());
+            var embed = GerarStatus(user, jogador.Personagem);
+            await ctx.RespondAsync(embed: embed.Build());
         }
 
         [Command("status")]
-        [Cooldown(1, 10, CooldownBucketType.User)]
+        //[Cooldown(1, 10, CooldownBucketType.User)]
         public async Task ComandoStatusAb(CommandContext ctx)
         {
             // Verifica se existe o jogador,
-            var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
-            if (naoCriouPersonagem) return;
-            await ctx.RespondAsync(embed: (await GerarStatusAsync(ctx.User)).Build());
+            var (isJogadorCriado, sessao) = await banco.ExisteJogadorAsync(ctx);
+            if (!isJogadorCriado) return;
+
+            var embed = GerarStatus(ctx.User, sessao.Jogador.Personagem);
+            await ctx.RespondAsync(embed: embed.Build());
         }
 
-        public async Task<DiscordEmbedBuilder> GerarStatusAsync(DiscordUser user)
+        public DiscordEmbedBuilder GerarStatus(DiscordUser user, WafclastPersonagem personagem)
         {
-            RPJogador jogador = await banco.GetJogadorAsync(user);
-            RPPersonagem personagem = jogador.Personagem;
+            var embed = new DiscordEmbedBuilder().Criar(user);
 
-            DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
-          //  embed.WithAuthor($"{user.Username} - Nível {personagem.Nivel.Atual} - {personagem.Classe} - {personagem.Nome}", iconUrl: user.AvatarUrl);
-           // embed.WithThumbnail(jogador.UrlFoto);
-            embed.WithDescription($"Tem {personagem.Nivel.ExpAtual.Text().Bold()} pontos de experiencia e precisa de {personagem.Nivel.ExpMax.Text().Bold()} para evoluir.\n" +
-                $"Mochila com **{personagem.Mochila.Espaco}/64** de espaço.\n" +
-                $"Regenera {personagem.Vida.RegenPorSegundo.Text().Bold()} pontos vida por segundo.\n" +
-                $"Regenera {personagem.Mana.RegenPorSegundo.Text().Bold()} pontos mana por segundo.\n" +
-                $"Tem {personagem.Evasao.Modificado.Text().Bold()} pontos de evasão.\n" +
-                $"Tem {personagem.Precisao.Modificado.Text().Bold()} pontos de precisão.\n" +
-                $"Tem {personagem.Armadura.Modificado.Text().Bold()} pontos de armadura.\n");
-
-           // embed.AddField($"{ComandoAtacar.ConverterVida(personagem.Vida.Atual / personagem.Vida.Maximo)} {"Vida".Titulo()}", $"{personagem.Vida.Atual.Text()}/{personagem.Vida.Maximo.Text()}", true);
-          //  embed.AddField($"{ComandoAtacar.ConverterMana(personagem.Mana.Atual / personagem.Mana.Maximo)} {"Mana".Titulo()}", $"{personagem.Mana.Atual.Text()}/{personagem.Mana.Maximo.Text()}", true);
-            embed.AddField($"{Emoji.Adaga} {"Dano por segundo".Titulo()}", $"{((personagem.DanoFisicoModificado.Maximo + personagem.DanoFisicoModificado.Minimo / 2) * personagem.VelocidadeAtaque.Modificado).Text()}");
-            embed.AddField($"{Emoji.EspadasCruzadas} {"Dano físico combinado".Titulo()}", $"{personagem.DanoFisicoModificado.Minimo} - {personagem.DanoFisicoModificado.Maximo}", true);
+            var str = new StringBuilder();
+            str.AppendLine($"Tem {personagem.Nivel.ExpAtual.ToString("N2").Bold()} pontos de experiencia e precisa de {personagem.Nivel.ExpMax.ToString("N2").Bold()} para evoluir.");
+            str.AppendLine($"Mochila com {personagem.Mochila.EspacoAtual.Bold()}/{personagem.Mochila.EspacoMax.Bold()} de espaço.");
+            str.AppendLine($"Regenera {personagem.Vida.RegenPorSegundo.ToString("N2").Bold()} pontos vida a cada 30 segundos.");
+            str.AppendLine($"Regenera {personagem.Mana.RegenPorSegundo.ToString("N2").Bold()} pontos mana a cada 30 segundos.");
+            str.AppendLine($"Tem {personagem.Evasao.Calculado.ToString("N2").Bold()} pontos de evasão.");
+            str.AppendLine($"Tem {personagem.Precisao.Calculado.ToString("N2").Bold()} pontos de precisão.");
+            str.AppendLine($"Tem {personagem.Armadura.Calculado.ToString("N2").Bold()} pontos de armadura.");
+            embed.WithDescription(str.ToString());
+            embed.WithThumbnail(user.AvatarUrl);
+            embed.AddField($"{ComandoAtacar.ConverterVida(personagem.Vida.Atual / personagem.Vida.Maximo)} {"Vida".Titulo()}", $"{personagem.Vida.Atual:N2}/{personagem.Vida.Maximo:N2}", true);
+            embed.AddField($"{ComandoAtacar.ConverterMana(personagem.Mana.Atual / personagem.Mana.Maximo)} {"Mana".Titulo()}", $"{personagem.Mana.Atual:N2}/{personagem.Mana.Maximo:N2}", true);
+            var danoFisico = personagem.DanoFisicoCalculado;
+            embed.AddField($"{Emoji.EspadasCruzadas} {"Dano físico".Titulo()}", $"{danoFisico.Minimo:N2} - {danoFisico.Maximo:N2}", true);
 
             return embed;
         }

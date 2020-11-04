@@ -1,28 +1,20 @@
-﻿using WafclastRPG.Game.Entidades;
-using WafclastRPG.Game.BancoItens;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using MongoDB.Driver;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using WafclastRPG.Game.Extensoes;
-using WafclastRPG.Game.Entidades.Itens;
 using System.Drawing;
 using System.IO;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Drawing.Drawing2D;
-using WafclastRPG.Game.Services;
-using WafclastRPG.Game.Metadata.Itens.MoedasEmpilhaveis;
-using System.Data;
 using System.Collections.Concurrent;
 using System.Threading;
+using WafclastRPG.Game;
 
-namespace WafclastRPG.Game.Comandos
+namespace WafclastRPG.Bot.Comandos
 {
     public class ComandoAdministrativo : BaseCommandModule
     {
@@ -91,103 +83,37 @@ namespace WafclastRPG.Game.Comandos
 
             bucket.Release();
         }
-
-        [Command("random-item")]
-        [RequireOwner]
-        public async Task RandomItemAsync(CommandContext ctx, int nivel = 1, [RemainingText] DiscordUser member = null)
-        {
-            using (var session = await banco.Client.StartSessionAsync())
-            {
-                BancoSession banco = new BancoSession(session);
-                if (member == null) member = ctx.User;
-                RPJogador jogador = await banco.GetJogadorAsync(member);
-                RPPersonagem personagem = jogador.Personagem;
-
-                var niveisSeparados = RPMetadata.Itens.Where(x => x.Key <= nivel);
-
-                Random r = new Random();
-                var itens = niveisSeparados.ElementAt(r.Next(0, niveisSeparados.Count()));
-                var itemSorteado = itens.ElementAt(r.Next(0, itens.Count()));
-                itemSorteado.ILevel = nivel;
-
-                personagem.Mochila.TryAddItem(itemSorteado);
-
-                await banco.EditJogadorAsync(jogador);
-                await session.CommitTransactionAsync();
-                await ctx.RespondAsync($"{member.Mention} recebeu {itemSorteado.TipoBaseModificado.Titulo().Bold()}!");
-            }
-        }
-
+       
         [Command("atualizar")]
         [RequireUserPermissions(Permissions.Administrator)]
         public async Task Atualizar(CommandContext ctx)
         {
-            FilterDefinition<RPJogador> filter = FilterDefinition<RPJogador>.Empty;
-            FindOptions<RPJogador> options = new FindOptions<RPJogador>
-            {
-                BatchSize = 8,
-                NoCursorTimeout = false
-            };
+            //FilterDefinition<RPJogador> filter = FilterDefinition<RPJogador>.Empty;
+            //FindOptions<RPJogador> options = new FindOptions<RPJogador>
+            //{
+            //    BatchSize = 8,
+            //    NoCursorTimeout = false
+            //};
 
-            using (IAsyncCursor<RPJogador> cursor = await banco.Jogadores.FindAsync(filter, options))
-            {
-                while (await cursor.MoveNextAsync())
-                {
-                    IEnumerable<RPJogador> usuarios = cursor.Current;
+            //using (IAsyncCursor<RPJogador> cursor = await banco.Jogadores.FindAsync(filter, options))
+            //{
+            //    while (await cursor.MoveNextAsync())
+            //    {
+            //        IEnumerable<RPJogador> usuarios = cursor.Current;
 
-                    foreach (RPJogador user in usuarios)
-                    {
-                        var f = user.Personagem.Mochila.Itens.FindAll(x => x.Classe == Enuns.RPClasse.PergaminhoSabedoria);
-                        foreach (var item in f)
-                        {
-                            if (item.Classe == Enuns.RPClasse.PergaminhoSabedoria)
-                                item.TipoBaseModificado = "Pergaminho de sabedoria";
-                        }
-                        await banco.Jogadores.ReplaceOneAsync(x => x.Id == user.Id, user);
-                    }
-                }
-            }
-            await ctx.RespondAsync("Banco foi atualizado com sucesso!");
-        }
-
-        [Command("matarinimigos")]
-        [RequireOwner]
-        public async Task matar(CommandContext ctx, DiscordUser member)
-        {
-            using (var session = await banco.Client.StartSessionAsync())
-            {
-                BancoSession banco = new BancoSession(session);
-                RPJogador jogador = await banco.GetJogadorAsync(member);
-                RPPersonagem personagem = jogador.Personagem;
-
-                personagem.Zona.Monstros = new List<RPMonstro>();
-
-                await banco.EditJogadorAsync(jogador);
-                await session.CommitTransactionAsync();
-                await ctx.RespondAsync($"Inimigos mortos para {member.Mention}!");
-
-            }
-        }
-
-
-        [Command("currency")]
-        [RequireOwner]
-        public async Task Currency(CommandContext ctx, int quantidade = 1)
-        {
-            using (var session = await banco.Client.StartSessionAsync())
-            {
-                BancoSession banco = new BancoSession(session);
-                RPJogador jogador = await banco.GetJogadorAsync(ctx.User);
-                RPPersonagem personagem = jogador.Personagem;
-
-                for (int i = 0; i < quantidade; i++)
-                    personagem.Mochila.TryAddItem(new MoedasEmpilhaveis().PergaminhoSabedoria());
-
-                await banco.EditJogadorAsync(jogador);
-                await session.CommitTransactionAsync();
-                await ctx.RespondAsync($"Adicionado {quantidade}!");
-
-            }
+            //        foreach (RPJogador user in usuarios)
+            //        {
+            //            var f = user.Personagem.Mochila.Itens.FindAll(x => x.Classe == Enuns.RPClasse.PergaminhoSabedoria);
+            //            foreach (var item in f)
+            //            {
+            //                if (item.Classe == Enuns.RPClasse.PergaminhoSabedoria)
+            //                    item.TipoBaseModificado = "Pergaminho de sabedoria";
+            //            }
+            //            await banco.Jogadores.ReplaceOneAsync(x => x.Id == user.Id, user);
+            //        }
+            //    }
+            //}
+            //await ctx.RespondAsync("Banco foi atualizado com sucesso!");
         }
 
         private static ImageCodecInfo GetEncoder(System.Drawing.Imaging.ImageFormat format)

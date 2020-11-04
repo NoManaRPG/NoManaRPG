@@ -7,7 +7,7 @@ namespace WafclastRPG.Game.Extensoes
 {
     public static class EnumExtension
     {
-        public static string GetEnumDescription(Enum value)
+        public static string GetEnumDescription(this Enum value)
         {
             FieldInfo fi = value.GetType().GetField(value.ToString());
             DescriptionAttribute[] attributes = fi.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[];

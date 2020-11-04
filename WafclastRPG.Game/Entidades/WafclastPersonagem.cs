@@ -26,9 +26,22 @@ namespace WafclastRPG.Game.Entidades
         #endregion
 
         #region Dano físico
+        [BsonIgnore]
+        public WafclastDano DanoFisicoCalculado
+        {
+            get
+            {
+                Random rng = new Random();
+                WafclastDano dano = new WafclastDano(DanoFisicoBase);
+                dano.Minimo *= DanoFisicoExtraPorcentagem;
+                dano.Maximo *= DanoFisicoExtraPorcentagem;
+                dano.Somar(DanoFisicoExtra);
+                //rng.NextDouble() * (dano.Maximo - dano.Minimo) + dano.Minimo
+                return dano;
+            }
+        }
         public double DanoFisicoExtraPorcentagem { get; private set; } = 1;
-        public WafclastDano DanoFisicoFinal { get; private set; }
-        public WafclastDano DanoFisicoExtra { get; private set; }
+        public WafclastDano DanoFisicoExtra { get; private set; } = new WafclastDano();
         public WafclastDano DanoFisicoBase { get; private set; }
         public double DanoFisicoDesviarChance { get; private set; }
         public double DanoFisicoCriticoChance { get; private set; }
@@ -41,10 +54,10 @@ namespace WafclastRPG.Game.Entidades
         #endregion
 
         #region Outros
-        public WafclastZona Zona { get; private set; }
+        public WafclastZona Zona { get; private set; } = new WafclastZona();
         public WafclastClasse Classe { get; private set; }
-        public WafclastNivel Nivel { get; private set; }
-        public WafclastMochila Mochila { get; private set; }
+        public WafclastNivel Nivel { get; private set; } = new WafclastNivel();
+        public WafclastMochila Mochila { get; private set; } = new WafclastMochila();
         #endregion
 
         public WafclastPersonagem(WafclastClasse classe, WafclastDano dano,
@@ -55,9 +68,6 @@ namespace WafclastRPG.Game.Entidades
             this.Destreza = destreza;
             this.Inteligencia = inteligencia;
 
-
-
-            DanoFisicoFinal = dano;
             DanoFisicoBase = dano;
 
             CalcVida();
@@ -89,42 +99,31 @@ namespace WafclastRPG.Game.Entidades
         {
             switch (item)
             {
-                case RPBaseItemArma arma:
-                    DanoFisicoExtra.Minimo += arma.DanoFisicoModificado.Minimo;
-                    DanoFisicoExtra.Maximo += arma.DanoFisicoModificado.Maximo;
+                case WafclastItemArma arma:
+                    DanoFisicoExtra.Somar(arma.DanoFisicoCalculado);
                     break;
             }
-
-            CalcDano();
-        }
-
-        public void CalcDano()
-        {
-            DanoFisicoFinal.Minimo = (DanoFisicoBase.Minimo + DanoFisicoExtra.Minimo) * DanoFisicoExtraPorcentagem;
-            DanoFisicoFinal.Maximo = (DanoFisicoBase.Maximo + DanoFisicoExtra.Maximo) * DanoFisicoExtraPorcentagem;
         }
 
         public void CalcVida()
         {
-            Vida.WithMaximo((38 + (Nivel.Atual * 12) + (Forca / 2)) * Vida.PorcentagemAdicional);
+            Vida.WithBase(38 + (Nivel.Atual * 12) + (Forca / 2));
         }
 
         public void CalcMana()
         {
-            Mana.WithMaximo((40 + (Nivel.Atual * 6) + (Inteligencia / 2)) * Mana.PorcentagemAdicional);
+            Mana.WithBase(40 + (Nivel.Atual * 6) + (Inteligencia / 2));
             Mana.WithRegen(0.018 * Mana.Maximo);
         }
 
         public void CalcEvasao()
         {
-            Evasao. = (53 + (Nivel.Atual * 3)) * ((Destreza / 5 * 0.01) + 1);
-            Evasao.Final = (Evasao.Base + Evasao.Extra) * Evasao.PorcentagemMultiplicador;
+            Evasao.WithBase((53 + (Nivel.Atual * 3)) * ((Destreza / 5 * 0.01) + 1));
         }
 
         public void CalcPrecisao()
         {
-            Precisao.Base = (Destreza * 2) + ((Nivel.Atual - 1) * 2);
-            Precisao.Final = (Precisao.Base + Precisao.Extra) * Precisao.PorcentagemMultiplicador;
+            Precisao.WithBase((Destreza * 2) + ((Nivel.Atual - 1) * 2));
         }
 
         public int AddExp(double exp)

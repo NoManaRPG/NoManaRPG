@@ -1,6 +1,4 @@
-﻿using WafclastRPG.Game.Atributos;
-using WafclastRPG.Game.Extensoes;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Converters;
 using DSharpPlus.CommandsNext.Entities;
@@ -9,10 +7,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using static DSharpPlus.CommandsNext.CommandsNextExtension;
+using static WafclastRPG.Bot.Utilities;
 using System;
-using static WafclastRPG.Game.Utilities;
+using WafclastRPG.Bot.Atributos;
+using WafclastRPG.Bot.Extensoes;
 
-namespace WafclastRPG.Game.Comandos.Exibir
+namespace WafclastRPG.Bot.Comandos.Exibir
 {
     public class ComandoAjuda : BaseCommandModule
     {
