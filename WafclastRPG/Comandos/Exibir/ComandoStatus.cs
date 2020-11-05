@@ -21,7 +21,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         [ComoUsar("status")]
         [ComoUsar("status [@USUARIO]")]
         [Exemplo("status @Imain")]
-       // [Cooldown(1, 10, CooldownBucketType.User)]
+        // [Cooldown(1, 10, CooldownBucketType.User)]
         public async Task ComandoStatusAb(CommandContext ctx, DiscordUser user)
         {
             var jogador = await banco.GetJogadorAsync(user);
@@ -35,7 +35,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         }
 
         [Command("status")]
-        //[Cooldown(1, 10, CooldownBucketType.User)]
+        [Cooldown(1, 10, CooldownBucketType.User)]
         public async Task ComandoStatusAb(CommandContext ctx)
         {
             // Verifica se existe o jogador,
@@ -60,8 +60,8 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             str.AppendLine($"Tem {personagem.Armadura.Calculado.ToString("N2").Bold()} pontos de armadura.");
             embed.WithDescription(str.ToString());
             embed.WithThumbnail(user.AvatarUrl);
-            embed.AddField($"{ComandoAtacar.ConverterVida(personagem.Vida.Atual / personagem.Vida.Maximo)} {"Vida".Titulo()}", $"{personagem.Vida.Atual:N2}/{personagem.Vida.Maximo:N2}", true);
-            embed.AddField($"{ComandoAtacar.ConverterMana(personagem.Mana.Atual / personagem.Mana.Maximo)} {"Mana".Titulo()}", $"{personagem.Mana.Atual:N2}/{personagem.Mana.Maximo:N2}", true);
+            embed.AddField($"{WafclastPersonagem.VidaEmoji(personagem.Vida.Atual / personagem.Vida.Maximo)} {"Vida".Titulo()}", $"{personagem.Vida.Atual:N2}/{personagem.Vida.Maximo:N2}", true);
+            embed.AddField($"{WafclastPersonagem.ManaEmoji(personagem.Mana.Atual / personagem.Mana.Maximo)} {"Mana".Titulo()}", $"{personagem.Mana.Atual:N2}/{personagem.Mana.Maximo:N2}", true);
             var danoFisico = personagem.DanoFisicoCalculado;
             embed.AddField($"{Emoji.EspadasCruzadas} {"Dano físico".Titulo()}", $"{danoFisico.Minimo:N2} - {danoFisico.Maximo:N2}", true);
 

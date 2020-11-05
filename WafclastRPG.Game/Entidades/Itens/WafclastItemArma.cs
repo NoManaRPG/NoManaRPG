@@ -1,6 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using WafclastRPG.Game.Enums;
-using WafclastRPG.Game.Enuns;
 
 namespace WafclastRPG.Game.Entidades.Itens
 {
@@ -22,15 +21,16 @@ namespace WafclastRPG.Game.Entidades.Itens
         }
         public WafclastDano DanoFisicoBase { get; private set; }
         public double DanoFisicoCriticoChance { get; private set; } = 0;
+        public bool IsDuasMao { get; private set; }
 
-        public WafclastItemArma(int nivel, string nome, WafclastTipo tipo, WafclastClasse classe,
-            int ocupaEspaco, WafclastDano danoFisico, double chanceCritico)
-            : base(nome, tipo, ocupaEspaco)
+        public WafclastItemArma(int id, string nome, int ocupaEspaco,
+            WafclastClasse classe, WafclastDano danoFisico, double chanceCritico, bool duasMao = false)
+            : base(id, nome, ocupaEspaco)
         {
-            this.Nivel = nivel;
             this.Classe = classe;
             this.DanoFisicoBase = danoFisico;
             this.DanoFisicoCriticoChance = chanceCritico;
+            this.IsDuasMao = duasMao;
         }
     }
 }

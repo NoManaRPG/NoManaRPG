@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Config;
 
-namespace WafclastRPG.Bot
+namespace WafclastRPG.Bot.Eventos
 {
     public class GuildMemberRemoved
     {

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using WafclastRPG.Bot.Config;
 using WafclastRPG.Game;
+using WafclastRPG.Game.Metadata;
 
 namespace WafclastRPG.Bot
 {

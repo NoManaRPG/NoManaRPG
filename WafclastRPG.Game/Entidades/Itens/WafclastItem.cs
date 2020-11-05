@@ -1,5 +1,4 @@
-﻿using WafclastRPG.Game.Enuns;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
 
 namespace WafclastRPG.Game.Entidades.Itens
 {
@@ -7,14 +6,14 @@ namespace WafclastRPG.Game.Entidades.Itens
     [BsonKnownTypes(typeof(WafclastItemArma), typeof(WafclastItemEmpilhavel))]
     public class WafclastItem
     {
+        public int Id { get; private set; }
         public string Nome { get; private set; }
-        public WafclastTipo Tipo { get; private set; }
         public int OcupaEspaco { get; private set; }
 
-        public WafclastItem(string nome, WafclastTipo tipo, int ocupaEspaco)
+        public WafclastItem(int id, string nome, int ocupaEspaco)
         {
+            this.Id = id;
             this.Nome = nome;
-            this.Tipo = tipo;
             this.OcupaEspaco = ocupaEspaco;
         }
     }

@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WafclastRPG.Game.Entidades;
 using WafclastRPG.Game.Extensoes;
+using WafclastRPG.Game.Metadata;
 
 namespace WafclastRPG.Game
 {
@@ -23,6 +24,8 @@ namespace WafclastRPG.Game
             Database = Client.GetDatabase("Wafclast");
             Jogadores = Database.CriarCollection<WafclastJogador>();
             Baldes = new ConcurrentDictionary<ulong, SemaphoreSlim>();
+
+            new Data();
 
             #region Usar no futuro
             //var notificationLogBuilder = Builders<RPGJogador>.IndexKeys;
@@ -43,6 +46,9 @@ namespace WafclastRPG.Game
 
         public Task<WafclastJogador> GetJogadorAsync(ulong id)
               => Jogadores.Find(x => x.Id == id).FirstOrDefaultAsync();
+
+        public Task ReplaceJogadorAsync(ulong id, WafclastJogador jogador)
+            => Jogadores.ReplaceOneAsync(x => x.Id == id, jogador);
 
         public async Task AddJogadorAsync(WafclastJogador jogador)
         {

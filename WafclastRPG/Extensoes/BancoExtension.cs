@@ -13,15 +13,19 @@ namespace WafclastRPG.Bot.Extensoes
     {
         public static async Task<Tuple<bool, Sessao>> ExisteJogadorAsync(this Banco banco, CommandContext ctx, bool esperar = false)
         {
+            var balde = banco.GetBalde(ctx.User.Id);
+            if (esperar)
+                await balde.WaitAsync();
+
             var jogador = await banco.GetJogadorAsync(ctx.User.Id);
             if (jogador == null)
             {
+                balde.Release();
                 await ctx.RespondAsync($"Bem-vindo! {ctx.User.Mention} antes de começar, crie um personagem digitando {Formatter.InlineCode("!criar-personagem")}.");
                 return new Tuple<bool, Sessao>(false, null);
             }
-            var sessao = new Sessao(jogador, banco.GetBalde(ctx.User.Id));
-            if (esperar)
-                await sessao.Esperar();
+
+            var sessao = new Sessao(jogador, balde, banco);
             return new Tuple<bool, Sessao>(true, sessao);
         }
 

@@ -13,8 +13,6 @@ namespace WafclastRPG.Game.Entidades
 
         public void Diminuir(double valor)
         {
-            if (valor > 0)
-                throw new ArgumentOutOfRangeException("valor", "Valor não pode ser positivo!");
             Atual -= valor;
             if (Atual < 0)
                 Atual = 0;
@@ -22,8 +20,6 @@ namespace WafclastRPG.Game.Entidades
 
         public void Incrementar(double valor)
         {
-            if (valor < 0)
-                throw new ArgumentOutOfRangeException("valor", "Valor não pode ser negativo!");
             Atual += valor;
             if (Atual > Calculado)
                 Atual = Calculado;

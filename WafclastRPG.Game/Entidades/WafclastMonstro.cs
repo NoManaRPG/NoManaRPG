@@ -1,29 +1,51 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using WafclastRPG.Game.Entidades.Itens;
 
 namespace WafclastRPG.Game.Entidades
 {
     public class WafclastMonstro
     {
-        public string Nome { get; set; }
-        public int Nivel { get; set; }
-        public double Dano { get; set; }
-        public double Evasao { get; set; }
-        public double Precisao { get; set; }
-        public double Exp { get; set; }
-        public double Vida { get; set; }
+        public string Nome { get; private set; }
+        public int Nivel { get; private set; }
+        public double Dano { get; private set; }
+        public double Evasao { get; private set; }
+        public double Precisao { get; private set; }
+        public double Exp { get; private set; }
+        public double Vida { get; private set; }
 
-        public WafclastMonstro(string nome, int nivel)
+        public WafclastItem ItemDrop { get; private set; }
+
+        public WafclastMonstro(string nome, WafclastItem drop)
         {
-            Nome = nome;
-            Nivel = nivel;
-            Dano = CalcularDano();
-            Evasao = CalcularEvasao();
-            Precisao = CalcularPrecisao();
-            Exp = CalcularExp();
-            Vida = CalcularVida();
+            this.Nome = nome;
+            this.ItemDrop = drop;
+        }
+
+        public void CalcularAtributos()
+        {
+            this.Dano = CalcularDano();
+            this.Evasao = CalcularEvasao();
+            this.Precisao = CalcularPrecisao();
+            this.Exp = CalcularExp();
+            this.Vida = CalcularVida();
+        }
+
+        public void SetNivel(int nivel)
+        {
+            this.Nivel = nivel;
+            CalcularAtributos();
+        }
+
+        /// <summary>
+        /// Retorna verdadeiro caso tenha abatido o monstro.
+        /// </summary>
+        /// <param name="valor"></param>
+        public bool CausarDano(double valor)
+        {
+            Vida -= valor;
+            if (Vida <= 0)
+                return true;
+            return false;
         }
 
         public double CalcularExp()
@@ -104,12 +126,6 @@ namespace WafclastRPG.Game.Entidades
         //        }
         //        return null;
         //    }
-        //}
-
-        //[BsonIgnoreExtraElements]
-        //public class MobItemDropRPG
-        //{
-        //    public int ChanceDrop { get; set; }
         //}
     }
 }

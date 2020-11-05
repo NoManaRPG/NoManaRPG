@@ -7,7 +7,7 @@ namespace WafclastRPG.Game.Entidades
     public class WafclastJogador
     {
         [BsonId]
-        public ulong Id { get; }
+        public ulong Id { get; private set; }
         [BsonElement]
         public DateTime ContaCriacao { get; }
         public WafclastPersonagem Personagem { get; private set; }

@@ -1,4 +1,9 @@
-﻿namespace WafclastRPG.Game.Entidades
+﻿using System;
+using System.Text;
+using WafclastRPG.Game.Metadata;
+using WafclastRPG.Game.Services;
+
+namespace WafclastRPG.Game.Entidades
 {
     public class WafclastZona
     {
@@ -7,93 +12,33 @@
 
         public WafclastZona() { }
 
-        //public int TrocarZona(double velocidadeAtaquePersonagem, int nivel)
-        //{
-        //    Turno = 0;
-        //    Nivel = nivel;
-        //    OndaAtual = 1;
-        //    OndaTotal = Convert.ToInt64(Math.Pow(Nivel, 2) * 2);
-        //    int quantidadeInimigo = Math.Clamp(Convert.ToInt32(Math.Pow(1, nivel)), 0, 1);
-        //        var f = RPMetadata.MonstrosNomes;
-        //        var sorteio = Calculo.SortearValor(0, f.Nomes.Count - 1);
-        //        var g = f.Nomes[sorteio];
-        //        RPMonstro m = new RPMonstro(g, nivel);
-        //        Monstros.Add(m);
+        /// <summary>
+        /// Retorna verdadeiro caso tenha abatido o personagem.
+        /// </summary>
+        /// <param name="personagem"></param>
+        /// <param name="batalha"></param>
+        public bool MonstroAtacar(WafclastPersonagem personagem, out StringBuilder batalha)
+        {
+            batalha = new StringBuilder();
+            Turno++;
+            if (Calculo.DanoFisicoChanceAcerto(Monstro.Precisao, personagem.Evasao.Calculado))
+            {
+                double dano = personagem.CausarDanoFisico(Monstro.Dano);
+                batalha.AppendLine($"{Emoji.Escudo} {Monstro.Nome} causou {dano:N2} de dano físico.");
+                if (personagem.Vida.Atual <= 0)
+                    return true;
+            }
+            else
+                batalha.AppendLine($"{Emoji.CarinhaNervoso} {Monstro.Nome} errou o ataque!");
+            return false;
+        }
 
-        //    foreach (var item in Monstros)
-        //        PontosAcaoTotal += item.VelocidadeAtaque;
-        //    PontosAcaoTotal += velocidadeAtaquePersonagem;
-        //    return quantidadeInimigo;
-        //}
-
-        //public void SortearItem(RPMonstro monstro, double chancePersonagem)
-        //{
-        //    Monstros.Remove(monstro);
-        //    if (monstro.SortearItens(monstro.Nivel, chancePersonagem, out List<RPBaseItem> itens))
-        //    {
-        //        foreach (var item in itens)
-        //            ItensNoChao.Add(item);
-        //    }
-        //}
-
-        //public bool NovaOnda(double velocidadeAtaquePersonagem, out int quantidadeMonstros)
-        //{
-        //    quantidadeMonstros = 0;
-        //    if (Monstros.Count == 0)
-        //    {
-        //        if (OndaAtual < OndaTotal)
-        //        {
-        //            Turno = 0;
-        //            Monstros = new List<RPMonstro>();
-        //            OndaAtual++;
-
-        //            quantidadeMonstros = Calculo.SortearValor(1, 2);
-        //            for (int i = 0; i < quantidadeMonstros; i++)
-        //            {
-
-        //                // Sorteia os monstros
-        //                var listaNomes = RPMetadata.MonstrosNomes[Nivel];
-        //                var nomeSorteado = listaNomes.Nomes[Calculo.SortearValor(0, listaNomes.Nomes.Count - 1)];
-        //                RPMonstro m = new RPMonstro(nomeSorteado, Nivel);
-        //                Monstros.Add(m);
-        //            }
-
-        //            //Calcula pontos de ação total.
-        //            foreach (var item in Monstros)
-        //                PontosAcaoTotal += item.VelocidadeAtaque;
-        //            PontosAcaoTotal += velocidadeAtaquePersonagem;
-        //            return true;
-        //        }
-        //    }
-        //    return false;
-        //}
-
-        //public void CalcAtaquesInimigos(RPPersonagem personagem, StringBuilder resumoBatalha)
-        //{
-        //    do
-        //    {
-        //        foreach (var mob in Monstros)
-        //        {
-        //            if (mob.Acao(PontosAcaoTotal))
-        //            {
-        //                Turno++;
-        //                if (Calculo.DanoFisicoChanceAcerto(mob.Precisao, personagem.Evasao.Modificado))
-        //                {
-        //                    double dano = personagem.ReceberDanoFisico(mob.Dano);
-        //                    resumoBatalha.AppendLine($"{Emoji.Escudo} {mob.Nome} causou {dano.Text()} de dano físico.");
-        //                }
-        //                else
-        //                    resumoBatalha.AppendLine($"{Emoji.Nervoso} {mob.Nome} errou o ataque!");
-        //            }
-        //        }
-
-
-        //        if (personagem.Acao(PontosAcaoTotal))
-        //        {
-        //            Turno++;
-        //            break;
-        //        }
-        //    } while (personagem.Vida.Atual > 0);
-        //}
+        public void SortearMonstro(int nivel)
+        {
+            Random random = new Random();
+            var sorteado = random.Next(0, Data.Monstros.Count - 1);
+            Monstro = Data.Monstros[sorteado];
+            Monstro.SetNivel(nivel);
+        }
     }
 }

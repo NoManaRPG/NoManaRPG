@@ -1,9 +1,11 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using WafclastRPG.Game.Entidades.Itens;
 using WafclastRPG.Game.Enums;
+using WafclastRPG.Game.Services;
 
 namespace WafclastRPG.Game.Entidades
 {
@@ -36,7 +38,6 @@ namespace WafclastRPG.Game.Entidades
                 dano.Minimo *= DanoFisicoExtraPorcentagem;
                 dano.Maximo *= DanoFisicoExtraPorcentagem;
                 dano.Somar(DanoFisicoExtra);
-                //rng.NextDouble() * (dano.Maximo - dano.Minimo) + dano.Minimo
                 return dano;
             }
         }
@@ -79,7 +80,7 @@ namespace WafclastRPG.Game.Entidades
             Mana.Incrementar(double.MaxValue);
         }
 
-        public double ReceberDanoFisico(double danoFisico)
+        public double CausarDanoFisico(double danoFisico)
         {
             double porcentagemReducao = Math.Clamp(Armadura.Calculado / (Armadura.Calculado + 10 * danoFisico), 0, 0.9) * danoFisico;
             double danoReduzido = danoFisico - porcentagemReducao;
@@ -89,10 +90,9 @@ namespace WafclastRPG.Game.Entidades
 
         public void Resetar()
         {
-            Zona = new WafclastZona();
             Vida.Incrementar(double.MaxValue);
             Mana.Incrementar(double.MaxValue);
-            Nivel.PersonagemMorreu();
+            Nivel.Penalizar();
         }
 
         public void Equipar(WafclastItem item)
@@ -126,7 +126,7 @@ namespace WafclastRPG.Game.Entidades
             Precisao.WithBase((Destreza * 2) + ((Nivel.Atual - 1) * 2));
         }
 
-        public int AddExp(double exp)
+        public bool AddExp(double exp)
         {
             int quantEvoluiu = Nivel.AddExp(exp);
             if (quantEvoluiu != 0)
@@ -137,8 +137,81 @@ namespace WafclastRPG.Game.Entidades
                 CalcPrecisao();
                 Vida.Incrementar(double.MaxValue);
                 Mana.Incrementar(double.MaxValue);
+                return true;
             }
-            return quantEvoluiu;
+            return false;
         }
+
+        public StringBuilder AtacarMonstro(out WafclastBatalha resultado, int ataque = 0)
+        {
+            resultado = WafclastBatalha.InimigoAbatido;
+
+            if (Zona.Monstro == null)
+                Zona.SortearMonstro(Nivel.Atual);
+
+            if (Zona.MonstroAtacar(this, out var batalha))
+            {
+                Resetar();
+                batalha.AppendLine($"**{Emoji.CrossBone} Você morreu!!! {Emoji.CrossBone}**");
+                resultado = WafclastBatalha.PersonagemAbatido;
+                return batalha;
+            }
+            Zona.Turno++;
+            // Chance acerto.
+            if (Calculo.DanoFisicoChanceAcerto(Precisao.Calculado, Zona.Monstro.Evasao))
+            {
+                var dp = DanoFisicoCalculado;
+                var dano = Calculo.SortearValor(dp.Minimo, dp.Maximo);
+                batalha.AppendLine($"\n{Emoji.Adaga} Você causou {dano:N2} de dano no {Zona.Monstro.Nome}!");
+                // Monstro morto.
+                if (Zona.Monstro.CausarDano(dano))
+                {
+                    batalha.AppendLine($"{Emoji.CrossBone} **{Zona.Monstro.Nome}** ️{Emoji.CrossBone}");
+                    batalha.AppendLine($"<:xp:758439721016885308>+{Zona.Monstro.Exp:N2}.");
+                    if (AddExp(Zona.Monstro.Exp))
+                        resultado = WafclastBatalha.Evoluiu;
+
+                    Zona.Monstro = null;
+                }
+            }
+            else
+                batalha.AppendLine($"\n{Emoji.CarinhaDesapontado} Você errou o ataque!");
+            return batalha;
+        }
+
+        public static string VidaEmoji(double porcentagem)
+        {
+            switch (porcentagem)
+            {
+                case double n when (n > 0.75):
+                    return Emoji.CoracaoVerde;
+                case double n when (n > 0.50):
+                    return Emoji.CoracaoAmarelo;
+                case double n when (n > 0.25):
+                    return Emoji.CoracaoLaranja;
+            }
+            return Emoji.CoracaoVermelho;
+        }
+
+        public static string ManaEmoji(double porcentagem)
+        {
+            switch (porcentagem)
+            {
+                case double n when (n > 0.75):
+                    return Emoji.CirculoVerde;
+                case double n when (n > 0.50):
+                    return Emoji.CirculoAmarelo;
+                case double n when (n > 0.25):
+                    return Emoji.CirculoLaranja;
+            }
+            return Emoji.CirculoVermelho;
+        }
+    }
+
+    public enum WafclastBatalha
+    {
+        InimigoAbatido,
+        PersonagemAbatido,
+        Evoluiu,
     }
 }
