@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using DSharpPlus.Net.Models;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,7 +42,18 @@ namespace WafclastRPG.Bot.Comandos.Acao
             embed.AddField("Resumo da Batalha".Titulo(), batalha.ToString());
 
             if (resultado == Resultado.Evoluiu)
+            {
                 embed.AddField("Evolução".Titulo(), $"{Emoji.Up} Você evoluiu de nível!");
+                if (ctx.Guild.Id == 732102804654522470)
+                {
+                    try
+                    {
+                        var name = $"{ ctx.Member.Username } [Lvl.{ personagem.Nivel.Atual}]";
+                        await ctx.Member.ModifyAsync(x => x.Nickname = name);
+                    }
+                    catch (Exception) { }
+                }
+            }
 
             switch (resultado)
             {
