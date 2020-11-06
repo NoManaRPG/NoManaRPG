@@ -51,17 +51,24 @@ namespace WafclastRPG.Game.Entidades
             return true;
         }
 
-        public bool TryRemoveItem(int index, out WafclastItem item, int quantidade = 1)
+        public enum MochilaResposta
+        {
+            NaoEncontrado,
+            QuantiaInvalida,
+            Ok
+        }
+
+        public MochilaResposta TryRemoveItem(int index, out WafclastItem item, int quantidade = 1)
         {
             item = null;
             var mochilaItem = Itens.ElementAtOrDefault(index);
             if (mochilaItem == null)
-                return false;
+                return MochilaResposta.NaoEncontrado;
 
             if (mochilaItem is WafclastItemEmpilhavel)
             {
                 if (quantidade > (mochilaItem as WafclastItemEmpilhavel).Pilha)
-                    return false;
+                    return MochilaResposta.QuantiaInvalida;
                 var ie = (mochilaItem.Clone() as WafclastItemEmpilhavel);
                 ie.Pilha = quantidade;
                 var mm = (mochilaItem as WafclastItemEmpilhavel);
@@ -77,7 +84,7 @@ namespace WafclastRPG.Game.Entidades
                 Itens.RemoveAt(index);
                 item = mochilaItem;
             }
-            return true;
+            return MochilaResposta.Ok;
         }
     }
 }

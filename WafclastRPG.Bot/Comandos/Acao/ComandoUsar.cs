@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WafclastRPG.Bot.Atributos;
 using WafclastRPG.Bot.Extensoes;
 using WafclastRPG.Game;
+using WafclastRPG.Game.Entidades;
 using WafclastRPG.Game.Entidades.Itens;
 
 namespace WafclastRPG.Bot.Comandos.Acao
@@ -49,12 +50,17 @@ namespace WafclastRPG.Bot.Comandos.Acao
                 sessao.Soltar();
                 return;
             }
-
-            if (!personagem.Mochila.TryRemoveItem(index, out var item, quantidade))
+            var resposta = personagem.Mochila.TryRemoveItem(index, out var item, quantidade);
+            switch (resposta)
             {
-                await ctx.RespondAsync($"{ctx.User.Mention}, você não tem a quantia informada na `mochila`!");
-                sessao.Soltar();
-                return;
+                case WafclastMochila.MochilaResposta.NaoEncontrado:
+                    sessao.Soltar();
+                    await ctx.RespondAsync($"{ctx.User.Mention}, `#ID` não foi encontrado na `mochila`!");
+                    return;
+                case WafclastMochila.MochilaResposta.QuantiaInvalida:
+                    sessao.Soltar();
+                    await ctx.RespondAsync($"{ctx.User.Mention}, você não tem {quantidade}!");
+                    return;
             }
 
             var str = new StringBuilder();
