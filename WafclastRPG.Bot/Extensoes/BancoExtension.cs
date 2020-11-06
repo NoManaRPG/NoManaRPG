@@ -20,7 +20,8 @@ namespace WafclastRPG.Bot.Extensoes
             var jogador = await banco.GetJogadorAsync(ctx.User.Id);
             if (jogador == null)
             {
-                balde.Release();
+                if (esperar)
+                    balde.Release();
                 await ctx.RespondAsync($"Bem-vindo! {ctx.User.Mention} antes de começar, crie um personagem digitando {Formatter.InlineCode("!criar-personagem")}.");
                 return new Tuple<bool, Sessao>(false, null);
             }

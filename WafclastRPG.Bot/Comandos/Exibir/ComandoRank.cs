@@ -25,10 +25,6 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         [Cooldown(1, 60, CooldownBucketType.User)]
         public async Task ComandoMochilaAsync(CommandContext ctx)
         {
-            // Verifica se existe o jogador e faz o jogador esperar antes de começar outro comando
-            var (isJogadorCriado, sessao) = await banco.ExisteJogadorAsync(ctx);
-            if (!isJogadorCriado) return;
-
             var top = await banco.Jogadores.Find(FilterDefinition<WafclastJogador>.Empty).Limit(10)
                 .SortByDescending(x => x.Personagem.Mochila.Moedas).ToListAsync();
             StringBuilder str = new StringBuilder();
@@ -37,7 +33,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             foreach (var item in top)
             {
                 var g = await ctx.Client.GetUserAsync(item.Id);
-                str.AppendLine($"{pos}. {g.Mention} - :coin: {item.Personagem.Mochila.Moedas}".Bold());
+                str.AppendLine($"{pos}. {g.Username}#{g.Discriminator} - :coin: {item.Personagem.Mochila.Moedas}".Bold());
                 pos++;
             }
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
