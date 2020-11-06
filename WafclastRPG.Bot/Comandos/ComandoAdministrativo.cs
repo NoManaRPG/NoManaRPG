@@ -13,6 +13,9 @@ using System.Drawing.Drawing2D;
 using System.Collections.Concurrent;
 using System.Threading;
 using WafclastRPG.Game;
+using WafclastRPG.Game.Entidades;
+using System.Collections.Generic;
+using WafclastRPG.Game.Entidades.Itens;
 
 namespace WafclastRPG.Bot.Comandos
 {
@@ -98,32 +101,37 @@ namespace WafclastRPG.Bot.Comandos
         [RequireUserPermissions(Permissions.Administrator)]
         public async Task Atualizar(CommandContext ctx)
         {
-            //FilterDefinition<RPJogador> filter = FilterDefinition<RPJogador>.Empty;
-            //FindOptions<RPJogador> options = new FindOptions<RPJogador>
-            //{
-            //    BatchSize = 8,
-            //    NoCursorTimeout = false
-            //};
+            FilterDefinition<WafclastJogador> filter = FilterDefinition<WafclastJogador>.Empty;
+            FindOptions<WafclastJogador> options = new FindOptions<WafclastJogador>
+            {
+                BatchSize = 8,
+                NoCursorTimeout = false
+            };
 
-            //using (IAsyncCursor<RPJogador> cursor = await banco.Jogadores.FindAsync(filter, options))
-            //{
-            //    while (await cursor.MoveNextAsync())
-            //    {
-            //        IEnumerable<RPJogador> usuarios = cursor.Current;
+            using (IAsyncCursor<WafclastJogador> cursor = await banco.Jogadores.FindAsync(filter, options))
+            {
+                while (await cursor.MoveNextAsync())
+                {
+                    IEnumerable<WafclastJogador> usuarios = cursor.Current;
 
-            //        foreach (RPJogador user in usuarios)
-            //        {
-            //            var f = user.Personagem.Mochila.Itens.FindAll(x => x.Classe == Enuns.RPClasse.PergaminhoSabedoria);
-            //            foreach (var item in f)
-            //            {
-            //                if (item.Classe == Enuns.RPClasse.PergaminhoSabedoria)
-            //                    item.TipoBaseModificado = "Pergaminho de sabedoria";
-            //            }
-            //            await banco.Jogadores.ReplaceOneAsync(x => x.Id == user.Id, user);
-            //        }
-            //    }
-            //}
-            //await ctx.RespondAsync("Banco foi atualizado com sucesso!");
+                    foreach (WafclastJogador user in usuarios)
+                    {
+                        user.Personagem.Mochila.EspacoAtual = 0;
+                        var itens = user.Personagem.Mochila.Itens;
+                        foreach (var item in itens)
+                        {
+                            switch (item)
+                            {
+                                case WafclastItemEmpilhavel wie:
+                                    user.Personagem.Mochila.EspacoAtual += wie.OcupaEspaco * wie.Pilha;
+                                    break;
+                            }
+                        }
+                        await banco.Jogadores.ReplaceOneAsync(x => x.Id == user.Id, user);
+                    }
+                }
+            }
+            await ctx.RespondAsync("Banco foi atualizado com sucesso!");
         }
 
         private static ImageCodecInfo GetEncoder(System.Drawing.Imaging.ImageFormat format)

@@ -12,7 +12,7 @@ namespace WafclastRPG.Game.Entidades
     {
         public List<WafclastItem> Itens { get; set; } = new List<WafclastItem>();
         public int Moedas { get; private set; }
-        public int EspacoAtual { get; private set; }
+        public int EspacoAtual { get; set; }
         public int EspacoMax { get; private set; } = 64;
         public int Nivel { get; set; } = 1;
 
@@ -36,7 +36,7 @@ namespace WafclastRPG.Game.Entidades
             switch (item)
             {
                 case WafclastItemEmpilhavel ie:
-                    ie.Pilha += quantidade;
+                    ie.Pilha = quantidade;
                     var encontrou = Itens.Find(x => x.Nome == ie.Nome);
                     if (encontrou != null)
                         ((WafclastItemEmpilhavel)encontrou).Pilha += quantidade;
