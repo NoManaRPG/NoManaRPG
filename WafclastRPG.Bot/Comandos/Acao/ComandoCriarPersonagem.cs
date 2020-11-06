@@ -91,8 +91,7 @@ namespace WafclastRPG.Bot.Comandos.Acao
         {
             var jogador = new WafclastJogador(ctx.User.Id, personagem);
             await banco.AddJogadorAsync(jogador);
-            await ctx.RespondAsync($"{ctx.User.Mention}, personagem {personagem.Classe.GetEnumDescription()} criado! " +
-                $"Digite {Formatter.InlineCode("!ajuda")} para ver outros comandos.");
+            await ctx.RespondAsync($"{ctx.User.Mention}, o seu personagem {personagem.Classe.GetEnumDescription()} criado. Divirta-se!");
         }
     }
 }
