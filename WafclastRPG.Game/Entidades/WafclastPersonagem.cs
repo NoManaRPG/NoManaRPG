@@ -172,7 +172,8 @@ namespace WafclastRPG.Game.Entidades
                 batalha.AppendLine(":cold_sweat: **Você está sem vigor para explorar!**");
                 return batalha;
             }
-
+            if (ataque == 1)
+                batalha.AppendLine($"**{Zona.SortearMonstro(IdRegiao, Nivel.Atual)} apareceu!**\n");
             if (Zona.Monstro == null)
                 batalha.AppendLine($"**{Zona.SortearMonstro(IdRegiao, Nivel.Atual)} apareceu!**\n");
             Zona.Turno++;
@@ -201,7 +202,6 @@ namespace WafclastRPG.Game.Entidades
                     if (AddExp(Zona.Monstro.Exp))
                         resultado = Resultado.Evoluiu;
 
-                    Zona.Turno = 0;
                     int quantMoedas = Nivel.Atual * 2;
                     batalha.AppendLine($"**{Emoji.Coins}+{quantMoedas}**");
                     Mochila.AdicionarMoeda(quantMoedas);

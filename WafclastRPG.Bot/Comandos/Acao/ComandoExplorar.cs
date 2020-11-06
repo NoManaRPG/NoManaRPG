@@ -22,7 +22,7 @@ namespace WafclastRPG.Bot.Comandos.Acao
         [Description("Permite explorar a região, se encontrar um monstro você o ataca.")]
         [ComoUsar("explorar")]
         // [Cooldown(1, 4, CooldownBucketType.User)]
-        public async Task ComandoExplorarAsync(CommandContext ctx)
+        public async Task ComandoExplorarAsync(CommandContext ctx, string codigo = "")
         {
             // Verifica se existe o jogador e faz o jogador esperar antes de começar outro comando
             var (isJogadorCriado, sessao) = await banco.ExisteJogadorAsync(ctx, true);
@@ -32,7 +32,10 @@ namespace WafclastRPG.Bot.Comandos.Acao
 
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder().Criar(ctx.User);
 
-            var batalha = personagem.AtacarMonstro(out var resultado);
+            codigo.TryParseID(out var ataque);
+            Math.Clamp(ataque, 0, 1);
+
+            var batalha = personagem.AtacarMonstro(out var resultado, ataque);
 
             var str = new StringBuilder();
             str.AppendLine($":poultry_leg: **{personagem.Fome.Atual:N2}**");

@@ -40,6 +40,7 @@ namespace WafclastRPG.Game.Entidades
             var sorteado = random.Next(0, regiao.Monstros.Count);
             Monstro = regiao.Monstros[sorteado];
             Monstro.SetNivel(nivel);
+            Turno = 0;
             return Monstro.Nome;
         }
     }
