@@ -32,7 +32,7 @@ namespace WafclastRPG.Bot.Comandos.Acao
                 DiscordEmbedBuilder embed = new DiscordEmbedBuilder().Criar(ctx);
                 embed.WithColor(DiscordColor.Gold);
                 embed.WithTitle("Classes disponíveis");
-                embed.WithDescription($"Escolha uma classe digitando `!criar-personagem <classe>`.");
+                embed.WithDescription($"Escolha uma classe digitando `w.criar-personagem <classe>`.");
                 embed.AddField("Caçadora", "Foco em: Destreza", true);
                 embed.AddField("Berserker", "Foco em: Força", true);
                 embed.AddField("Bruxa", "Foco em: Inteligência", true);
