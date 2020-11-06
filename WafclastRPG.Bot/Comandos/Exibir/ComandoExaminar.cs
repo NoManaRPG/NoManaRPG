@@ -11,7 +11,6 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         public Banco banco;
 
         [Command("examinar")]
-        [Aliases("ex")]
         [Description("Permite examinar um item.\n`#ID` se contra na mochila.")]
         [ComoUsar("examinar [#ID]")]
         [Exemplo("examinar #1")]

@@ -39,7 +39,7 @@ namespace WafclastRPG.Bot
             CommandsNext.RegisterCommands<ComandoStatus>();
             CommandsNext.RegisterCommands<ComandoAdministrativo>();
             CommandsNext.RegisterCommands<ComandoCriarPersonagem>();
-            CommandsNext.RegisterCommands<ComandoAtacar>();
+            CommandsNext.RegisterCommands<ComandoExplorar>();
             CommandsNext.RegisterCommands<ComandoMochila>();
             CommandsNext.RegisterCommands<ComandoEquipamentos>();
             CommandsNext.RegisterCommands<ComandoEquipar>();
@@ -47,6 +47,8 @@ namespace WafclastRPG.Bot
             CommandsNext.RegisterCommands<ComandoExaminar>();
             CommandsNext.RegisterCommands<ComandoVender>();
             CommandsNext.RegisterCommands<ComandoBot>();
+            CommandsNext.RegisterCommands<ComandoRank>();
+            CommandsNext.RegisterCommands<ComandoUsar>();
         }
     }
 }

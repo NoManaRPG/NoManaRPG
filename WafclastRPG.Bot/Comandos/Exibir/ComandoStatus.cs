@@ -62,6 +62,9 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             embed.WithThumbnail(user.AvatarUrl);
             embed.AddField($"{WafclastPersonagem.VidaEmoji(personagem.Vida.Atual / personagem.Vida.Maximo)} {"Vida".Titulo()}", $"{personagem.Vida.Atual:N2}/{personagem.Vida.Maximo:N2}", true);
             embed.AddField($"{WafclastPersonagem.ManaEmoji(personagem.Mana.Atual / personagem.Mana.Maximo)} {"Mana".Titulo()}", $"{personagem.Mana.Atual:N2}/{personagem.Mana.Maximo:N2}", true);
+            embed.AddField($":poultry_leg: {"Fome".Titulo()}", $"{personagem.Fome.Atual:N2}/{personagem.Fome.Maximo:N2}", true);
+            embed.AddField($":cup_with_straw: {"Sede".Titulo()}", $" {personagem.Sede.Atual:N2}/{personagem.Sede.Maximo:N2}", true);
+            embed.AddField($":zap: {"Vigor".Titulo()}", $" {personagem.GetVigor():N2}/{personagem.Vigor.Maximo:N2}", true);
             var danoFisico = personagem.DanoFisicoCalculado;
             embed.AddField($"{Emoji.EspadasCruzadas} {"Dano físico".Titulo()}", $"{danoFisico.Minimo:N2} - {danoFisico.Maximo:N2}", true);
 

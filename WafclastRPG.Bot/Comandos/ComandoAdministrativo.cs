@@ -25,6 +25,16 @@ namespace WafclastRPG.Bot.Comandos
         public async Task PurgeAsync(CommandContext ctx, int quantidade)
             => await ctx.Channel.DeleteMessagesAsync(await ctx.Channel.GetMessagesAsync(quantidade + 1));
 
+        [Command("mensagem")]
+        [RequireOwner]
+        public async Task MensagemAsync(CommandContext ctx, [RemainingText] string mensagem)
+        {
+            var embed = new DiscordEmbedBuilder();
+            embed.WithDescription(mensagem);
+            embed.WithImageUrl("https://cdn.discordapp.com/attachments/758139402219159562/773918198524936252/Wafclast.png");
+            await ctx.RespondAsync(embed: embed.Build());
+        }
+
         [Command("sudo")]
         [RequireOwner]
         public async Task Sudo(CommandContext ctx, DiscordUser member, [RemainingText] string command)
@@ -83,7 +93,7 @@ namespace WafclastRPG.Bot.Comandos
 
             bucket.Release();
         }
-       
+
         [Command("atualizar")]
         [RequireUserPermissions(Permissions.Administrator)]
         public async Task Atualizar(CommandContext ctx)

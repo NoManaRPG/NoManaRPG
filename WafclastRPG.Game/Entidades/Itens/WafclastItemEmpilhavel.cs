@@ -1,15 +1,18 @@
-﻿namespace WafclastRPG.Game.Entidades.Itens
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
+
+namespace WafclastRPG.Game.Entidades.Itens
 {
+    [BsonIgnoreExtraElements]
     public class WafclastItemEmpilhavel : WafclastItem
     {
-        public WafclastItemEmpilhavel(int id, string nome, int ocupaEspaco)
-            : base(id, nome, ocupaEspaco)
+        public WafclastItemEmpilhavel(string nome, int ocupaEspaco, double precoCompra)
+            : base(nome, ocupaEspaco, precoCompra)
         {
             this.Pilha = 1;
         }
 
-        public int Pilha { get; private set; }
+        public int Pilha { get; set; }
 
-        public void AddPilha(int quantidade) => this.Pilha += quantidade;
     }
 }

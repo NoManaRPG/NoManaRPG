@@ -15,6 +15,11 @@ namespace WafclastRPG.Game.Entidades
         public WafclastPontoRegenerativo Vida { get; private set; } = new WafclastPontoRegenerativo();
         public WafclastPontoRegenerativo Mana { get; private set; } = new WafclastPontoRegenerativo();
 
+        public WafclastPontoRegenerativo Vigor { get; private set; } = new WafclastPontoRegenerativo();
+        public DateTime DataUltimoComando { get; set; } = DateTime.UtcNow;
+        public WafclastPontoRegenerativo Fome { get; private set; } = new WafclastPontoRegenerativo();
+        public WafclastPontoRegenerativo Sede { get; private set; } = new WafclastPontoRegenerativo();
+
         #region Atributos
         public int Forca { get; private set; }
         public int Destreza { get; private set; }
@@ -55,10 +60,11 @@ namespace WafclastRPG.Game.Entidades
         #endregion
 
         #region Outros
-        public WafclastZona Zona { get; private set; } = new WafclastZona();
+        public WafclastBatalha Zona { get; private set; } = new WafclastBatalha();
         public WafclastClasse Classe { get; private set; }
         public WafclastNivel Nivel { get; private set; } = new WafclastNivel();
         public WafclastMochila Mochila { get; private set; } = new WafclastMochila();
+        public int IdRegiao { get; set; } = 1;
         #endregion
 
         public WafclastPersonagem(WafclastClasse classe, WafclastDano dano,
@@ -75,9 +81,23 @@ namespace WafclastRPG.Game.Entidades
             CalcMana();
             CalcEvasao();
             CalcPrecisao();
+            Vigor.WithBase(100);
+            Fome.WithBase(100);
+            Sede.WithBase(100);
 
             Vida.Incrementar(double.MaxValue);
             Mana.Incrementar(double.MaxValue);
+            Vigor.Incrementar(double.MaxValue);
+            Fome.Incrementar(double.MaxValue);
+            Sede.Incrementar(double.MaxValue);
+        }
+
+        public double GetVigor()
+        {
+            var tempoSegundos = DateTime.UtcNow - DataUltimoComando;
+            var vigorRestaurado = tempoSegundos.TotalSeconds / 30;
+            Vigor.Incrementar(vigorRestaurado);
+            return Vigor.Atual;
         }
 
         public double CausarDanoFisico(double danoFisico)
@@ -142,41 +162,76 @@ namespace WafclastRPG.Game.Entidades
             return false;
         }
 
-        public StringBuilder AtacarMonstro(out WafclastBatalha resultado, int ataque = 0)
+        public StringBuilder AtacarMonstro(out Resultado resultado, int ataque = 0)
         {
-            resultado = WafclastBatalha.InimigoAbatido;
+            resultado = Resultado.InimigoAbatido;
+            var batalha = new StringBuilder();
+            if (!DiminuirEstamina())
+            {
+                resultado = Resultado.SemVigor;
+                batalha.AppendLine(":cold_sweat: **Você está sem vigor para explorar!**");
+                return batalha;
+            }
 
             if (Zona.Monstro == null)
-                Zona.SortearMonstro(Nivel.Atual);
-
-            if (Zona.MonstroAtacar(this, out var batalha))
+                batalha.AppendLine($"**{Zona.SortearMonstro(IdRegiao, Nivel.Atual)} apareceu!**\n");
+            Zona.Turno++;
+            batalha.AppendLine($"Turno {Zona.Turno}");
+            if (Zona.MonstroAtacar(this, batalha, out batalha))
             {
                 Resetar();
                 batalha.AppendLine($"**{Emoji.CrossBone} Você morreu!!! {Emoji.CrossBone}**");
-                resultado = WafclastBatalha.PersonagemAbatido;
+                resultado = Resultado.PersonagemAbatido;
                 return batalha;
             }
-            Zona.Turno++;
+
             // Chance acerto.
+            Zona.Turno++;
+            batalha.AppendLine($"\nTurno {Zona.Turno}");
             if (Calculo.DanoFisicoChanceAcerto(Precisao.Calculado, Zona.Monstro.Evasao))
             {
                 var dp = DanoFisicoCalculado;
                 var dano = Calculo.SortearValor(dp.Minimo, dp.Maximo);
-                batalha.AppendLine($"\n{Emoji.Adaga} Você causou {dano:N2} de dano no {Zona.Monstro.Nome}!");
+                batalha.AppendLine($"{Emoji.Adaga} Você causou {dano:N2} de dano no {Zona.Monstro.Nome}!");
                 // Monstro morto.
                 if (Zona.Monstro.CausarDano(dano))
                 {
                     batalha.AppendLine($"{Emoji.CrossBone} **{Zona.Monstro.Nome}** ️{Emoji.CrossBone}");
-                    batalha.AppendLine($"<:xp:758439721016885308>+{Zona.Monstro.Exp:N2}.");
+                    batalha.AppendLine($"**<:xp:758439721016885308>+{Zona.Monstro.Exp:N2}.**");
                     if (AddExp(Zona.Monstro.Exp))
-                        resultado = WafclastBatalha.Evoluiu;
+                        resultado = Resultado.Evoluiu;
 
+                    Zona.Turno = 0;
+                    int quantMoedas = Nivel.Atual * 2;
+                    batalha.AppendLine($"**:coin:+{quantMoedas}**");
+                    Mochila.AdicionarMoeda(quantMoedas);
+                    if (Calculo.Chance(0.5))
+                    {
+                        if (Mochila.TryAddItem(Zona.Monstro.ItemDrop))
+                            batalha.AppendLine($"**:school_satchel:+{Zona.Monstro.ItemDrop.Nome}**");
+                    }
                     Zona.Monstro = null;
                 }
             }
             else
-                batalha.AppendLine($"\n{Emoji.CarinhaDesapontado} Você errou o ataque!");
+                batalha.AppendLine($"{Emoji.CarinhaDesapontado} Você errou o ataque!");
             return batalha;
+        }
+
+        public bool DiminuirEstamina()
+        {
+            _ = GetVigor();
+            DataUltimoComando = DateTime.UtcNow;
+            if (Vigor.Atual < 1)
+                return false;
+            Vigor.Diminuir(1);
+            Fome.Diminuir(0.4);
+            if (Fome.Atual == 0)
+                Vida.Diminuir(2);
+            Sede.Diminuir(0.8);
+            if (Sede.Atual == 0)
+                Vida.Diminuir(1);
+            return true;
         }
 
         public static string VidaEmoji(double porcentagem)
@@ -208,10 +263,11 @@ namespace WafclastRPG.Game.Entidades
         }
     }
 
-    public enum WafclastBatalha
+    public enum Resultado
     {
         InimigoAbatido,
         PersonagemAbatido,
         Evoluiu,
+        SemVigor,
     }
 }

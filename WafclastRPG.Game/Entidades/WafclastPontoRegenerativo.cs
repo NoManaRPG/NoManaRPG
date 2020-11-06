@@ -8,8 +8,8 @@ namespace WafclastRPG.Game.Entidades
     {
         [BsonIgnore]
         public double Maximo { get => Calculado; }
-        public double Atual { get; private set; }
-        public double RegenPorSegundo { get; private set; }
+        public double Atual { get;  set; }
+        public double RegenPorSegundo { get;  set; }
 
         public void Diminuir(double valor)
         {

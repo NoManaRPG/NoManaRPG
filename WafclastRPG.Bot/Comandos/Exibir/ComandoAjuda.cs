@@ -108,37 +108,40 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         public DiscordEmbed MensagemAjuda()
         {
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
-            embed.WithDescription("Digite `!ajuda [comando]` para mais informações. Por exemplo: `!ajuda bot`");
+            embed.WithDescription("Digite `!ajuda [comando]` para mais informações. Por exemplo: `!ajuda bot`.");
 
-            embed.AddField("Comando principal".Titulo(), FormatarURLComando("criar-personagem", "Permite criar o seu personagem escolhendo uma das 7 classes disponíveis") +
-                FormatarURLComando("bot", "Permite informações sobre o bot") +
-                FormatarURLComando("status", "Permite ver o seu status ou a de outra pessoa"), true);
+            var str = new StringBuilder();
 
-            embed.AddField("Itens".Titulo(), FormatarURLComando("mochila", "Permite ver os itens da mochila") +
-                FormatarURLComando("equipamentos", "Permite ver os itens equipados") +
-                FormatarURLComando("examinar", "Permite ver a descrição de um item") +
-                FormatarURLComando("equipar", "Permite equipar itens") +
-                FormatarURLComando("desequipar", "Permite desequipr itens equipados") +
-                FormatarURLComando("portal", "Permite usar o Pergaminho de Portal"), true);
+            str.Append($"**Core** - ");
+            str.Append($"{FormatarURLComando("criar-personagem", "Permite criar o seu personagem escolhendo uma das 7 classes disponíveis")} ");
+            str.Append($"{FormatarURLComando("bot", "Exibe informações sobre o bot")} ");
+            str.AppendLine();
+            str.Append($"**Itens** - ");
+            str.Append($"{FormatarURLComando("mochila", "Permite ver os itens da mochila")} ");
+            str.Append($"{FormatarURLComando("usar", "Permite usar os itens da mochila")} ");
+            str.Append($"");
+            str.AppendLine();
+            str.Append($"**Combate** - ");
+            str.Append($"{FormatarURLComando("status", "Permite ver o seu status ou a de outra pessoa")} ");
+            str.Append($"{FormatarURLComando("explorar", "Permite explorar e atacar monstros")}");
+            str.AppendLine();
+            str.Append($"**Outros** - ");
+            str.Append($"{FormatarURLComando("ajuda", "Mostra todos os comandos e ajuda do comando especificado")} ");
+            str.Append($"{FormatarURLComando("top", "Exibe as pessoas mais ricas")} ");
+            str.AppendLine();
 
-            embed.AddField("Combate".Titulo(), FormatarURLComando("atacar", "Permite atacar um monstro que encontra na sua frente\nAtalhos: !at") +
-                FormatarURLComando("explorar", "Permite explorar o andar por mais monstros") +
-                FormatarURLComando("monstros", "Permite ver os monstros que estão na sua frente") +
-                FormatarURLComando("zona", "Permite ver informações sobre a zona atual") +
-                FormatarURLComando("descer", "Permite descer um andar") +
-                FormatarURLComando("subir", "Permite subir um andar") +
-                FormatarURLComando("usar-pocao", "Permite usar uma poção que se encontra no cinto") +
-                FormatarURLComando("chao", "Permite olhar os itens que estão no chão") +
-                FormatarURLComando("pegar", "Permite pegar um item que está no chão"), true);
 
-            embed.AddField("Mercado".Titulo(), FormatarURLComando("vender", "Permite vender itens") +
-                   FormatarURLComando("comprar", "Permite comprar os itens que estão a venda") +
-                FormatarURLComando("loja", "Permite ver os itens que estão a venda"), true);
+            //embed.AddField("Itens".Titulo(),  +
+            //    FormatarURLComando("equipamentos", "Permite ver os itens equipados") +
+            //    FormatarURLComando("examinar", "Permite ver a descrição de um item") +
+            //    FormatarURLComando("equipar", "Permite equipar itens") +
+            //    FormatarURLComando("desequipar", "Permite desequipr itens equipados") +
 
-            embed.AddField("Outros".Titulo().Bold(),
-                FormatarURLComando("ajuda", "Mostra todos os comandos e ajuda do comando especificado"), true);
+            //embed.AddField("Mercado".Titulo(), FormatarURLComando("vender", "Permite vender itens") +
+            //       FormatarURLComando("comprar", "Permite comprar os itens que estão a venda") +
+            //    FormatarURLComando("loja", "Permite ver os itens que estão a venda"), true);
 
-            embed.WithImageUrl("https://cdn.discordapp.com/attachments/750081991046856814/755886689523859536/VaalTower.jpg");
+            embed.WithDescription(str.ToString());
             embed.WithColor(DiscordColor.Violet);
             embed.WithTimestamp(DateTime.Now);
             embed.WithFooter("Passe o mouse em cima para mais info!");

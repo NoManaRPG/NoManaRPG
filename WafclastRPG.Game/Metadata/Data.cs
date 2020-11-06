@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
@@ -8,22 +9,29 @@ using WafclastRPG.Game.Metadata.Itens;
 
 namespace WafclastRPG.Game.Metadata
 {
-    public class Data
+    public sealed class Data
     {
-        public static List<WafclastMonstro> Monstros { get; set; } = new List<WafclastMonstro>();
-
+        public static ConcurrentDictionary<int, WafclastRegiao> Regioes { get; private set; } = new ConcurrentDictionary<int, WafclastRegiao>();
         public Data()
         {
-            CarregarMonstros();
+            CarregarRegioes();
         }
 
-        public void CarregarMonstros()
+        private void CarregarRegioes()
         {
-            var montros = typeof(Monstros).GetMethods();
-            for (int i = 0; i < montros.Length - 4; i++)
+            var regioes = typeof(Regioes).GetMethods();
+            for (int i = 0; i < regioes.Length - 4; i++)
             {
-                Monstros.Add((WafclastMonstro)montros[i].Invoke(null, null));
+                var reg = (WafclastRegiao)regioes[i].Invoke(null, null);
+                Regioes.AddOrUpdate(reg.Id, reg, (k, v) => reg);
             }
+        }
+
+        public static WafclastRegiao GetRegiao(int id)
+        {
+            if (Regioes.TryGetValue(id, out var reg))
+                return reg;
+            return null;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace WafclastRPG.Bot.Eventos
         public static Task Event(DiscordClient client, ReadyEventArgs e)
         {
             client.Logger.Log(LogLevel.Information, "Cliente está pronto.", DateTime.Now);
-            client.UpdateStatusAsync(new DiscordActivity($"!ajuda", ActivityType.ListeningTo), UserStatus.Online);
+            client.UpdateStatusAsync(new DiscordActivity($"w.ajuda | Venha me conhecer!", ActivityType.ListeningTo), UserStatus.Online);
             return Task.CompletedTask;
         }
     }

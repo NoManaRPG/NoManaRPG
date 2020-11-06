@@ -27,8 +27,6 @@ namespace WafclastRPG.Game.Entidades
 
         public void WithBase(double valor)
         {
-            if (valor <= 0)
-                throw new ArgumentOutOfRangeException("valor", "Valor não pode ser negativo ou 0!");
             this.Base = valor;
         }
         public void WithExtra(double valor)

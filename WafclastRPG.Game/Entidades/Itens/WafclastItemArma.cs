@@ -3,10 +3,11 @@ using WafclastRPG.Game.Enums;
 
 namespace WafclastRPG.Game.Entidades.Itens
 {
+    [BsonIgnoreExtraElements]
     public class WafclastItemArma : WafclastItem
     {
-        public int Nivel { get; private set; }
-        public WafclastClasse Classe { get; private set; }
+        public int Nivel { get; set; }
+        public WafclastClasse Classe { get; set; }
         [BsonIgnore]
         public WafclastDano DanoFisicoCalculado
         {
@@ -19,13 +20,13 @@ namespace WafclastRPG.Game.Entidades.Itens
                 return dano;
             }
         }
-        public WafclastDano DanoFisicoBase { get; private set; }
-        public double DanoFisicoCriticoChance { get; private set; } = 0;
-        public bool IsDuasMao { get; private set; }
+        public WafclastDano DanoFisicoBase { get; set; }
+        public double DanoFisicoCriticoChance { get; set; } = 0;
+        public bool IsDuasMao { get; set; }
 
-        public WafclastItemArma(int id, string nome, int ocupaEspaco,
-            WafclastClasse classe, WafclastDano danoFisico, double chanceCritico, bool duasMao = false)
-            : base(id, nome, ocupaEspaco)
+        public WafclastItemArma(string nome, int ocupaEspaco, double precoCompra,
+            WafclastClasse classe, WafclastDano danoFisico, double chanceCritico,
+            bool duasMao = false) : base(nome, ocupaEspaco, precoCompra)
         {
             this.Classe = classe;
             this.DanoFisicoBase = danoFisico;

@@ -5,22 +5,22 @@ using WafclastRPG.Game.Services;
 
 namespace WafclastRPG.Game.Entidades
 {
-    public class WafclastZona
+    public class WafclastBatalha
     {
         public int Turno { get; set; }
         public WafclastMonstro Monstro { get; set; }
 
-        public WafclastZona() { }
+
+        public WafclastBatalha() { }
 
         /// <summary>
         /// Retorna verdadeiro caso tenha abatido o personagem.
         /// </summary>
         /// <param name="personagem"></param>
         /// <param name="batalha"></param>
-        public bool MonstroAtacar(WafclastPersonagem personagem, out StringBuilder batalha)
+        public bool MonstroAtacar(WafclastPersonagem personagem, StringBuilder inicio, out StringBuilder batalha)
         {
-            batalha = new StringBuilder();
-            Turno++;
+            batalha = inicio;
             if (Calculo.DanoFisicoChanceAcerto(Monstro.Precisao, personagem.Evasao.Calculado))
             {
                 double dano = personagem.CausarDanoFisico(Monstro.Dano);
@@ -33,12 +33,14 @@ namespace WafclastRPG.Game.Entidades
             return false;
         }
 
-        public void SortearMonstro(int nivel)
+        public string SortearMonstro(int idRegiao, int nivel)
         {
+            var regiao = Data.GetRegiao(idRegiao);
             Random random = new Random();
-            var sorteado = random.Next(0, Data.Monstros.Count - 1);
-            Monstro = Data.Monstros[sorteado];
+            var sorteado = random.Next(0, regiao.Monstros.Count);
+            Monstro = regiao.Monstros[sorteado];
             Monstro.SetNivel(nivel);
+            return Monstro.Nome;
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WafclastRPG.Game.Metadata.Itens
 {
-    public static class Armas
+    public sealed class Armas
     {
     }
 }
