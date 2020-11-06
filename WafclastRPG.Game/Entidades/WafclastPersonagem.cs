@@ -197,13 +197,13 @@ namespace WafclastRPG.Game.Entidades
                 if (Zona.Monstro.CausarDano(dano))
                 {
                     batalha.AppendLine($"{Emoji.CrossBone} **{Zona.Monstro.Nome}** ️{Emoji.CrossBone}");
-                    batalha.AppendLine($"**<:xp:758439721016885308>+{Zona.Monstro.Exp:N2}.**");
+                    batalha.AppendLine($"**{Emoji.Exp}+{Zona.Monstro.Exp:N2}.**");
                     if (AddExp(Zona.Monstro.Exp))
                         resultado = Resultado.Evoluiu;
 
                     Zona.Turno = 0;
                     int quantMoedas = Nivel.Atual * 2;
-                    batalha.AppendLine($"**:coin:+{quantMoedas}**");
+                    batalha.AppendLine($"**{Emoji.Coins}+{quantMoedas}**");
                     Mochila.AdicionarMoeda(quantMoedas);
                     if (Calculo.Chance(0.5))
                     {

@@ -28,7 +28,6 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             embed.WithTitle("RPG para quem usa muito o discord!");
             var criador = ctx.Client.CurrentApplication.Owners.First();
             var str = new StringBuilder();
-            str.AppendLine($"Criador: {criador.Mention}");
             str.AppendLine(FormatarURL("Servidor Oficial", "https://discord.gg/MAR4NFq"));
             str.AppendLine(FormatarURL("Vote no bot", "https://top.gg/bot/732598033962762402"));
             str.AppendLine(FormatarURL("Proximos updates", "https://trello.com/b/D8dPGRzU/torrerpg"));

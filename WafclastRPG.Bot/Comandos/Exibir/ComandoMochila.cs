@@ -28,7 +28,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             if (!isJogadorCriado) return;
 
             StringBuilder str = new StringBuilder();
-            str.AppendLine($"**:coin: {sessao.Jogador.Personagem.Mochila.Moedas}**");
+            str.AppendLine($"**{Emoji.Coins} {sessao.Jogador.Personagem.Mochila.Moedas}**");
             var pag = GetPage(sessao.Jogador.Personagem.Mochila.Itens, pagina, 10);
 
             for (int i = 0; i < pag.Count; i++)
