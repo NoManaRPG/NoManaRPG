@@ -22,7 +22,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         [Command("top")]
         [Description("Exibe os 10 personagens mais ricos")]
         [ComoUsar("top")]
-        [Cooldown(1, 60, CooldownBucketType.User)]
+        [Cooldown(1, 30, CooldownBucketType.User)]
         public async Task ComandoMochilaAsync(CommandContext ctx)
         {
             var top = await banco.Jogadores.Find(FilterDefinition<WafclastJogador>.Empty).Limit(10)
@@ -32,8 +32,15 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             int pos = 1;
             foreach (var item in top)
             {
-                var g = await ctx.Client.GetUserAsync(item.Id);
-                str.AppendLine($"{pos}. {g.Username}#{g.Discriminator} - :coin: {item.Personagem.Mochila.Moedas}".Bold());
+                try
+                {
+                    var member = await ctx.Guild.GetMemberAsync(item.Id);
+                    str.AppendLine($"{pos}. {member.Mention} - {Emoji.Coins} {item.Personagem.Mochila.Moedas}".Bold());
+                }
+                catch (Exception)
+                {
+                    str.AppendLine($"{pos}. {item.Id} - {Emoji.Coins} {item.Personagem.Mochila.Moedas}".Bold());
+                }
                 pos++;
             }
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
