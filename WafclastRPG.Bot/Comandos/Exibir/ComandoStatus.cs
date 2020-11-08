@@ -36,7 +36,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
 
         [Command("status")]
         [Cooldown(1, 10, CooldownBucketType.User)]
-        public async Task ComandoStatusAb(CommandContext ctx)
+        public async Task ComandoStatusAsync(CommandContext ctx)
         {
             // Verifica se existe o jogador,
             var (isJogadorCriado, sessao) = await banco.ExisteJogadorAsync(ctx);
