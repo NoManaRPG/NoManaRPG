@@ -21,11 +21,13 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         [Description("Permite ver os itens que estão na mochila.")]
         [ComoUsar("mochila [PAGINA]")]
         [Exemplo("mochila 1")]
-        public async Task ComandoMochilaAsync(CommandContext ctx, int pagina = 0)
+        public async Task ComandoMochilaAsync(CommandContext ctx, string stringPagina = "0")
         {
             // Verifica se existe o jogador e faz o jogador esperar antes de começar outro comando
             var (isJogadorCriado, sessao) = await banco.ExisteJogadorAsync(ctx);
             if (!isJogadorCriado) return;
+
+            int.TryParse(stringPagina, out var pagina);
 
             StringBuilder str = new StringBuilder();
             str.AppendLine($"**{Emoji.Coins} {sessao.Jogador.Personagem.Mochila.Moedas}**");
