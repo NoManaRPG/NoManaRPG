@@ -16,12 +16,55 @@ using WafclastRPG.Game;
 using WafclastRPG.Game.Entidades;
 using System.Collections.Generic;
 using WafclastRPG.Game.Entidades.Itens;
+using System.Linq;
+using WafclastRPG.Bot.Extensoes;
 
 namespace WafclastRPG.Bot.Comandos
 {
     public class ComandoAdministrativo : BaseCommandModule
     {
         public Banco banco;
+
+        // This command only work on Wafclast Guild.
+        [Command("ban")]
+        public async Task BanAsync(CommandContext ctx, DiscordMember membro = null, [RemainingText] string razao = "")
+        {
+            if (ctx.Guild.Id == 732102804654522470)
+            {
+                // Verify if the member has "Moderator" role.
+                ulong modRole = 775094267831255110;
+                var isMod = ctx.Member.Roles.FirstOrDefault(x => x.Id == modRole);
+                if (isMod != null)
+                {
+                    if (membro == null)
+                    {
+                        await ctx.RespondAsync($"{ctx.User.Mention}, você precisa informar um membro válido!");
+                        return;
+                    }
+
+                    isMod = membro.Roles.FirstOrDefault(x => x.Id == modRole);
+                    if (isMod == null)
+                    {
+                        DiscordEmbedBuilder embed = new DiscordEmbedBuilder().Criar(ctx);
+                        embed.WithTitle("Ban");
+                        embed.WithTimestamp(DateTime.Now);
+                        if (string.IsNullOrWhiteSpace(razao))
+                        {
+                            embed.WithDescription($"{membro.Mention}, foi banido sem nenhuma razão especifica.");
+                        }
+                        else
+                            embed.WithDescription($"{membro.Mention}, foi banido.\n{razao}");
+                        // Role banido.
+                        DiscordRole banido = ctx.Guild.GetRole(775098106823704617);
+                        await membro.GrantRoleAsync(banido);
+                        var channel = ctx.Guild.GetChannel(775099480928026656);
+                        await channel.SendMessageAsync(embed: embed.Build());
+                    }
+                    else return;
+                }
+                else return;
+            }
+        }
 
         [Command("purge")]
         [RequireUserPermissions(Permissions.Administrator)]
