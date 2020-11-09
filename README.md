@@ -1,4 +1,4 @@
-WafClast RPG
+# WafClast RPG
 
 A RPG game for Discord.
 
