@@ -1,4 +1,5 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using MongoDB.Driver;
@@ -32,15 +33,8 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             int pos = 1;
             foreach (var item in top)
             {
-                try
-                {
-                    var member = await ctx.Guild.GetMemberAsync(item.Id);
-                    str.AppendLine($"{pos}. {member.Mention} - {Emoji.Coins} {item.Personagem.Mochila.Moedas}".Bold());
-                }
-                catch (Exception)
-                {
-                    str.AppendLine($"{pos}. {item.Id} - {Emoji.Coins} {item.Personagem.Mochila.Moedas}".Bold());
-                }
+                var member = await ctx.Client.GetUserAsync(item.Id);
+                str.AppendLine(Formatter.Bold($"{pos}. {member.Mention} {Emoji.Coins} {item.Personagem.Mochila.Moedas}"));
                 pos++;
             }
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
