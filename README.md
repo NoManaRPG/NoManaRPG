@@ -1,6 +1,17 @@
-# WafClast RPG
+WafClast RPG
 
 A RPG game for Discord.
+
+<a href="https://github.com/TalionOak/WafclastRPG/blob/WafclastRPG/LICENSE"><img src="https://img.shields.io/badge/license-AGPL%20v3-lightgray.svg">
+<a href="https://apoia.se/wafclastrpg"><img src="https://img.shields.io/badge/apoia.se-WafClastRPG-yellow.svg"></a>
+<a href="https://discord.gg/MAR4NFq"><img src="https://discordapp.com/api/guilds/732102804654522470/widget.png"></a>
+
+## 🤔 How can I add her?
+
+If you want to use WafClastRPG on your server, you can add our public instance by [clicking here](https://discord.com/oauth2/authorize?client_id=732598033962762402&permissions=388160&scope=bot)! We recommend using the public instance, after all, more than 40 guilds already use, trust and love her, so why not try it out?
+
+You can also host WafClastRPG yourself, however we won't give support for people that are trying to selfhost her, we don't want to spend hours trying to troubleshoot other people issues that only happens on selfhosted instances, so you should at least know how to troubleshoot issues, if you find any.
+
 
 ## 🚀 Selfhosting WafClastRPG (Discord)
 
