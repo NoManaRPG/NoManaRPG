@@ -85,10 +85,13 @@ namespace WafclastRPG.Bot
                 return await Task.FromResult(-1);
 #if DEBUG
             var prefix = await banco.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixTeste);
+            var pfixLocation = msg.GetStringPrefixLength(prefix);
 #else
             var prefix = await banco.GetServerPrefixAsync(gld.Id, ConfigFile.Prefix);
-#endif
             var pfixLocation = msg.GetStringPrefixLength(prefix);
+            if (pfixLocation == -1)
+                pfixLocation = msg.GetStringPrefixLength(ConfigFile.Prefix);
+#endif
             return await Task.FromResult(pfixLocation);
         }
     }
