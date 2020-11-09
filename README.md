@@ -15,7 +15,7 @@ If you are planning to selfhost WafClastRPG, here are some stuff that you should
 7. We use Ubuntu 18.04 to run her, she may work on other Linux operating systems or even in Windows, but we recommend hosting her on Ubuntu!
 8. To avoid problems and confusions, we **do not allow** using the name "WafClastRPG", "ClastRPG" or any similar names on your selfhosted versions. Call her "Nii RPG" if you aren't creative enough to create your own name to give to your selfhosted version. Don't like "Nii RPG"? Generate your own [here](https://www.behindthename.com/random/)!
 
-Seems too hard but you *really* want to use WafClastRPG? Don't worry, you can use our free public instance by clicking here [clicking here](hhttps://discord.gg/MAR4NFq)!
+Seems too hard but you *really* want to use WafClastRPG? Don't worry, you can use our free public instance by clicking here [clicking here](https://discord.gg/MAR4NFq)!
 
 
 ### 👷 Prerequisites
