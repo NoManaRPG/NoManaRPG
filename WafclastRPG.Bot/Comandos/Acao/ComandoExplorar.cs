@@ -44,12 +44,45 @@ namespace WafclastRPG.Bot.Comandos.Acao
             if (resultado == Resultado.Evoluiu)
             {
                 embed.AddField("Evolução".Titulo(), $"{Emoji.Up} Você evoluiu de nível!");
+                // Only on oficial server
                 if (ctx.Guild.Id == 732102804654522470)
                 {
                     try
                     {
                         var name = $"{ ctx.Member.Username } [Lvl.{ personagem.Nivel.Atual}]";
                         await ctx.Member.ModifyAsync(x => x.Nickname = name);
+                        DiscordRole role;
+                        switch (personagem.Classe)
+                        {
+                            case Game.Enums.WafclastClasse.Berserker:
+                                role = ctx.Guild.GetRole(775485924271194113);
+                                await ctx.Member.GrantRoleAsync(role);
+                                break;
+                            case Game.Enums.WafclastClasse.Bruxa:
+                                role = ctx.Guild.GetRole(775485930067853322);
+                                await ctx.Member.GrantRoleAsync(role);
+                                break;
+                            case Game.Enums.WafclastClasse.Cacadora:
+                                role = ctx.Guild.GetRole(775485922350989332);
+                                await ctx.Member.GrantRoleAsync(role);
+                                break;
+                            case Game.Enums.WafclastClasse.Duelista:
+                                role = ctx.Guild.GetRole(775485930038886400);
+                                await ctx.Member.GrantRoleAsync(role);
+                                break;
+                            case Game.Enums.WafclastClasse.Herdeira:
+                                role = ctx.Guild.GetRole(775486216803844116);
+                                await ctx.Member.GrantRoleAsync(role);
+                                break;
+                            case Game.Enums.WafclastClasse.Sombra:
+                                role = ctx.Guild.GetRole(775485927724285996);
+                                await ctx.Member.GrantRoleAsync(role);
+                                break;
+                            case Game.Enums.WafclastClasse.Templario:
+                                role = ctx.Guild.GetRole(775485932131713024);
+                                await ctx.Member.GrantRoleAsync(role);
+                                break;
+                        }
                     }
                     catch (Exception) { }
                 }
