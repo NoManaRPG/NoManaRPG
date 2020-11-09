@@ -85,7 +85,7 @@ namespace WafclastRPG.Bot.Comandos.Acao
                 #region Comida
                 case WafclastItemComida wic:
                     personagem.Fome.Incrementar(wic.FomeRestaura * wic.Pilha);
-                    str.AppendLine($"{ctx.User.Mention}, você comeu **{wic.Pilha}** {wic.Nome.Titulo()}! :poultry_leg:**+{wic.FomeRestaura * wic.Pilha}**.");
+                    str.AppendLine($"{ctx.User.Mention}, você comeu **{wic.Pilha}** {wic.Nome.Titulo()}! {Emoji.Fome}**+{wic.FomeRestaura * wic.Pilha}**.");
                     break;
                 #endregion
                 #region Bebida

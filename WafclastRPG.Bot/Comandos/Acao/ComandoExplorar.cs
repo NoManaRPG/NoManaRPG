@@ -38,7 +38,7 @@ namespace WafclastRPG.Bot.Comandos.Acao
             var batalha = personagem.AtacarMonstro(out var resultado, ataque);
 
             var str = new StringBuilder();
-            str.AppendLine($":poultry_leg: **{personagem.Fome.Atual:N2}**");
+            str.AppendLine($"{Emoji.Fome} **{personagem.Fome.Atual:N2}**");
             str.AppendLine($":cup_with_straw: **{personagem.Sede.Atual:N2}**");
             str.AppendLine($":zap: **{personagem.Vigor.Atual:N2}**");
             embed.WithDescription(str.ToString());
