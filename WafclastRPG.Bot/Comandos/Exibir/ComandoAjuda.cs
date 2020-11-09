@@ -9,8 +9,10 @@ using System.Threading.Tasks;
 using static DSharpPlus.CommandsNext.CommandsNextExtension;
 using static WafclastRPG.Bot.Utilities;
 using System;
-using WafclastRPG.Bot.Atributos;
 using WafclastRPG.Bot.Extensoes;
+using Microsoft.Extensions.DependencyInjection;
+using WafclastRPG.Bot.Config;
+using DSharpPlus;
 
 namespace WafclastRPG.Bot.Comandos.Exibir
 {
@@ -19,8 +21,6 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         [Command("ajuda")]
         [Aliases("h", "?", "help")]
         [Description("Explica como usar um comando, suas abreviações e exemplos.")]
-        [ComoUsar("ajuda [comando]")]
-        [Exemplo("ajuda status")]
         public async Task ComandoAjudaAsync(CommandContext ctx, params string[] comando)
         {
             await ctx.TriggerTypingAsync();
@@ -28,79 +28,81 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         }
     }
 
-    public class IAjudaComando : BaseHelpFormatter
+    public class IComandoAjuda : BaseHelpFormatter
     {
-        private DiscordEmbedBuilder _embed;
-        private StringBuilder _srExemplos;
-        private StringBuilder _srUsos;
-        private StringBuilder _srSubCommands;
-        private bool _comandoAjuda;
-        public IAjudaComando(CommandContext ctx) : base(ctx)
-        {
-            if (ctx.RawArguments.Count == 0)
-                _comandoAjuda = true;
-            else
-                _comandoAjuda = false;
+        DiscordEmbedBuilder embed;
+        StringBuilder srSubCommands;
+        bool isCommandHelp;
+        string prefix;
 
-            if (!_comandoAjuda)
+        public IComandoAjuda(CommandContext ctx) : base(ctx)
+        {
+            var defaultPrefix = ctx.Services.GetService<ConfigFile>().Prefix;
+            var banco = ctx.Services.GetService<Banco>();
+            prefix = banco.GetServerPrefix(ctx.Guild.Id, defaultPrefix);
+
+            if (ctx.RawArguments.Count == 0)
+                isCommandHelp = true;
+            else
             {
-                _embed = new DiscordEmbedBuilder();
-                _srExemplos = new StringBuilder();
-                _srUsos = new StringBuilder();
+                embed = new DiscordEmbedBuilder();
+                isCommandHelp = false;
             }
         }
 
-
         public override BaseHelpFormatter WithCommand(Command command)
         {
-            if (!_comandoAjuda)
+            if (!isCommandHelp)
             {
-                foreach (var item in command.ExecutionChecks)
+                var methods = command.Overloads;
+                var srHow = new StringBuilder();
+                var srArguments = new StringBuilder();
+                srHow.Append($"**{prefix}{command.Name}");
+                foreach (var item in methods)
                 {
-                    switch (item)
+
+                    foreach (var arg in item.Arguments)
                     {
-                        case ExemploAttribute e:
-                            _srExemplos.Append($"`!{e.Mensagem}`\n");
-                            break;
-                        case ComoUsarAttribute u:
-                            _srUsos.Append($"`!{u.Mensagem}`\n");
-                            break;
+                        srHow.Append($" {arg.Name.ToUpper()} ");
+                        srArguments.AppendLine($"{arg.Name.ToUpper()} -> `{arg.Description}`");
+                        srArguments.AppendLine($"É opcional? {(arg.IsOptional ? "Sim" : "Não")}");
+                        if (arg.DefaultValue != null)
+                            srArguments.AppendLine($"Por padrão é {arg.DefaultValue}.");
                     }
+                    srHow.AppendLine("**");
+                    srHow.AppendLine();
                 }
 
                 StringBuilder strAliases = new StringBuilder();
                 foreach (var al in command.Aliases)
                     strAliases.Append($"`{al}` ,");
                 if (strAliases.Length != 0)
-                    _embed.AddField($"**Atalhos**", strAliases.ToString());
-                _embed.WithTitle($"**{command.Name.FirstUpper()}**");
-                _embed.WithDescription(command.Description);
-                if (_srUsos.Length != 0)
-                    _embed.AddField("**Como usar**", _srUsos.ToString());
-                if (_srExemplos.Length != 0)
-                    _embed.AddField("**Exemplos**", _srExemplos.ToString());
+                    embed.AddField($"**Atalhos**", strAliases.ToString());
+                embed.WithTitle(Formatter.Bold($"{command.Name.FirstUpper()}"));
+                embed.WithDescription(command.Description);
+                embed.AddField("**Como usar**", srHow.ToString() + srArguments.ToString());
             }
             return this;
         }
 
         public override BaseHelpFormatter WithSubcommands(IEnumerable<Command> subcommands)
         {
-            if (!_comandoAjuda)
+            if (!isCommandHelp)
             {
-                _srSubCommands = new StringBuilder();
+                srSubCommands = new StringBuilder();
                 foreach (var item in subcommands)
-                    _srSubCommands.Append($"`{item.Name}` , ");
-                _embed.AddField("**Comandos**", _srSubCommands.ToString());
+                    srSubCommands.Append($"`{item.Name}` , ");
+                embed.AddField("**Comandos**", srSubCommands.ToString());
             }
             return this;
         }
 
         public override CommandHelpMessage Build()
         {
-            if (!_comandoAjuda)
+            if (!isCommandHelp)
             {
-                _embed.WithColor(DiscordColor.CornflowerBlue);
-                return new CommandHelpMessage(embed: _embed.Build());
+                embed.WithColor(DiscordColor.CornflowerBlue);
+                return new CommandHelpMessage(embed: embed.Build());
             }
             return new CommandHelpMessage(embed: MensagemAjuda());
         }
@@ -113,22 +115,22 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             var str = new StringBuilder();
 
             str.Append($"**Core** - ");
-            str.Append($"{FormatarURLComando("criar-personagem", "Permite criar o seu personagem escolhendo uma das 7 classes disponíveis")} ");
-            str.Append($"{FormatarURLComando("bot", "Exibe informações sobre o bot")} ");
+            str.Append($"{FormatarURLComando(prefix, "criar-personagem", "Permite criar o seu personagem escolhendo uma das 7 classes disponíveis")} ");
+            str.Append($"{FormatarURLComando(prefix, "bot", "Exibe informações sobre o bot")} ");
             str.AppendLine();
             str.Append($"**Itens** - ");
-            str.Append($"{FormatarURLComando("mochila", "Permite ver os itens da mochila")} ");
-            str.Append($"{FormatarURLComando("usar", "Permite usar os itens da mochila")} ");
-            str.Append($"{FormatarURLComando("examinar", "Permite examinar os itens da mochila")} ");
+            str.Append($"{FormatarURLComando(prefix, "mochila", "Permite ver os itens da mochila")} ");
+            str.Append($"{FormatarURLComando(prefix, "usar", "Permite usar os itens da mochila")} ");
+            str.Append($"{FormatarURLComando(prefix, "examinar", "Permite examinar os itens da mochila")} ");
             str.Append($"");
             str.AppendLine();
             str.Append($"**Combate** - ");
-            str.Append($"{FormatarURLComando("status", "Permite ver o seu status ou a de outra pessoa")} ");
-            str.Append($"{FormatarURLComando("explorar", "Permite explorar e atacar monstros")}");
+            str.Append($"{FormatarURLComando(prefix, "status", "Permite ver o seu status ou a de outra pessoa")} ");
+            str.Append($"{FormatarURLComando(prefix, "explorar", "Permite explorar e atacar monstros")}");
             str.AppendLine();
             str.Append($"**Outros** - ");
-            str.Append($"{FormatarURLComando("ajuda", "Mostra todos os comandos e ajuda do comando especificado")} ");
-            str.Append($"{FormatarURLComando("top", "Exibe as pessoas mais ricas")} ");
+            str.Append($"{FormatarURLComando(prefix, "ajuda", "Mostra todos os comandos e ajuda do comando especificado")} ");
+            str.Append($"{FormatarURLComando(prefix, "top", "Exibe as pessoas mais ricas")} ");
             str.AppendLine();
 
             //embed.AddField("Mercado".Titulo(), FormatarURLComando("vender", "Permite vender itens") +

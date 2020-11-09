@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WafclastRPG.Bot.Atributos;
 using WafclastRPG.Bot.Extensoes;
 using WafclastRPG.Game;
 using WafclastRPG.Game.Entidades.Itens;
@@ -19,8 +18,6 @@ namespace WafclastRPG.Bot.Comandos.Exibir
 
         [Command("mochila")]
         [Description("Permite ver os itens que estão na mochila.")]
-        [ComoUsar("mochila [PAGINA]")]
-        [Exemplo("mochila 1")]
         public async Task ComandoMochilaAsync(CommandContext ctx, string stringPagina = "0")
         {
             // Verifica se existe o jogador e faz o jogador esperar antes de começar outro comando

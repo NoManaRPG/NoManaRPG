@@ -4,7 +4,6 @@ using DSharpPlus.Entities;
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using WafclastRPG.Bot.Atributos;
 using WafclastRPG.Bot.Extensoes;
 using WafclastRPG.Game;
 using WafclastRPG.Game.Entidades.Itens;
@@ -18,8 +17,6 @@ namespace WafclastRPG.Bot.Comandos.Exibir
 
         [Command("examinar")]
         [Description("Permite examinar um item pelo o `#ID`.")]
-        [ComoUsar("examinar [#ID]")]
-        [Exemplo("examinar #1")]
         public async Task ComandoExaminarAsync(CommandContext ctx, string stringId = "#0")
         {
             // Verifica se existe o jogador e faz o jogador esperar antes de começar outro comando

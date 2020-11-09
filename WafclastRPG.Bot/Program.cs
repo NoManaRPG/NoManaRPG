@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using WafclastRPG.Bot.Config;
 using WafclastRPG.Game;
 using WafclastRPG.Game.Metadata;
+using DSharpPlus.Entities;
 
 namespace WafclastRPG.Bot
 {
@@ -14,6 +15,9 @@ namespace WafclastRPG.Bot
     {
         public ConfigFile ConfigFile { get; private set; }
         public BotInfo BotInfo { get; private set; }
+        public Banco banco { get; private set; }
+
+
         static void Main(string[] args) => new Program().RodarBotAsync().GetAwaiter().GetResult();
 
         public async Task RodarBotAsync()
@@ -32,11 +36,9 @@ namespace WafclastRPG.Bot
 #if DEBUG
             var token = ConfigFile.TokenTeste;
             var logLevel = LogLevel.Debug;
-            var prefix = new string[1] { ConfigFile.PrefixTeste };
 #else
             var token = ConfigFile.Token;
             var logLevel = LogLevel.Information;
-            var prefix = new string[1] { ConfigFile.Prefix };
 #endif
             #endregion
 
@@ -54,15 +56,16 @@ namespace WafclastRPG.Bot
             BotInfo.VersaoRevisao++;
             BotInfo.SaveToFile("BotInfo.json");
 
+            banco = new Banco();
             var services = new ServiceCollection()
-                .AddSingleton<Banco>()
-                .AddSingleton<ConfigFile>()
-                .AddSingleton<BotInfo>()
+                .AddSingleton(this.banco)
+                .AddSingleton(this.ConfigFile)
+                .AddSingleton(this.BotInfo)
                 .BuildServiceProvider();
 
             bot.ModuloComando(new CommandsNextConfiguration
             {
-                StringPrefixes = prefix,
+                PrefixResolver = this.ResolvePrefixAsync,
                 EnableDms = false,
                 CaseSensitive = false,
                 EnableDefaultHelp = false,
@@ -73,6 +76,20 @@ namespace WafclastRPG.Bot
 
             await bot.ConectarAsync();
             await Task.Delay(-1);
+        }
+
+        private async Task<int> ResolvePrefixAsync(DiscordMessage msg)
+        {
+            var gld = msg.Channel.Guild;
+            if (gld == null)
+                return await Task.FromResult(-1);
+#if DEBUG
+            var prefix = await banco.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixTeste);
+#else
+            var prefix = await banco.GetServerPrefix(gld.Id, ConfigFile.Prefix);
+#endif
+            var pfixLocation = msg.GetStringPrefixLength(prefix);
+            return await Task.FromResult(pfixLocation);
         }
     }
 }

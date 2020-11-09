@@ -1,11 +1,8 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
 using System;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WafclastRPG.Bot.Atributos;
 using WafclastRPG.Bot.Extensoes;
 using WafclastRPG.Game;
 using WafclastRPG.Game.Entidades;
@@ -19,8 +16,6 @@ namespace WafclastRPG.Bot.Comandos.Acao
 
         [Command("usar")]
         [Description("Permite usar um item.")]
-        [ComoUsar("usar [#ID]")]
-        [Exemplo("usar #1")]
         [Cooldown(1, 5, CooldownBucketType.User)]
         public async Task ComandoVenderAsync(CommandContext ctx, string stringId = "", string stringQuantidade = "1")
         {

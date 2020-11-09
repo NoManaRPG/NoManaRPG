@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System;
 using System.Diagnostics;
-using WafclastRPG.Bot.Atributos;
 using static WafclastRPG.Bot.Utilities;
 using WafclastRPG.Bot.Config;
 
@@ -18,7 +17,6 @@ namespace WafclastRPG.Bot.Comandos.Exibir
 
         [Command("bot")]
         [Description("Exibe informações sobre o bot.")]
-        [ComoUsar("bot")]
         public async Task ComandoBotAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();

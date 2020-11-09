@@ -33,7 +33,7 @@ namespace WafclastRPG.Bot
             Client.GuildMemberRemoved += (c, e) => GuildMemberRemoved.Event(c, e, botInfo);
             Client.ClientErrored += ClientErrored.Event;
 
-            CommandsNext.SetHelpFormatter<IAjudaComando>();
+            CommandsNext.SetHelpFormatter<IComandoAjuda>();
 
             CommandsNext.RegisterCommands<ComandoAjuda>();
             CommandsNext.RegisterCommands<ComandoStatus>();
@@ -49,6 +49,7 @@ namespace WafclastRPG.Bot
             CommandsNext.RegisterCommands<ComandoBot>();
             CommandsNext.RegisterCommands<ComandoRank>();
             CommandsNext.RegisterCommands<ComandoUsar>();
+            CommandsNext.RegisterCommands<ComandoPrefixo>();
         }
     }
 }

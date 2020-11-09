@@ -3,16 +3,10 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WafclastRPG.Bot.Atributos;
-using WafclastRPG.Bot.Extensoes;
 using WafclastRPG.Game;
 using WafclastRPG.Game.Entidades;
-using WafclastRPG.Game.Entidades.Itens;
 
 namespace WafclastRPG.Bot.Comandos.Exibir
 {
@@ -21,8 +15,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         public Banco banco;
 
         [Command("top")]
-        [Description("Exibe os 10 personagens mais ricos")]
-        [ComoUsar("top")]
+        [Description("Exibe os 10 jogadores mais ricos.")]
         [Cooldown(1, 30, CooldownBucketType.User)]
         public async Task ComandoMochilaAsync(CommandContext ctx)
         {

@@ -2,11 +2,9 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using DSharpPlus.Net.Models;
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using WafclastRPG.Bot.Atributos;
 using WafclastRPG.Bot.Extensoes;
 using WafclastRPG.Game;
 using WafclastRPG.Game.Entidades;
@@ -20,8 +18,7 @@ namespace WafclastRPG.Bot.Comandos.Acao
         [Command("explorar")]
         [Aliases("ex")]
         [Description("Permite explorar a região, se encontrar um monstro você o ataca.")]
-        [ComoUsar("explorar")]
-        // [Cooldown(1, 4, CooldownBucketType.User)]
+        [Cooldown(1, 4, CooldownBucketType.User)]
         public async Task ComandoExplorarAsync(CommandContext ctx, string codigo = "")
         {
             // Verifica se existe o jogador e faz o jogador esperar antes de começar outro comando
