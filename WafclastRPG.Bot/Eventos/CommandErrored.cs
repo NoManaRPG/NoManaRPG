@@ -60,6 +60,9 @@ namespace WafclastRPG.Bot.Eventos
                 case MongoCommandException mce:
                     await ctx.RespondAsync($"{ctx.User.Mention}, o último comando não foi processado corretamente! Tente executar os comandos mais lentamente!");
                     break;
+                case Newtonsoft.Json.JsonReaderException _:
+                    e.Context.Client.Logger.LogDebug(new EventId(602, "Discord Problem"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas discord está lento.", DateTime.Now);
+                    break;
                 default:
                     e.Context.Client.Logger.LogDebug(new EventId(601, "Comando Invalido"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
 
