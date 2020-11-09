@@ -11,6 +11,7 @@ namespace WafclastRPG.Game.Entidades.Itens
         public string Nome { get; set; }
         public int OcupaEspaco { get; set; }
         public double PrecoCompra { get; set; }
+        public double PrecoVenda { get { return this.PrecoCompra / 2; } }
 
         public WafclastItem(string nome, int ocupaEspaco, double precoCompra)
         {

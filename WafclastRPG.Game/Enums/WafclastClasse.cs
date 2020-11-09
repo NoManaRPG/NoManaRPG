@@ -18,6 +18,7 @@ namespace WafclastRPG.Game.Enums
         Sombra,
         [Description("Herdeira")]
         Herdeira,
+        [Description("Todas as classes")]
         Todas
     }
 }

@@ -1,8 +1,14 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
+using System;
+using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Atributos;
+using WafclastRPG.Bot.Extensoes;
 using WafclastRPG.Game;
+using WafclastRPG.Game.Entidades.Itens;
+using WafclastRPG.Game.Extensoes;
 
 namespace WafclastRPG.Bot.Comandos.Exibir
 {
@@ -11,149 +17,79 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         public Banco banco;
 
         [Command("examinar")]
-        [Description("Permite examinar um item.\n`#ID` se contra na mochila.")]
+        [Description("Permite examinar um item pelo o `#ID`.")]
         [ComoUsar("examinar [#ID]")]
         [Exemplo("examinar #1")]
-        public async Task ComandoExaminarAsync(CommandContext ctx, string idEscolhido = "0")
+        public async Task ComandoExaminarAsync(CommandContext ctx, string stringId = "#0")
         {
-            // Verifica se existe o jogador,
-        //    var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
-        //    if (naoCriouPersonagem) return;
+            // Verifica se existe o jogador e faz o jogador esperar antes de começar outro comando
+            var (isJogadorCriado, sessao) = await banco.ExisteJogadorAsync(ctx);
+            if (!isJogadorCriado) return;
 
-        //    if (personagemNaoModificar.Mochila.Itens.Count == 0)
-        //    {
-        //        await ctx.RespondAsync($"{ctx.User.Mention}, você precisa de itens na mochila para examinar!");
-        //        return;
-        //    }
+            var personagem = sessao.Jogador.Personagem;
 
-        //    // Converte o id informado.
-        //    if (idEscolhido.TryParseID(out int id))
-        //    {
-        //        var descricao = ItemDescricao(personagemNaoModificar, id);
-        //        if (descricao != null)
-        //        {
-        //        //    descricao.WithAuthor($"{ctx.User.Username} - {personagemNaoModificar.Nome}", iconUrl: ctx.User.AvatarUrl);
-        //            await ctx.RespondAsync(embed: descricao.Build());
-        //        }
-        //        else
-        //            await ctx.RespondAsync($"{ctx.User.Mention}, `#ID` não encontrado!");
-        //    }
-        //    else
-        //        await ctx.RespondAsync($"{ctx.User.Mention}, o `#ID` precisa ser numérico. Digite `!mochila` para encontrar `#ID`s.");
-        //}
+            if (personagem.Mochila.Itens.Count == 0)
+            {
+                await ctx.RespondAsync($"{ctx.User.Mention}, você precisa de algum itens na mochila para poder estar examinando!");
+                return;
+            }
 
-        //public static DiscordEmbedBuilder ItemDescricao(RPPersonagem personagem, int id)
-        //{
-        //    var item = personagem.Mochila.Itens.ElementAtOrDefault(id);
-        //    if (item != null)
-        //    {
-        //        DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
-        //        embed.WithTitle($"`#{id}` {GerarEmojiRaridade(item.Raridade)} {item.TipoBaseModificado.Titulo().Bold()}");
-        //        embed.WithColor(GerarColorRaridade(item.Raridade));
-        //        StringBuilder str = new StringBuilder();
-        //        switch (item)
-        //        {
-        //            case RPFrascoVida frascoVida:
-        //                str.AppendLine("Frascos de Vida");
-        //                str.AppendLine($"Ocupa {item.Espaco} espaço");
-        //                str.AppendLine($"Recupera {frascoVida.Regen} de Vida por {frascoVida.Tempo} Segundo");
-        //                str.AppendLine($"Consome {frascoVida.CargasUso} de {frascoVida.CargasMax} Carga na utilização");
-        //                str.AppendLine($"Atualmente tem {frascoVida.CargasAtual} Carga");
-        //                str.AppendLine($"Requer nível {frascoVida.ILevel}");
-        //                str.AppendLine();
-        //                str.AppendLine("██████████████");
-        //                str.AppendLine();
-        //                str.AppendLine("Só é possível manter cargas no cinto. Recarrega conforme você mata monstros.");
-        //                break;
-        //            case RPBaseItemArma arma:
-        //                switch (arma)
-        //                {
-        //                    case RPArmaAdaga _:
-        //                        str.AppendLine("Adaga");
-        //                        break;
-        //                    case RPArmaArco _:
-        //                        str.AppendLine("Arco");
-        //                        break;
-        //                    case RPArmaCetro _:
-        //                        str.AppendLine("Cetro");
-        //                        break;
-        //                    case RPArmaEspada _:
-        //                        str.AppendLine("Espada");
-        //                        break;
-        //                    case RPArmaVarinha _:
-        //                        str.AppendLine("Varinha");
-        //                        break;
-        //                }
-        //                str.AppendLine($"Ocupa {item.Espaco} espaço");
-        //                str.AppendLine($"Dano Físico: {arma.DanoFisicoBase.Minimo}-{arma.DanoFisicoBase.Maximo}");
-        //                str.AppendLine($"Chance de Crítico: { arma.ChanceCritico * 100}% ");
-        //                str.AppendLine($"Ataques por Segundo: {arma.VelocidadeAtaque}");
-        //                str.AppendLine();
-        //                str.AppendLine("██████████████");
-        //                str.AppendLine();
-        //                str.AppendLine($"Requer Nível {arma.ILevel}, {(arma.Inteligencia == 0 ? "" : $"{arma.Inteligencia} Int,")} {(arma.Destreza == 0 ? "" : $"{arma.Destreza} Des,")} {(arma.Forca == 0 ? "" : $"{arma.Forca} For")}");
-        //                break;
-        //            case RPMoedaEmpilhavel moeda:
-        //                str.AppendLine("Moedas Empilháveis");
-        //                str.AppendLine($"Ocupa {item.Espaco} espaço");
-        //                str.AppendLine($"Tamanho da pilha: {moeda.PilhaAtual}/{moeda.PilhaMaxima}");
-        //                str.AppendLine();
-        //                str.AppendLine("██████████████");
-        //                str.AppendLine();
-        //                switch (moeda.Classe)
-        //                {
-        //                    case RPClasse.FragmentoPergaminho:
-        //                        str.AppendLine("Uma pilha de 5 fragmentos forma um pergaminho de sabedoria");
-        //                        break;
-        //                    case RPClasse.PergaminhoSabedoria:
-        //                        str.AppendLine("Identifica um item");
-        //                        str.AppendLine("Digite `!identificar #ID` para identificar");
-        //                        break;
-        //                    case RPClasse.PergaminhoPortal:
-        //                        str.AppendLine("Cria um portal");
-        //                        str.AppendLine("Digite `!portal` para criar um portal");
-        //                        break;
-        //                }
-        //                break;
-        //        }
-        //        embed.WithDescription(str.ToString());
-        //        return embed;
-        //    }
-        //    return null;
-        //}
+            stringId.TryParseID(out int index);
+            Math.Clamp(index, 0, personagem.Mochila.Itens.Count - 1);
+            if (personagem.Mochila.TryGetItem(index, out var item))
+            {
+                var descricao = ItemDescricao(item).Criar(ctx);
+                await ctx.RespondAsync(embed: descricao.Build());
+            }
+            else
+                await ctx.RespondAsync($"{ctx.User.Mention}, item não encontrado na mochila!");
+        }
 
-        //private static DiscordEmoji GerarEmojiRaridade(RPRaridade raridade)
-        //{
-        //    switch (raridade)
-        //    {
-        //        case RPRaridade.Normal:
-        //            return Emoji.ItemNormal;
-        //        case RPRaridade.Magico:
-        //            return Emoji.ItemMagico;
-        //        case RPRaridade.Raro:
-        //            return Emoji.ItemRaro;
-        //        case RPRaridade.Unico:
-        //            return Emoji.ItemUnico;
-        //        default:
-        //            return null;
-        //    }
-        //}
+        public static DiscordEmbedBuilder ItemDescricao(WafclastItem item)
+        {
+            DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
+            embed.WithTitle($" {item.Nome.Titulo()}");
+            embed.WithColor(DiscordColor.Azure);
+            StringBuilder str = new StringBuilder();
 
-        //private static DiscordColor GerarColorRaridade(RPRaridade raridade)
-        //{
-        //    switch (raridade)
-        //    {
-        //        case RPRaridade.Normal:
-        //            return DiscordColor.LightGray;
-        //        case RPRaridade.Magico:
-        //            return DiscordColor.CornflowerBlue;
-        //        case RPRaridade.Raro:
-        //            return DiscordColor.HotPink;
-        //        case RPRaridade.Unico:
-        //            return DiscordColor.Orange;
-        //        default:
-        //            return DiscordColor.Wheat;
-        //    }
+            str.AppendLine($"Ocupa {item.OcupaEspaco} espaço.");
+            str.AppendLine($"{Emoji.Coins} {item.PrecoVenda / 2}V.");
+
+            switch (item)
+            {
+                case WafclastItemFrasco wif:
+                    if (wif.Tipo.HasFlag(FrascoTipo.Vida) & wif.Tipo.HasFlag(FrascoTipo.Mana))
+                        str.AppendLine($"Recupera {wif.VidaRestaura} Vida e {wif.ManaRestaura} Mana.");
+                    else if (wif.Tipo.HasFlag(FrascoTipo.Vida))
+                        str.AppendLine($"Recupera {wif.VidaRestaura} Vida.");
+                    else
+                        str.AppendLine($"Recupera {wif.ManaRestaura} Mana.");
+                    str.AppendLine($"Você tem {wif.Pilha}.");
+                    str.AppendLine("Consumível.");
+                    break;
+                case WafclastItemArma wia:
+                    str.AppendLine($"Nível: {wia.Nivel}.");
+                    str.AppendLine(wia.Classe.GetEnumDescription());
+                    if (wia.IsDuasMao)
+                        str.AppendLine("Precisa das duas mãos.");
+                    var dano = wia.DanoFisicoCalculado;
+                    str.AppendLine($"Dano Físico: {dano.Minimo}-{dano.Maximo}");
+                    str.AppendLine($"Chance de Crítico: { wia.DanoFisicoCriticoChance * 100}% ");
+                    break;
+                case WafclastItemComida wic:
+                    str.AppendLine($"{Emoji.Fome} +{wic.FomeRestaura}");
+                    str.AppendLine($"Você tem {wic.Pilha}.");
+                    str.AppendLine("Consumível.");
+                    break;
+                case WafclastItemBebida wic:
+                    str.AppendLine($"{Emoji.Sede} +{wic.SedeRestaura}");
+                    str.AppendLine($"Você tem {wic.Pilha}.");
+                    str.AppendLine("Consumível.");
+                    break;
+            }
+            embed.WithDescription(str.ToString());
+            return embed;
         }
     }
+
 }

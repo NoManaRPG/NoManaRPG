@@ -108,7 +108,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         public DiscordEmbed MensagemAjuda()
         {
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
-            embed.WithDescription("Digite `!ajuda [comando]` para mais informações. Por exemplo: `!ajuda bot`.");
+            embed.WithDescription("Digite `w.ajuda [comando]` para mais informações. Por exemplo: `w.ajuda bot`.");
 
             var str = new StringBuilder();
 
@@ -119,6 +119,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             str.Append($"**Itens** - ");
             str.Append($"{FormatarURLComando("mochila", "Permite ver os itens da mochila")} ");
             str.Append($"{FormatarURLComando("usar", "Permite usar os itens da mochila")} ");
+            str.Append($"{FormatarURLComando("examinar", "Permite examinar os itens da mochila")} ");
             str.Append($"");
             str.AppendLine();
             str.Append($"**Combate** - ");
@@ -129,13 +130,6 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             str.Append($"{FormatarURLComando("ajuda", "Mostra todos os comandos e ajuda do comando especificado")} ");
             str.Append($"{FormatarURLComando("top", "Exibe as pessoas mais ricas")} ");
             str.AppendLine();
-
-
-            //embed.AddField("Itens".Titulo(),  +
-            //    FormatarURLComando("equipamentos", "Permite ver os itens equipados") +
-            //    FormatarURLComando("examinar", "Permite ver a descrição de um item") +
-            //    FormatarURLComando("equipar", "Permite equipar itens") +
-            //    FormatarURLComando("desequipar", "Permite desequipr itens equipados") +
 
             //embed.AddField("Mercado".Titulo(), FormatarURLComando("vender", "Permite vender itens") +
             //       FormatarURLComando("comprar", "Permite comprar os itens que estão a venda") +

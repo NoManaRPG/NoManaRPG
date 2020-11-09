@@ -1,6 +1,4 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Driver.Core.Operations;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using WafclastRPG.Game.Entidades.Itens;
@@ -85,6 +83,14 @@ namespace WafclastRPG.Game.Entidades
                 item = mochilaItem;
             }
             return MochilaResposta.Ok;
+        }
+
+        public bool TryGetItem(int index, out WafclastItem item)
+        {
+            item = Itens.ElementAtOrDefault(index);
+            if (item != null)
+                return true;
+            return false;
         }
     }
 }
