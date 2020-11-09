@@ -91,7 +91,7 @@ namespace WafclastRPG.Bot.Comandos.Acao
                 #region Bebida
                 case WafclastItemBebida wib:
                     personagem.Sede.Incrementar(wib.SedeRestaura * wib.Pilha);
-                    str.AppendLine($"{ctx.User.Mention}, você bebeu **{wib.Pilha}** {wib.Nome.Titulo()}! :cup_with_straw:**+{wib.SedeRestaura * wib.Pilha}**.");
+                    str.AppendLine($"{ctx.User.Mention}, você bebeu **{wib.Pilha}** {wib.Nome.Titulo()}! {Emoji.Sede}**+{wib.SedeRestaura * wib.Pilha}**.");
                     break;
                 #endregion
                 default:

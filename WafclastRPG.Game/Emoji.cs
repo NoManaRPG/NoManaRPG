@@ -26,6 +26,7 @@
         public const string ExplacamaoDupla = ":bangbang:";
 
         public const string Fome = ":poultry_leg:";
+        public const string Sede = ":cup_with_straw:";
 
         public const string Coins = "<:coins:774232103864107038>";
         public const string Exp = "<:xp:758439721016885308>";

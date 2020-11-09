@@ -39,7 +39,7 @@ namespace WafclastRPG.Bot.Comandos.Acao
 
             var str = new StringBuilder();
             str.AppendLine($"{Emoji.Fome} **{personagem.Fome.Atual:N2}**");
-            str.AppendLine($":cup_with_straw: **{personagem.Sede.Atual:N2}**");
+            str.AppendLine($"{Emoji.Sede} **{personagem.Sede.Atual:N2}**");
             str.AppendLine($":zap: **{personagem.Vigor.Atual:N2}**");
             embed.WithDescription(str.ToString());
             embed.AddField("Resumo da Batalha".Titulo(), batalha.ToString());
