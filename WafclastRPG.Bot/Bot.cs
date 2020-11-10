@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using WafclastRPG.Bot.Comandos;
 using WafclastRPG.Bot.Comandos.Acao;
 using WafclastRPG.Bot.Comandos.Exibir;
+using WafclastRPG.Bot.Commands.UserCommands;
 using WafclastRPG.Bot.Config;
 using WafclastRPG.Bot.Eventos;
 
@@ -45,11 +46,12 @@ namespace WafclastRPG.Bot
             CommandsNext.RegisterCommands<ComandoEquipar>();
             CommandsNext.RegisterCommands<ComandoDesequipar>();
             CommandsNext.RegisterCommands<ComandoExaminar>();
-            CommandsNext.RegisterCommands<ComandoVender>();
             CommandsNext.RegisterCommands<ComandoBot>();
             CommandsNext.RegisterCommands<ComandoRank>();
             CommandsNext.RegisterCommands<ComandoUsar>();
             CommandsNext.RegisterCommands<ComandoPrefixo>();
+            CommandsNext.RegisterCommands<ComandoAtribuir>();
+            CommandsNext.RegisterCommands<ComandoAtributos>();
         }
     }
 }

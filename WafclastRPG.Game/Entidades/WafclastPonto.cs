@@ -35,6 +35,10 @@ namespace WafclastRPG.Game.Entidades
                 throw new ArgumentOutOfRangeException("valor", "Valor não pode ser negativo!");
             this.Extra = valor;
         }
+        public void AddExtra(double valor)
+        {
+            this.Extra += valor;
+        }
         public void WithMultiplicador(double valor)
         {
             if (valor < 1)

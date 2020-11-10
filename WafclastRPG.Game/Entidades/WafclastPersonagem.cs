@@ -21,9 +21,9 @@ namespace WafclastRPG.Game.Entidades
         public WafclastPontoRegenerativo Sede { get; private set; } = new WafclastPontoRegenerativo();
 
         #region Atributos
-        public int Forca { get; private set; }
-        public int Destreza { get; private set; }
-        public int Inteligencia { get; private set; }
+        public int Forca { get; set; }
+        public int Destreza { get; set; }
+        public int Inteligencia { get; set; }
         #endregion
 
         #region Pontos
@@ -65,6 +65,7 @@ namespace WafclastRPG.Game.Entidades
         public WafclastNivel Nivel { get; private set; } = new WafclastNivel();
         public WafclastMochila Mochila { get; private set; } = new WafclastMochila();
         public int IdRegiao { get; set; } = 1;
+        public int Pontos { get; set; } = 0;
         #endregion
 
         public WafclastPersonagem(WafclastClasse classe, WafclastDano dano,
@@ -157,6 +158,7 @@ namespace WafclastRPG.Game.Entidades
                 CalcPrecisao();
                 Vida.Incrementar(double.MaxValue);
                 Mana.Incrementar(double.MaxValue);
+                Pontos += 5 * quantEvoluiu;
                 return true;
             }
             return false;

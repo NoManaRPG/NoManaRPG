@@ -136,7 +136,7 @@ namespace WafclastRPG.Bot.Comandos
                 Buckets.AddOrUpdate(ctx.User.Id, bucket, (k, v) => bucket);
             }
 
-
+            await Task.CompletedTask;
             bucket.Release();
         }
 
@@ -159,17 +159,7 @@ namespace WafclastRPG.Bot.Comandos
 
                     foreach (WafclastJogador user in usuarios)
                     {
-                        user.Personagem.Mochila.EspacoAtual = 0;
-                        var itens = user.Personagem.Mochila.Itens;
-                        foreach (var item in itens)
-                        {
-                            switch (item)
-                            {
-                                case WafclastItemEmpilhavel wie:
-                                    user.Personagem.Mochila.EspacoAtual += wie.OcupaEspaco * wie.Pilha;
-                                    break;
-                            }
-                        }
+                        user.Personagem.Pontos = (user.Personagem.Nivel.Atual - 1) * 5;
                         await banco.Jogadores.ReplaceOneAsync(x => x.Id == user.Id, user);
                     }
                 }
