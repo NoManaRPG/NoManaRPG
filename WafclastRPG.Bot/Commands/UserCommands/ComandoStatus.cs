@@ -4,6 +4,7 @@ using DSharpPlus.Entities;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using WafclastRPG.Bot.Atributos;
 using WafclastRPG.Bot.Extensoes;
 using WafclastRPG.Game;
 using WafclastRPG.Game.Entidades;
@@ -16,7 +17,9 @@ namespace WafclastRPG.Bot.Comandos.Exibir
 
         [Command("status")]
         [Description("Permite exibir os status do personagem ou de outro usuário.")]
-        // [Cooldown(1, 10, CooldownBucketType.User)]
+        [Example("status <@87604980344721408>", "Exibe os status do <@87604980344721408>.")]
+        [Example("status", "Exibe os seus status.")]
+        [Usage("status [ @jogador ]")]
         public async Task ComandoStatusAb(CommandContext ctx, DiscordUser user)
         {
             var jogador = await banco.GetJogadorAsync(user);

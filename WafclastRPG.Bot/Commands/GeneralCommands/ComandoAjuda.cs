@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 using static DSharpPlus.CommandsNext.CommandsNextExtension;
 using static WafclastRPG.Bot.Utilities;
 using System;
-using WafclastRPG.Bot.Extensoes;
 using Microsoft.Extensions.DependencyInjection;
 using WafclastRPG.Bot.Config;
 using DSharpPlus;
+using System.Linq;
+using WafclastRPG.Bot.Atributos;
 
 namespace WafclastRPG.Bot.Comandos.Exibir
 {
@@ -21,6 +22,9 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         [Command("ajuda")]
         [Aliases("h", "?", "help")]
         [Description("Explica como usar um comando, suas abreviações e exemplos.")]
+        [Example("ajuda status", "Exibe o que é o comando *status*, seus argumentos e abreviações..")]
+        [Example("ajuda", "Exibe todos os comandos.")]
+        [Usage("ajuda [ comando ]")]
         public async Task ComandoAjudaAsync(CommandContext ctx, params string[] comando)
         {
             await ctx.TriggerTypingAsync();
@@ -31,7 +35,6 @@ namespace WafclastRPG.Bot.Comandos.Exibir
     public class IComandoAjuda : BaseHelpFormatter
     {
         DiscordEmbedBuilder embed;
-        StringBuilder srSubCommands;
         bool isCommandHelp;
         string prefix;
 
@@ -46,6 +49,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             else
             {
                 embed = new DiscordEmbedBuilder();
+                embed.WithAuthor("Menu de ajuda do Wafclast", null, ctx.Client.CurrentUser.AvatarUrl);
                 isCommandHelp = false;
             }
         }
@@ -54,48 +58,35 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         {
             if (!isCommandHelp)
             {
-                var methods = command.Overloads;
-                var srHow = new StringBuilder();
-                var srArguments = new StringBuilder();
-                srHow.Append($"**{prefix}{command.Name}");
-                foreach (var item in methods)
-                {
+                embed.WithTitle(Formatter.Bold($"{prefix}{command.Name}"));
+                embed.WithDescription($"```{command.Description}```");
 
-                    foreach (var arg in item.Arguments)
-                    {
-                        srHow.Append($" {arg.Name.ToUpper()} ");
-                        srArguments.AppendLine($"{arg.Name.ToUpper()} -> `{arg.Description}`");
-                        srArguments.AppendLine($"É opcional? {(arg.IsOptional ? "Sim" : "Não")}");
-                        if (arg.DefaultValue != null)
-                            srArguments.AppendLine($"Por padrão é {arg.DefaultValue}.");
-                    }
-                    srHow.AppendLine("**");
-                    srHow.AppendLine();
+                var str = new StringBuilder();
+                var examples = command.CustomAttributes.Where(x => x.GetType() == typeof(ExampleAttribute));
+                var usage = command.CustomAttributes.Where(x => x.GetType() == typeof(UsageAttribute)).FirstOrDefault();
+
+                foreach (var item in examples)
+                {
+                    str.AppendLine(Formatter.InlineCode($"{prefix}{(item as ExampleAttribute).Command}"));
+                    str.AppendLine((item as ExampleAttribute).Description);
+                    str.AppendLine();
                 }
+
+                if (!string.IsNullOrWhiteSpace(str.ToString()))
+                    embed.AddField(Formatter.Bold(Formatter.Italic("Exemplos")), str.ToString(), true);
+
+                if (usage != null)
+                    embed.AddField(Formatter.Bold(Formatter.Italic("Usos")), Formatter.InlineCode($"{prefix}{(usage as UsageAttribute).Command}"), true);
 
                 StringBuilder strAliases = new StringBuilder();
                 foreach (var al in command.Aliases)
-                    strAliases.Append($"`{al}` ,");
-                if (strAliases.Length != 0)
-                    embed.AddField($"**Atalhos**", strAliases.ToString());
-                embed.WithTitle(Formatter.Bold($"{command.Name.FirstUpper()}"));
-                embed.WithDescription(command.Description);
-                embed.AddField("**Como usar**", srHow.ToString() + srArguments.ToString());
+                    strAliases.Append($"__*{al}*__ ,");
+                embed.AddField(Formatter.Bold(Formatter.Italic("Atalhos")), $"{ (string.IsNullOrWhiteSpace(strAliases.ToString()) ? "__*nenhum*__" : strAliases.ToString()) }");
             }
             return this;
         }
 
-        public override BaseHelpFormatter WithSubcommands(IEnumerable<Command> subcommands)
-        {
-            if (!isCommandHelp)
-            {
-                srSubCommands = new StringBuilder();
-                foreach (var item in subcommands)
-                    srSubCommands.Append($"`{item.Name}` , ");
-                embed.AddField("**Comandos**", srSubCommands.ToString());
-            }
-            return this;
-        }
+        public override BaseHelpFormatter WithSubcommands(IEnumerable<Command> subcommands) => this;
 
         public override CommandHelpMessage Build()
         {
@@ -133,10 +124,6 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             str.Append($"{FormatarURLComando(prefix, "ajuda", "Mostra todos os comandos e ajuda do comando especificado")} ");
             str.Append($"{FormatarURLComando(prefix, "top", "Exibe as pessoas mais ricas")} ");
             str.AppendLine();
-
-            //embed.AddField("Mercado".Titulo(), FormatarURLComando("vender", "Permite vender itens") +
-            //       FormatarURLComando("comprar", "Permite comprar os itens que estão a venda") +
-            //    FormatarURLComando("loja", "Permite ver os itens que estão a venda"), true);
 
             embed.WithDescription(str.ToString());
             embed.WithColor(DiscordColor.Violet);

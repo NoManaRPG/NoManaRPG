@@ -5,6 +5,7 @@ using DSharpPlus.Entities;
 using MongoDB.Driver;
 using System.Text;
 using System.Threading.Tasks;
+using WafclastRPG.Bot.Atributos;
 using WafclastRPG.Game;
 using WafclastRPG.Game.Entidades;
 

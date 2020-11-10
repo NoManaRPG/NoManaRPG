@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System.Threading.Tasks;
+using WafclastRPG.Bot.Atributos;
 
 namespace WafclastRPG.Bot.Comandos.Acao
 {
@@ -11,6 +12,9 @@ namespace WafclastRPG.Bot.Comandos.Acao
         [Command("equipar")]
         [Aliases("e")]
         [Description("Permite equipar um item.\n`#ID` se contra na mochila.")]
+        [Example("criar-personagem caçadora", "Faz você escolher o personagem com a classe caçadora.")]
+        [Example("criar-personagem", "Exibe todas as classes.")]
+        [Usage("criar-personagem [ classe ]")]
         public async Task ComandoEquiparAsync(CommandContext ctx, string stringIndexItem = "0")
         {
             await Task.CompletedTask;

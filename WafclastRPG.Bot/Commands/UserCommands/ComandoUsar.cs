@@ -3,6 +3,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using WafclastRPG.Bot.Atributos;
 using WafclastRPG.Bot.Extensoes;
 using WafclastRPG.Game;
 using WafclastRPG.Game.Entidades;
@@ -17,6 +18,8 @@ namespace WafclastRPG.Bot.Comandos.Acao
         [Command("usar")]
         [Description("Permite usar um item.")]
         [Cooldown(1, 5, CooldownBucketType.User)]
+        [Example("usar #0", "Usa o item de id *#0* que é o primeiro da mochila.")]
+        [Usage("usar <#ID>")]
         public async Task ComandoVenderAsync(CommandContext ctx, string stringId = "", string stringQuantidade = "1")
         {
             // Verifica se existe o jogador e faz o jogador esperar antes de começar outro comando

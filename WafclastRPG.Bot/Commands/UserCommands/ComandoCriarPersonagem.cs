@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System.Threading.Tasks;
+using WafclastRPG.Bot.Atributos;
 using WafclastRPG.Bot.Extensoes;
 using WafclastRPG.Game.Entidades;
 using WafclastRPG.Game.Enums;
@@ -17,6 +18,9 @@ namespace WafclastRPG.Bot.Comandos.Acao
         [Aliases("cp")]
         [Description("Permite criar um personagem com uma das 7 classes disponíveis.")]
         [Cooldown(1, 10, CooldownBucketType.User)]
+        [Example("criar-personagem caçadora", "Faz você escolher o personagem com a classe caçadora.")]
+        [Example("criar-personagem", "Exibe todas as classes.")]
+        [Usage("criar-personagem [ classe ]")]
         public async Task CriarPersonagemAsync(CommandContext ctx, string classe = "")
         {
             var jogadorExiste = await JogadorExisteAsync(ctx);

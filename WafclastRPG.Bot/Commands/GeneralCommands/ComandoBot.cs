@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics;
 using static WafclastRPG.Bot.Utilities;
 using WafclastRPG.Bot.Config;
+using WafclastRPG.Bot.Atributos;
 
 namespace WafclastRPG.Bot.Comandos.Exibir
 {
@@ -16,7 +17,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         public BotInfo botInfo;
 
         [Command("bot")]
-        [Description("Exibe informações sobre o bot.")]
+        [Description("Exibe informações sobre o bot como memoria usada, quantia de servidores etc.")]
         public async Task ComandoBotAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
