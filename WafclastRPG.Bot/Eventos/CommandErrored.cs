@@ -67,7 +67,7 @@ namespace WafclastRPG.Bot.Eventos
                     e.Context.Client.Logger.LogDebug(new EventId(601, "Comando Invalido"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
 
                     DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
-                    embed.WithAuthor($"{e.Context.User.Username}({e.Context.User.Id})", null, e.Context.User.AvatarUrl);
+                    embed.WithAuthor($"{e.Context.Guild.Id}-{e.Context.User.Username}({e.Context.User.Id})", null, e.Context.User.AvatarUrl);
                     embed.WithTitle($"{e.Command?.QualifiedName ?? "<comando desconhecido>"}");
                     embed.WithDescription($"[{e.Exception}]({e.Context.Message.JumpLink})");
                     embed.WithTimestamp(DateTime.Now);

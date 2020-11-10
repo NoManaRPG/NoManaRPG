@@ -71,6 +71,17 @@ namespace WafclastRPG.Bot.Comandos
         public async Task PurgeAsync(CommandContext ctx, int quantidade)
             => await ctx.Channel.DeleteMessagesAsync(await ctx.Channel.GetMessagesAsync(quantidade + 1));
 
+        [Command("dm")]
+        [RequireOwner]
+        public async Task DmAsync(CommandContext ctx, DiscordGuild server, DiscordUser user, [RemainingText] string mensagem)
+        {
+            var serv = await ctx.Client.GetGuildAsync(server.Id);
+            var sv = await serv.GetMemberAsync(user.Id);
+            var dm = await sv.CreateDmChannelAsync();
+            await dm.SendMessageAsync(mensagem);
+        }
+
+
         [Command("mensagem")]
         [RequireOwner]
         public async Task MensagemAsync(CommandContext ctx, [RemainingText] string mensagem)
