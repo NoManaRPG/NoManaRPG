@@ -90,7 +90,9 @@ namespace WafclastRPG.Bot
             var prefix = await banco.GetServerPrefixAsync(gld.Id, ConfigFile.Prefix);
             var pfixLocation = msg.GetStringPrefixLength(prefix);
             if (pfixLocation == -1)
-                pfixLocation = msg.GetStringPrefixLength(ConfigFile.Prefix);
+                pfixLocation = msg.GetStringPrefixLength(ConfigFile.Prefix.ToLower());
+            if (pfixLocation == -1)
+                pfixLocation = msg.GetStringPrefixLength(ConfigFile.Prefix.ToUpper());
 #endif
             return await Task.FromResult(pfixLocation);
         }
