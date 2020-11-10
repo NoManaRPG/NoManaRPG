@@ -15,7 +15,7 @@ namespace WafclastRPG.Bot.Commands.UserCommands
         [Description("Permite atribuir pontos que se ganha ao evoluir em atributos.")]
         [Example("atribuir força 1", "Atribui 1 ponto em força.")]
         [Usage("atribuir <atributo> [ quantidade ] ")]
-        public async Task ComandoAtribuirAsync(CommandContext ctx, string atributo, string stringQuant = "1")
+        public async Task ComandoAtribuirAsync(CommandContext ctx, string atributo = "", string stringQuant = "1")
         {
             // Verifica se existe o jogador e faz o jogador esperar antes de começar outro comando
             var (isJogadorCriado, sessao) = await banco.ExisteJogadorAsync(ctx, true);
