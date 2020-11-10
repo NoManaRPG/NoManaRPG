@@ -8,6 +8,7 @@ using WafclastRPG.Bot.Atributos;
 using WafclastRPG.Bot.Extensoes;
 using WafclastRPG.Game;
 using WafclastRPG.Game.Entidades;
+using WafclastRPG.Game.Extensoes;
 
 namespace WafclastRPG.Bot.Comandos.Exibir
 {
@@ -46,8 +47,9 @@ namespace WafclastRPG.Bot.Comandos.Exibir
 
         public DiscordEmbedBuilder GerarStatus(DiscordUser user, WafclastPersonagem personagem)
         {
-            var embed = new DiscordEmbedBuilder().Criar(user);
-
+            var embed = new DiscordEmbedBuilder();
+            embed.WithAuthor($"{user.Username} [Lvl.{personagem.Nivel.Atual}] ({personagem.Classe.GetEnumDescription()})", "https://discord.gg/MAR4NFq", user.AvatarUrl);
+            embed.WithFooter("Se estiver perdido use o comando ajuda.", "https://cdn.discordapp.com/attachments/736163626934861845/742671714386968576/help_animated_x4_1.gif");
             var str = new StringBuilder();
             str.AppendLine($"Tem {personagem.Nivel.ExpAtual.ToString("N2").Bold()} pontos de experiencia e precisa de {personagem.Nivel.ExpMax.ToString("N2").Bold()} para evoluir.");
             str.AppendLine($"Mochila com {personagem.Mochila.EspacoAtual.Bold()}/{personagem.Mochila.EspacoMax.Bold()} de espaço.");

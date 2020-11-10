@@ -170,6 +170,30 @@ namespace WafclastRPG.Bot.Comandos
                     foreach (WafclastJogador user in usuarios)
                     {
                         user.Personagem.Pontos = (user.Personagem.Nivel.Atual - 1) * 5;
+                        var p = user.Personagem;
+                        switch (user.Personagem.Classe)
+                        {
+                            case Game.Enums.WafclastClasse.Berserker:
+                                p.Forca = 32;
+                                p.Inteligencia = 14;
+                                break;
+                            case Game.Enums.WafclastClasse.Sombra:
+                                p.Forca = 14;
+                                p.Inteligencia = 23;
+                                break;
+                            case Game.Enums.WafclastClasse.Duelista:
+                                p.Forca = 23;
+                                p.Inteligencia = 14;
+                                break;
+                            case Game.Enums.WafclastClasse.Bruxa:
+                                p.Inteligencia = 32;
+                                p.Forca = 14;
+                                break;
+                        }
+                        p.CalcEvasao();
+                        p.CalcPrecisao();
+                        p.CalcMana();
+                        p.CalcVida();
                         await banco.Jogadores.ReplaceOneAsync(x => x.Id == user.Id, user);
                     }
                 }

@@ -51,16 +51,16 @@ namespace WafclastRPG.Bot.Comandos.Acao
                     per = new WafclastPersonagem(WafclastClasse.Cacadora, new WafclastDano(2, 5), 14, 32, 14);
                     break;
                 case "berserker":
-                    per = new WafclastPersonagem(WafclastClasse.Berserker, new WafclastDano(2, 8), 14, 14, 32);
+                    per = new WafclastPersonagem(WafclastClasse.Berserker, new WafclastDano(2, 8), 32, 14, 14);
                     break;
                 case "sombra":
-                    per = new WafclastPersonagem(WafclastClasse.Sombra, new WafclastDano(2, 5), 23, 23, 14);
+                    per = new WafclastPersonagem(WafclastClasse.Sombra, new WafclastDano(2, 5), 14, 23, 23);
                     break;
                 case "duelista":
-                    per = new WafclastPersonagem(WafclastClasse.Duelista, new WafclastDano(2, 6), 14, 23, 23);
+                    per = new WafclastPersonagem(WafclastClasse.Duelista, new WafclastDano(2, 6), 23, 23, 14);
                     break;
                 case "bruxa":
-                    per = new WafclastPersonagem(WafclastClasse.Bruxa, new WafclastDano(2, 5), 32, 14, 14);
+                    per = new WafclastPersonagem(WafclastClasse.Bruxa, new WafclastDano(2, 5), 14, 14, 32);
                     break;
                 case "templario":
                     per = new WafclastPersonagem(WafclastClasse.Templario, new WafclastDano(2, 6), 23, 14, 23);
