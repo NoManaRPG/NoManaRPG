@@ -13,6 +13,7 @@ namespace WafclastRPG.Bot.Comandos.Acao
         [Description("Permite equipar um item.\n`#ID` se contra na mochila.")]
         public async Task ComandoEquiparAsync(CommandContext ctx, string stringIndexItem = "0")
         {
+            await Task.CompletedTask;
             //// Verifica se existe o jogador,
             //var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
             //if (naoCriouPersonagem) return;

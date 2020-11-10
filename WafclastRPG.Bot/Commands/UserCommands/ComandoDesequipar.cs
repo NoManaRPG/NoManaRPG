@@ -12,6 +12,7 @@ namespace WafclastRPG.Bot.Comandos.Acao
         [Description("Permite desequipar um item. Veja no equipamentos os `⌈SLOTS⌋` disponíveis.")]
         public async Task ComandoDesequiparAsync(CommandContext ctx, [RemainingText] string itemString = "")
         {
+            await Task.CompletedTask;
             //// Verifica se existe o jogador,
             //var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
             //if (naoCriouPersonagem) return;

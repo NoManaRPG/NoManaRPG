@@ -14,6 +14,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         [Description("Permite todos os itens equipados no seu personagem. Cada item está separado por `⌈SLOT⌋`.")]
         public async Task ComandoEquipamentosAsync(CommandContext ctx)
         {
+            await Task.CompletedTask;
         //    // Verifica se existe o jogador,
         //    var (naoCriouPersonagem, personagemNaoModificar) = await banco.VerificarJogador(ctx);
         //    if (naoCriouPersonagem) return;
