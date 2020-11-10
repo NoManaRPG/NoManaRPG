@@ -126,22 +126,34 @@ namespace WafclastRPG.Game.Entidades
             }
         }
 
+        /// <summary>
+        /// Usa força no seu calculo.
+        /// </summary>
         public void CalcVida()
         {
             Vida.WithBase(38 + (Nivel.Atual * 12) + (Forca / 2));
         }
 
+        /// <summary>
+        /// Usa inteligencia no seu calculo.
+        /// </summary>
         public void CalcMana()
         {
             Mana.WithBase(40 + (Nivel.Atual * 6) + (Inteligencia / 2));
             Mana.WithRegen(0.018 * Mana.Maximo);
         }
 
+        /// <summary>
+        /// Usa destreza no seu calculo.
+        /// </summary>
         public void CalcEvasao()
         {
             Evasao.WithBase((53 + (Nivel.Atual * 3)) * ((Destreza / 5 * 0.01) + 1));
         }
 
+        /// <summary>
+        /// Usa destreza no seu calculo.
+        /// </summary>
         public void CalcPrecisao()
         {
             Precisao.WithBase((Destreza * 2) + ((Nivel.Atual - 1) * 2));

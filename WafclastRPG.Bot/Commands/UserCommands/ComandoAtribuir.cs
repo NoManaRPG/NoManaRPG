@@ -50,12 +50,16 @@ namespace WafclastRPG.Bot.Commands.UserCommands
             {
                 case "forca":
                     personagem.Forca += quantidade;
+                    personagem.CalcVida();
                     break;
                 case "inteligencia":
                     personagem.Inteligencia += quantidade;
+                    personagem.CalcMana();
                     break;
                 case "destreza":
                     personagem.Destreza += quantidade;
+                    personagem.CalcPrecisao();
+                    personagem.CalcEvasao();
                     break;
                 case "fome":
                     personagem.Fome.AddExtra(quantidade);
