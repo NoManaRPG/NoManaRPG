@@ -24,15 +24,14 @@ namespace WafclastRPG.Bot.Comandos.Exibir
                 .SortByDescending(x => x.Personagem.Mochila.Moedas).ToListAsync();
             StringBuilder str = new StringBuilder();
 
-            int pos = 1;
             foreach (var item in top)
             {
                 var member = await ctx.Client.GetUserAsync(item.Id);
-                str.AppendLine(Formatter.Bold($"{pos}. {member.Mention} {Emoji.Coins} {item.Personagem.Mochila.Moedas}"));
-                pos++;
+                str.AppendLine(Formatter.Bold($"{item.Personagem.Mochila.Moedas}{Emoji.Coins} {member.Mention}"));
             }
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
             embed.WithDescription(str.ToString());
+            embed.WithTitle("Jogadores mais ricos");
 
             await ctx.RespondAsync(embed: embed.Build());
         }
