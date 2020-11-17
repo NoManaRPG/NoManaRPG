@@ -12,11 +12,18 @@ namespace WafclastRPG.Game.Entidades
         public DateTime ContaCriacao { get; }
         public WafclastPersonagem Personagem { get; private set; }
 
-        public WafclastJogador(ulong id, WafclastPersonagem personagem)
+        public WafclastJogador(ulong id)
         {
             this.Id = id;
             this.ContaCriacao = DateTime.UtcNow;
-            this.Personagem = personagem;
+            this.Personagem = new WafclastPersonagem();
+        }
+
+        public WafclastJogador(WafclastJogador jogador)
+        {
+            this.Id = jogador.Id;
+            this.ContaCriacao = jogador.ContaCriacao;
+            this.Personagem = jogador.Personagem;
         }
     }
 }

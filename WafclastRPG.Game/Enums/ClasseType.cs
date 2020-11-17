@@ -2,7 +2,7 @@
 
 namespace WafclastRPG.Game.Enums
 {
-    public enum WafclastClasse
+    public enum ClasseType
     {
         [Description("Caçadora")]
         Cacadora,

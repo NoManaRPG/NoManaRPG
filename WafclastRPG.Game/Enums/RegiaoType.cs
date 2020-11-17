@@ -2,7 +2,7 @@
 
 namespace WafclastRPG.Game.Enums
 {
-    public enum WafclastRegioes
+    public enum RegiaoType
     {
         [Description("Meizhou")]
         Meizhou,

@@ -1,14 +1,14 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WafclastRPG.Bot.Atributos;
 using WafclastRPG.Bot.Extensoes;
 using WafclastRPG.Game;
-using WafclastRPG.Game.Entidades.Itens;
+using WafclastRPG.Game.Entidades;
 
 namespace WafclastRPG.Bot.Comandos.Exibir
 {
@@ -18,39 +18,36 @@ namespace WafclastRPG.Bot.Comandos.Exibir
 
         [Command("mochila")]
         [Description("Permite ver os itens que estão na mochila.")]
+        [Example("mochila 1", "Mostra 8 itens apartir do indice 0")]
+        [Usage("mochila [ pagina ]")]
         public async Task ComandoMochilaAsync(CommandContext ctx, string stringPagina = "0")
         {
-            // Verifica se existe o jogador e faz o jogador esperar antes de começar outro comando
-            var (isJogadorCriado, sessao) = await banco.ExisteJogadorAsync(ctx);
-            if (!isJogadorCriado) return;
-
-            int.TryParse(stringPagina, out var pagina);
-
-            StringBuilder str = new StringBuilder();
-            str.AppendLine($"**{Emoji.Coins} {sessao.Jogador.Personagem.Mochila.Moedas}**");
-            var pag = GetPage(sessao.Jogador.Personagem.Mochila.Itens, pagina, 10);
-
-            for (int i = 0; i < pag.Count; i++)
+            using (await banco.LockAsync(ctx.User.Id))
             {
-                var item = pag[i];
-                str.Append($"`#{i}` ");
-                str.Append($"{item.Nome.Titulo().Bold()} ");
-                if (pag[i] is WafclastItemEmpilhavel)
-                    str.Append($"*x{((WafclastItemEmpilhavel)pag[i]).Pilha}*");
-                str.AppendLine();
-            }
+                var jogador = await banco.GetJogadorAsync(ctx);
+                var per = jogador.Personagem;
 
-            DiscordEmbedBuilder embed = new DiscordEmbedBuilder().Criar(ctx);
-            embed.WithTitle($"Mochila nível {sessao.Jogador.Personagem.Mochila.Nivel}.");
-            if (string.IsNullOrWhiteSpace(str.ToString()))
-                embed.WithDescription("*Parece que sua mochila está vazia, por que não explore um pouco?*");
-            else
+                int.TryParse(stringPagina, out var pagina);
+
+                StringBuilder str = new StringBuilder();
+                str.AppendLine($"**{per.Moedas}** {Emoji.Coins}");
+                var pag = GetPage(per.Mochila.Itens, pagina, 8);
+
+                for (int i = 0; i < pag.Count; i++)
+                {
+                    var item = await banco.GetItemAsync(pag[i].ItemId);
+                    str.Append($"`#{i}` ");
+                    str.AppendLine($"{item.Nome} x{pag[i].Quantidade}");
+                }
+
+                DiscordEmbedBuilder embed = new DiscordEmbedBuilder().Inicializar(ctx);
                 embed.WithDescription(str.ToString());
-            embed.WithFooter($"Espaço {sessao.Jogador.Personagem.Mochila.EspacoAtual}/{sessao.Jogador.Personagem.Mochila.EspacoMax} | Pagina {pagina}.");
-            await ctx.RespondAsync(embed: embed.Build());
+                embed.WithFooter($"Espaço {per.Mochila.EspacoAtual}/{per.Mochila.EspacoMax} | Pagina {pagina}.");
+                await ctx.RespondAsync(embed: embed.Build());
+            }
         }
 
-        public List<WafclastItem> GetPage(List<WafclastItem> list, int page, int pageSize)
+        public List<WafclastMochila.Item> GetPage(List<WafclastMochila.Item> list, int page, int pageSize)
                 => list.Skip(page * pageSize).Take(pageSize).ToList();
     }
 }

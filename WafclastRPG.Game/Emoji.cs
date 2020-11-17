@@ -1,9 +1,9 @@
 ﻿namespace WafclastRPG.Game
 {
-    public class Emoji
+    public static class Emoji
     {
-        public static string CrossBone = ":skull_crossbones:";
-        public static string Up = ":up:";
+        public const string CrossBone = ":skull_crossbones:";
+        public const string Up = ":up:";
 
         public const string CoracaoVerde = ":green_heart:";
         public const string CoracaoAmarelo = ":yellow_heart:";
@@ -30,5 +30,26 @@
 
         public const string Coins = "<a:coins:775750607738896436>";
         public const string Exp = "<:xp:758439721016885308>";
+
+        public const string Relogio = ":stopwatch:";
+        public const string Demonio = ":smiling_imp:";
+
+        public const string Mago = ":man_mage:";
+
+        public const string Vazio = "<:vazio:776621232240984094>";
+
+        public static string GerarVidaEmoji(double porcentagem)
+        {
+            switch (porcentagem)
+            {
+                case double n when (n > 0.75):
+                    return Emoji.CoracaoVerde;
+                case double n when (n > 0.50):
+                    return Emoji.CoracaoAmarelo;
+                case double n when (n > 0.25):
+                    return Emoji.CoracaoLaranja;
+            }
+            return Emoji.CoracaoVermelho;
+        }
     }
 }

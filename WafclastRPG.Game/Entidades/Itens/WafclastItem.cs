@@ -4,19 +4,26 @@ using System;
 namespace WafclastRPG.Game.Entidades.Itens
 {
     [BsonIgnoreExtraElements]
-    [BsonKnownTypes(typeof(WafclastItemArma), typeof(WafclastItemEmpilhavel),
-        typeof(WafclastItemBebida), typeof(WafclastItemComida), typeof(WafclastItemFrasco))]
+    [BsonKnownTypes(typeof(WafclastItemArma), typeof(WafclastItemComida),
+                    typeof(WafclastItemNormal))]
     public class WafclastItem : ICloneable
     {
+        [BsonId]
+        public int ItemId { get; set; }
         public string Nome { get; set; }
-        public int OcupaEspaco { get; set; }
-        public double PrecoCompra { get; set; }
+        public double PrecoCompra { get; set; } // Moedas
+        public string Examinar { get; set; }
+
+        [BsonIgnoreIfNull]
+        public int ReceitaId { get; set; }
+
+        [BsonIgnore]
         public double PrecoVenda { get { return this.PrecoCompra / 2; } }
 
-        public WafclastItem(string nome, int ocupaEspaco, double precoCompra)
+        public WafclastItem(int itemId, string nome, double precoCompra)
         {
+            this.ItemId = itemId;
             this.Nome = nome;
-            this.OcupaEspaco = ocupaEspaco;
             this.PrecoCompra = precoCompra;
         }
 

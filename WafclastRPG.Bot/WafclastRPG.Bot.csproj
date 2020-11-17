@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Extensoes\BotMathematicsExtention.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="BotInfo.json" />
     <None Remove="Config.json" />
   </ItemGroup>

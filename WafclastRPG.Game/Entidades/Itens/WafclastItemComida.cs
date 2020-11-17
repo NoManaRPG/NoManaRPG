@@ -1,16 +1,12 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-
-namespace WafclastRPG.Game.Entidades.Itens
+﻿namespace WafclastRPG.Game.Entidades.Itens
 {
-    [BsonIgnoreExtraElements]
-    public class WafclastItemComida : WafclastItemEmpilhavel
+    public class WafclastItemComida : WafclastItemNormal
     {
-        public double FomeRestaura { get; set; }
+        public int Cura { get; set; }
 
-        public WafclastItemComida(string nome, int ocupaEspaco, double precoCompra,
-            double fomeRestaura) : base(nome, ocupaEspaco, precoCompra)
+        public WafclastItemComida(int itemId, string nome, double precoCompra, int cura) : base(itemId, nome, precoCompra)
         {
-            this.FomeRestaura = fomeRestaura;
+            Cura = cura;
         }
     }
 }

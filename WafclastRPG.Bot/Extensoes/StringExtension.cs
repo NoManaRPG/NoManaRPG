@@ -27,7 +27,7 @@ namespace WafclastRPG.Bot.Extensoes
             => int.TryParse(texto.Replace("#", string.Empty), out id);
 
         public static string Titulo(this string titulo)
-            => "**⌈" + titulo + "⌋**";
+            => "⌈" + titulo + "⌋";
 
         public static string FirstUpper(this string texto)
             => texto.First().ToString().ToUpper() + texto.Substring(1);

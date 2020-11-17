@@ -1,4 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using WafclastRPG.Game.Entidades.Itens;
@@ -8,89 +10,80 @@ namespace WafclastRPG.Game.Entidades
     [BsonIgnoreExtraElements]
     public class WafclastMochila
     {
-        public List<WafclastItem> Itens { get; set; } = new List<WafclastItem>();
-        public int Moedas { get; private set; }
-        public int EspacoAtual { get; set; }
-        public int EspacoMax { get; private set; } = 64;
-        public int Nivel { get; set; } = 1;
+        public int EspacoAtual { get; set; } = 0;
+        public int EspacoMax { get; private set; } = 28;
 
-        public WafclastMochila() { }
-
-        public void AdicionarMoeda(int quantidade)
-        {
-            Moedas += quantidade;
-        }
-
-        public void RemoverMoeda(int quantidade)
-        {
-            Moedas += quantidade;
-        }
+        // Index | ItemId | Quantidade
+        public List<Item> Itens { get; set; } = new List<Item>();
 
         public bool TryAddItem(WafclastItem item, int quantidade = 1)
         {
-            if ((item.OcupaEspaco * quantidade) + EspacoAtual > EspacoMax)
-                return false;
-            EspacoAtual += item.OcupaEspaco * quantidade;
             switch (item)
             {
-                case WafclastItemEmpilhavel ie:
-                    ie.Pilha = quantidade;
-                    var encontrou = Itens.Find(x => x.Nome == ie.Nome);
-                    if (encontrou != null)
-                        ((WafclastItemEmpilhavel)encontrou).Pilha += quantidade;
+                case WafclastItemNormal win:
+                    EspacoAtual += quantidade;
+                    if (EspacoAtual > EspacoMax)
+                        return false;
                     else
-                        Itens.Add(ie);
-                    break;
-                case WafclastItemArma ia:
-                    for (int i = 0; i < quantidade; i++)
-                        Itens.Add(ia);
-                    break;
+                    {
+                        var itemigual = Itens.Find(x => x.ItemId == win.ItemId);
+                        if (itemigual != null)
+                            itemigual.Quantidade += quantidade;
+                        else
+                            Itens.Add(new Item(win.ItemId, quantidade));
+                        return true;
+                    }
             }
+            return false;
+        }
+
+        public bool TryRemoveItem(int index, int quantidade, out Item item)
+        {
+            item = null;
+            var itemM = Itens.ElementAtOrDefault(index);
+            if (itemM == null)
+                return false;
+            if (!itemM.Juntavel)
+            {
+                if (quantidade <= itemM.Quantidade)
+                {
+                    EspacoAtual -= quantidade;
+                    itemM.Quantidade -= quantidade;
+                    item = itemM.Clone();
+                    if (itemM.Quantidade == 0)
+                        Itens.Remove(itemM);
+                    return true;
+                }
+            }
+            else { }
+            return false;
+        }
+
+        public bool TryGetItem(int index, out Item item)
+        {
+            item = Itens.ElementAtOrDefault(index);
+            if (item == null)
+                return false;
             return true;
         }
 
-        public enum MochilaResposta
+        public class Item
         {
-            NaoEncontrado,
-            QuantiaInvalida,
-            Ok
-        }
+            public int ItemId { get; private set; }
+            public int Quantidade { get; set; }
+            public bool Juntavel { get; set; }
 
-        public MochilaResposta TryRemoveItem(int index, out WafclastItem item, int quantidade = 1)
-        {
-            item = null;
-            var mochilaItem = Itens.ElementAtOrDefault(index);
-            if (mochilaItem == null)
-                return MochilaResposta.NaoEncontrado;
-
-            if (mochilaItem is WafclastItemEmpilhavel)
+            public Item(int itemId, int quantidade, bool juntavel = false)
             {
-                if (quantidade > (mochilaItem as WafclastItemEmpilhavel).Pilha)
-                    return MochilaResposta.QuantiaInvalida;
-                var ie = (mochilaItem.Clone() as WafclastItemEmpilhavel);
-                ie.Pilha = quantidade;
-                var mm = (mochilaItem as WafclastItemEmpilhavel);
-                mm.Pilha -= quantidade;
-                if (mm.Pilha == 0)
-                    Itens.RemoveAt(index);
-                EspacoAtual -= ie.OcupaEspaco * ie.Pilha;
-                item = ie;
+                this.ItemId = itemId;
+                this.Quantidade = quantidade;
+                this.Juntavel = juntavel;
             }
-            else
-            {
-                EspacoAtual -= item.OcupaEspaco;
-                Itens.RemoveAt(index);
-                item = mochilaItem;
-            }
-            return MochilaResposta.Ok;
-        }
 
-        public bool TryGetItem(int index, out WafclastItem item)
-        {
-            item = Itens.ElementAtOrDefault(index);
-            if (item != null)
-                return true;
-            return false;
+            public Item Clone()
+            {
+                return new Item(this.ItemId, this.Quantidade, this.Juntavel);
+            }
         }
     }
 }

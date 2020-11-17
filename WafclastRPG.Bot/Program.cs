@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using WafclastRPG.Bot.Config;
 using WafclastRPG.Game;
-using WafclastRPG.Game.Metadata;
 using DSharpPlus.Entities;
 
 namespace WafclastRPG.Bot
@@ -15,11 +14,16 @@ namespace WafclastRPG.Bot
     {
         public ConfigFile ConfigFile { get; private set; }
         public BotInfo BotInfo { get; private set; }
-        public Banco banco { get; private set; }
-
+        public Banco Banco { get; private set; } = new Banco();
 
         static void Main(string[] args) => new Program().RodarBotAsync().GetAwaiter().GetResult();
-
+        private double ExperienceTotalLevel(double level)
+        {
+            double v1 = 1.0 / 8.0 * level * (level - 1.0) + 75.0;
+            double pow1 = Math.Pow(2, (level - 1) / 7) - 1;
+            double pow2 = 1 - Math.Pow(2, -1 / 7.0);
+            return Math.Truncate(v1 * (pow1 / pow2));
+        }
         public async Task RodarBotAsync()
         {
             ConfigFile = ConfigFile.LoadFromFile("Config.json");
@@ -35,6 +39,7 @@ namespace WafclastRPG.Bot
             #region Configs
 #if DEBUG
             var token = ConfigFile.TokenTeste;
+            ConfigFile.Prefix = ConfigFile.PrefixTeste;
             var logLevel = LogLevel.Debug;
 #else
             var token = ConfigFile.Token;
@@ -56,11 +61,12 @@ namespace WafclastRPG.Bot
             BotInfo.VersaoRevisao++;
             BotInfo.SaveToFile("BotInfo.json");
 
-            banco = new Banco();
+
             var services = new ServiceCollection()
-                .AddSingleton(this.banco)
+                .AddSingleton(this.Banco)
                 .AddSingleton(this.ConfigFile)
                 .AddSingleton(this.BotInfo)
+                .AddSingleton<BotMathematics>()
                 .BuildServiceProvider();
 
             bot.ModuloComando(new CommandsNextConfiguration
@@ -84,10 +90,12 @@ namespace WafclastRPG.Bot
             if (gld == null)
                 return await Task.FromResult(-1);
 #if DEBUG
-            var prefix = await banco.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixTeste);
+            if (Banco.IsExecutingInteractivity(msg.Author.Id))
+                return await Task.FromResult(-1);
+            var prefix = await Banco.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixTeste);
             var pfixLocation = msg.GetStringPrefixLength(prefix);
 #else
-            var prefix = await banco.GetServerPrefixAsync(gld.Id, ConfigFile.Prefix);
+            var prefix = await Banco.GetServerPrefixAsync(gld.Id, ConfigFile.Prefix);
             var pfixLocation = msg.GetStringPrefixLength(prefix);
             if (pfixLocation == -1)
                 pfixLocation = msg.GetStringPrefixLength(ConfigFile.Prefix.ToLower());

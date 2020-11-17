@@ -1,25 +1,28 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.Options;
 using System.Collections.Generic;
-using System.Text;
+using WafclastRPG.Game.Entidades.NPC;
 using WafclastRPG.Game.Enums;
 
 namespace WafclastRPG.Game.Entidades
 {
     public class WafclastRegiao
     {
-        public int Id { get; set; }
-        public WafclastRegioes Reino { get; set; }
-        public string Local { get; set; }
-        public List<int> Saidas { get; set; }
-        public List<WafclastMonstro> Monstros { get; set; }
+        public int Id { get; private set; }
+        public RegiaoType Reino { get; private set; }
+        public string Local { get; private set; }
 
-        public WafclastRegiao(int id, WafclastRegioes reino, string local, List<int> saidas, List<WafclastMonstro> monstros)
+        public List<WafclastMonstro> Monstros { get; set; } = new List<WafclastMonstro>();
+        public List<WafclastNPC> NPCs { get; set; } = new List<WafclastNPC>();
+
+        [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
+        public Dictionary<SaidaType, int> Saidas { get; set; } = new Dictionary<SaidaType, int>();
+
+        public WafclastRegiao(int id, RegiaoType reino, string local)
         {
-            this.Id = id;
-            this.Reino = reino;
-            this.Local = local;
-            this.Saidas = saidas;
-            this.Monstros = monstros;
+            Id = id;
+            Reino = reino;
+            Local = local;
         }
     }
 }

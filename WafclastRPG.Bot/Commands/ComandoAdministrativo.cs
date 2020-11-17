@@ -5,19 +5,16 @@ using DSharpPlus.Entities;
 using MongoDB.Driver;
 using System;
 using System.Threading.Tasks;
-using System.Drawing;
-using System.IO;
 using System.Drawing.Imaging;
-using System.Drawing.Text;
-using System.Drawing.Drawing2D;
 using System.Collections.Concurrent;
 using System.Threading;
-using WafclastRPG.Game;
 using WafclastRPG.Game.Entidades;
 using System.Collections.Generic;
-using WafclastRPG.Game.Entidades.Itens;
 using System.Linq;
 using WafclastRPG.Bot.Extensoes;
+using System.Text;
+using DSharpPlus.Interactivity.Extensions;
+using System.Security.Cryptography;
 
 namespace WafclastRPG.Bot.Comandos
 {
@@ -45,7 +42,7 @@ namespace WafclastRPG.Bot.Comandos
                     isMod = membro.Roles.FirstOrDefault(x => x.Id == modRole);
                     if (isMod == null)
                     {
-                        DiscordEmbedBuilder embed = new DiscordEmbedBuilder().Criar(ctx);
+                        DiscordEmbedBuilder embed = new DiscordEmbedBuilder().Inicializar(ctx);
                         embed.WithTitle("Ban");
                         embed.WithTimestamp(DateTime.Now);
                         if (string.IsNullOrWhiteSpace(razao))
@@ -70,6 +67,16 @@ namespace WafclastRPG.Bot.Comandos
         [RequireUserPermissions(Permissions.Administrator)]
         public async Task PurgeAsync(CommandContext ctx, int quantidade)
             => await ctx.Channel.DeleteMessagesAsync(await ctx.Channel.GetMessagesAsync(quantidade + 1));
+
+        [Command("emojis")]
+        [RequireUserPermissions(Permissions.Administrator)]
+        public async Task ASD(CommandContext ctx)
+        {
+            var str = new StringBuilder();
+            foreach (var item in ctx.Guild.Emojis)
+                str.AppendLine($"{item.Key} - {item.Value}");
+            await ctx.RespondAsync(str.ToString());
+        }
 
         [Command("dm")]
         [RequireOwner]
@@ -169,36 +176,43 @@ namespace WafclastRPG.Bot.Comandos
 
                     foreach (WafclastJogador user in usuarios)
                     {
-                        user.Personagem.Pontos = (user.Personagem.Nivel.Atual - 1) * 5;
-                        var p = user.Personagem;
-                        switch (user.Personagem.Classe)
-                        {
-                            case Game.Enums.WafclastClasse.Berserker:
-                                p.Forca = 32;
-                                p.Inteligencia = 14;
-                                break;
-                            case Game.Enums.WafclastClasse.Sombra:
-                                p.Forca = 14;
-                                p.Inteligencia = 23;
-                                break;
-                            case Game.Enums.WafclastClasse.Duelista:
-                                p.Forca = 23;
-                                p.Inteligencia = 14;
-                                break;
-                            case Game.Enums.WafclastClasse.Bruxa:
-                                p.Inteligencia = 32;
-                                p.Forca = 14;
-                                break;
-                        }
-                        p.CalcEvasao();
-                        p.CalcPrecisao();
-                        p.CalcMana();
-                        p.CalcVida();
+                       
                         await banco.Jogadores.ReplaceOneAsync(x => x.Id == user.Id, user);
                     }
                 }
             }
             await ctx.RespondAsync("Banco foi atualizado com sucesso!");
+        }
+
+        [Command("code")]
+        [RequireOwner]
+        public async Task WaitForCode(CommandContext ctx, DiscordChannel channel)
+        {
+            var interactivity = ctx.Client.GetInteractivity();
+
+            var codebytes = new byte[8];
+            using (var rng = RandomNumberGenerator.Create())
+                rng.GetBytes(codebytes);
+
+            var code = BitConverter.ToString(codebytes).ToLower();
+
+            await channel.SendMessageAsync($"O primeiro que digitar o seguinte código ganha uma recompensa: `{code}`");
+
+            var msg = await interactivity.WaitForMessageAsync(xm => xm.Content.Contains(code) && xm.ChannelId == channel.Id, TimeSpan.FromSeconds(60));
+            if (!msg.TimedOut)
+            {
+                await channel.SendMessageAsync($"O ganhador é: {msg.Result.Author.Mention}");
+                var jogador = await banco.Jogadores.Find(x => x.Id == msg.Result.Author.Id).FirstOrDefaultAsync();
+                if (jogador == null)
+                {
+                    await ctx.RespondAsync("Mas parece que ele ainda não criou um personagem!");
+                    return;
+                }
+              
+                await banco.Jogadores.ReplaceOneAsync(x => x.Id == msg.Result.Author.Id, jogador);
+            }
+            else
+                await channel.SendMessageAsync("Ninguém? Serio?!?");
         }
 
         private static ImageCodecInfo GetEncoder(System.Drawing.Imaging.ImageFormat format)
@@ -210,97 +224,97 @@ namespace WafclastRPG.Bot.Comandos
             return null;
         }
 
-        [Command("teste")]
-        [RequireOwner]
-        public async Task testeCalc(CommandContext ctx, [RemainingText] string text)
-        {
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                ImageCodecInfo jpgEncoder = GetEncoder(System.Drawing.Imaging.ImageFormat.Jpeg);
-                Encoder myEncoder = Encoder.Quality;
-                EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 70L);
-                EncoderParameters myEncoderParameters = new EncoderParameters(1);
+        //[Command("teste")]
+        //[RequireOwner]
+        //public async Task testeCalc(CommandContext ctx, [RemainingText] string text)
+        //{
+        //    using (MemoryStream memoryStream = new MemoryStream())
+        //    {
+        //        ImageCodecInfo jpgEncoder = GetEncoder(System.Drawing.Imaging.ImageFormat.Jpeg);
+        //        Encoder myEncoder = Encoder.Quality;
+        //        EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 70L);
+        //        EncoderParameters myEncoderParameters = new EncoderParameters(1);
 
-                myEncoderParameters.Param[0] = myEncoderParameter;
+        //        myEncoderParameters.Param[0] = myEncoderParameter;
 
-                PointF firstLocation = new PointF(90f, 289f);
+        //        PointF firstLocation = new PointF(90f, 289f);
 
-                string imageFilePath = @"C:\Users\Talion\Desktop\template.png";
-                Bitmap bitmap = (Bitmap)Image.FromFile(imageFilePath);//load the image file
+        //        string imageFilePath = @"C:\Users\Talion\Desktop\template.png";
+        //        Bitmap bitmap = (Bitmap)Image.FromFile(imageFilePath);//load the image file
 
-                using (Graphics graphics = Graphics.FromImage(bitmap))
-                {
-                    graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                    graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
-                    using (Font arialFont = new Font("Arial", 89, FontStyle.Italic | FontStyle.Bold))
-                    {
-                        graphics.DrawString(text, arialFont, Brushes.White, firstLocation);
-                    }
-                }
-                bitmap.Save(@"C:\Users\Talion\Desktop\teste.png");
+        //        using (Graphics graphics = Graphics.FromImage(bitmap))
+        //        {
+        //            graphics.SmoothingMode = SmoothingMode.AntiAlias;
+        //            graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+        //            using (Font arialFont = new Font("Arial", 89, FontStyle.Italic | FontStyle.Bold))
+        //            {
+        //                graphics.DrawString(text, arialFont, Brushes.White, firstLocation);
+        //            }
+        //        }
+        //        bitmap.Save(@"C:\Users\Talion\Desktop\teste.png");
 
-                new Bitmap(bitmap).Save(memoryStream, jpgEncoder, myEncoderParameters); //save the image file
-                memoryStream.Position = 0;
-                await ctx.RespondWithFileAsync("Perfil.jpeg", memoryStream);
-            }
+        //        new Bitmap(bitmap).Save(memoryStream, jpgEncoder, myEncoderParameters); //save the image file
+        //        memoryStream.Position = 0;
+        //        await ctx.RespondWithFileAsync("Perfil.jpeg", memoryStream);
+        //    }
 
-            //var numeroRandom = Calculo.SortearValor(0, 100.0);
-            //switch (numeroRandom)
-            //{
-            //    case double n when (n > 0.9):
-            //        await ctx.RespondAsync($"N maior que 0.9 {numeroRandom}");
-            //        break;
-            //    case double n when (n > 0.8):
-            //        await ctx.RespondAsync($"N maior que 0.8 {numeroRandom}");
-            //        break;
-            //    case double n when (n > 0.7):
-            //        await ctx.RespondAsync($"N maior que 0.7 {numeroRandom}");
-            //        break;
-            //    case double n when (n > 0.6):
-            //        await ctx.RespondAsync($"N maior que 0.6 {numeroRandom}");
-            //        break;
-            //    case double n when (n > 0.5):
-            //        await ctx.RespondAsync($"N maior que 0.5 {numeroRandom}");
-            //        break;
-            //    case double n when (n > 0.4):
-            //        await ctx.RespondAsync($"N maior que 0.4 {numeroRandom}");
-            //        break;
-            //    case double n when (n > 0.3):
-            //        await ctx.RespondAsync($"N maior que 0.3 {numeroRandom}");
-            //        break;
-            //    case double n when (n > 0.2):
-            //        await ctx.RespondAsync($"N maior que 0.2 {numeroRandom}");
-            //        break;
-            //}
+        //var numeroRandom = Calculo.SortearValor(0, 100.0);
+        //switch (numeroRandom)
+        //{
+        //    case double n when (n > 0.9):
+        //        await ctx.RespondAsync($"N maior que 0.9 {numeroRandom}");
+        //        break;
+        //    case double n when (n > 0.8):
+        //        await ctx.RespondAsync($"N maior que 0.8 {numeroRandom}");
+        //        break;
+        //    case double n when (n > 0.7):
+        //        await ctx.RespondAsync($"N maior que 0.7 {numeroRandom}");
+        //        break;
+        //    case double n when (n > 0.6):
+        //        await ctx.RespondAsync($"N maior que 0.6 {numeroRandom}");
+        //        break;
+        //    case double n when (n > 0.5):
+        //        await ctx.RespondAsync($"N maior que 0.5 {numeroRandom}");
+        //        break;
+        //    case double n when (n > 0.4):
+        //        await ctx.RespondAsync($"N maior que 0.4 {numeroRandom}");
+        //        break;
+        //    case double n when (n > 0.3):
+        //        await ctx.RespondAsync($"N maior que 0.3 {numeroRandom}");
+        //        break;
+        //    case double n when (n > 0.2):
+        //        await ctx.RespondAsync($"N maior que 0.2 {numeroRandom}");
+        //        break;
+        //}
 
-            //var frutas = new List<Fruta> {
-            //new Fruta { Cor = 1, Nome = "Morango" },
-            //    new Fruta { Cor = 1, Nome = "Framboesa" },
-            //    new Fruta { Cor = 1, Nome = "Cereja" },
-            //    new Fruta { Cor = 2, Nome = "Limão" },
-            //    new Fruta { Cor = 2, Nome = "Melancia" }        };
+        //var frutas = new List<Fruta> {
+        //new Fruta { Cor = 1, Nome = "Morango" },
+        //    new Fruta { Cor = 1, Nome = "Framboesa" },
+        //    new Fruta { Cor = 1, Nome = "Cereja" },
+        //    new Fruta { Cor = 2, Nome = "Limão" },
+        //    new Fruta { Cor = 2, Nome = "Melancia" }        };
 
-            //var grupos = frutas.GroupBy(f => f.Cor);
+        //var grupos = frutas.GroupBy(f => f.Cor);
 
-            //Console.WriteLine("Imprimindo grupos");
-            //Console.WriteLine("-----------------------");
-            //foreach (var nomeGrupo in grupos.Select(g => g.Key))
-            //{
-            //    Console.WriteLine(nomeGrupo);
-            //}
+        //Console.WriteLine("Imprimindo grupos");
+        //Console.WriteLine("-----------------------");
+        //foreach (var nomeGrupo in grupos.Select(g => g.Key))
+        //{
+        //    Console.WriteLine(nomeGrupo);
+        //}
 
-            //Console.WriteLine("-----------------------");
-            //var pesquisa = grupos.Where(x => x.Key <= 2).ToList();
-            //foreach (var listaDeFrutasPorCor in pesquisa)
-            //{
-            //    Console.WriteLine("Imprimindo frutas da cor: " + listaDeFrutasPorCor.Key);
-            //    Console.WriteLine("-----------------------");
-            //    foreach (var fruta in listaDeFrutasPorCor)
-            //    {
-            //        Console.WriteLine(fruta.Nome);
-            //    }
-            //    Console.WriteLine("-----------------------");
-            //}
-        }
+        //Console.WriteLine("-----------------------");
+        //var pesquisa = grupos.Where(x => x.Key <= 2).ToList();
+        //foreach (var listaDeFrutasPorCor in pesquisa)
+        //{
+        //    Console.WriteLine("Imprimindo frutas da cor: " + listaDeFrutasPorCor.Key);
+        //    Console.WriteLine("-----------------------");
+        //    foreach (var fruta in listaDeFrutasPorCor)
+        //    {
+        //        Console.WriteLine(fruta.Nome);
+        //    }
+        //    Console.WriteLine("-----------------------");
+        //}
+        //}
     }
 }
