@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 
 namespace WafclastRPG.Game.Entidades.Proficiencias
@@ -13,7 +14,9 @@ namespace WafclastRPG.Game.Entidades.Proficiencias
 
         public virtual string Descricao { get; }
 
+        [BsonRepresentation(BsonType.Int32, AllowTruncation = true)]
         public int ExperienciaAtual { get; private set; }
+        [BsonRepresentation(BsonType.Int32, AllowTruncation = true)]
         public int ExperienciaProximoNivel { get; private set; }
 
         public WafclastProficiencia()

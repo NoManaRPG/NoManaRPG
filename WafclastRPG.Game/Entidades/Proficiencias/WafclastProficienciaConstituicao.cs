@@ -1,5 +1,8 @@
-﻿namespace WafclastRPG.Game.Entidades.Proficiencias
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace WafclastRPG.Game.Entidades.Proficiencias
 {
+    [BsonIgnoreExtraElements]
     public class WafclastProficienciaConstituicao : WafclastProficiencia
     {
         public override string Descricao
