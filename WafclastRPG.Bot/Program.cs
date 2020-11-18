@@ -17,13 +17,7 @@ namespace WafclastRPG.Bot
         public Banco Banco { get; private set; } = new Banco();
 
         static void Main(string[] args) => new Program().RodarBotAsync().GetAwaiter().GetResult();
-        private double ExperienceTotalLevel(double level)
-        {
-            double v1 = 1.0 / 8.0 * level * (level - 1.0) + 75.0;
-            double pow1 = Math.Pow(2, (level - 1) / 7) - 1;
-            double pow2 = 1 - Math.Pow(2, -1 / 7.0);
-            return Math.Truncate(v1 * (pow1 / pow2));
-        }
+
         public async Task RodarBotAsync()
         {
             ConfigFile = ConfigFile.LoadFromFile("Config.json");

@@ -34,7 +34,7 @@ namespace WafclastRPG.Bot.Eventos
                                 break;
                             case TimeSpan n when (n.Hours >= 1):
                                 await ctx.RespondAsync($"Aguarde {tempo.Hours} horas e {tempo.Minutes} minutos para usar este comando! {ctx.Member.Mention}.");
-                                break;
+                                break;  
                             case TimeSpan n when (n.Minutes >= 1):
                                 await ctx.RespondAsync($"Aguarde {tempo.Minutes} minutos e {tempo.Seconds} segundos para usar este comando! {ctx.Member.Mention}.");
                                 break;
