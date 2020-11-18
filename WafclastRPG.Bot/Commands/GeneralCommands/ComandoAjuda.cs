@@ -120,7 +120,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             //str.Append($"{FormatarURLComando(prefix, "examinar", "Permite examinar os itens da mochila")} ");
             //str.Append($"{FormatarURLComando(prefix, "status", "Permite ver o seu status ou a de outra pessoa")} ");
             str.Append($"{FormatarURLComando(prefix, "explorar", "Permite explorar e atacar monstros")}");
-            //str.Append($"{FormatarURLComando(prefix, "atribuir", "Permite atribuir pontos")}");
+            str.Append($"{FormatarURLComando(prefix, "equipar", "Permite equipar itens")}");
             str.Append($"{FormatarURLComando(prefix, "habilidade", "Exibe todas as habilidades")}");
             str.AppendLine();
 
