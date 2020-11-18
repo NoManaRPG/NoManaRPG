@@ -86,6 +86,15 @@ namespace WafclastRPG.Game.Entidades
                 return true;
             return false;
         }
+
+        public void Morrer()
+        {
+            Mochila.EspacoAtual = 0;
+            Mochila.Itens = new List<WafclastMochila.Item>();
+            InimigoMonstro = null;
+            var hab = GetHabilidade(Constituicao) as WafclastProficienciaConstituicao;
+            hab.AddVida(int.MaxValue);
+        }
     }
 }
 
