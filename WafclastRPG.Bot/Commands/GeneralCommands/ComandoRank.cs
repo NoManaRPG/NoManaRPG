@@ -15,23 +15,32 @@ namespace WafclastRPG.Bot.Comandos.Exibir
     {
         public Banco banco;
 
-        [Command("top")]
-        [Description("Exibe os 10 jogadores mais ricos.")]
+        //Está dando erro
+        [Command("top-hab")]
+        [Description("Exibe os 10 jogadores com determinada habilidades mais fortes.")]
+        [Usage("top-hab <Habilidade>")]
+        [Example("top-hab ataque", "Exibe os 10 jogadores com o maior nível em ataque")]
         [Cooldown(1, 30, CooldownBucketType.User)]
-        public async Task ComandoMochilaAsync(CommandContext ctx)
+        public async Task ComandoMochilaAsync(CommandContext ctx, string hab = "")
         {
-            //var top = await banco.Jogadores.Find(FilterDefinition<WafclastJogador>.Empty).Limit(10)
-            //    .SortByDescending(x => x.Personagem.Moedas).ToListAsync();
             //StringBuilder str = new StringBuilder();
 
-            //foreach (var item in top)
-            //{
-            //    var member = await ctx.Client.GetUserAsync(item.Id);
-            //    str.AppendLine(Formatter.Bold($"{item.Personagem.Mochila.Moedas}{Emoji.Coins} {member.Mention}"));
-            //}
-            //DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
+            //var filter = Builders<WafclastJogador>.Filter.Gt(x => x.Personagem.Habilidades[0].ExperienciaAtual, 50);
+            //var res = await banco.Jogadores.FindAsync(filter);
+
+            await Task.CompletedTask;
+
+
+            //var embed = new DiscordEmbedBuilder();
+
+            ////foreach (var item in top)
+            ////{
+            ////    var habi = item.Personagem.Habilidades[Game.Enums.ProficienciaType.Ataque];
+            ////    str.AppendLine($"{habi.Nivel}|{habi.ExperienciaAtual} - <@{item.Id}>");
+            ////}
+
             //embed.WithDescription(str.ToString());
-            //embed.WithTitle("Jogadores mais ricos");
+            //embed.WithTitle("Jogadores com ataque maior");
 
             //await ctx.RespondAsync(embed: embed.Build());
         }
