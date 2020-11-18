@@ -27,6 +27,7 @@ namespace WafclastRPG.Bot.Comandos.Acao
         [Example("explorar 1", "Explora a região por novos inimigos.")]
         [Example("explorar", "Explora a região e ataca os inimigos presentes.")]
         [Usage("explorar [ tipo ]")]
+        [Cooldown(1, 15, CooldownBucketType.User)]
         public async Task ComandoExplorarAsync(CommandContext ctx, string codigo = "4")
         {
             /*
