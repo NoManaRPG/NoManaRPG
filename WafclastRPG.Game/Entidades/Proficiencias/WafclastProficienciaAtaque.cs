@@ -8,7 +8,6 @@ namespace WafclastRPG.Game.Entidades.Proficiencias
     /// Controla a precisão e os tipos de armas que podem ser equipadas
     /// </summary>
     [BsonIgnoreExtraElements]
-    [Description("Teste")]
     public class WafclastProficienciaAtaque : WafclastProficiencia
     {
         public override string Descricao

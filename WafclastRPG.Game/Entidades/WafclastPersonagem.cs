@@ -7,6 +7,7 @@ using static WafclastRPG.Game.Enums.ProficienciaType;
 using MongoDB.Bson.Serialization.Options;
 using WafclastRPG.Game.Entidades.NPC;
 using WafclastRPG.Game.Entidades.Itens;
+using System;
 
 namespace WafclastRPG.Game.Entidades
 {
@@ -34,6 +35,7 @@ namespace WafclastRPG.Game.Entidades
         }
 
         public WafclastProficiencia GetHabilidade(ProficienciaType proficiencia) => Habilidades.GetValueOrDefault(proficiencia);
+
         public bool TryGetEquipamento(EquipamentoType equipamentoType, out WafclastItem item)
             => Equipamentos.TryGetValue(equipamentoType, out item);
 
