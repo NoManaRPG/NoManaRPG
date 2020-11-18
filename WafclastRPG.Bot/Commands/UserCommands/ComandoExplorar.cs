@@ -115,9 +115,7 @@ namespace WafclastRPG.Bot.Comandos.Acao
                             {
                                 batalha.AppendLine($"{Emoji.CrossBone} **Você morreu!** {Emoji.CrossBone}");
                                 batalha.AppendLine($"{Emoji.CrossBone} **Você perdeu seus itens!** {Emoji.CrossBone}");
-                                per.Mochila.EspacoAtual = 0;
-                                per.Mochila.Itens = new List<WafclastMochila.Item>();
-                                per.InimigoMonstro = null;
+                                per.Morrer();
                                 arma1.AtaqueVelocidade = 0;
                                 if (arma2 is WafclastItemArma)
                                     arma2.AtaqueVelocidade = 0;
@@ -125,7 +123,7 @@ namespace WafclastRPG.Bot.Comandos.Acao
                                 embed.WithImageUrl("https://cdn.discordapp.com/attachments/758139402219159562/769397084284649472/kisspng-headstone-drawing-royalty-free-clip-art-5afd7eb3d84cb3.625146071526562483886.png");
                                 await ctx.RespondAsync(embed: embed.Build());
                                 await jogador.Salvar();
-                                break;
+                                return;
                             }
                             else
                             {
