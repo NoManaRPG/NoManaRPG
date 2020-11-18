@@ -37,6 +37,11 @@ namespace WafclastRPG.Game.Entidades.Proficiencias
         }
 
         public void AddVida(int valor)
-            => this.Vida += valor;
+        {
+            this.Vida += valor;
+            var vidaTotal = CalcularVida();
+            if (this.Vida >= vidaTotal)
+                this.Vida = vidaTotal;
+        }
     }
 }
