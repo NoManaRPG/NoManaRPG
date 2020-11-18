@@ -9,6 +9,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using WafclastRPG.Bot.Extensoes;
+using System.IO;
+using DSharpPlus;
+using System.Text;
 
 namespace WafclastRPG.Bot.Eventos
 {
@@ -36,17 +39,14 @@ namespace WafclastRPG.Bot.Eventos
                                 await ctx.RespondAsync($"Aguarde {tempo.Minutes} minutos e {tempo.Seconds} segundos para usar este comando! {ctx.Member.Mention}.");
                                 break;
                             default:
-                                await ctx.RespondAsync($"Aguarde {tempo.Seconds} segundos para usar este comando! {ctx.Member.Mention}.");
+                                await ctx.RespondAsync($"{ctx.Member.Mention}, você precisa esperar {tempo.Seconds} segundos para usar este comando!");
                                 break;
                         };
                     }
                     break;
                 case CommandNotFoundException cnfe:
                     if (e.Command?.Name == "ajuda")
-                    {
-                        DiscordEmoji x = DiscordEmoji.FromName(ctx.Client, ":no_entry_sign:");
-                        await ctx.RespondAsync($"{x} | {ctx.User.Mention} o comando {e.Context.RawArgumentString} não existe.*");
-                    }
+                        await ctx.RespondAsync($":no_entry_sign: | {ctx.User.Mention} o comando {e.Context.RawArgumentString} não existe.*");
                     break;
                 case NotFoundException nfe:
                     await ctx.RespondAsync($"{ctx.User.Mention}, o usuario informado não foi encontrado.");
@@ -57,26 +57,58 @@ namespace WafclastRPG.Bot.Eventos
                 case ServerErrorException se:
                     e.Context.Client.Logger.LogDebug(new EventId(601, "Comando Invalido"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
                     break;
-                case MongoCommandException mce:
-                    await ctx.RespondAsync($"{ctx.User.Mention}, o último comando não foi processado corretamente! Tente executar os comandos mais lentamente!");
-                    break;
                 case Newtonsoft.Json.JsonReaderException _:
                     e.Context.Client.Logger.LogDebug(new EventId(602, "Discord Problem"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas discord está lento.", DateTime.Now);
                     break;
                 default:
-                    e.Context.Client.Logger.LogDebug(new EventId(601, "Comando Invalido"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
+                    e.Context.Client.Logger.LogDebug(new EventId(601, "Command Error"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
 
-                    DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
-                    embed.WithAuthor($"{e.Context.Guild.Id}-{e.Context.User.Username}({e.Context.User.Id})", null, e.Context.User.AvatarUrl);
-                    embed.WithTitle($"{e.Command?.QualifiedName ?? "<comando desconhecido>"}");
-                    embed.WithDescription($"[{e.Exception}]({e.Context.Message.JumpLink})");
-                    embed.WithTimestamp(DateTime.Now);
+                    var embed = new DiscordEmbedBuilder();
+                    var str = new StringBuilder();
+                    var channel = await ctx.Client.GetChannelAsync(742778666509008956);
+                    var error = e.Exception.ToString();
 
-                    DiscordChannel channel = await ctx.Client.GetChannelAsync(742778666509008956);
-                    await ctx.Client.SendMessageAsync(channel, embed: embed.Build());
-                    await ctx.RespondAsync("Aconteceu um erro! Reporte no servidor oficial!", embed: embed.Build());
+                    if (error.Length >= 2000)
+                    {
+                        str.AppendLine($"ID do Usuario: {e.Context.User.Id}");
+                        str.AppendLine($"ID do Servidor: {e.Context.Guild.Id}");
+                        str.AppendLine("Pela mensagem ser muito grande, foi anexado um log acima.");
+                        str.AppendLine($"({Formatter.MaskedUrl("MENSAGEM", e.Context.Message.JumpLink)})");
+
+                        embed.WithAuthor($"{e.Context.User.Username}", e.Context.User.AvatarUrl, e.Context.User.AvatarUrl);
+                        embed.WithTitle($"Comando executado: {e.Command?.QualifiedName ?? "<comando desconhecido>"}");
+                        embed.WithTimestamp(DateTime.Now);
+                        embed.WithDescription(str.ToString());
+
+                        var stream = GenerateStreamFromString(error);
+                        await channel.SendFileAsync("Log.txt", stream, embed: embed.Build());
+                    }
+                    else
+                    {
+                        str.AppendLine($"ID do Usuario: {e.Context.User.Id}");
+                        str.AppendLine($"ID do Servidor: {e.Context.Guild.Id}");
+                        str.AppendLine(e.Exception.ToString());
+                        str.AppendLine($"({Formatter.MaskedUrl("MENSAGEM", e.Context.Message.JumpLink)})");
+
+                        embed.WithAuthor($"{e.Context.User.Username}", e.Context.User.AvatarUrl, e.Context.User.AvatarUrl);
+                        embed.WithTitle($"Comando executado: {e.Command?.QualifiedName ?? "<comando desconhecido>"}");
+                        embed.WithTimestamp(DateTime.Now);
+                        embed.WithDescription(str.ToString());
+                        await channel.SendMessageAsync(embed: embed.Build());
+                    }
+                    await ctx.RespondAsync("Aconteceu um erro! Reporte no servidor oficial o que você fez!");
                     break;
             }
+        }
+
+        public static Stream GenerateStreamFromString(string s)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
         }
     }
 }
