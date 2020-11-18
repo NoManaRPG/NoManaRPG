@@ -61,6 +61,7 @@ namespace WafclastRPG.Bot
             this.CommandsNext.RegisterCommands<ComandoPrefixo>();
             this.CommandsNext.RegisterCommands<ComandoPapear>();
             this.CommandsNext.RegisterCommands<ComandoHabilidade>();
+            this.CommandsNext.RegisterCommands<ComandoSaquear>();
         }
     }
 }
