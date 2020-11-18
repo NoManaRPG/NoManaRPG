@@ -1,4 +1,8 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Options;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Driver;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Entidades;
