@@ -4,14 +4,14 @@
     {
         PrimeiraMao,
         SegundaMao,
-        Aura,
-        Municao,
-        Cabeca,
+        Aura, // Dá bonus para algo
+        Municao, // Como flechas
+        Cabeca, 
         Pesco,
-        Peitoral,
-        Costas,
+        Peitoral, 
+        Costas, // Como uma capa / Mochila
         Maos,
-        Anel,
+        Anel, // Dá bonus
         Pernas,
         Pes,
     }
