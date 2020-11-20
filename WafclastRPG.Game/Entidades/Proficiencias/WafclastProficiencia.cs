@@ -10,12 +10,12 @@ namespace WafclastRPG.Game.Entidades.Proficiencias
     public abstract class WafclastProficiencia
     {
         public int Nivel { get; set; }
-        public bool IsElite { get; set; } = false;
-
+        public bool IsElite { get; set; } = false; // Max level 120. otherwise 99
         public virtual string Descricao { get; }
 
         [BsonRepresentation(BsonType.Int32, AllowTruncation = true)]
         public int ExperienciaAtual { get; private set; }
+
         [BsonRepresentation(BsonType.Int32, AllowTruncation = true)]
         public int ExperienciaProximoNivel { get; private set; }
 
