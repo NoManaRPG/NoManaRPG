@@ -7,9 +7,11 @@ using static WafclastRPG.Game.Enums.ProficienciaType;
 using WafclastRPG.Game.Entidades.NPC;
 using WafclastRPG.Game.Entidades.Itens;
 using System;
+using MongoDB.Bson.Serialization.Options;
 
 namespace WafclastRPG.Game.Entidades
 {
+    [BsonIgnoreExtraElements]
     public class WafclastPersonagem
     {
         /*
@@ -36,10 +38,14 @@ namespace WafclastRPG.Game.Entidades
         public int MissaoPontos { get; set; }
         public int RegiaoId { get; set; } = 0;
         public int WafCoins { get; set; }
+
+        [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
         public Dictionary<ProficienciaType, WafclastProficiencia> Habilidades { get; set; }
+        [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
         public Dictionary<EquipamentoType, WafclastItem> Equipamentos { get; set; }
         public WafclastMochila Mochila { get; set; } = new WafclastMochila();
         public WafclastMonstro InimigoMonstro { get; set; }
+        public int ExperienceExtra { get; set; }
 
         public WafclastPersonagem()
         {

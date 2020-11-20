@@ -39,15 +39,6 @@ namespace WafclastRPG.Bot
 
             new Data(this);
 
-            BsonClassMap.RegisterClassMap<WafclastPersonagem>(cm =>
-            {
-                cm.AutoMap();
-                cm.SetIgnoreExtraElements(true);
-                cm.MapMember(c => c.Habilidades).SetSerializer(new DictionaryInterfaceImplementerSerializer<Dictionary<ProficienciaType, WafclastProficiencia>>(DictionaryRepresentation.ArrayOfDocuments));
-                cm.MapMember(c => c.Equipamentos).SetSerializer(new DictionaryInterfaceImplementerSerializer<Dictionary<EquipamentoType, WafclastItem>>(DictionaryRepresentation.ArrayOfDocuments));
-            });
-
-
             #region Usar no futuro
             //var notificationLogBuilder = Builders<RPGJogador>.IndexKeys;
             //var indexModel = new CreateIndexModel<RPGJogador>(notificationLogBuilder.Ascending(x => x.NivelAtual));
