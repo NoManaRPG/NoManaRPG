@@ -55,7 +55,7 @@ namespace WafclastRPG.Game.Entidades
         public void CalcularNivelCombate()
         {
             var ataque = GetHabilidade(Ataque);
-            var forca = GetHabilidade(Ataque);
+            var forca = GetHabilidade(Forca);
             var defesa = GetHabilidade(Defesa);
             var constituicao = GetHabilidade(Constituicao);
             NivelCombate = (int)Math.Truncate(((13.0 / 10.0) * ataque.Nivel + forca.Nivel) + defesa.Nivel + constituicao.Nivel);
