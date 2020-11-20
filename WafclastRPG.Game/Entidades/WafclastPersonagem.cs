@@ -14,6 +14,22 @@ namespace WafclastRPG.Game.Entidades
     [BsonIgnoreExtraElements]
     public class WafclastPersonagem
     {
+        /*
+         * Nível total: Soma de todas as habilidades
+         * Nível de combate: Soma de todas as habilidades de combate
+         * Exp Total: Soma de todas as experiencias
+         * Doador
+         * porta-níqueis
+         * Porta-Ferramentas: ferramenta / Tipo/item?
+         * Missoes
+         * Ponto de missoes
+         * Titulo
+         * WafCoins
+         * Habilidades
+         * Equipamentos
+         * Mochila
+         */
+
         public int RegiaoId { get; set; } = 0;
 
         public WafclastMochila Mochila { get; set; } = new WafclastMochila();
