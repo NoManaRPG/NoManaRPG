@@ -50,7 +50,7 @@ namespace WafclastRPG.Bot
         public void StopExecutingInteractivity(ulong userId) => PrefixLocker.TryRemove(userId, out _);
         public void StartExecutingInteractivity(ulong userId) => PrefixLocker.TryAdd(userId, true);
 
-        public async Task<BotJogador> GetJogadorAsync(ulong id)
+        public async Task<BotJogador> GetJogadorAsync(ulong id, DSharpPlus.Entities.DiscordUser user)
         {
             var jogador = await Jogadores.Find(x => x.Id == id).FirstOrDefaultAsync();
             if (jogador == null)
@@ -58,7 +58,7 @@ namespace WafclastRPG.Bot
                 jogador = new WafclastJogador(id);
                 jogador.Personagem.Mochila.TryAddItem(Armas.BronzeDaggerAb());
             }
-            return new BotJogador(jogador, this);
+            return new BotJogador(jogador, this, user);
         }
 
         public Task ReplaceJogadorAsync(ulong id, WafclastJogador jogador)

@@ -8,9 +8,9 @@ namespace WafclastRPG.Bot.Extensoes
     public static class BancoExtension
     {
         public static Task<BotJogador> GetJogadorAsync(this Banco banco, CommandContext ctx)
-        => banco.GetJogadorAsync(ctx.User.Id);
+        => banco.GetJogadorAsync(ctx.User.Id, ctx.User);
 
         public static Task<BotJogador> GetJogadorAsync(this Banco banco, DiscordUser user)
-            => banco.GetJogadorAsync(user.Id);
+            => banco.GetJogadorAsync(user.Id, user);
     }
 }
