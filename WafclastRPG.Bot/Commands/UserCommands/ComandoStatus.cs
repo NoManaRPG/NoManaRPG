@@ -54,6 +54,8 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             var perVida = per.GetHabilidade(ProficienciaType.Constituicao) as WafclastProficienciaConstituicao;
             embed.AddField($"{Emoji.GerarVidaEmoji((double)perVida.Vida / perVida.CalcularVida())} {"Vida".Titulo()}", $"{ perVida.Vida}/{ perVida.CalcularVida()}");
 
+            embed.AddField($"_Moedas_", $"{Emoji.Coins} {per.PortaNiqueis}");
+
             await ctx.RespondAsync(embed: embed.Build());
         }
     }
