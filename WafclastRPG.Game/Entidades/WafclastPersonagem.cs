@@ -23,21 +23,27 @@ namespace WafclastRPG.Game.Entidades
          * Porta-Ferramentas: ferramenta / Tipo/item?
          * Missoes
          * Ponto de missoes
-         * Titulo
-         * WafCoins
+         * WafCoins: Ganha ao doar
          * Habilidades
          * Equipamentos
          * Mochila
+         * RegiaoId
          */
 
+        public int NivelTotal { get; set; }
+        public int NivelCombate { get; set; }
+        public int ExperienciaTotal { get; set; }
+        public bool Doador { get; set; }
+        public int PortaNiqueis { get; set; }
+        public int MissaoPontos { get; set; }
         public int RegiaoId { get; set; } = 0;
-
+        public int WafCoins { get; set; }
+        public Dictionary<ProficienciaType, WafclastProficiencia> Habilidades { get; set; }
+        public Dictionary<EquipamentoType, WafclastItem> Equipamentos { get; set; }
         public WafclastMochila Mochila { get; set; } = new WafclastMochila();
         public WafclastMonstro InimigoMonstro { get; set; }
-        public ulong Moedas { get; set; }
 
-        [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)] public Dictionary<ProficienciaType, WafclastProficiencia> Habilidades { get; private set; }
-        [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)] public Dictionary<EquipamentoType, WafclastItem> Equipamentos { get; private set; } = new Dictionary<EquipamentoType, WafclastItem>();
+
 
         public WafclastPersonagem()
         {

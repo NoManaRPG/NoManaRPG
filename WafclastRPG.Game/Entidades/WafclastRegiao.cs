@@ -8,6 +8,13 @@ namespace WafclastRPG.Game.Entidades
 {
     public class WafclastRegiao
     {
+        /* Regions?
+        * 
+        * Regions are where is the character is
+        * Every region has some monster or npc, that the player can interact
+        * Some exit to other region.
+        */
+
         public int Id { get; private set; }
         public RegiaoType Reino { get; private set; }
         public string Local { get; private set; }
