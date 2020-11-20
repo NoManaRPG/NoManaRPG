@@ -42,6 +42,7 @@ namespace WafclastRPG.Bot
             BsonClassMap.RegisterClassMap<WafclastPersonagem>(cm =>
             {
                 cm.AutoMap();
+                cm.SetIgnoreExtraElements(true);
                 cm.MapMember(c => c.Habilidades).SetSerializer(new DictionaryInterfaceImplementerSerializer<Dictionary<ProficienciaType, WafclastProficiencia>>(DictionaryRepresentation.ArrayOfDocuments));
                 cm.MapMember(c => c.Equipamentos).SetSerializer(new DictionaryInterfaceImplementerSerializer<Dictionary<EquipamentoType, WafclastItem>>(DictionaryRepresentation.ArrayOfDocuments));
             });
