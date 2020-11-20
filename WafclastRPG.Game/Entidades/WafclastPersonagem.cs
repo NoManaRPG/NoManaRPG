@@ -50,6 +50,8 @@ namespace WafclastRPG.Game.Entidades
                 .AddHab(new WafclastProficienciaDefesa(), Defesa)
                 .AddHab(new WafclastProficienciaForca(), Forca);
             #endregion
+            CalcularTotalLevelExperience();
+            CalcularNivelCombate();
         }
 
         public void CalcularNivelCombate()
@@ -58,7 +60,19 @@ namespace WafclastRPG.Game.Entidades
             var forca = GetHabilidade(Forca);
             var defesa = GetHabilidade(Defesa);
             var constituicao = GetHabilidade(Constituicao);
-            NivelCombate = (int)Math.Truncate(((13.0 / 10.0) * ataque.Nivel + forca.Nivel) + defesa.Nivel + constituicao.Nivel);
+
+            NivelCombate = (int)Math.Truncate((((13.0 / 10.0) * ataque.Nivel + forca.Nivel) + defesa.Nivel + constituicao.Nivel) / 4);
+        }
+
+        public void CalcularTotalLevelExperience()
+        {
+            NivelTotal = 0;
+            ExperienciaTotal = 0;
+            foreach (var item in Habilidades)
+            {
+                NivelTotal += item.Value.Nivel;
+                ExperienciaTotal += item.Value.ExperienciaAtual;
+            }
         }
 
         public WafclastProficiencia GetHabilidade(ProficienciaType proficiencia) => Habilidades.GetValueOrDefault(proficiencia);
