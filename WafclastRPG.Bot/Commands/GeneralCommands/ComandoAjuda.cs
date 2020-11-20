@@ -110,7 +110,6 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             //str.Append($"{FormatarURLComando(prefix, "top", "Exibe as pessoas mais ricas")} ");
             str.AppendLine();
             str.Append($"**Core** - ");
-            //str.Append($"{FormatarURLComando(prefix, "criar-personagem", "Permite criar o seu personagem escolhendo uma das 7 classes disponíveis")} ");
             str.Append($"{FormatarURLComando(prefix, "bot", "Exibe informações sobre o bot")} ");
             str.Append($"{FormatarURLComando(prefix, "prefixo", "Permite editar o prefixo do bot no servidor atual")} ");
             str.AppendLine();
@@ -118,7 +117,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             str.Append($"{FormatarURLComando(prefix, "mochila", "Permite ver os itens da mochila")} ");
             //str.Append($"{FormatarURLComando(prefix, "usar", "Permite usar os itens da mochila")} ");
             //str.Append($"{FormatarURLComando(prefix, "examinar", "Permite examinar os itens da mochila")} ");
-            //str.Append($"{FormatarURLComando(prefix, "status", "Permite ver o seu status ou a de outra pessoa")} ");
+            str.Append($"{FormatarURLComando(prefix, "status", "Permite ver o seu status ou a de outra pessoa")} ");
             str.Append($"{FormatarURLComando(prefix, "explorar", "Permite explorar e atacar monstros")}");
             str.Append($"{FormatarURLComando(prefix, "equipar", "Permite equipar itens")}");
             str.Append($"{FormatarURLComando(prefix, "habilidade", "Exibe todas as habilidades")}");
