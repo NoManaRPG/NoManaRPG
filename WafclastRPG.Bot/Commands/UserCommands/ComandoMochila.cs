@@ -30,7 +30,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
                 int.TryParse(stringPagina, out var pagina);
 
                 StringBuilder str = new StringBuilder();
-                str.AppendLine($"**{per.Moedas}** {Emoji.Coins}");
+                str.AppendLine($"**{per.PortaNiqueis}** {Emoji.Coins}");
                 var pag = GetPage(per.Mochila.Itens, pagina, 8);
 
                 for (int i = 0; i < pag.Count; i++)
