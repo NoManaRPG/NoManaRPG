@@ -4,14 +4,12 @@ using WafclastRPG.Game.Entidades.Proficiencias;
 using WafclastRPG.Game.Extensoes;
 using WafclastRPG.Game.Enums;
 using static WafclastRPG.Game.Enums.ProficienciaType;
-using MongoDB.Bson.Serialization.Options;
 using WafclastRPG.Game.Entidades.NPC;
 using WafclastRPG.Game.Entidades.Itens;
 using System;
 
 namespace WafclastRPG.Game.Entidades
 {
-    [BsonIgnoreExtraElements]
     public class WafclastPersonagem
     {
         /*
@@ -43,8 +41,6 @@ namespace WafclastRPG.Game.Entidades
         public WafclastMochila Mochila { get; set; } = new WafclastMochila();
         public WafclastMonstro InimigoMonstro { get; set; }
 
-
-
         public WafclastPersonagem()
         {
             #region Popular habilidades
@@ -54,6 +50,15 @@ namespace WafclastRPG.Game.Entidades
                 .AddHab(new WafclastProficienciaDefesa(), Defesa)
                 .AddHab(new WafclastProficienciaForca(), Forca);
             #endregion
+        }
+
+        public void CalcularNivelCombate()
+        {
+            var ataque = GetHabilidade(Ataque);
+            var forca = GetHabilidade(Ataque);
+            var defesa = GetHabilidade(Defesa);
+            var constituicao = GetHabilidade(Constituicao);
+            NivelCombate = (int)Math.Truncate(((13.0 / 10.0) * ataque.Nivel + forca.Nivel) + defesa.Nivel + constituicao.Nivel);
         }
 
         public WafclastProficiencia GetHabilidade(ProficienciaType proficiencia) => Habilidades.GetValueOrDefault(proficiencia);
