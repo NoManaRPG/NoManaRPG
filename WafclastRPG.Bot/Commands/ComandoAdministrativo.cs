@@ -15,12 +15,14 @@ using WafclastRPG.Bot.Extensoes;
 using System.Text;
 using DSharpPlus.Interactivity.Extensions;
 using System.Security.Cryptography;
+using WafclastRPG.Bot.Config;
 
 namespace WafclastRPG.Bot.Comandos
 {
     public class ComandoAdministrativo : BaseCommandModule
     {
         public Banco banco;
+        public ConfigFile config;
 
         // This command only work on Wafclast Guild.
         [Command("ban")]
@@ -110,7 +112,8 @@ namespace WafclastRPG.Bot.Comandos
                 await ctx.RespondAsync("Comando não encontrado");
                 return;
             }
-            var cfx = ctx.CommandsNext.CreateFakeContext(member, ctx.Channel, "", "w.", cmd, args);
+
+            var cfx = ctx.CommandsNext.CreateFakeContext(member, ctx.Channel, "", config.Prefix, cmd, args);
             await ctx.CommandsNext.ExecuteCommandAsync(cfx);
         }
 
@@ -176,7 +179,7 @@ namespace WafclastRPG.Bot.Comandos
 
                     foreach (WafclastJogador user in usuarios)
                     {
-                       
+
                         await banco.Jogadores.ReplaceOneAsync(x => x.Id == user.Id, user);
                     }
                 }
@@ -208,7 +211,7 @@ namespace WafclastRPG.Bot.Comandos
                     await ctx.RespondAsync("Mas parece que ele ainda não criou um personagem!");
                     return;
                 }
-              
+
                 await banco.Jogadores.ReplaceOneAsync(x => x.Id == msg.Result.Author.Id, jogador);
             }
             else
