@@ -117,6 +117,22 @@ namespace WafclastRPG.Bot.Comandos
             await ctx.CommandsNext.ExecuteCommandAsync(cfx);
         }
 
+        [Command("sudo")]
+        [RequireOwner]
+        public async Task Sudo(CommandContext ctx, ulong id, [RemainingText] string command)
+        {
+            await ctx.TriggerTypingAsync();
+            var cmd = ctx.CommandsNext.FindCommand(command, out var args);
+            if (cmd == null)
+            {
+                await ctx.RespondAsync("Comando não encontrado");
+                return;
+            }
+            var member = await ctx.Client.GetUserAsync(id);
+            var cfx = ctx.CommandsNext.CreateFakeContext(member, ctx.Channel, "", config.Prefix, cmd, args);
+            await ctx.CommandsNext.ExecuteCommandAsync(cfx);
+        }
+
         [Command("deletar-user")]
         [RequireOwner]
         public async Task DeletarUsuarioAsync(CommandContext ctx, [RemainingText] DiscordUser user = null)
@@ -179,7 +195,8 @@ namespace WafclastRPG.Bot.Comandos
 
                     foreach (WafclastJogador user in usuarios)
                     {
-
+                        if (user.Personagem.Equipamentos == null)
+                            user.Personagem.Equipamentos = new Dictionary<Game.Enums.EquipamentoType, Game.Entidades.Itens.WafclastItem>();
                         await banco.Jogadores.ReplaceOneAsync(x => x.Id == user.Id, user);
                     }
                 }

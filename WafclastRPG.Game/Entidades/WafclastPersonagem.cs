@@ -33,9 +33,9 @@ namespace WafclastRPG.Game.Entidades
         public int NivelTotal { get; set; }
         public int NivelCombate { get; set; }
         public int ExperienciaTotal { get; set; }
-        public bool Doador { get; set; }
-        public int PortaNiqueis { get; set; }
-        public int MissaoPontos { get; set; }
+        public bool Doador { get; set; } = false;
+        public int PortaNiqueis { get; set; } = 0;
+        public int MissaoPontos { get; set; } = 0;
         public int RegiaoId { get; set; } = 0;
         public int WafCoins { get; set; }
 
@@ -43,7 +43,7 @@ namespace WafclastRPG.Game.Entidades
         public Dictionary<ProficienciaType, WafclastProficiencia> Habilidades { get; set; }
         [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
         public Dictionary<EquipamentoType, WafclastItem> Equipamentos { get; set; }
-        public WafclastMochila Mochila { get; set; } = new WafclastMochila();
+        public WafclastMochila Mochila { get; set; }
         public WafclastMonstro InimigoMonstro { get; set; }
         public int ExperienceExtra { get; set; }
 
@@ -56,6 +56,9 @@ namespace WafclastRPG.Game.Entidades
                 .AddHab(new WafclastProficienciaDefesa(), Defesa)
                 .AddHab(new WafclastProficienciaForca(), Forca);
             #endregion
+
+            Equipamentos = new Dictionary<EquipamentoType, WafclastItem>();
+            Mochila = new WafclastMochila();
             CalcularTotalLevelExperience();
             CalcularNivelCombate();
         }
