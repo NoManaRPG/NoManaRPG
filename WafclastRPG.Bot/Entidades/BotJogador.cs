@@ -18,7 +18,7 @@ namespace WafclastRPG.Bot.Entidades
         public DiscordEmbedBuilder CriarEmbed()
         {
             var embed = new DiscordEmbedBuilder();
-            embed.WithAuthor($"{this.user.Username} [Lvl.{this.Personagem.NivelCombate}]", this.user.AvatarUrl);
+            embed.WithAuthor($"{this.user.Username} [Nv.{this.Personagem.NivelCombate}]", this.user.AvatarUrl);
             embed.WithFooter("Se estiver perdido, utilize o comando ajuda.");
             return embed;
         }

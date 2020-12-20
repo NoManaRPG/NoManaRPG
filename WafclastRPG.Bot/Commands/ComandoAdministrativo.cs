@@ -162,18 +162,16 @@ namespace WafclastRPG.Bot.Comandos
         }
 
 
-        [Command("testedes")]
+        [Command("kill")]
         [RequireOwner]
-        public async Task fff(CommandContext ctx)
+        public async Task Kill(CommandContext ctx)
         {
-            if (!Buckets.TryGetValue(ctx.User.Id, out var bucket))
-            {
-                bucket = new SemaphoreSlim(1, 1);
-                Buckets.AddOrUpdate(ctx.User.Id, bucket, (k, v) => bucket);
-            }
+            var jogador = await banco.GetJogadorAsync(ctx);
+            var per = jogador.Personagem;
 
-            await Task.CompletedTask;
-            bucket.Release();
+            per.InimigoMonstro.Vida = 1;
+            await jogador.Salvar();
+            await ctx.RespondAsync("inimigo está agora com 1 de vida!");
         }
 
         [Command("atualizar")]

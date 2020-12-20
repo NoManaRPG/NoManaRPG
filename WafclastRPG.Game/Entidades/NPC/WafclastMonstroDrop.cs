@@ -4,6 +4,9 @@
     {
         public int ItemId { get; set; }
         public Raridade Chance { get; set; }
+        /// <summary>
+        /// Is actual quantity too
+        /// </summary>
         public int QuantidadeMin { get; set; }
         public int QuantidadeMax { get; set; }
 
@@ -27,6 +30,7 @@
         {
             public int ValorMenor { get; set; }
             public int ValorMaior { get; set; }
+            public double Chance { get { return (double)ValorMenor / (double)ValorMaior; } }
 
             public Raridade(int valorMenor, int valorMaior)
             {

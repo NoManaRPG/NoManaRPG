@@ -163,6 +163,22 @@ namespace WafclastRPG.Bot.Comandos.Acao
                         batalha.AppendLine($"{Emoji.CrossBone} {per.InimigoMonstro.Nome} {Emoji.CrossBone}");
                         habForca.AddExperience(per.InimigoMonstro.VidaMax * 0.133);
                         habAtaque.AddExperience(per.InimigoMonstro.VidaMax * 0.133);
+
+                        // Sortear itens que podem cair do inimigo.
+                        var dropchance = per.InimigoMonstro.Drops;
+                        per.InimigoMonstro.Drops = new List<Game.Entidades.NPC.WafclastMonstroDrop>();
+                        foreach (var item in dropchance)
+                        {
+                            if (rdg.Chance(item.Chance.Chance))
+                            {
+                                var sorteado = item;
+                                // Sorteia quantidade e reutiliza
+                                sorteado.QuantidadeMin = rdg.Sortear(sorteado.QuantidadeMin, sorteado.QuantidadeMax);
+                                per.InimigoMonstro.Drops.Add(sorteado);
+                            }
+                        }
+                        batalha.AppendLine($"Caiu {per.InimigoMonstro.Drops.Count} item.");
+
                         return true;
                     }
                 }
