@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WafclastRPG.Bot.Config
+namespace WafclastRPG.Bot
 {
     public class BotInfo
     {

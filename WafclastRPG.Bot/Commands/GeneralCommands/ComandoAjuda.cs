@@ -10,7 +10,6 @@ using static DSharpPlus.CommandsNext.CommandsNextExtension;
 using static WafclastRPG.Bot.Utilities;
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using WafclastRPG.Bot.Config;
 using DSharpPlus;
 using System.Linq;
 using WafclastRPG.Bot.Atributos;
@@ -40,7 +39,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
 
         public IComandoAjuda(CommandContext ctx) : base(ctx)
         {
-            var defaultPrefix = ctx.Services.GetService<Config>().Prefix;
+            var defaultPrefix = ctx.Services.GetService<Config>().PrefixRelease;
             var banco = ctx.Services.GetService<Banco>();
             prefix = banco.GetServerPrefix(ctx.Guild.Id, defaultPrefix);
 

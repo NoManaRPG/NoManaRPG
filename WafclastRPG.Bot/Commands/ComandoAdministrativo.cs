@@ -15,14 +15,13 @@ using WafclastRPG.Bot.Extensoes;
 using System.Text;
 using DSharpPlus.Interactivity.Extensions;
 using System.Security.Cryptography;
-using WafclastRPG.Bot.Config;
 
 namespace WafclastRPG.Bot.Comandos
 {
     public class ComandoAdministrativo : BaseCommandModule
     {
         public Banco banco;
-        public ConfigFile config;
+        public Config config;
 
         // This command only work on Wafclast Guild.
         [Command("ban")]
@@ -113,7 +112,7 @@ namespace WafclastRPG.Bot.Comandos
                 return;
             }
 
-            var cfx = ctx.CommandsNext.CreateFakeContext(member, ctx.Channel, "", config.Prefix, cmd, args);
+            var cfx = ctx.CommandsNext.CreateFakeContext(member, ctx.Channel, "", config.PrefixRelease, cmd, args);
             await ctx.CommandsNext.ExecuteCommandAsync(cfx);
         }
 
@@ -129,7 +128,7 @@ namespace WafclastRPG.Bot.Comandos
                 return;
             }
             var member = await ctx.Client.GetUserAsync(id);
-            var cfx = ctx.CommandsNext.CreateFakeContext(member, ctx.Channel, "", config.Prefix, cmd, args);
+            var cfx = ctx.CommandsNext.CreateFakeContext(member, ctx.Channel, "", config.PrefixRelease, cmd, args);
             await ctx.CommandsNext.ExecuteCommandAsync(cfx);
         }
 

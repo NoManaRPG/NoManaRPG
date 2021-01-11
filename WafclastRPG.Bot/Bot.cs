@@ -9,7 +9,6 @@ using WafclastRPG.Bot.Comandos;
 using WafclastRPG.Bot.Comandos.Acao;
 using WafclastRPG.Bot.Comandos.Exibir;
 using WafclastRPG.Bot.Commands.UserCommands;
-using WafclastRPG.Bot.Config;
 using WafclastRPG.Bot.Eventos;
 
 namespace WafclastRPG.Bot
@@ -20,18 +19,17 @@ namespace WafclastRPG.Bot
         public CommandsNextExtension CommandsNext { get; private set; }
 
         public Bot(DiscordConfiguration discordConfiguration)
-        {
-            Client = new DiscordClient(discordConfiguration);
-        }
+            => Client = new DiscordClient(discordConfiguration);
 
         public Task ConectarAsync() => Client.ConnectAsync();
 
-        public void ModuloComando(CommandsNextConfiguration ccfg)
+        public void ModuleCommand(CommandsNextConfiguration ccfg)
         {
             this.CommandsNext = Client.UseCommandsNext(ccfg);
             this.CommandsNext.CommandExecuted += CommandExecuted.Event;
             this.CommandsNext.CommandErrored += CommandErrored.EventAsync;
             this.Client.Ready += Ready.Event;
+
             var botInfo = (BotInfo)CommandsNext.Services.GetService(typeof(BotInfo));
             this.Client.GuildAvailable += (c, e) => GuildAvailable.Event(c, e, botInfo);
             this.Client.GuildMemberAdded += (c, e) => GuildMemberAdded.Event(c, e, botInfo);

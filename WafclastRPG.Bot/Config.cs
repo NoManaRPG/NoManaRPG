@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
 
-namespace WafclastRPG.Bot.Config
+namespace WafclastRPG.Bot
 {
     public class Config
     {

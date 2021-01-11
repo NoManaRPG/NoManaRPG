@@ -4,7 +4,6 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
-using WafclastRPG.Bot.Config;
 using WafclastRPG.Game;
 using DSharpPlus.Entities;
 
@@ -12,7 +11,7 @@ namespace WafclastRPG.Bot
 {
     public class Program
     {
-        public Config.Config Config { get; private set; }
+        public Config ConfigFile { get; private set; }
         public BotInfo BotInfo { get; private set; }
         public Banco Banco { get; private set; } = new Banco();
 
@@ -20,8 +19,8 @@ namespace WafclastRPG.Bot
 
         public async Task RodarBotAsync()
         {
-            Config = WafclastRPG.Bot.Config.Config.LoadFromJsonFile("Config.json");
-            if (Config == null)
+            ConfigFile = Config.LoadFromJsonFile("Config.json");
+            if (ConfigFile == null)
             {
                 Console.WriteLine("O arquivo config.json não existe!");
                 Console.WriteLine("Coloque as informações necessarias no arquivo gerado!");
@@ -32,8 +31,8 @@ namespace WafclastRPG.Bot
 
             #region Configs
 #if DEBUG
-            var token = Config.TokenDebug;
-            Config.PrefixRelease = Config.PrefixDebug;
+            var token = ConfigFile.TokenDebug;
+            ConfigFile.PrefixRelease = ConfigFile.PrefixDebug;
             var logLevel = LogLevel.Debug;
 #else
             var token = ConfigFile.Token;
@@ -53,12 +52,12 @@ namespace WafclastRPG.Bot
 
             var services = new ServiceCollection()
                 .AddSingleton(this.Banco)
-                .AddSingleton(this.Config)
+                .AddSingleton(this.ConfigFile)
                 .AddSingleton(this.BotInfo)
                 .AddSingleton<BotMathematics>()
                 .BuildServiceProvider();
 
-            bot.ModuloComando(new CommandsNextConfiguration
+            bot.ModuleCommand(new CommandsNextConfiguration
             {
                 PrefixResolver = this.ResolvePrefixAsync,
                 EnableDms = false,
@@ -81,7 +80,7 @@ namespace WafclastRPG.Bot
 #if DEBUG
             if (Banco.IsExecutingInteractivity(msg.Author.Id))
                 return await Task.FromResult(-1);
-            var prefix = await Banco.GetServerPrefixAsync(gld.Id, Config.PrefixDebug);
+            var prefix = await Banco.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixDebug);
             var pfixLocation = msg.GetStringPrefixLength(prefix);
 #else
             var prefix = await Banco.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixRelease);
