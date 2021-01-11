@@ -12,7 +12,7 @@ namespace WafclastRPG.Bot
 {
     public class Program
     {
-        public ConfigFile ConfigFile { get; private set; }
+        public Config.Config Config { get; private set; }
         public BotInfo BotInfo { get; private set; }
         public Banco Banco { get; private set; } = new Banco();
 
@@ -20,8 +20,8 @@ namespace WafclastRPG.Bot
 
         public async Task RodarBotAsync()
         {
-            ConfigFile = ConfigFile.LoadFromFile("Config.json");
-            if (ConfigFile == null)
+            Config = WafclastRPG.Bot.Config.Config.LoadFromJsonFile("Config.json");
+            if (Config == null)
             {
                 Console.WriteLine("O arquivo config.json não existe!");
                 Console.WriteLine("Coloque as informações necessarias no arquivo gerado!");
@@ -32,8 +32,8 @@ namespace WafclastRPG.Bot
 
             #region Configs
 #if DEBUG
-            var token = ConfigFile.TokenTeste;
-            ConfigFile.Prefix = ConfigFile.PrefixTeste;
+            var token = Config.TokenDebug;
+            Config.PrefixRelease = Config.PrefixDebug;
             var logLevel = LogLevel.Debug;
 #else
             var token = ConfigFile.Token;
@@ -51,14 +51,9 @@ namespace WafclastRPG.Bot
                 MinimumLogLevel = logLevel,
             });
 
-            BotInfo = BotInfo.LoadFromFile("BotInfo.json");
-            BotInfo.VersaoRevisao++;
-            BotInfo.SaveToFile("BotInfo.json");
-
-
             var services = new ServiceCollection()
                 .AddSingleton(this.Banco)
-                .AddSingleton(this.ConfigFile)
+                .AddSingleton(this.Config)
                 .AddSingleton(this.BotInfo)
                 .AddSingleton<BotMathematics>()
                 .BuildServiceProvider();
@@ -86,15 +81,15 @@ namespace WafclastRPG.Bot
 #if DEBUG
             if (Banco.IsExecutingInteractivity(msg.Author.Id))
                 return await Task.FromResult(-1);
-            var prefix = await Banco.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixTeste);
+            var prefix = await Banco.GetServerPrefixAsync(gld.Id, Config.PrefixDebug);
             var pfixLocation = msg.GetStringPrefixLength(prefix);
 #else
-            var prefix = await Banco.GetServerPrefixAsync(gld.Id, ConfigFile.Prefix);
+            var prefix = await Banco.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixRelease);
             var pfixLocation = msg.GetStringPrefixLength(prefix);
             if (pfixLocation == -1)
-                pfixLocation = msg.GetStringPrefixLength(ConfigFile.Prefix.ToLower());
+                pfixLocation = msg.GetStringPrefixLength(ConfigFile.PrefixRelease.ToLower());
             if (pfixLocation == -1)
-                pfixLocation = msg.GetStringPrefixLength(ConfigFile.Prefix.ToUpper());
+                pfixLocation = msg.GetStringPrefixLength(ConfigFile.PrefixRelease.ToUpper());
 #endif
             return await Task.FromResult(pfixLocation);
         }

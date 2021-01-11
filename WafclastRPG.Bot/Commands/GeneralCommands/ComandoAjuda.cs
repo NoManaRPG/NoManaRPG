@@ -40,7 +40,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
 
         public IComandoAjuda(CommandContext ctx) : base(ctx)
         {
-            var defaultPrefix = ctx.Services.GetService<ConfigFile>().Prefix;
+            var defaultPrefix = ctx.Services.GetService<Config>().Prefix;
             var banco = ctx.Services.GetService<Banco>();
             prefix = banco.GetServerPrefix(ctx.Guild.Id, defaultPrefix);
 
