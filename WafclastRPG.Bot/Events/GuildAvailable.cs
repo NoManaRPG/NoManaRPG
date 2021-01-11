@@ -4,10 +4,9 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Threading;
-using WafclastRPG.Bot.Config;
 using WafclastRPG.Bot.Extensoes;
 
-namespace WafclastRPG.Bot.Eventos
+namespace WafclastRPG.Bot.Events
 {
     public static class GuildAvailable
     {

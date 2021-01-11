@@ -5,7 +5,6 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Atributos;
-using WafclastRPG.Bot.Config;
 using WafclastRPG.Bot.Extensoes;
 using WafclastRPG.Game.Enums;
 
@@ -14,7 +13,7 @@ namespace WafclastRPG.Bot.Commands.UserCommands
     public class ComandoHabilidade : BaseCommandModule
     {
         public Banco banco;
-        public ConfigFile config;
+        public Config config;
 
         [Command("habilidade")]
         [Description("Exibe o nivel nome e experiencia das suas habilidades")]
@@ -33,7 +32,7 @@ namespace WafclastRPG.Bot.Commands.UserCommands
                 var str = new StringBuilder();
                 foreach (var item in per.Habilidades)
                     str.AppendLine($"**{item.Key.GetEnumDescription()}** - Nível {item.Value.Nivel}.");
-                embed.WithDescription($"Digite `{config.Prefix}habilidade ataque` para saber mais sobre a habilidade em especifico. \n\n{str.ToString()}");
+                embed.WithDescription($"Digite `{config.PrefixRelease}habilidade ataque` para saber mais sobre a habilidade em especifico. \n\n{str.ToString()}");
             }
             else
             {

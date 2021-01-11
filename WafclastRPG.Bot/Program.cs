@@ -13,7 +13,7 @@ namespace WafclastRPG.Bot
     {
         public Config ConfigFile { get; private set; }
         public BotInfo BotInfo { get; private set; }
-        public Banco Banco { get; private set; } = new Banco();
+        public Banco Banco { get; private set; }
 
         static void Main(string[] args) => new Program().RodarBotAsync().GetAwaiter().GetResult();
 
@@ -35,7 +35,7 @@ namespace WafclastRPG.Bot
             ConfigFile.PrefixRelease = ConfigFile.PrefixDebug;
             var logLevel = LogLevel.Debug;
 #else
-            var token = ConfigFile.Token;
+            var token = ConfigFile.TokenRelease;
             var logLevel = LogLevel.Information;
 #endif
             #endregion
@@ -50,11 +50,12 @@ namespace WafclastRPG.Bot
                 MinimumLogLevel = logLevel,
             });
 
+            Banco = new Banco();
+            BotInfo = new BotInfo();
             var services = new ServiceCollection()
                 .AddSingleton(this.Banco)
                 .AddSingleton(this.ConfigFile)
                 .AddSingleton(this.BotInfo)
-                .AddSingleton<BotMathematics>()
                 .BuildServiceProvider();
 
             bot.ModuleCommand(new CommandsNextConfiguration

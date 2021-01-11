@@ -9,7 +9,7 @@ using WafclastRPG.Bot.Comandos;
 using WafclastRPG.Bot.Comandos.Acao;
 using WafclastRPG.Bot.Comandos.Exibir;
 using WafclastRPG.Bot.Commands.UserCommands;
-using WafclastRPG.Bot.Eventos;
+using WafclastRPG.Bot.Events;
 
 namespace WafclastRPG.Bot
 {

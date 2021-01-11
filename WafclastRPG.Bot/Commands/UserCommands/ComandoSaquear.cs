@@ -59,8 +59,8 @@ namespace WafclastRPG.Bot.Commands.UserCommands
 
                     str.AppendLine($"`#{i}` **{item.Nome.Titulo()}** x_{per.InimigoMonstro.Drops[i].QuantidadeMin}_");
                 }
-                str.AppendLine($"`#{per.InimigoMonstro.Drops.Count + 1}` **Saquear tudo.**");
-                str.AppendLine($"`#{per.InimigoMonstro.Drops.Count + 2}` **Sair.**");
+                str.AppendLine($"`#{per.InimigoMonstro.Drops.Count}` **Saquear tudo.**");
+                str.AppendLine($"`#{per.InimigoMonstro.Drops.Count + 1}` **Sair.**");
 
 
                 var tempo = TimeSpan.FromSeconds(15);
@@ -153,8 +153,8 @@ namespace WafclastRPG.Bot.Commands.UserCommands
                         str.AppendLine($"`#{i}` **{listItens[i].Nome.Titulo()}** x_{per.InimigoMonstro.Drops[i].QuantidadeMin}_");
                     }
 
-                    str.AppendLine($"`#{per.InimigoMonstro.Drops.Count + 1}` **Saquear tudo.**");
-                    str.AppendLine($"`#{per.InimigoMonstro.Drops.Count + 2}` **Sair.**");
+                    str.AppendLine($"`#{per.InimigoMonstro.Drops.Count }` **Saquear tudo.**");
+                    str.AppendLine($"`#{per.InimigoMonstro.Drops.Count + 1}` **Sair.**");
                 }
 
                 banco.StopExecutingInteractivity(ctx.User.Id);

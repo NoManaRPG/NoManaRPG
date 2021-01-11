@@ -13,7 +13,7 @@ using System.IO;
 using DSharpPlus;
 using System.Text;
 
-namespace WafclastRPG.Bot.Eventos
+namespace WafclastRPG.Bot.Events
 {
     public static class CommandErrored
     {
