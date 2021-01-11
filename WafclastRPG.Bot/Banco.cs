@@ -1,19 +1,11 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Options;
-using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Entidades;
 using WafclastRPG.Bot.Extensoes;
 using WafclastRPG.Game.Entidades;
 using WafclastRPG.Game.Entidades.Itens;
-using WafclastRPG.Game.Entidades.Proficiencias;
-using WafclastRPG.Game.Enums;
 using WafclastRPG.Game.Metadata;
-using WafclastRPG.Game.Metadata.Itens;
 
 namespace WafclastRPG.Bot
 {
@@ -56,7 +48,6 @@ namespace WafclastRPG.Bot
             if (jogador == null)
             {
                 jogador = new WafclastJogador(id);
-                jogador.Personagem.Mochila.TryAddItem(Armas.BronzeDaggerAb());
             }
             return new BotJogador(jogador, this, user);
         }
