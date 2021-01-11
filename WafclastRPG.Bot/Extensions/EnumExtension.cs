@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
-namespace WafclastRPG.Bot.Extensoes
+namespace WafclastRPG.Bot.Extensions
 {
     public static class EnumExtension
     {

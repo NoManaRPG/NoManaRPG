@@ -11,7 +11,7 @@ using System.Threading;
 using WafclastRPG.Game.Entidades;
 using System.Collections.Generic;
 using System.Linq;
-using WafclastRPG.Bot.Extensoes;
+using WafclastRPG.Bot.Extensions;
 using System.Text;
 using DSharpPlus.Interactivity.Extensions;
 using System.Security.Cryptography;

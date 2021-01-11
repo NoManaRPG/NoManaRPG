@@ -3,7 +3,7 @@ using DSharpPlus.Entities;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Entidades;
 
-namespace WafclastRPG.Bot.Extensoes
+namespace WafclastRPG.Bot.Extensions
 {
     public static class BancoExtension
     {

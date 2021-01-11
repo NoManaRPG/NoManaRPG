@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace WafclastRPG.Bot.Extensoes
+namespace WafclastRPG.Bot.Extensions
 {
     public static class StringExtension
     {

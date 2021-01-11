@@ -5,7 +5,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Atributos;
-using WafclastRPG.Bot.Extensoes;
+using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game;
 using WafclastRPG.Game.Entidades.Itens;
 using WafclastRPG.Game.Extensoes;

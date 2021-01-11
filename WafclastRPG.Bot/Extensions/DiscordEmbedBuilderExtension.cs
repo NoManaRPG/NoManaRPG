@@ -1,7 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 
-namespace WafclastRPG.Bot.Extensoes
+namespace WafclastRPG.Bot.Extensions
 {
     public static class DiscordEmbedBuilderExtension
     {

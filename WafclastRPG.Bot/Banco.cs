@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Entidades;
-using WafclastRPG.Bot.Extensoes;
+using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game.Entidades;
 using WafclastRPG.Game.Entidades.Itens;
 using WafclastRPG.Game.Metadata;

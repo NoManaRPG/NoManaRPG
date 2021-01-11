@@ -8,7 +8,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using WafclastRPG.Bot.Extensoes;
+using WafclastRPG.Bot.Extensions;
 using System.IO;
 using DSharpPlus;
 using System.Text;

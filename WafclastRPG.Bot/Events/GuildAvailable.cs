@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Threading;
-using WafclastRPG.Bot.Extensoes;
+using WafclastRPG.Bot.Extensions;
 
 namespace WafclastRPG.Bot.Events
 {

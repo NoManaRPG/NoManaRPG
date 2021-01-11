@@ -2,7 +2,7 @@
 using DSharpPlus.Entities;
 using System.Threading.Tasks;
 
-namespace WafclastRPG.Bot.Extensoes
+namespace WafclastRPG.Bot.Extensions
 {
     public static class CommandContextExtension
     {

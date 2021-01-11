@@ -1,6 +1,6 @@
 ﻿using DSharpPlus;
 
-namespace WafclastRPG.Bot.Extensoes
+namespace WafclastRPG.Bot.Extensions
 {
     public static class FormatterExtension
     {

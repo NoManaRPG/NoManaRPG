@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Extensoes\BotMathematicsExtention.cs" />
+    <Compile Remove="Extensions\BotMathematicsExtention.cs" />
   </ItemGroup>
 
   <ItemGroup>

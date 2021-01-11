@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace WafclastRPG.Bot.Extensoes
+namespace WafclastRPG.Bot.Extensions
 {
     public static class IMongoDatabaseExtension
     {
