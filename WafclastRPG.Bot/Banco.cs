@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using DSharpPlus.Entities;
+using MongoDB.Driver;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Entidades;
@@ -38,11 +39,15 @@ namespace WafclastRPG.Bot
             #endregion
         }
 
+        #region Interactivity
+
         public bool IsExecutingInteractivity(ulong userId) => PrefixLocker.TryGetValue(userId, out _);
         public void StopExecutingInteractivity(ulong userId) => PrefixLocker.TryRemove(userId, out _);
         public void StartExecutingInteractivity(ulong userId) => PrefixLocker.TryAdd(userId, true);
 
-        public async Task<BotJogador> GetJogadorAsync(ulong id, DSharpPlus.Entities.DiscordUser user)
+        #endregion
+
+        public async Task<BotJogador> GetJogadorAsync(ulong id, DiscordUser user)
         {
             var jogador = await Jogadores.Find(x => x.Id == id).FirstOrDefaultAsync();
             if (jogador == null)
