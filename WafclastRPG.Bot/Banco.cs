@@ -11,19 +11,19 @@ namespace WafclastRPG.Bot
 {
     public class Banco : BotAsyncLock
     {
-        public IMongoClient Client { get; }
-        public IMongoDatabase Database { get; }
-        public IMongoCollection<WafclastJogador> Jogadores { get; }
-        public IMongoCollection<BotServidor> Servidores { get; }
-        public IMongoCollection<WafclastRegiao> Regioes { get; }
-        public IMongoCollection<WafclastItem> Itens { get; }
+        private IMongoClient Client { get; }
+        private IMongoDatabase Database { get; }
+        private IMongoCollection<WafclastJogador> Jogadores { get; }
+        private IMongoCollection<BotServidor> Servidores { get; }
+        private IMongoCollection<WafclastRegiao> Regioes { get; }
+        private IMongoCollection<WafclastItem> Itens { get; }
 
         private readonly ConcurrentDictionary<ulong, bool> PrefixLocker = new ConcurrentDictionary<ulong, bool>();
 
         public Banco()
         {
             Client = new MongoClient("mongodb://localhost");
-            Database = Client.GetDatabase("WafclastBeta");
+            Database = Client.GetDatabase("WafclastDefinitiveVersion");
             Jogadores = Database.CriarCollection<WafclastJogador>();
             Servidores = Database.CriarCollection<BotServidor>();
             Regioes = Database.CriarCollection<WafclastRegiao>();

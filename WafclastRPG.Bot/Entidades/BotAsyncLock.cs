@@ -10,7 +10,6 @@ namespace WafclastRPG.Bot.Entidades
 {
     public class BotAsyncLock
     {
-
         private readonly Dictionary<object, SemaphoreReferenceCount> Semaphores = new Dictionary<object, SemaphoreReferenceCount>();
 
         private SemaphoreSlim GetOrCreateSemaphore(object key)
@@ -18,9 +17,7 @@ namespace WafclastRPG.Bot.Entidades
             lock (Semaphores)
             {
                 if (Semaphores.TryGetValue(key, out var item))
-                {
                     item.IncrementCount();
-                }
                 else
                 {
                     item = new SemaphoreReferenceCount();
