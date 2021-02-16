@@ -28,14 +28,17 @@ namespace WafclastRPG.Bot
 #else
             Database = Client.GetDatabase("WafclastV2");
 #endif
-            
+
             WafclastPlayer.MapBuilder();
+            WafclastLevel.MapBuilderLevel();
+            WafclastCoins.MapBuilder();
+            WafclastCharacter.MapBuilder();
 
             Jogadores = Database.CriarCollection<WafclastPlayer>();
             Servidores = Database.CriarCollection<BotServidor>();
             PrefixLocker = new ConcurrentDictionary<ulong, bool>();
 
-            
+
 
             new Data(this);
 

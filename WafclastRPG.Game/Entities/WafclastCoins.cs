@@ -1,4 +1,6 @@
-﻿namespace WafclastRPG.Game.Entities
+﻿using MongoDB.Bson.Serialization;
+
+namespace WafclastRPG.Game.Entities
 {
     public class WafclastCoins
     {
@@ -46,6 +48,14 @@
         public static ulong GetCopper(ulong baseDenomination) => baseDenomination % SilverInCopper;
         public static ulong GetSilver(ulong baseDenomination) => baseDenomination % GoldInCopper / SilverInCopper;
         public static ulong GetGold(ulong coins) => coins / GoldInCopper;
+        public static void MapBuilder()
+        {
+            BsonClassMap.RegisterClassMap<WafclastCoins>(cm =>
+            {
+                cm.AutoMap();
+                cm.SetIgnoreExtraElements(true);
+            });
+        }
         #endregion
     }
 }
