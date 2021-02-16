@@ -2,7 +2,6 @@
 using DSharpPlus.EventArgs;
 using System.Threading;
 using System.Threading.Tasks;
-using WafclastRPG.Bot.Config;
 
 namespace WafclastRPG.Bot.Events
 {

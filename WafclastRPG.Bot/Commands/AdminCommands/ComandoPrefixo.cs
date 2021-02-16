@@ -1,7 +1,6 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using MongoDB.Driver;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Atributos;
 using WafclastRPG.Bot.Entidades;
@@ -24,7 +23,7 @@ namespace WafclastRPG.Bot.Comandos.Acao
         {
             if (string.IsNullOrWhiteSpace(prefixo))
             {
-                await banco.Servidores.DeleteOneAsync(x => x.Id == ctx.Guild.Id);
+                await banco.DeleteServerAsync(ctx.Guild.Id);
                 await ctx.RespondAsync("Feito!");
                 return;
             }
@@ -37,7 +36,7 @@ namespace WafclastRPG.Bot.Comandos.Acao
 
             var server = new BotServidor(ctx.Guild.Id);
             server.SetPrefix(prefixo);
-            await banco.Servidores.ReplaceOneAsync(x => x.Id == server.Id, server, new ReplaceOptions { IsUpsert = true });
+            await banco.ReplaceServerAsync(server.Id, server);
             await ctx.RespondAsync("Feito!");
         }
     }

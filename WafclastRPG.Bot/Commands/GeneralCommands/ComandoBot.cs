@@ -7,8 +7,6 @@ using System.Text;
 using System;
 using System.Diagnostics;
 using static WafclastRPG.Bot.Utilities;
-using WafclastRPG.Bot.Config;
-using WafclastRPG.Bot.Atributos;
 
 namespace WafclastRPG.Bot.Comandos.Exibir
 {
@@ -30,7 +28,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             str.AppendLine(FormatarURL("Servidor Oficial", "https://discord.gg/MAR4NFq"));
             str.AppendLine(FormatarURL("Vote no bot", "https://top.gg/bot/732598033962762402"));
             str.AppendLine(FormatarURL("Proximos updates", "https://trello.com/b/D8dPGRzU/torrerpg"));
-            str.AppendLine(FormatarURL("Github", "https://github.com/TalionOak/TorreRP"));
+            str.AppendLine(FormatarURL("Github", "https://github.com/WafclastRPG/WafclastRPG"));
             embed.WithDescription(str.ToString());
             embed.AddField("Apoia.se", FormatarURL("Doe R$1 real para que o desenvolvimento do bot não pare!", "https://apoia.se/wafclastrpg"));
             embed.AddField("Quero o bot no meu servidor", FormatarURL("Clique aqui", "https://discord.com/api/oauth2/authorize?client_id=732598033962762402&permissions=388160&scope=bot"));

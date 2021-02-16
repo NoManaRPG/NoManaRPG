@@ -1,29 +1,27 @@
 ﻿using DSharpPlus.Entities;
 using System.Threading.Tasks;
-using WafclastRPG.Game.Entidades;
+using WafclastRPG.Game.Entities;
 
 namespace WafclastRPG.Bot.Entidades
 {
-    public class BotJogador : WafclastJogador
+    public class BotJogador : WafclastPlayer
     {
         private readonly Banco banco;
         private readonly DiscordUser user;
+        private DiscordEmbedBuilder embed;
 
-        public BotJogador(WafclastJogador jogador, Banco banco, DiscordUser user) : base(jogador)
+        public BotJogador(WafclastPlayer jogador, Banco banco, DiscordUser user) : base(jogador)
         {
             this.banco = banco;
             this.user = user;
         }
 
-        public DiscordEmbedBuilder CriarEmbed()
+        public DiscordEmbedBuilder NewEmbed()
         {
-            var embed = new DiscordEmbedBuilder();
-            embed.WithAuthor($"{this.user.Username} [Nv.{this.Personagem.NivelCombate}]", this.user.AvatarUrl);
-            embed.WithFooter("Se estiver perdido, utilize o comando ajuda.");
+            embed.WithAuthor(user.Username, iconUrl: user.AvatarUrl);
             return embed;
         }
 
-        public Task<WafclastRegiao> GetRegiaoAsync() => banco.GetRegiaoAsync(Personagem.RegiaoId);
-        public Task Salvar() => this.banco.ReplaceJogadorAsync(this.Id, new WafclastJogador(this));
+        public Task Salvar() => this.banco.ReplaceJogadorAsync(this.Id, new WafclastPlayer(this));
     }
 }

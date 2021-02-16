@@ -5,10 +5,14 @@ namespace WafclastRPG.Bot
 {
     public class Config
     {
+        [JsonProperty("TokenRelease")]
         internal string TokenRelease = "Your token...";
+        [JsonProperty("TokenDebug")]
         internal string TokenDebug = "Your token...";
 
+        [JsonProperty("PrefixRelease")]
         internal string PrefixRelease = "Your prefix...";
+        [JsonProperty("PrefixDebug")]
         internal string PrefixDebug = "Your prefix...";
 
         public static Config LoadFromJsonFile(string path)

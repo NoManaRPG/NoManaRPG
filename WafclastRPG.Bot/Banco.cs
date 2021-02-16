@@ -4,8 +4,7 @@ using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Entidades;
 using WafclastRPG.Bot.Extensions;
-using WafclastRPG.Game.Entidades;
-using WafclastRPG.Game.Entidades.Itens;
+using WafclastRPG.Game.Entities;
 using WafclastRPG.Game.Metadata;
 
 namespace WafclastRPG.Bot
@@ -14,21 +13,24 @@ namespace WafclastRPG.Bot
     {
         private IMongoClient Client { get; }
         private IMongoDatabase Database { get; }
-        private IMongoCollection<WafclastJogador> Jogadores { get; }
+        private IMongoCollection<WafclastPlayer> Jogadores { get; }
         private IMongoCollection<BotServidor> Servidores { get; }
-        private IMongoCollection<WafclastRegiao> Regioes { get; }
-        private IMongoCollection<WafclastItem> Itens { get; }
 
-        private readonly ConcurrentDictionary<ulong, bool> PrefixLocker = new ConcurrentDictionary<ulong, bool>();
+        private ConcurrentDictionary<ulong, bool> PrefixLocker { get; }
+        private ReplaceOptions _replaceOptions = new ReplaceOptions { IsUpsert = true };
 
         public Banco()
         {
             Client = new MongoClient("mongodb://localhost");
-            Database = Client.GetDatabase("WafclastDefinitiveVersion");
-            Jogadores = Database.CriarCollection<WafclastJogador>();
+#if DEBUG
+
+            Database = Client.GetDatabase("WafclastV2Debug");
+#else
+            Database = Client.GetDatabase("WafclastV2");
+#endif
+            Jogadores = Database.CriarCollection<WafclastPlayer>();
             Servidores = Database.CriarCollection<BotServidor>();
-            Regioes = Database.CriarCollection<WafclastRegiao>();
-            Itens = Database.CriarCollection<WafclastItem>();
+            PrefixLocker = new ConcurrentDictionary<ulong, bool>();
 
             new Data(this);
 
@@ -46,22 +48,7 @@ namespace WafclastRPG.Bot
         public void StartExecutingInteractivity(ulong userId) => PrefixLocker.TryAdd(userId, true);
 
         #endregion
-
-        public async Task<BotJogador> GetJogadorAsync(ulong id, DiscordUser user)
-        {
-            var jogador = await Jogadores.Find(x => x.Id == id).FirstOrDefaultAsync();
-            if (jogador == null)
-            {
-                jogador = new WafclastJogador(id);
-            }
-            return new BotJogador(jogador, this, user);
-        }
-
-        public Task ReplaceJogadorAsync(ulong id, WafclastJogador jogador)
-            => Jogadores.ReplaceOneAsync(x => x.Id == id, jogador, new ReplaceOptions { IsUpsert = true });
-
-        public async Task InsertJogadorAsync(WafclastJogador jogador)
-            => await Jogadores.InsertOneAsync(jogador);
+        #region Server
 
         public async Task<string> GetServerPrefixAsync(ulong serverId, string defaultPrefix)
         {
@@ -70,7 +57,6 @@ namespace WafclastRPG.Bot
                 return defaultPrefix;
             return svl.Prefix;
         }
-
         public string GetServerPrefix(ulong serverId, string defaultPrefix)
         {
             var svl = Servidores.Find(x => x.Id == serverId).FirstOrDefault();
@@ -78,17 +64,29 @@ namespace WafclastRPG.Bot
                 return defaultPrefix;
             return svl.Prefix;
         }
+        public Task DeleteServerAsync(ulong serverId)
+            => Servidores.DeleteOneAsync(x => x.Id == serverId);
 
-        public Task<WafclastRegiao> GetRegiaoAsync(int id)
-            => Regioes.Find(x => x.Id == id).FirstOrDefaultAsync();
+        public Task ReplaceServerAsync(ulong serverId, BotServidor server)
+            => Servidores.ReplaceOneAsync(x => x.Id == serverId, server, _replaceOptions);
 
-        public Task ReplaceRegiaoAsync(WafclastRegiao regiao)
-            => Regioes.ReplaceOneAsync(x => x.Id == regiao.Id, regiao, new ReplaceOptions { IsUpsert = true });
+        #endregion
+        #region Jogador
 
-        public Task ReplaceItemAsync(WafclastItem item)
-          => Itens.ReplaceOneAsync(x => x.ItemId == item.ItemId, item, new ReplaceOptions { IsUpsert = true });
+        public async Task<BotJogador> GetJogadorAsync(ulong id, DiscordUser user)
+        {
+            var jogador = await Jogadores.Find(x => x.Id == id).FirstOrDefaultAsync();
+            if (jogador == null)
+                jogador = new WafclastPlayer(id);
+            return new BotJogador(jogador, this, user);
+        }
 
-        public Task<WafclastItem> GetItemAsync(int id)
-          => Itens.Find(x => x.ItemId == id).FirstOrDefaultAsync();
+        public Task ReplaceJogadorAsync(ulong id, WafclastPlayer jogador)
+            => Jogadores.ReplaceOneAsync(x => x.Id == id, jogador, _replaceOptions);
+
+        public Task InsertJogadorAsync(WafclastPlayer jogador)
+            => Jogadores.InsertOneAsync(jogador);
+
+        #endregion
     }
 }

@@ -5,10 +5,9 @@ using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.Interactivity.Extensions;
 using System;
 using System.Threading.Tasks;
-using WafclastRPG.Bot.Comandos;
 using WafclastRPG.Bot.Comandos.Acao;
 using WafclastRPG.Bot.Comandos.Exibir;
-using WafclastRPG.Bot.Commands.UserCommands;
+using WafclastRPG.Bot.Commands.AdminCommands;
 using WafclastRPG.Bot.Events;
 
 namespace WafclastRPG.Bot
@@ -34,6 +33,9 @@ namespace WafclastRPG.Bot
             this.Client.GuildAvailable += (c, e) => GuildAvailable.Event(c, e, botInfo);
             this.Client.GuildMemberAdded += (c, e) => GuildMemberAdded.Event(c, e, botInfo);
             this.Client.GuildMemberRemoved += (c, e) => GuildMemberRemoved.Event(c, e, botInfo);
+            this.Client.MessageCreated += MessageCreated.Event;
+            this.Client.MessageDeleted += MessageDeleted.Event;
+            this.Client.MessageUpdated += MessageUpdated.Event;
             this.Client.ClientErrored += ClientErrored.Event;
 
             this.Client.UseInteractivity(new InteractivityConfiguration
@@ -46,20 +48,10 @@ namespace WafclastRPG.Bot
 
             this.CommandsNext.SetHelpFormatter<IComandoAjuda>();
             this.CommandsNext.RegisterCommands<ComandoAjuda>();
-            this.CommandsNext.RegisterCommands<ComandoStatus>();
-            this.CommandsNext.RegisterCommands<ComandoAdministrativo>();
-            this.CommandsNext.RegisterCommands<ComandoExplorar>();
-            this.CommandsNext.RegisterCommands<ComandoMochila>();
             this.CommandsNext.RegisterCommands<ComandoEquipamentos>();
-            this.CommandsNext.RegisterCommands<ComandoEquipar>();
-            this.CommandsNext.RegisterCommands<ComandoDesequipar>();
-            this.CommandsNext.RegisterCommands<ComandoExaminar>();
             this.CommandsNext.RegisterCommands<ComandoBot>();
-            this.CommandsNext.RegisterCommands<ComandoRank>();
             this.CommandsNext.RegisterCommands<ComandoPrefixo>();
-            this.CommandsNext.RegisterCommands<ComandoPapear>();
-            this.CommandsNext.RegisterCommands<ComandoHabilidade>();
-            this.CommandsNext.RegisterCommands<ComandoSaquear>();
+            this.CommandsNext.RegisterCommands<TestCommands>();
         }
     }
 }
