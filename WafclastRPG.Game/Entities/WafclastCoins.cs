@@ -33,6 +33,11 @@
             return false;
         }
 
+        public override string ToString()
+        {
+            return $"**{GetGold()}** Ouro, **{GetSilver()}** Prata e **{GetCopper()}** Cobre.";
+        }
+
         public ulong GetCopper() => Coins % SilverInCopper;
         public ulong GetSilver() => Coins % GoldInCopper / SilverInCopper;
         public ulong GetGold() => Coins / GoldInCopper;
