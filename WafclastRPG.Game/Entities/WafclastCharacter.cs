@@ -5,14 +5,12 @@ using System.Text;
 
 namespace WafclastRPG.Game.Entities
 {
-    public class WafclastCharacter
+    public class WafclastCharacter : WafclastLevel
     {
-        public int Level { get; private set; }
         public WafclastCoins Coins { get; private set; }
 
         public WafclastCharacter()
         {
-            Level = 0;
         }
 
         public void AddLevel()
