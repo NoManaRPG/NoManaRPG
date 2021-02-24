@@ -1,17 +1,8 @@
-﻿using WafclastRPG.Bot;
-
-namespace WafclastRPG.Game.Metadata
+﻿namespace WafclastRPG.Game.Metadata
 {
     public sealed class Data
     {
-        private readonly Banco banco;
-
-        public Data(Banco banco)
-        {
-            this.banco = banco;
-         //   CarregarComidas();
-        }
-
+        public Data() { }
         //private void CarregarComidas()
         //{
         //    var itens = typeof(Comidas).GetMethods();

@@ -10,15 +10,11 @@ namespace WafclastRPG.Game.Entities
 {
     public abstract class WafclastLevel
     {
-        public int Level { get; set; }
+        public int Level { get; set; } = 1;
         public double ExperienciaAtual { get; private set; }
         public double ExperienciaProximoNivel { get; private set; }
 
-        public WafclastLevel()
-        {
-            this.Level = 1;
-            this.ExperienciaProximoNivel = this.ExperienceTotalLevel(2);
-        }
+        public WafclastLevel() => this.ExperienciaProximoNivel = this.ExperienceTotalLevel(2);
 
         public WafclastLevel(int startLevel)
         {
@@ -66,8 +62,8 @@ namespace WafclastRPG.Game.Entities
             {
                 cm.AutoMap();
                 cm.SetIgnoreExtraElements(true);
-                cm.MapMember(c => c.ExperienciaAtual).SetSerializer(new Int32Serializer(BsonType.Double, new RepresentationConverter(true, true)));
-                cm.MapMember(c => c.ExperienciaProximoNivel).SetSerializer(new Int32Serializer(BsonType.Double, new RepresentationConverter(true, true)));
+                cm.MapMember(c => c.ExperienciaAtual).SetSerializer(new DoubleSerializer(BsonType.Double, new RepresentationConverter(true, true)));
+                cm.MapMember(c => c.ExperienciaProximoNivel).SetSerializer(new DoubleSerializer(BsonType.Double, new RepresentationConverter(true, true)));
             });
         }
     }

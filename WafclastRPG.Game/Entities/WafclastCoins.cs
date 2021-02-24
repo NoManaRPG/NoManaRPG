@@ -8,9 +8,9 @@ namespace WafclastRPG.Game.Entities
         private const ulong GoldInCopper = SilverInCopper * 100;
         private const ulong PlatinumInCopper = GoldInCopper * 100;
 
-        private ulong Coins { get; set; }
+        private ulong Coins { get; set; } = 0;
 
-        public WafclastCoins() => Coins = 0;
+        public WafclastCoins() { }
         public WafclastCoins(ulong startCoins) => Coins = startCoins;
 
         public void Add(ulong gold, ulong silver, ulong copper)

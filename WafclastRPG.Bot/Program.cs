@@ -17,7 +17,7 @@ namespace WafclastRPG.Bot
 
         static void Main(string[] args) => new Program().RodarBotAsync().GetAwaiter().GetResult();
 
-        public async Task RodarBotAsync()
+        public async Task RodarBotAsync()   
         {
             ConfigFile = Config.LoadFromJsonFile("Config.json");
             if (ConfigFile == null)

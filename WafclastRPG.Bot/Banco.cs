@@ -5,23 +5,22 @@ using System.Threading.Tasks;
 using WafclastRPG.Bot.Entidades;
 using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game.Entities;
-using WafclastRPG.Game.Metadata;
 
 namespace WafclastRPG.Bot
 {
     public class Banco : BotAsyncLock
     {
-        private IMongoClient Client { get; }
-        private IMongoDatabase Database { get; }
-        private IMongoCollection<WafclastPlayer> Jogadores { get; }
-        private IMongoCollection<BotServidor> Servidores { get; }
+        public IMongoClient Client { get; }
+        public IMongoDatabase Database { get; }
+        public IMongoCollection<WafclastPlayer> Jogadores { get; }
+        public IMongoCollection<BotServidor> Servidores { get; }
 
-        private ConcurrentDictionary<ulong, bool> PrefixLocker { get; }
-        private ReplaceOptions _replaceOptions = new ReplaceOptions { IsUpsert = true };
+        public ConcurrentDictionary<ulong, bool> PrefixLocker { get; }
+        public ReplaceOptions _replaceOptions = new ReplaceOptions { IsUpsert = true };
 
         public Banco()
         {
-            Client = new MongoClient("mongodb://localhost");
+            Client = new MongoClient("mongodb://localhost?retryWrites=true");
 #if DEBUG
 
             Database = Client.GetDatabase("WafclastV2Debug");
@@ -40,7 +39,7 @@ namespace WafclastRPG.Bot
 
 
 
-            new Data(this);
+            //new Data(this);
 
             #region Usar no futuro
             //var notificationLogBuilder = Builders<RPGJogador>.IndexKeys;
