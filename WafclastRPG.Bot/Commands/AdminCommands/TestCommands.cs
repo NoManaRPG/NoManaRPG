@@ -1,6 +1,4 @@
-﻿
-
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using MongoDB.Driver;
@@ -8,6 +6,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using WafclastRPG.Bot.Database;
 using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game.Entities;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
@@ -16,7 +15,7 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
 {
     public class TestCommands : BaseCommandModule
     {
-        public Banco banco;
+        public BotDatabase banco;
 
         [Command("testevalor")]
         [RequireOwner]
@@ -70,79 +69,74 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
 
         [Command("sessao")]
         [RequireOwner]
-        public async Task Sessao(CommandContext ctx)
+        public async Task Sessao(CommandContext ctx, ulong id)
         {
-            var can = new CancellationTokenSource();
-            await Task.Delay(new Random().Next(1000, 5000));
-            using (var session = await this.banco.Client.StartSessionAsync(cancellationToken: can.Token))
+            string mensagem;
+            using (var session = await this.banco.StartDatabaseSessionAsync())
             {
-                await session.WithTransactionAsync(async (s, ct) =>
-                {
-                    await Task.Delay(new Random().Next(1000, 5000));
-                    var user = await this.banco.Jogadores.Find(s, x => x.Id == ctx.User.Id).FirstOrDefaultAsync();
-                    if (user == null)
-                    {
-                        await ctx.ResponderAsync("Objeto não encontrado! cancelando operação.");
-                        can.Cancel();
-                        return s.AbortTransactionAsync();
-                    }
-                    user.Character.AddLevel();
-                    await this.banco.Jogadores.ReplaceOneAsync(s, x => x.Id == user.Id, user);
-                    await Task.Delay(new Random().Next(1000, 5000));
-                    return Task.CompletedTask;
-                }, cancellationToken: can.Token);
+                mensagem = await session.WithTransactionAsync(async (s, ct) =>
+                  {
+                      var user = await session.FindJogadorAsync(id);
+                      if (user.Character.Level >= 10)
+                          return "Nivel max";
 
-                await session.CommitTransactionAsync();
-                await ctx.ResponderAsync("alterado");
+                      user.Character.AddLevel();
+                      await user.SaveAsync();
+                      await ctx.ResponderAsync("+1 level");
+                      await Task.Delay(5000);
+
+                      user.Character.AddLevel();
+                      await user.SaveAsync();
+                      await ctx.ResponderAsync("+1 level..");
+                      await Task.Delay(5000);
+                      return "";
+                  });
             }
-
-
-            //using (var s = await this.banco.Client.StartSessionAsync())
-            //{
-
-            //    s.StartTransaction();
-            //    var data = s.Client.GetDatabase("WafclastV2Debug");
-            //    var Jogadores = data.GetCollection<WafclastPlayer>("WafclastPlayer");
-
-            //    var user = await Jogadores.Find(s, x => x.Id == ctx.User.Id).FirstOrDefaultAsync();
-            //    user.Character.AddLevel();
-            //    await Jogadores.ReplaceOneAsync(s, x => x.Id == user.Id, user);
-            //    await Task.Delay(3000);
-
-            //    await s.CommitTransactionAsync();
-
-            //    await ctx.ResponderAsync("alterado");
-            //}
-
+            await ctx.ResponderAsync(mensagem);
         }
 
-        [Command("apagar")]
+        [Command("editar")]
         [RequireOwner]
-        public async Task Apagar(CommandContext ctx)
+        public async Task editar(CommandContext ctx, ulong id)
         {
-            using (var session = await this.banco.Client.StartSessionAsync())
+            Task<bool> result;
+            using (var session = await this.banco.StartDatabaseSessionAsync())
             {
-                await session.WithTransactionAsync(async (s, ct) =>
+                result = await session.WithTransactionAsync(async (s, ct) =>
                 {
-                    await this.banco.Jogadores.DeleteOneAsync(s, x => x.Id == ctx.User.Id);
-                    return Task.CompletedTask;
+                    var user = await session.FindJogadorAsync(id);
+                    if (user.Character.Level >= 4)
+                        return Task.FromResult(false);
+                    user.Character.Level = 10;
+                    await user.SaveAsync();
+                    return Task.FromResult(true);
                 });
-
-                await session.CommitTransactionAsync();
-                await ctx.ResponderAsync("deletado");
             }
+
+            if (await result == true)
+                await ctx.ResponderAsync("alterado");
+            else
+                await ctx.ResponderAsync("não alterado");
         }
 
-        [Command("criar")]
+        [Command("zerar")]
         [RequireOwner]
         public async Task criar(CommandContext ctx)
         {
+            Task<bool> result;
+            using (var session = await this.banco.StartDatabaseSessionAsync())
+            {
+                result = await session.WithTransactionAsync(async (s, ct) =>
+                {
+                    var user = await session.FindJogadorAsync(ctx.User);
+                    user.Character.Level = 0;
+                    await user.SaveAsync();
+                    return Task.FromResult(true);
+                });
+            };
 
-            WafclastPlayer p = new WafclastPlayer(ctx.User.Id);
-            await banco.InsertJogadorAsync(p);
-
-            await ctx.ResponderAsync("Criado");
-
+            if (await result == true)
+                await ctx.ResponderAsync("zerado");
         }
     }
 }

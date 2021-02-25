@@ -1,27 +1,19 @@
 ﻿using DSharpPlus.Entities;
 using System.Threading.Tasks;
+using WafclastRPG.Bot.Database;
 using WafclastRPG.Game.Entities;
 
 namespace WafclastRPG.Bot.Entidades
 {
     public class BotJogador : WafclastPlayer
     {
-        private readonly Banco banco;
-        private readonly DiscordUser user;
-        private DiscordEmbedBuilder embed;
+        private readonly BotDatabaseSession banco;
 
-        public BotJogador(WafclastPlayer jogador, Banco banco, DiscordUser user) : base(jogador)
+        public BotJogador(WafclastPlayer jogador, BotDatabaseSession banco) : base(jogador)
         {
             this.banco = banco;
-            this.user = user;
         }
 
-        public DiscordEmbedBuilder NewEmbed()
-        {
-            embed.WithAuthor(user.Username, iconUrl: user.AvatarUrl);
-            return embed;
-        }
-
-        public Task Salvar() => this.banco.ReplaceJogadorAsync(this.Id, new WafclastPlayer(this));
+        public Task SaveAsync() => this.banco.ReplaceJogadorAsync(new WafclastPlayer(this));
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using WafclastRPG.Game;
 using DSharpPlus.Entities;
+using WafclastRPG.Bot.Database;
 
 namespace WafclastRPG.Bot
 {
@@ -13,11 +14,11 @@ namespace WafclastRPG.Bot
     {
         public Config ConfigFile { get; private set; }
         public BotInfo BotInfo { get; private set; }
-        public Banco Banco { get; private set; }
+        public BotDatabase Database { get; private set; }
 
         static void Main(string[] args) => new Program().RodarBotAsync().GetAwaiter().GetResult();
 
-        public async Task RodarBotAsync()   
+        public async Task RodarBotAsync()
         {
             ConfigFile = Config.LoadFromJsonFile("Config.json");
             if (ConfigFile == null)
@@ -47,13 +48,14 @@ namespace WafclastRPG.Bot
                 GatewayCompressionLevel = GatewayCompressionLevel.Stream,
                 AutoReconnect = true,
                 Token = token,
+                Intents = DiscordIntents.All,
                 MinimumLogLevel = logLevel,
             });
 
-            Banco = new Banco();
+            Database = new BotDatabase();
             BotInfo = new BotInfo();
             var services = new ServiceCollection()
-                .AddSingleton(this.Banco)
+                .AddSingleton(this.Database)
                 .AddSingleton(this.ConfigFile)
                 .AddSingleton(this.BotInfo)
                 .BuildServiceProvider();
@@ -79,9 +81,9 @@ namespace WafclastRPG.Bot
             if (gld == null)
                 return await Task.FromResult(-1);
 #if DEBUG
-            if (Banco.IsExecutingInteractivity(msg.Author.Id))
+            if (Database.IsExecutingInteractivity(msg.Author.Id))
                 return await Task.FromResult(-1);
-            var prefix = await Banco.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixDebug);
+            var prefix = await Database.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixDebug);
             var pfixLocation = msg.GetStringPrefixLength(prefix);
 #else
             var prefix = await Banco.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixRelease);

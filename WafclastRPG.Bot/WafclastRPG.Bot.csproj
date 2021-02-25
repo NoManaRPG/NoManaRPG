@@ -17,10 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00745" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00745" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00745" />
-    <PackageReference Include="MongoDB.Driver" Version="2.11.4" />
+    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00804" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00804" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00804" />
+    <PackageReference Include="MongoDB.Bson" Version="2.11.6" />
+    <PackageReference Include="MongoDB.Driver" Version="2.11.6" />
     <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
   </ItemGroup>
 
