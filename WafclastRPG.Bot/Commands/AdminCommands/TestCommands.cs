@@ -1,4 +1,5 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using MongoDB.Driver;
@@ -33,7 +34,7 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
                 hab = Regex.Replace(hab, @"\s+", "");
                 if (Enum.TryParse<enumtest>(hab, true, out var habilidade))
                 {
-                    embed.WithTitle(habilidade.GetEnumDescription().Titulo().Bold());
+                    embed.WithTitle(Formatter.Bold(habilidade.GetEnumDescription().Titulo()));
                 }
                 else
                 {
