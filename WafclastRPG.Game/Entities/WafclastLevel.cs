@@ -3,8 +3,6 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Options;
 using MongoDB.Bson.Serialization.Serializers;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace WafclastRPG.Game.Entities
 {
@@ -22,22 +20,23 @@ namespace WafclastRPG.Game.Entities
             this.ExperienciaProximoNivel = this.ExperienceTotalLevel(startLevel + 1);
         }
 
-        public bool AddExp(double experience)
+        public int AddExp(double experience)
         {
+            int niveisEv = 0;
             double expResultante = this.ExperienciaAtual + experience;
             if (expResultante >= this.ExperienciaProximoNivel)
             {
                 do
                 {
-                    double quantosPrecisaProxNivel = expResultante - this.ExperienciaProximoNivel;
+                    expResultante = expResultante - this.ExperienciaProximoNivel;
                     this.Evoluir();
-                    expResultante = quantosPrecisaProxNivel;
+                    niveisEv++;
                 } while (expResultante >= this.ExperienciaProximoNivel);
-                this.ExperienciaAtual += (int)Math.Truncate(expResultante);
-                return true;
+                this.ExperienciaAtual += expResultante;
+                return niveisEv;
             }
-            this.ExperienciaAtual += (int)Math.Truncate(experience);
-            return false;
+            this.ExperienciaAtual += experience;
+            return niveisEv;
         }
 
         private void Evoluir()
