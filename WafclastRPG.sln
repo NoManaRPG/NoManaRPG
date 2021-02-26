@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WafclastRPG.Bot", "Wafclast
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WafclastRPG.Game", "WafclastRPG.Game\WafclastRPG.Game.csproj", "{35B5E87F-7F21-4024-AFEE-5585910B044D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WafclastRPG.Data", "WafclastRPG.Data\WafclastRPG.Data.csproj", "{A51223A6-D979-4FD8-98A6-011210E3CB5D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{35B5E87F-7F21-4024-AFEE-5585910B044D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35B5E87F-7F21-4024-AFEE-5585910B044D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35B5E87F-7F21-4024-AFEE-5585910B044D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A51223A6-D979-4FD8-98A6-011210E3CB5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A51223A6-D979-4FD8-98A6-011210E3CB5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A51223A6-D979-4FD8-98A6-011210E3CB5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A51223A6-D979-4FD8-98A6-011210E3CB5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
