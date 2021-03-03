@@ -1,32 +1,32 @@
 ﻿using MongoDB.Bson.Serialization;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace WafclastRPG.Game.Entities
 {
     public class WafclastCharacter : WafclastLevel
     {
         public WafclastCoins Coins { get; private set; } = new WafclastCoins(20);
-        public ulong LocalId { get; private set; }
-        public int VelocidadeMovimento { get; private set; }
-        public int VelocidadeAtaque { get; private set; }
-        public int Defesa { get; private set; }
-        public int Ataque { get; private set; }
-        public int Vida { get; private set; }
-
-        public int Concentracao { get; private set; } = 5;
-        public int Sorte { get; private set; } = 1;
-        public int Estamina { get; private set; } = 5;
+        public WafclastCharacterAtributos Atributo { get; private set; } = new WafclastCharacterAtributos();
+        public ulong LocalId { get; private set; } = 0;
+        public decimal Defesa { get; private set; } = 0;
+        public decimal Ataque { get; private set; } = 0;
+        public decimal Vida { get; private set; } = 0;
 
         public WafclastCharacter()
         {
+            CalcStats();
+        }
+
+        public void CalcStats()
+        {
+            Ataque = Atributo.Forca * 2;
+            Vida = Atributo.Resistencia * 4;
         }
 
         public void AddLevel()
         {
             Level++;
         }
+
         public void RemoveLevel()
         {
             Level--;

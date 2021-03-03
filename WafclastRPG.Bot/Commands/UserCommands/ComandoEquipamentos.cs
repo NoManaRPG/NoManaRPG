@@ -3,7 +3,6 @@ using DSharpPlus.CommandsNext.Attributes;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Atributos;
 using WafclastRPG.Bot.Database;
-using WafclastRPG.Game;
 
 namespace WafclastRPG.Bot.Comandos.Exibir
 {

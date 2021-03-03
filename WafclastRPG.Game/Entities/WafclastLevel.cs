@@ -9,8 +9,8 @@ namespace WafclastRPG.Game.Entities
     public abstract class WafclastLevel
     {
         public int Level { get; set; } = 1;
-        public double ExperienciaAtual { get; private set; }
-        public double ExperienciaProximoNivel { get; private set; }
+        public decimal ExperienciaAtual { get; private set; }
+        public decimal ExperienciaProximoNivel { get; private set; }
 
         public WafclastLevel() => this.ExperienciaProximoNivel = this.ExperienceTotalLevel(2);
 
@@ -20,10 +20,10 @@ namespace WafclastRPG.Game.Entities
             this.ExperienciaProximoNivel = this.ExperienceTotalLevel(startLevel + 1);
         }
 
-        public int AddExp(double experience)
+        public int AddExp(decimal experience)
         {
             int niveisEv = 0;
-            double expResultante = this.ExperienciaAtual + experience;
+            decimal expResultante = this.ExperienciaAtual + experience;
             if (expResultante >= this.ExperienciaProximoNivel)
             {
                 do
@@ -50,7 +50,7 @@ namespace WafclastRPG.Game.Entities
         private int ExperienceTotalLevel(int level)
         {
             double v1 = 1.0 / 8.0 * level * (level - 1.0) + 75.0;
-            double pow1 = Math.Pow(2, (level - 1.0) / 7.0) - 1;
+            double pow1 = Math.Pow(3, (level - 1.0) / 7.0) - 1;
             double pow2 = 1 - Math.Pow(2, -1 / 7.0);
             return (int)Math.Truncate(v1 * (pow1 / pow2));
         }
@@ -61,8 +61,8 @@ namespace WafclastRPG.Game.Entities
             {
                 cm.AutoMap();
                 cm.SetIgnoreExtraElements(true);
-                cm.MapMember(c => c.ExperienciaAtual).SetSerializer(new DoubleSerializer(BsonType.Double, new RepresentationConverter(true, true)));
-                cm.MapMember(c => c.ExperienciaProximoNivel).SetSerializer(new DoubleSerializer(BsonType.Double, new RepresentationConverter(true, true)));
+                cm.MapMember(c => c.ExperienciaAtual).SetSerializer(new DecimalSerializer(BsonType.Decimal128, new RepresentationConverter(true, true)));
+                cm.MapMember(c => c.ExperienciaProximoNivel).SetSerializer(new DecimalSerializer(BsonType.Decimal128, new RepresentationConverter(true, true)));
             });
         }
     }

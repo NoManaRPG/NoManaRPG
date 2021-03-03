@@ -1,5 +1,4 @@
-﻿using DSharpPlus.Entities;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WafclastRPG.Bot.Database;
 using WafclastRPG.Game.Entities;
 
