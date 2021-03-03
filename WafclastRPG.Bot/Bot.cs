@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WafclastRPG.Bot.Comandos.Acao;
 using WafclastRPG.Bot.Comandos.Exibir;
 using WafclastRPG.Bot.Commands.AdminCommands;
+using WafclastRPG.Bot.Commands.GeneralCommands;
 using WafclastRPG.Bot.Events;
 
 namespace WafclastRPG.Bot
@@ -51,6 +52,7 @@ namespace WafclastRPG.Bot
             this.CommandsNext.RegisterCommands<ComandoEquipamentos>();
             this.CommandsNext.RegisterCommands<ComandoBot>();
             this.CommandsNext.RegisterCommands<ComandoPrefixo>();
+            this.CommandsNext.RegisterCommands<StartCommand>();
             this.CommandsNext.RegisterCommands<TestCommands>();
         }
     }

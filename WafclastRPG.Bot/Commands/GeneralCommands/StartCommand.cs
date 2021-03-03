@@ -29,7 +29,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
             {
                 result = await session.WithTransactionAsync(async (s, ct) =>
                 {
-                    var player = await session.FindJogadorAsync(ctx.User);
+                    var player = await session.FindPlayerAsync(ctx.User);
                     if (player != null)
                         return Task.FromResult(false);
 

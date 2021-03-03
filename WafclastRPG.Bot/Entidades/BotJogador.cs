@@ -13,6 +13,6 @@ namespace WafclastRPG.Bot.Entidades
             this.banco = banco;
         }
 
-        public Task SaveAsync() => this.banco.ReplaceJogadorAsync(new WafclastPlayer(this));
+        public Task SaveAsync() => this.banco.ReplacePlayerAsync(new WafclastPlayer(this));
     }
 }

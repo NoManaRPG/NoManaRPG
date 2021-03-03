@@ -77,7 +77,7 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
             {
                 mensagem = await session.WithTransactionAsync(async (s, ct) =>
                   {
-                      var user = await session.FindJogadorAsync(id);
+                      var user = await session.FindPlayerAsync(id);
                       if (user.Character.Level >= 10)
                           return "Nivel max";
 
@@ -105,7 +105,7 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
             {
                 result = await session.WithTransactionAsync(async (s, ct) =>
                 {
-                    var user = await session.FindJogadorAsync(id);
+                    var user = await session.FindPlayerAsync(id);
                     if (user.Character.Level >= 4)
                         return Task.FromResult(false);
                     user.Character.Level = 10;
@@ -129,7 +129,7 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
             {
                 result = await session.WithTransactionAsync(async (s, ct) =>
                 {
-                    var user = await session.FindJogadorAsync(ctx.User);
+                    var user = await session.FindPlayerAsync(ctx.User);
                     user.Character.Level = 0;
                     await user.SaveAsync();
                     return Task.FromResult(true);

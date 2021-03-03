@@ -32,14 +32,14 @@ namespace WafclastRPG.Bot.Database
         /// </summary>
         /// <param name="user"></param>
         /// <returns>O BotJogador ou null</returns>
-        public async Task<BotJogador> FindJogadorAsync(DiscordUser user) => await FindJogadorAsync(user.Id);
+        public async Task<BotJogador> FindPlayerAsync(DiscordUser user) => await FindPlayerAsync(user.Id);
 
         /// <summary>
         /// Procura no banco de dados pelo o Id informado.
         /// </summary>
         /// <param name="user"></param>
         /// <returns>O BotJogador ou null</returns>
-        public async Task<BotJogador> FindJogadorAsync(ulong id)
+        public async Task<BotJogador> FindPlayerAsync(ulong id)
         {
             var jogador = await CollectionJogadores.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
             if (jogador == null)
@@ -54,9 +54,9 @@ namespace WafclastRPG.Bot.Database
         /// <param name="id"></param>
         /// <param name="jogador"></param>
         /// <returns></returns>
-        public Task ReplaceJogadorAsync(WafclastPlayer jogador) => CollectionJogadores.ReplaceOneAsync(Session, x => x.Id == jogador.Id, jogador, new ReplaceOptions { IsUpsert = true });
+        public Task ReplacePlayerAsync(WafclastPlayer jogador) => CollectionJogadores.ReplaceOneAsync(Session, x => x.Id == jogador.Id, jogador, new ReplaceOptions { IsUpsert = true });
 
-        public Task InsertJogadorAsync(WafclastPlayer jogador) => CollectionJogadores.InsertOneAsync(Session, jogador);
+        public Task InsertPlayerAsync(WafclastPlayer jogador) => CollectionJogadores.InsertOneAsync(Session, jogador);
 
     }
     #endregion
