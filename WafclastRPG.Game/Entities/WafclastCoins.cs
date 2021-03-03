@@ -54,6 +54,7 @@ namespace WafclastRPG.Game.Entities
             {
                 cm.AutoMap();
                 cm.SetIgnoreExtraElements(true);
+                cm.MapProperty(c => c.Coins);
             });
         }
         #endregion
