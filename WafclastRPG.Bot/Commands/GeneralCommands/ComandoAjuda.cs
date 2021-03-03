@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using static DSharpPlus.CommandsNext.CommandsNextExtension;
-using static WafclastRPG.Bot.Utilities;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using DSharpPlus;
@@ -105,9 +104,10 @@ namespace WafclastRPG.Bot.Comandos.Exibir
 
             var str = new StringBuilder();
 
-            str.Append($"**Geral** - ");
-            str.Append("`ajuda`");
-          
+            str.Append($"**Geral** -");
+            str.Append($"{Formatter.InlineCode("comecar")} - ");
+            str.Append($"{Formatter.InlineCode("ajuda")} ");
+
 
             embed.WithDescription(str.ToString());
             embed.WithColor(DiscordColor.Violet);
