@@ -48,12 +48,14 @@ namespace WafclastRPG.Bot
             });
 
             this.CommandsNext.SetHelpFormatter<IComandoAjuda>();
-            this.CommandsNext.RegisterCommands<ComandoAjuda>();
+            this.CommandsNext.RegisterCommands<HelpCommand>();
             this.CommandsNext.RegisterCommands<ComandoEquipamentos>();
             this.CommandsNext.RegisterCommands<ComandoBot>();
             this.CommandsNext.RegisterCommands<ComandoPrefixo>();
             this.CommandsNext.RegisterCommands<StartCommand>();
             this.CommandsNext.RegisterCommands<TestCommands>();
+            this.CommandsNext.RegisterCommands<StatusCommand>();
+            this.CommandsNext.RegisterCommands<DatabaseCommands>();
         }
     }
 }

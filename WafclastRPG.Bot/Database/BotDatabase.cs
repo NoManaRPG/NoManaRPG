@@ -9,12 +9,12 @@ namespace WafclastRPG.Bot.Database
 {
     public class BotDatabase
     {
-        private IMongoClient MongoClient { get; }
-        private IMongoDatabase MongoDatabase { get; }
-        private IMongoCollection<WafclastPlayer> CollectionJogadores { get; }
-        private IMongoCollection<BotServidor> CollectionServidores { get; }
+        public IMongoClient MongoClient { get; }
+        public IMongoDatabase MongoDatabase { get; }
+        public IMongoCollection<WafclastPlayer> CollectionJogadores { get; }
+        public IMongoCollection<BotServidor> CollectionServidores { get; }
 
-        private ConcurrentDictionary<ulong, bool> PrefixLocker { get; }
+        public ConcurrentDictionary<ulong, bool> PrefixLocker { get; }
 
         public BotDatabase()
         {
@@ -46,6 +46,14 @@ namespace WafclastRPG.Bot.Database
         public async Task<BotDatabaseSession> StartDatabaseSessionAsync() => new BotDatabaseSession(
             await MongoClient.StartSessionAsync(),
             CollectionJogadores);
+
+        /// <summary>
+        /// Procura no banco de dados pelo o Id informado.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>O BotJogador ou null</returns>
+        public async Task<WafclastPlayer> FindPlayerAsync(ulong id)
+            => await CollectionJogadores.Find(x => x.Id == id).FirstOrDefaultAsync();
 
         #region Interactivity
 

@@ -9,27 +9,26 @@ namespace WafclastRPG.Game.Entities
         public ulong LocalId { get; private set; } = 0;
         public decimal Defesa { get; private set; } = 0;
         public decimal Ataque { get; private set; } = 0;
-        public decimal Vida { get; private set; } = 0;
+
+        public decimal VidaAtual { get; private set; } = 0;
+        public decimal VidaMaxima { get; private set; } = 0;
 
         public WafclastCharacter()
         {
             CalcStats();
+            VidaAtual = VidaMaxima;
         }
 
         public void CalcStats()
         {
             Ataque = Atributo.Forca * 2;
-            Vida = Atributo.Resistencia * 4;
+            VidaMaxima = Atributo.Resistencia * 4;
         }
 
         public void AddLevel()
         {
             Level++;
-        }
-
-        public void RemoveLevel()
-        {
-            Level--;
+            VidaAtual = VidaMaxima;
         }
 
         public static void MapBuilder()
