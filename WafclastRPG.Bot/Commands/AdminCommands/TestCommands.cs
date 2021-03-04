@@ -22,7 +22,7 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
         [RequireOwner]
         public async Task CommmandEnumTest(CommandContext ctx, [RemainingText] string hab = "")
         {
-            var embed = new DiscordEmbedBuilder().NewEmbed(ctx);
+            var embed = new DiscordEmbedBuilder();
 
             if (string.IsNullOrEmpty(hab))
             {
