@@ -44,8 +44,7 @@ namespace WafclastRPG.Bot.Database
         }
 
         public async Task<BotDatabaseSession> StartDatabaseSessionAsync() => new BotDatabaseSession(
-            await MongoClient.StartSessionAsync(),
-            CollectionJogadores);
+            await MongoClient.StartSessionAsync(), this);
 
         /// <summary>
         /// Procura no banco de dados pelo o Id informado.

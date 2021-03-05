@@ -12,14 +12,13 @@ namespace WafclastRPG.Bot.Database
 {
     public class BotDatabaseSession : IDisposable
     {
-        public IClientSessionHandle Session { get; }
-        private IMongoCollection<WafclastPlayer> CollectionJogadores { get; }
+        private IClientSessionHandle Session { get; }
+        private BotDatabase Database { get; }
 
-        public BotDatabaseSession(IClientSessionHandle clientSessionHandle,
-            IMongoCollection<WafclastPlayer> collectionJogadores)
+        public BotDatabaseSession(IClientSessionHandle session, BotDatabase database)
         {
-            Session = clientSessionHandle;
-            CollectionJogadores = collectionJogadores;
+            Session = session;
+            Database = database;
         }
 
         public Task<TResult> WithTransactionAsync<TResult>(Func<IClientSessionHandle, CancellationToken, Task<TResult>> callbackAsync, TransactionOptions transactionOptions = null, CancellationToken cancellationToken = default) => Session.WithTransactionAsync(callbackAsync: callbackAsync);
@@ -41,7 +40,7 @@ namespace WafclastRPG.Bot.Database
         /// <returns>O BotJogador ou null</returns>
         public async Task<BotJogador> FindPlayerAsync(ulong id)
         {
-            var jogador = await CollectionJogadores.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
+            var jogador = await Database.CollectionJogadores.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
             if (jogador == null)
                 return null;
             return new BotJogador(jogador, this);
@@ -54,10 +53,12 @@ namespace WafclastRPG.Bot.Database
         /// <param name="id"></param>
         /// <param name="jogador"></param>
         /// <returns></returns>
-        public Task ReplacePlayerAsync(WafclastPlayer jogador) => CollectionJogadores.ReplaceOneAsync(Session, x => x.Id == jogador.Id, jogador, new ReplaceOptions { IsUpsert = true });
+        public Task ReplacePlayerAsync(WafclastPlayer jogador) => Database.CollectionJogadores.ReplaceOneAsync(Session, x => x.Id == jogador.Id, jogador, new ReplaceOptions { IsUpsert = true });
 
-        public Task InsertPlayerAsync(WafclastPlayer jogador) => CollectionJogadores.InsertOneAsync(Session, jogador);
+        public Task InsertPlayerAsync(WafclastPlayer jogador) => Database.CollectionJogadores.InsertOneAsync(Session, jogador);
+
+        #endregion 
+
 
     }
-    #endregion
 }
