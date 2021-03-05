@@ -14,9 +14,9 @@ namespace WafclastRPG.Bot.Comandos.Exibir
     {
         public BotInfo botInfo;
 
-        [Command("bot")]
+        [Command("info")]
         [Description("Exibe informações sobre o bot como memoria usada, quantia de servidores etc.")]
-        public async Task ComandoBotAsync(CommandContext ctx)
+        public async Task InfoCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
             var embed = new DiscordEmbedBuilder();

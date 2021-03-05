@@ -15,7 +15,20 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
         [Command("deletar-user")]
         [Description("Apaga o usuario")]
         [RequireOwner]
-        public async Task DeletarUser(CommandContext ctx, DiscordUser user)
+        public async Task DeletarUserAsync(CommandContext ctx, DiscordUser user)
+        {
+            await ctx.TriggerTypingAsync();
+            var result = await banco.CollectionJogadores.DeleteOneAsync(x => x.Id == user.Id);
+            if (result.DeletedCount >= 1)
+                await ctx.ResponderAsync("usuario deletado!");
+            else
+                await ctx.ResponderAsync("não foi possível deletar!");
+        }
+
+        [Command("criar-mapa")]
+        [Description("Cria o mapa atual")]
+        [RequireOwner]
+        public async Task Map(CommandContext ctx, DiscordUser user)
         {
             await ctx.TriggerTypingAsync();
             var result = await banco.CollectionJogadores.DeleteOneAsync(x => x.Id == user.Id);

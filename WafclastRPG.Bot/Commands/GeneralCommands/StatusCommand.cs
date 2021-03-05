@@ -16,7 +16,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
         [Command("status")]
         [Description("Exibe o status do seu personagem.")]
         [Usage("status")]
-        public async Task StatusCommandAb(CommandContext ctx)
+        public async Task StatusCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
             var player = await banco.FindPlayerAsync(ctx.User.Id);

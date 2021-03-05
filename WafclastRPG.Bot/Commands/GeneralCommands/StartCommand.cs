@@ -17,7 +17,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
         [Aliases("start")]
         [Description("Cria um personagem para o bot poder usar em outros comandos.")]
         [Usage("comecar")]
-        public async Task StartCommandAb(CommandContext ctx)
+        public async Task StartCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
 

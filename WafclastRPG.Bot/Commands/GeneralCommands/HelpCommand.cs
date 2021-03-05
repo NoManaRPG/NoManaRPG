@@ -24,10 +24,33 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         [Example("ajuda status", "Exibe o que é o comando *status*, seus argumentos e abreviações..")]
         [Example("ajuda", "Exibe todos os comandos.")]
         [Usage("ajuda [ comando ]")]
-        public async Task ComandoAjudaAsync(CommandContext ctx, params string[] comando)
+        [Priority(0)]
+        public async Task HelpCommanAsync(CommandContext ctx, params string[] comando)
         {
             await ctx.TriggerTypingAsync();
             await new DefaultHelpModule().DefaultHelpAsync(ctx, comando);
+        }
+
+        [Command("admin")]
+        [Description("Exibe os comandos de Administrador.")]
+        public async Task HelpCommandAdminAsync(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+
+            DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
+
+            var str = new StringBuilder();
+
+            str.Append($"**Geral** -");
+            str.Append($"{Formatter.InlineCode("deletar-user")} - ");
+            str.Append($"{Formatter.InlineCode("criar-mapa")} - ");
+
+
+            embed.WithDescription(str.ToString());
+            embed.WithColor(DiscordColor.Violet);
+            embed.WithTimestamp(DateTime.Now);
+
+            await ctx.RespondAsync(embed.Build());
         }
     }
 
@@ -108,6 +131,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             str.Append($"{Formatter.InlineCode("comecar")} - ");
             str.Append($"{Formatter.InlineCode("ajuda")} - ");
             str.Append($"{Formatter.InlineCode("status")} - ");
+            str.Append($"{Formatter.InlineCode("info")} - ");
 
 
             embed.WithDescription(str.ToString());
