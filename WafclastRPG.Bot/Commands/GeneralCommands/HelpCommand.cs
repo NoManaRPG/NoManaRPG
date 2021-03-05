@@ -24,7 +24,6 @@ namespace WafclastRPG.Bot.Comandos.Exibir
         [Example("ajuda status", "Exibe o que é o comando *status*, seus argumentos e abreviações..")]
         [Example("ajuda", "Exibe todos os comandos.")]
         [Usage("ajuda [ comando ]")]
-        [Priority(0)]
         public async Task HelpCommanAsync(CommandContext ctx, params string[] comando)
         {
             await ctx.TriggerTypingAsync();
