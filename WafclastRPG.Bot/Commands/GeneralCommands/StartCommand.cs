@@ -1,6 +1,7 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using MongoDB.Driver;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Atributos;
 using WafclastRPG.Bot.Database;
@@ -20,6 +21,12 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
         public async Task StartCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
+            var rm = await banco.CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
+            if (rm == null || rm.Tipo != WafclastMapaType.Cidade)
+            {
+                await ctx.ResponderAsync("você precisa criar um personagem na cidade!");
+                return;
+            }
 
             Task<bool> result;
             using (var session = await this.banco.StartDatabaseSessionAsync())
@@ -31,6 +38,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                         return Task.FromResult(false);
 
                     var newPlayer = new WafclastPlayer(ctx.User.Id);
+                    newPlayer.Character.LocalId = rm.Id;
                     await session.InsertPlayerAsync(newPlayer);
                     return Task.FromResult(true);
                 });

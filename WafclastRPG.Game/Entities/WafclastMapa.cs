@@ -6,7 +6,9 @@ namespace WafclastRPG.Game.Entities
     {
         public ulong Id { get; private set; }
         public WafclastMapaType Tipo { get; private set; }
-        public int QuantidadeMonstros { get; private set; } = 0;
+        public WafclastCoordinates Coordinates { get; set; }
+        public int QuantidadeMonstros { get; set; } = 0;
+
         public WafclastMapa(ulong id, WafclastMapaType tipo)
         {
             Id = id;

@@ -11,6 +11,7 @@ namespace WafclastRPG.Game.Entities
         public decimal Defesa { get; private set; } = 0;
         public decimal Ataque { get; private set; } = 0;
         public decimal Vida { get; private set; } = 0;
+        public decimal VidaMaxima { get; private set; } = 0;
         public decimal Exp { get; private set; } = 0;
 
         public DateTime DateSpawn { get; set; }

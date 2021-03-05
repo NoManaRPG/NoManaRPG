@@ -6,7 +6,7 @@ namespace WafclastRPG.Game.Entities
     {
         public WafclastCoins Coins { get; private set; } = new WafclastCoins(20);
         public WafclastCharacterAtributos Atributo { get; private set; } = new WafclastCharacterAtributos();
-        public ulong LocalId { get; private set; } = 0;
+        public ulong LocalId { get; set; } = 0;
         public decimal Defesa { get; private set; } = 0;
         public decimal Ataque { get; private set; } = 0;
 
