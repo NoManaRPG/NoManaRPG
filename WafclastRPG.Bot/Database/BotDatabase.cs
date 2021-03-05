@@ -13,8 +13,11 @@ namespace WafclastRPG.Bot.Database
         public IMongoDatabase MongoDatabase { get; }
         public IMongoCollection<WafclastPlayer> CollectionJogadores { get; }
         public IMongoCollection<BotServidor> CollectionServidores { get; }
+        public IMongoCollection<WafclastMonster> CollectionMonsters { get; }
+        public IMongoCollection<WafclastMapa> CollectionMaps { get; }
 
-        public ConcurrentDictionary<ulong, bool> PrefixLocker { get; }
+        public ConcurrentDictionary<ulong, bool> PrefixLocker
+        { get; }
 
         public BotDatabase()
         {
@@ -27,13 +30,17 @@ namespace WafclastRPG.Bot.Database
 #endif
             #endregion
 
-            WafclastPlayer.MapBuilder();
-            WafclastLevel.MapBuilderLevel();
-            WafclastCoins.MapBuilder();
             WafclastCharacter.MapBuilder();
+            WafclastCoins.MapBuilder();
+            WafclastLevel.MapBuilderLevel();
+            WafclastMapa.MapBuilder();
+            WafclastMonster.MapBuilder();
+            WafclastPlayer.MapBuilder();
 
             CollectionJogadores = MongoDatabase.CriarCollection<WafclastPlayer>();
             CollectionServidores = MongoDatabase.CriarCollection<BotServidor>();
+            CollectionMonsters = MongoDatabase.CriarCollection<WafclastMonster>();
+            CollectionMaps = MongoDatabase.CriarCollection<WafclastMapa>();
             PrefixLocker = new ConcurrentDictionary<ulong, bool>();
 
             #region Usar no futuro
