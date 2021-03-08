@@ -34,7 +34,7 @@ namespace WafclastRPG.Bot
             this.Client.GuildAvailable += (c, e) => GuildAvailable.Event(c, e, botInfo);
             this.Client.GuildMemberAdded += (c, e) => GuildMemberAdded.Event(c, e, botInfo);
             this.Client.GuildMemberRemoved += (c, e) => GuildMemberRemoved.Event(c, e, botInfo);
-            this.Client.MessageCreated += MessageCreated.Event;
+            this.Client.MessageCreated += (c, e) => MessageCreated.Event(c,e, CommandsNext);
             this.Client.MessageDeleted += MessageDeleted.Event;
             this.Client.MessageUpdated += MessageUpdated.Event;
             this.Client.ClientErrored += ClientErrored.Event;
@@ -50,7 +50,7 @@ namespace WafclastRPG.Bot
             this.CommandsNext.SetHelpFormatter<IComandoAjuda>();
             this.CommandsNext.RegisterCommands<HelpCommand>();
             this.CommandsNext.RegisterCommands<ComandoEquipamentos>();
-            this.CommandsNext.RegisterCommands<ComandoBot>();
+            this.CommandsNext.RegisterCommands<InfoCommand>();
             this.CommandsNext.RegisterCommands<ComandoPrefixo>();
             this.CommandsNext.RegisterCommands<StartCommand>();
             this.CommandsNext.RegisterCommands<TestCommands>();
