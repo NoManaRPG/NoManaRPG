@@ -59,6 +59,7 @@ namespace WafclastRPG.Bot
             this.CommandsNext.RegisterCommands<DatabaseCommands>();
             this.CommandsNext.RegisterCommands<AttackCommand>();
             this.CommandsNext.RegisterCommands<TravelCommand>();
+            this.CommandsNext.RegisterCommands<LookCommand>();
         }
     }
 }
