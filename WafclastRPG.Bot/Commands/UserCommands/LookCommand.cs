@@ -75,8 +75,13 @@ namespace WafclastRPG.Bot.Commands.UserCommands
                 var monster = await banco.CollectionMonsters.Find(x => x.Id == ctx.Channel.Id + id).FirstOrDefaultAsync();
                 if (monster != null)
                 {
-                    var porcentagemLife = Convert.ToInt32((monster.VidaAtual / monster.VidaMaxima) * 100);
-                    await ctx.RespondAsync($"Estado do {Formatter.Bold(monster.Nome)}: {VidaEmTexto(porcentagemLife)}");
+                    if (monster.DateSpawn > DateTime.UtcNow)
+                        await ctx.ResponderAsync($"o monstro {Formatter.Bold(monster.Nome)} está morto!");
+                    else
+                    {
+                        var porcentagemLife = Convert.ToInt32((monster.VidaAtual / monster.VidaMaxima) * 100);
+                        await ctx.RespondAsync($"Estado do {Formatter.Bold(monster.Nome)}: {VidaEmTexto(porcentagemLife)}");
+                    }
                 }
                 else
                     await ctx.ResponderAsync(Strings.MonstroNaoEncontrado(id));
