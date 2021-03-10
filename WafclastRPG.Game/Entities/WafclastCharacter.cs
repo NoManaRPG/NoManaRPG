@@ -7,6 +7,7 @@ namespace WafclastRPG.Game.Entities
         public WafclastCoins Coins { get; private set; } = new WafclastCoins(20);
         public WafclastCharacterAtributos Atributo { get; private set; } = new WafclastCharacterAtributos();
         public ulong LocalId { get; set; } = 0;
+        public ulong ServerId { get; set; } = 0;
         public decimal Defesa { get; private set; } = 0;
         public decimal Ataque { get; private set; } = 0;
 
@@ -29,6 +30,26 @@ namespace WafclastRPG.Game.Entities
         {
             Level++;
             VidaAtual = VidaMaxima;
+        }
+
+        /// <summary>
+        /// Retorna true caso tenha sido abatido.
+        /// </summary>
+        /// <param name="valor"></param>
+        /// <returns></returns>
+        public bool ReceberDano(decimal valor)
+        {
+            VidaAtual -= valor;
+            if (VidaAtual <= 0)
+                return true;
+            return false;
+        }
+
+        public void ReceberVida(decimal valor)
+        {
+            VidaAtual += valor;
+            if (VidaAtual >= VidaMaxima)
+                VidaAtual = VidaMaxima;
         }
 
         public static void MapBuilder()
