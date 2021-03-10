@@ -26,7 +26,7 @@ namespace WafclastRPG.Bot.Database
 #if DEBUG
             MongoDatabase = MongoClient.GetDatabase("WafclastV2Debug");
 #else
-            Database = Client.GetDatabase("WafclastV2");
+            MongoDatabase = MongoClient.GetDatabase("WafclastV2");
 #endif
             #endregion
 

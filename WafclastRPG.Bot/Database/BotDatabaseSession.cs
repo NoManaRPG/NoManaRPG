@@ -57,8 +57,22 @@ namespace WafclastRPG.Bot.Database
 
         public Task InsertPlayerAsync(WafclastPlayer jogador) => Database.CollectionJogadores.InsertOneAsync(Session, jogador);
 
-        #endregion 
+        #endregion
+
+        #region Monstro
+
+        public async Task<WafclastMonster> FindMonsterAsync(ulong id)
+        {
+            var monster = await Database.CollectionMonsters.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
+            if (monster == null)
+                return null;
+            return monster;
+        }
+
+        public Task SaveMonsterAsync(WafclastMonster monster)
+            => Database.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster);
 
 
+        #endregion
     }
 }
