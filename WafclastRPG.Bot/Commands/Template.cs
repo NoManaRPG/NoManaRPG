@@ -1,0 +1,50 @@
+﻿using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using WafclastRPG.Bot.Atributos;
+using WafclastRPG.Bot.Database;
+using WafclastRPG.Bot.Extensions;
+
+namespace WafclastRPG.Bot.Commands
+{
+    public class Template : BaseCommandModule
+    {
+        public BotDatabase banco;
+
+        [Command("")]
+        [Description("Permite ")]
+        [Usage("")]
+        public async Task TemplateAsync(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+            Task<Response> result;
+            using (var session = await this.banco.StartDatabaseSessionAsync())
+            {
+                result = await session.WithTransactionAsync(async (s, ct) =>
+                {
+                    var player = await session.FindPlayerAsync(ctx.User);
+                    if (player == null)
+                        return Task.FromResult(new Response() { IsPlayerFound = false });
+
+
+                    return Task.FromResult(new Response());
+                });
+            };
+            var _response = await result;
+
+            if (_response.IsPlayerFound == false)
+            {
+                await ctx.ResponderAsync(Strings.NovoJogador);
+                return;
+            }
+        }
+
+        public class Response
+        {
+            public bool IsPlayerFound = true;
+        }
+    }
+}
