@@ -23,9 +23,10 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
         [Example("deletar-user @talion", "Deleta o usuario mencionado.")]
         [Example("deletar-user 1239485", "Deleta o usuario informado.")]
         [RequireOwner]
-        public async Task DeletarUserAsync(CommandContext ctx, DiscordUser user)
+        public async Task DeletarUserAsync(CommandContext ctx, DiscordUser user = null)
         {
             await ctx.TriggerTypingAsync();
+            if (user == null) user = ctx.User;
             var result = await banco.CollectionJogadores.DeleteOneAsync(x => x.Id == user.Id);
             if (result.DeletedCount >= 1)
                 await ctx.ResponderAsync("usuario deletado!");
@@ -59,6 +60,52 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
             }
             else
                 await ctx.RespondAsync($"{ctx.User.Mention}, você informou um tipo inexistente!");
+        }
+
+        [Command("criar-monstro")]
+        [Description("Permite criar um monstro para o mapa atual.")]
+        [Usage("criar-monstro [ id ] [ nome ] [ defesa ] [ ataque ] [ vida ] [ exp ] [ spawn time ]")]
+        [Example("criar-monstro 1 Zombiee 5 1 20 3 4", "Cria um monstro com as informações fornecidas..")]
+        [RequireOwner]
+        public async Task CriarMonstroAsync(CommandContext ctx, ulong id = 0, string nome = "", decimal defesa = 0, decimal ataque = 0, decimal vidaMaxima = 0, decimal exp = 0, int tempo = 0)
+        {
+            await ctx.TriggerTypingAsync();
+            var result = await banco.CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
+            if (result == null)
+            {
+                await ctx.ResponderAsync("não existe um mapa no canal atual!");
+                return;
+            }
+
+            var monstro = new WafclastMonster(ctx.Channel.Id, id, nome, defesa, ataque, vidaMaxima, exp, TimeSpan.FromMinutes(tempo));
+            await banco.CollectionMonsters.InsertOneAsync(monstro);
+
+            await ctx.ResponderAsync($"monstro criado!");
+        }
+
+        [Command("monstro-reduzir-vida")]
+        [RequireOwner]
+        public async Task MonstroReduzirVidaAsync(CommandContext ctx, ulong id, decimal quantidade)
+        {
+            await ctx.TriggerTypingAsync();
+            var monster = await banco.CollectionMonsters.Find(x => x.Id == ctx.Channel.Id + id).FirstOrDefaultAsync();
+
+            monster.SetVida(quantidade);
+
+            await banco.CollectionMonsters.ReplaceOneAsync(x => x.Id == ctx.Channel.Id + id, monster);
+
+            await ctx.ResponderAsync($"{monster.Nome} está com {quantidade} de vida!");
+        }
+
+        [Command("sair")]
+        [RequireOwner]
+        public async Task Sair(CommandContext ctx)
+        {
+            foreach (var item in ctx.Client.Guilds)
+            {
+                if (item.Value.Id != 732102804654522470)
+                    await item.Value.LeaveAsync();
+            }
         }
     }
 }
