@@ -20,7 +20,7 @@ namespace WafclastRPG.Game.Entities
             this.ExperienciaProximoNivel = this.ExperienceTotalLevel(startLevel + 1);
         }
 
-        public int AddExp(decimal experience)
+        public int ReceberExperiencia(decimal experience)
         {
             int niveisEv = 0;
             decimal expResultante = this.ExperienciaAtual + experience;
