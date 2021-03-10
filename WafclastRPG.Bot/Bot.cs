@@ -56,6 +56,7 @@ namespace WafclastRPG.Bot
             this.CommandsNext.RegisterCommands<TestCommands>();
             this.CommandsNext.RegisterCommands<StatusCommand>();
             this.CommandsNext.RegisterCommands<DatabaseCommands>();
+            this.CommandsNext.RegisterCommands<AttackCommand>();
         }
     }
 }
