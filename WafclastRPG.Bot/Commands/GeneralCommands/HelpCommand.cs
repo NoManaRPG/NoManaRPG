@@ -135,6 +135,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
 
             str.Append($"**Combate** -");
             str.Append($"{Formatter.InlineCode("atacar")} - ");
+            str.Append($"{Formatter.InlineCode("olhar")} - ");
 
 
             embed.WithDescription(str.ToString());

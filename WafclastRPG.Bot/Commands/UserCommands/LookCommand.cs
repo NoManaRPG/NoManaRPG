@@ -21,8 +21,10 @@ namespace WafclastRPG.Bot.Commands.UserCommands
         public BotDatabase banco;
 
         [Command("olhar")]
-        [Description("Permiter ver o estado atual de alguém.")]
-        [Usage("olhar ")]
+        [Description("Permiter ver o estado atual de monstros ou de alguém .")]
+        [Usage("olhar [ #id | @menção ]")]
+        [Example("olhar #1", "Permite olhar o estado do monstro com o ID 1.")]
+        [Example("olhar @Talion", "Permite olhar o estado do jogador mencionado.")]
         public async Task TemplateAsync(CommandContext ctx, string alvo = "")
         {
             await ctx.TriggerTypingAsync();
