@@ -51,7 +51,7 @@ namespace WafclastRPG.Bot.Commands.UserCommands
 
             if (_response.IsPlayerFound == false)
             {
-                await ctx.ResponderAsync($"você precisa usar o comando {Formatter.InlineCode("comecar")} antes!");
+                await ctx.ResponderAsync(Strings.NovoJogador);
                 return;
             }
 

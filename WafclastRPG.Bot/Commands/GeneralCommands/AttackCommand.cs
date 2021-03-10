@@ -33,7 +33,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
 
             if (!stringId.TryParseID(out ulong id))
             {
-                await ctx.ResponderAsync($"você informou um {Formatter.Bold("#ID")} inválido!");
+                await ctx.ResponderAsync(Strings.IdInvalido);
                 return;
             }
 
@@ -101,7 +101,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
 
             if (_response.IsMonstroEncontrado == false)
             {
-                await ctx.ResponderAsync($"não foi encontrado nenhum monstro com o {Formatter.Bold($"#ID {id}")}!");
+                await ctx.ResponderAsync(Strings.MonstroNaoEncontrado(id));
                 return;
             }
 
