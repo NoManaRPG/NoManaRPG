@@ -1,6 +1,8 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using System;
 using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Atributos;
@@ -24,17 +26,22 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                 return;
 
             var str = new StringBuilder();
-            str.AppendLine($"Ataque: {player.Character.Ataque}");
-            str.AppendLine($"Defesa: {player.Character.Defesa}");
-            str.AppendLine($"Vida: {player.Character.VidaAtual}");
-            str.AppendLine($"Vida max: {player.Character.VidaMaxima}");
+            str.AppendLine($"Ataque: {player.Character.Ataque:N2}");
+            str.AppendLine($"Defesa: {player.Character.Defesa:N2}");
+            str.AppendLine($"Vida: {player.Character.VidaAtual:N2}");
+            str.AppendLine($"Vida max: {player.Character.VidaMaxima:N2}");
+
+            var dg = await ctx.Client.GetGuildAsync(player.Character.ServerId, false);
+            var dc = dg.GetChannel(player.Character.LocalId);
+            var invite = await dc.CreateInviteAsync(60, 0);
+
+            str.AppendLine(Formatter.MaskedUrl(dc.Name, new Uri(invite.ToString())));
 
             var embed = new DiscordEmbedBuilder();
             embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
             embed.WithColor(DiscordColor.Blue);
             embed.WithTitle("Status");
             embed.WithDescription(str.ToString());
-
 
             await ctx.ResponderAsync(embed.Build());
         }
