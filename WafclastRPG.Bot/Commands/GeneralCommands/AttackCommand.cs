@@ -31,6 +31,12 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
             if (!await ctx.HasPlayerAsync(player))
                 return;
 
+            if (player.Character.LocalId != ctx.Channel.Id)
+            {
+                await ctx.ResponderAsync(Strings.LocalDiferente(ctx.Channel.Name));
+                return;
+            }
+
             if (!stringId.TryParseID(out ulong id))
             {
                 await ctx.ResponderAsync(Strings.IdInvalido);
@@ -44,9 +50,6 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                 {
                     var r = new Response();
                     var player = await session.FindPlayerAsync(ctx.User);
-
-                    if (player.Character.LocalId != ctx.Channel.Id)
-                        return Task.FromResult(new Response() { IsInOtherLocation = true });
 
                     var monster = await session.FindMonsterAsync(player.Character.LocalId + id);
                     if (monster == null)
@@ -93,12 +96,6 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
             };
             var _response = await result;
 
-            if (_response.IsInOtherLocation)
-            {
-                await ctx.ResponderAsync($"você não está em {Formatter.Bold(ctx.Channel.Name)}!");
-                return;
-            }
-
             if (_response.IsMonstroEncontrado == false)
             {
                 await ctx.ResponderAsync(Strings.MonstroNaoEncontrado(id));
@@ -121,7 +118,6 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
 
         private class Response
         {
-            public bool IsInOtherLocation = false;
             public bool IsMonstroEncontrado = false;
             public bool IsMonstroJaMorto = false;
             public bool IsMonstroMortoEmCombate = false;
