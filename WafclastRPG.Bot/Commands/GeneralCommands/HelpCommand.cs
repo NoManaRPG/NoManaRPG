@@ -130,6 +130,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             str.Append($"{Formatter.InlineCode("comecar")} - ");
             str.Append($"{Formatter.InlineCode("ajuda")} - ");
             str.Append($"{Formatter.InlineCode("status")} - ");
+            str.Append($"{Formatter.InlineCode("viajar")} - ");
             str.AppendLine($"{Formatter.InlineCode("info")} ");
 
             str.Append($"**Combate** -");
