@@ -15,7 +15,7 @@ namespace WafclastRPG.Bot.Events
     {
         public static async Task Event(DiscordClient c, MessageCreateEventArgs e, CommandsNextExtension commandsNext)
         {
-            if (e.Message.Content == "<@!754805014261661737>")
+            if (e.Message.Content == "<@!732598033962762402>")
             {
                 var cmd = commandsNext.FindCommand("info", out var customArgs);
                 var fakeContext = commandsNext.CreateFakeContext(e.Author, e.Channel, "", "", cmd, customArgs);
