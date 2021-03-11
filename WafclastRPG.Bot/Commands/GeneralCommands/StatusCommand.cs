@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WafclastRPG.Bot.Atributos;
 using WafclastRPG.Bot.Database;
 using WafclastRPG.Bot.Extensions;
+using WafclastRPG.Game;
 
 namespace WafclastRPG.Bot.Commands.GeneralCommands
 {
@@ -22,26 +23,35 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
         {
             await ctx.TriggerTypingAsync();
             var player = await banco.FindPlayerAsync(ctx.User.Id);
-            if (!await ctx.HasPlayerAsync(player))
+            if (player == null)
+            {
+                await ctx.ResponderAsync(Strings.NovoJogador);
                 return;
+            }
 
             var str = new StringBuilder();
-            str.AppendLine($"Ataque: {player.Character.Ataque:N2}");
-            str.AppendLine($"Defesa: {player.Character.Defesa:N2}");
-            str.AppendLine($"Vida: {player.Character.VidaAtual:N2}");
-            str.AppendLine($"Vida max: {player.Character.VidaMaxima:N2}");
+
+            str.AppendLine($"Tem {player.Character.ExperienciaAtual} pontos de experiencia e precisa de {player.Character.ExperienciaProximoNivel - player.Character.ExperienciaAtual} para o nível {player.Character.Level + 1}.");
+            str.AppendLine($"Está carregando 0 itens.");
+            str.AppendLine($"Regenera 0,00 pontos vida por mensagem.");
+
+
+            var embed = new DiscordEmbedBuilder();
+            embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}] ", iconUrl: ctx.User.AvatarUrl);
+            embed.WithThumbnail(ctx.User.AvatarUrl);
+            embed.WithColor(DiscordColor.Blue);
+            embed.WithDescription(str.ToString());
+
+            embed.AddField("Ataque".Titulo(), $"{Emojis.EspadasCruzadas} {player.Character.Ataque:N2}", true);
+            embed.AddField("Defesa".Titulo(), $"{Emojis.Escudo} {player.Character.Defesa:N2}", true);
+
+            var lifePor = player.Character.VidaAtual / player.Character.VidaMaxima;
+            embed.AddField("Vida".Titulo(), $"{Emojis.GerarVidaEmoji(lifePor)} {player.Character.VidaAtual:N2} / {player.Character.VidaMaxima:N2}");
 
             var dg = await ctx.Client.GetGuildAsync(player.Character.ServerId, false);
             var dc = dg.GetChannel(player.Character.LocalId);
             var invite = await dc.CreateInviteAsync(60, 0);
-
-            str.AppendLine(Formatter.MaskedUrl(dc.Name, new Uri(invite.ToString())));
-
-            var embed = new DiscordEmbedBuilder();
-            embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
-            embed.WithColor(DiscordColor.Blue);
-            embed.WithTitle("Status");
-            embed.WithDescription(str.ToString());
+            embed.AddField("Localização".Titulo(), $"{Emojis.Mapa} {Formatter.MaskedUrl(dc.Name, new Uri(invite.ToString()))}");
 
             await ctx.ResponderAsync(embed.Build());
         }
