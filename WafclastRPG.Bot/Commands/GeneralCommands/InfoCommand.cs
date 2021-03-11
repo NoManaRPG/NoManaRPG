@@ -30,7 +30,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             str.AppendLine(FormatarURL("Proximos updates", "https://github.com/WafclastRPG/WafclastRPG/issues"));
             str.AppendLine(FormatarURL("Github", "https://github.com/WafclastRPG/WafclastRPG"));
             embed.WithDescription(str.ToString());
-            embed.AddField("Apoia.se", FormatarURL("Doe R$1 real para que o desenvolvimento do bot não pare!", "https://apoia.se/wafclastrpg"));     
+            embed.AddField("Apoia.se", FormatarURL("Doe R$1 real para que o desenvolvimento do bot não pare!", "https://apoia.se/wafclastrpg"));
             embed.AddField("Tempo ativo", $"Online por: **{(DateTime.Now - botInfo.TempoAtivo).Days} dias, {(DateTime.Now - botInfo.TempoAtivo).Hours} horas e {(DateTime.Now - botInfo.TempoAtivo).Minutes} minutos.**", true);
             Process proc = Process.GetCurrentProcess();
             var mem = proc.PrivateMemorySize64;
@@ -40,6 +40,7 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             str2.Append($" com {botInfo.Membros} membros no total");
             embed.AddField("Estou em", str2.ToString(), true);
             embed.WithColor(DiscordColor.HotPink);
+            embed.WithFooter($"Tempo de resposta do servidor: {ctx.Client.Ping}ms");
             await ctx.RespondAsync(embed: embed.Build());
         }
     }

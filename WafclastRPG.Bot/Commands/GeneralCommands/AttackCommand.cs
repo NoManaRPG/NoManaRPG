@@ -4,6 +4,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Atributos;
@@ -24,8 +25,10 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
         [Description("Permite atacar um monstro do local atual.")]
         [Usage("atacar [ #ID ]")]
         [Example("atacar 1", "Você ataca o monstro de ID 1.")]
-        public async Task AttackCommandAsync(CommandContext ctx, string stringId = "")
+        public async Task AttackCommandAsync(CommandContext ctx, string alvo = "")
         {
+            var timer = new Stopwatch();
+            timer.Start();
             await ctx.TriggerTypingAsync();
             var player = await banco.FindPlayerAsync(ctx.User.Id);
             if (!await ctx.HasPlayerAsync(player))
@@ -37,7 +40,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                 return;
             }
 
-            if (!stringId.TryParseID(out ulong id))
+            if (!alvo.TryParseID(out ulong id))
             {
                 await ctx.ResponderAsync(Strings.IdInvalido);
                 return;
@@ -113,6 +116,8 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
             embed.WithColor(DiscordColor.DarkRed);
             embed.WithTitle("Combate");
             embed.WithDescription(_response.BattleResult.ToString());
+            timer.Stop();
+            embed.WithFooter($"Tempo de resposta: {timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.");
             await ctx.ResponderAsync(embed.Build());
         }
 

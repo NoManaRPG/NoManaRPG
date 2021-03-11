@@ -21,7 +21,7 @@ namespace WafclastRPG.Bot.Database
             Database = database;
         }
 
-        public Task<TResult> WithTransactionAsync<TResult>(Func<IClientSessionHandle, CancellationToken, Task<TResult>> callbackAsync, TransactionOptions transactionOptions = null, CancellationToken cancellationToken = default) => Session.WithTransactionAsync(callbackAsync: callbackAsync);
+        public Task<TResult> WithTransactionAsync<TResult>(Func<IClientSessionHandle, CancellationToken, Task<TResult>> callbackAsync) => Session.WithTransactionAsync(callbackAsync: callbackAsync);
         public void Dispose() => Session.Dispose();
 
         #region Jogador

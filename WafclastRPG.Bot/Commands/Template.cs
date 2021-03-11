@@ -20,9 +20,9 @@ namespace WafclastRPG.Bot.Commands
         public async Task TemplateAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
+
             Task<Response> result;
             using (var session = await this.banco.StartDatabaseSessionAsync())
-            {
                 result = await session.WithTransactionAsync(async (s, ct) =>
                 {
                     var player = await session.FindPlayerAsync(ctx.User);
@@ -32,7 +32,6 @@ namespace WafclastRPG.Bot.Commands
 
                     return Task.FromResult(new Response());
                 });
-            };
             var _response = await result;
 
             if (_response.IsPlayerFound == false)
@@ -42,7 +41,7 @@ namespace WafclastRPG.Bot.Commands
             }
         }
 
-        public class Response
+        private class Response
         {
             public bool IsPlayerFound = true;
         }
