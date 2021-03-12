@@ -4,6 +4,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Atributos;
@@ -97,15 +98,34 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
             await ctx.ResponderAsync($"{monster.Nome} está com {quantidade} de vida!");
         }
 
-        [Command("sair")]
+        [Command("atualizar")]
         [RequireOwner]
-        public async Task Sair(CommandContext ctx)
+        public async Task AtualizarAsync(CommandContext ctx)
         {
-            foreach (var item in ctx.Client.Guilds)
+            FilterDefinition<WafclastPlayer> filter = FilterDefinition<WafclastPlayer>.Empty;
+            FindOptions<WafclastPlayer> options = new FindOptions<WafclastPlayer>
             {
-                if (item.Value.Id != 732102804654522470)
-                    await item.Value.LeaveAsync();
-            }
+                BatchSize = 8,
+                NoCursorTimeout = false
+            };
+
+            using (IAsyncCursor<WafclastPlayer> cursor = await banco.CollectionJogadores.FindAsync(filter, options))
+                while (await cursor.MoveNextAsync())
+                {
+                    IEnumerable<WafclastPlayer> usuarios = cursor.Current;
+
+                    foreach (WafclastPlayer player in usuarios)
+                    {
+                        if (player.Character.ServerIdSpawn == 0)
+                            player.Character.ServerIdSpawn = 732102804654522470;
+                        if (player.Character.LocalIDSpawn == 0)
+                            player.Character.LocalIDSpawn = 817098891240538122;
+
+                        await banco.CollectionJogadores.ReplaceOneAsync(x => x.Id == player.Id, player);
+                    }
+                }
+
+            await ctx.RespondAsync("Banco foi atualizado!");
         }
     }
 }

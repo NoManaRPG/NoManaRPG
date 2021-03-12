@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Globalization;
+using System.Threading.Tasks;
 using WafclastRPG.Bot.Database;
 using WafclastRPG.Game.Entities;
 
@@ -14,5 +15,10 @@ namespace WafclastRPG.Bot.Entidades
         }
 
         public Task SaveAsync() => this.banco.ReplacePlayerAsync(new WafclastPlayer(this));
+        public string Mention()
+            => $"<@{Id.ToString(CultureInfo.InvariantCulture)}>";
+
+        public static string UserMention(ulong id)
+            => $"<@{id.ToString(CultureInfo.InvariantCulture)}>";
     }
 }

@@ -11,6 +11,7 @@ namespace WafclastRPG.Game.Entities
         public int Level { get; set; } = 1;
         public decimal ExperienciaAtual { get; private set; }
         public decimal ExperienciaProximoNivel { get; private set; }
+        public int LevelBloqueado { get; set; } = 0;
 
         public WafclastLevel() => this.ExperienciaProximoNivel = this.ExperienceTotalLevel(2);
 
@@ -37,6 +38,18 @@ namespace WafclastRPG.Game.Entities
             }
             this.ExperienciaAtual += experience;
             return niveisEv;
+        }
+
+        public void DiminuirLevel()
+        {
+            if (Level == 1)
+                return;
+
+            if (Level > LevelBloqueado)
+                LevelBloqueado = Level;
+
+            Level--;
+            ExperienciaProximoNivel = this.ExperienceTotalLevel(Level + 1);
         }
 
         private void Evoluir()

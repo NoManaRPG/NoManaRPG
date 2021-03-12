@@ -14,7 +14,6 @@
         /// Aumenta a velocidade de recuperação de vida por mensagem. Cada ponto recupera 0.2 de vida.
         /// </summary>
         public int Vitalidade { get; private set; } = 4;
-        public int PontosLivreAtributo { get; private set; } = 4;
+        public int PontosLivreAtributo { get; set; } = 4;
     }
 }
-    

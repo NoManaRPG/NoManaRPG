@@ -65,34 +65,6 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
             return (int)Math.Truncate(v1 * (pow1 / pow2));
         }
 
-        [Command("sessao")]
-        [RequireOwner]
-        public async Task Sessao(CommandContext ctx, ulong id)
-        {
-            string mensagem;
-            using (var session = await this.banco.StartDatabaseSessionAsync())
-            {
-                mensagem = await session.WithTransactionAsync(async (s, ct) =>
-                  {
-                      var user = await session.FindPlayerAsync(id);
-                      if (user.Character.Level >= 10)
-                          return "Nivel max";
-
-                      user.Character.AddLevel();
-                      await user.SaveAsync();
-                      await ctx.ResponderAsync("+1 level");
-                      await Task.Delay(5000);
-
-                      user.Character.AddLevel();
-                      await user.SaveAsync();
-                      await ctx.ResponderAsync("+1 level..");
-                      await Task.Delay(5000);
-                      return "";
-                  });
-            }
-            await ctx.ResponderAsync(mensagem);
-        }
-
         [Command("editar")]
         [RequireOwner]
         public async Task editar(CommandContext ctx, ulong id)

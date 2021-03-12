@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext.Attributes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Atributos;
@@ -19,6 +20,9 @@ namespace WafclastRPG.Bot.Commands
         [Usage("")]
         public async Task TemplateAsync(CommandContext ctx)
         {
+            var timer = new Stopwatch();
+            timer.Start();
+
             await ctx.TriggerTypingAsync();
 
             Task<Response> result;
@@ -39,6 +43,8 @@ namespace WafclastRPG.Bot.Commands
                 await ctx.ResponderAsync(Strings.NovoJogador);
                 return;
             }
+
+            timer.Stop();
         }
 
         private class Response

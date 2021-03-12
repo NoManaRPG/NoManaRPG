@@ -72,6 +72,20 @@ namespace WafclastRPG.Bot.Database
         public Task SaveMonsterAsync(WafclastMonster monster)
             => Database.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster);
 
+        #endregion
+
+        #region Mapa
+
+        public async Task<WafclastMapa> FindMapAsync(ulong id)
+        {
+            var map = await Database.CollectionMaps.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
+            if (map == null)
+                return null;
+            return map;
+        }
+
+        public Task SaveMapAsync(WafclastMapa map)
+            => Database.CollectionMaps.ReplaceOneAsync(x => x.Id == map.Id, map);
 
         #endregion
     }
