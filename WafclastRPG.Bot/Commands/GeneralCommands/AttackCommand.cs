@@ -90,7 +90,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                         embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
 
                         if (target.Character.Karma == 0)
-                            player.Character.Karma -= 10;
+                            player.Character.Karma -= 1;
                         var playerDamage = formulas.Sortear(player.Character.Ataque);
                         var _isTargetDead = target.Character.ReceberDano(playerDamage);
                         str.AppendLine($"{target.Mention()} recebeu {playerDamage:N2}({Emojis.Adaga}) de dano.");
