@@ -43,6 +43,8 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             str.Append($"**Geral** -");
             str.Append($"{Formatter.InlineCode("deletar-user")} - ");
             str.Append($"{Formatter.InlineCode("criar-mapa")} - ");
+            str.Append($"{Formatter.InlineCode("criar-monstro")} - ");
+            str.Append($"{Formatter.InlineCode("everyone-role")} - ");
 
 
             embed.WithDescription(str.ToString());
