@@ -35,7 +35,6 @@ namespace WafclastRPG.Game.Entities
             int levelUps = base.ReceberExperiencia(exp);
             for (int i = 0; i < levelUps; i++)
             {
-                Level++;
                 VidaAtual = VidaMaxima;
                 if (Level > LevelBloqueado)
                     Atributo.PontosLivreAtributo += 4;

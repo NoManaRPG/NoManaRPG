@@ -9,7 +9,7 @@ namespace WafclastRPG.Game.Entities
     public abstract class WafclastLevel
     {
         public int Level { get; set; } = 1;
-        public decimal ExperienciaAtual { get;  set; }
+        public decimal ExperienciaAtual { get; set; }
         public decimal ExperienciaProximoNivel { get; private set; }
         public int LevelBloqueado { get; set; } = 0;
 
@@ -42,6 +42,7 @@ namespace WafclastRPG.Game.Entities
 
         public void DiminuirLevel()
         {
+            ExperienciaAtual = 0;
             if (Level == 1)
                 return;
 
@@ -50,21 +51,20 @@ namespace WafclastRPG.Game.Entities
 
             Level--;
             ExperienciaProximoNivel = this.ExperienceTotalLevel(Level + 1);
-            ExperienciaAtual = 0;
+            this.ExperienciaAtual = this.ExperienceTotalLevel(Level);
         }
 
         private void Evoluir()
         {
             this.Level++;
             this.ExperienciaProximoNivel = this.ExperienceTotalLevel(Level + 1);
-            this.ExperienciaAtual = this.ExperienceTotalLevel(Level);
         }
 
         // Needs to be 83 for level 2.
         private int ExperienceTotalLevel(int level)
         {
             double v1 = 1.0 / 8.0 * level * (level - 1.0) + 75.0;
-            double pow1 = Math.Pow(3, (level - 1.0) / 7.0) - 1;
+            double pow1 = Math.Pow(2, (level - 1.0) / 7.0) - 1;
             double pow2 = 1 - Math.Pow(2, -1 / 7.0);
             return (int)Math.Truncate(v1 * (pow1 / pow2));
         }
