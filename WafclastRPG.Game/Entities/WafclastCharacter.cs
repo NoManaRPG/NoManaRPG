@@ -57,6 +57,7 @@ namespace WafclastRPG.Game.Entities
             {
                 VidaAtual = VidaMaxima;
                 LocalId = LocalIDSpawn;
+                ServerId = ServerIdSpawn;
                 Karma = 0;
                 DiminuirLevel();
                 return true;
