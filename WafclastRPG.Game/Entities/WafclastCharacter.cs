@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization;
+using System;
 
 namespace WafclastRPG.Game.Entities
 {
@@ -17,6 +18,8 @@ namespace WafclastRPG.Game.Entities
         public decimal VidaMaxima { get; private set; } = 0;
 
         public int Karma { get; set; } = 0;
+
+        public DateTime RegenDate { get; set; } = DateTime.UtcNow;
 
         public WafclastCharacter()
         {

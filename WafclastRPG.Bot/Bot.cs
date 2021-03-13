@@ -10,6 +10,7 @@ using WafclastRPG.Bot.Comandos.Exibir;
 using WafclastRPG.Bot.Commands.AdminCommands;
 using WafclastRPG.Bot.Commands.GeneralCommands;
 using WafclastRPG.Bot.Commands.UserCommands;
+using WafclastRPG.Bot.Database;
 using WafclastRPG.Bot.Events;
 
 namespace WafclastRPG.Bot
@@ -24,7 +25,7 @@ namespace WafclastRPG.Bot
 
         public Task ConectarAsync() => Client.ConnectAsync();
 
-        public void ModuleCommand(CommandsNextConfiguration ccfg)
+        public void ModuleCommand(CommandsNextConfiguration ccfg, BotDatabase database)
         {
             this.CommandsNext = Client.UseCommandsNext(ccfg);
             this.CommandsNext.CommandExecuted += CommandExecuted.Event;
@@ -35,7 +36,7 @@ namespace WafclastRPG.Bot
             this.Client.GuildAvailable += (c, e) => GuildAvailable.Event(c, e, botInfo);
             this.Client.GuildMemberAdded += (c, e) => GuildMemberAdded.Event(c, e, botInfo);
             this.Client.GuildMemberRemoved += (c, e) => GuildMemberRemoved.Event(c, e, botInfo);
-            this.Client.MessageCreated += (c, e) => MessageCreated.Event(c, e, CommandsNext);
+            this.Client.MessageCreated += (c, e) => MessageCreated.Event(c, e, CommandsNext, database);
             this.Client.MessageDeleted += MessageDeleted.Event;
             this.Client.MessageUpdated += MessageUpdated.Event;
             this.Client.ClientErrored += ClientErrored.Event;

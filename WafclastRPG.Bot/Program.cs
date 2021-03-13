@@ -70,7 +70,7 @@ namespace WafclastRPG.Bot
                 EnableMentionPrefix = true,
                 IgnoreExtraArguments = true,
                 Services = services,
-            });
+            }, Database);
 
             await bot.ConectarAsync();
             await Task.Delay(-1);

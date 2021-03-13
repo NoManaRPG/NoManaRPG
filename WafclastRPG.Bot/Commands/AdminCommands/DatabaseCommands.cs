@@ -116,16 +116,35 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
 
                     foreach (WafclastPlayer player in usuarios)
                     {
-                        if (player.Character.ServerIdSpawn == 0)
-                            player.Character.ServerIdSpawn = 732102804654522470;
-                        if (player.Character.LocalIDSpawn == 0)
-                            player.Character.LocalIDSpawn = 817098891240538122;
+                        if (player.Character.ExperienciaAtual >= player.Character.ExperienciaProximoNivel)
+                            player.Character.ExperienciaAtual = 0;
 
                         await banco.CollectionJogadores.ReplaceOneAsync(x => x.Id == player.Id, player);
                     }
                 }
 
             await ctx.RespondAsync("Banco foi atualizado!");
+        }
+
+        [Command("everyone-role")]
+        [Description("Permite dar a todos os membros um cargo especifico.")]
+        [Usage("everyone-role [ cargo ]")]
+        [Example("everyone-role @Admin", "Dá a todos os membros o cargo de @admin")]
+        [RequireOwner]
+        public async Task EveryoneRoleAsync(CommandContext ctx, DiscordRole role)
+        {
+            var members = await ctx.Guild.GetAllMembersAsync();
+            try
+            {
+                foreach (var member in members)
+                    await member.GrantRoleAsync(role);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            await ctx.ResponderAsync($"{members.Count} ganharam a badge!");
         }
     }
 }

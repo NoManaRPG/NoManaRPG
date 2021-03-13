@@ -33,9 +33,8 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
 
             str.AppendLine($"Tem {player.Character.ExperienciaAtual} pontos de experiencia e precisa de {player.Character.ExperienciaProximoNivel - player.Character.ExperienciaAtual} para o nível {player.Character.Level + 1}.");
             str.AppendLine($"Está carregando 0 itens.");
-            str.AppendLine($"Regenera 0,00 pontos vida por mensagem.");
-            str.AppendLine($"Está com {player.Character.Karma} de Karma.");
-
+            str.AppendLine($"Regenerá {player.Character.Atributo.Vitalidade * 0.2m} pontos de vida na prox mensagem ({(player.Character.RegenDate - DateTime.UtcNow).TotalSeconds:N0}s).");
+            str.AppendLine($"Está com {player.Character.Karma} pontos de Karma.");
 
             var embed = new DiscordEmbedBuilder();
             embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}] ", iconUrl: ctx.User.AvatarUrl);
