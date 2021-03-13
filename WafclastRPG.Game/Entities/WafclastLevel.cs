@@ -9,7 +9,7 @@ namespace WafclastRPG.Game.Entities
     public abstract class WafclastLevel
     {
         public int Level { get; set; } = 1;
-        public decimal ExperienciaAtual { get; private set; }
+        public decimal ExperienciaAtual { get;  set; }
         public decimal ExperienciaProximoNivel { get; private set; }
         public int LevelBloqueado { get; set; } = 0;
 
@@ -50,6 +50,7 @@ namespace WafclastRPG.Game.Entities
 
             Level--;
             ExperienciaProximoNivel = this.ExperienceTotalLevel(Level + 1);
+            ExperienciaAtual = 0;
         }
 
         private void Evoluir()
