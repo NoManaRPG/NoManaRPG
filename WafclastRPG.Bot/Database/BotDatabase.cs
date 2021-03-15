@@ -12,7 +12,7 @@ namespace WafclastRPG.Bot.Database
         public IMongoClient MongoClient { get; }
         public IMongoDatabase MongoDatabase { get; }
         public IMongoCollection<WafclastPlayer> CollectionJogadores { get; }
-        public IMongoCollection<BotServidor> CollectionServidores { get; }
+        public IMongoCollection<Server> CollectionServidores { get; }
         public IMongoCollection<WafclastMonster> CollectionMonsters { get; }
         public IMongoCollection<WafclastMapa> CollectionMaps { get; }
 
@@ -38,7 +38,7 @@ namespace WafclastRPG.Bot.Database
             WafclastPlayer.MapBuilder();
 
             CollectionJogadores = MongoDatabase.CriarCollection<WafclastPlayer>();
-            CollectionServidores = MongoDatabase.CriarCollection<BotServidor>();
+            CollectionServidores = MongoDatabase.CriarCollection<Server>();
             CollectionMonsters = MongoDatabase.CriarCollection<WafclastMonster>();
             CollectionMaps = MongoDatabase.CriarCollection<WafclastMapa>();
             PrefixLocker = new ConcurrentDictionary<ulong, bool>();
@@ -86,7 +86,7 @@ namespace WafclastRPG.Bot.Database
         }
         public Task DeleteServerAsync(ulong serverId)
             => CollectionServidores.DeleteOneAsync(x => x.Id == serverId);
-        public Task ReplaceServerAsync(ulong serverId, BotServidor server)
+        public Task ReplaceServerAsync(ulong serverId, Server server)
             => CollectionServidores.ReplaceOneAsync(x => x.Id == serverId, server, new ReplaceOptions { IsUpsert = true });
 
         #endregion

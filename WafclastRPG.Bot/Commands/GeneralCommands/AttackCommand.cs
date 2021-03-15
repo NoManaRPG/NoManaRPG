@@ -147,7 +147,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
 
                 if (_response.IsTargetDiffentChannel)
                 {
-                    await ctx.ResponderAsync($"parece que {BotJogador.UserMention(_response.TargetId)} não está em {ctx.Channel.Name}! Não é possível atacar.");
+                    await ctx.ResponderAsync($"parece que {Player.UserMention(_response.TargetId)} não está em {ctx.Channel.Name}! Não é possível atacar.");
                     return;
                 }
 
@@ -156,7 +156,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                 embed.WithDescription(_response.BattleResult.ToString());
                 timer.Stop();
                 embed.WithFooter($"Tempo de resposta: {timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.");
-                await ctx.RespondAsync($"{ctx.User.Mention} {Emojis.Adaga} { BotJogador.UserMention(_response.TargetId)}", embed: embed.Build());
+                await ctx.RespondAsync($"{ctx.User.Mention} {Emojis.Adaga} { Player.UserMention(_response.TargetId)}", embed: embed.Build());
 
                 #endregion
             }

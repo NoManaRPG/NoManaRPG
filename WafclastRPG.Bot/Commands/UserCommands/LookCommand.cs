@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Atributos;
 using WafclastRPG.Bot.Database;
+using WafclastRPG.Bot.Entidades;
 using WafclastRPG.Bot.Extensions;
 
 namespace WafclastRPG.Bot.Commands.UserCommands
@@ -66,7 +67,7 @@ namespace WafclastRPG.Bot.Commands.UserCommands
 
                 var porcentagemLife = Convert.ToInt32((playerTarget.Character.VidaAtual / playerTarget.Character.VidaMaxima) * 100);
 
-                await ctx.RespondAsync($"Estado do {UserMention(playerTarget.Id)}: {VidaEmTexto(porcentagemLife)}");
+                await ctx.RespondAsync($"Estado do {Player.UserMention(playerTarget.Id)}: {VidaEmTexto(porcentagemLife)}");
                 return;
             }
 
@@ -90,9 +91,6 @@ namespace WafclastRPG.Bot.Commands.UserCommands
                 await ctx.ResponderAsync(Strings.IdInvalido);
         }
 
-        public static string UserMention(ulong id)
-           => $"<@{id.ToString(CultureInfo.InvariantCulture)}>";
-
         public string VidaEmTexto(int vidaPorcentagem)
         {
             switch (vidaPorcentagem)
@@ -115,14 +113,10 @@ namespace WafclastRPG.Bot.Commands.UserCommands
                     return "Em má condição.";
                 case int x when x >= 10:
                     return "Está quase morto.";
+                case int x when x >= 1:
+                    return "Está com um corte feio e sangrando muito por causa das gigantes feridas.";
             };
-            return "Está sangrando muito por causa das gigantes feridas.";
+            return "Parece morto.";
         }
-
-        public class Response
-        {
-            public bool IsPlayerFound = true;
-        }
-
     }
 }

@@ -5,11 +5,11 @@ using WafclastRPG.Game.Entities;
 
 namespace WafclastRPG.Bot.Entidades
 {
-    public class BotJogador : WafclastPlayer
+    public class Player : WafclastPlayer
     {
         private readonly BotDatabaseSession banco;
 
-        public BotJogador(WafclastPlayer jogador, BotDatabaseSession banco) : base(jogador)
+        public Player(WafclastPlayer jogador, BotDatabaseSession banco) : base(jogador)
         {
             this.banco = banco;
         }

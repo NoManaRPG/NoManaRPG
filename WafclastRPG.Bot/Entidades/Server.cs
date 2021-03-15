@@ -3,13 +3,13 @@
 namespace WafclastRPG.Bot.Entidades
 {
     [BsonIgnoreExtraElements]
-    public class BotServidor
+    public class Server
     {
         [BsonId]
         public ulong Id { get; private set; }
         public string Prefix { get; private set; }
 
-        public BotServidor(ulong id)
+        public Server(ulong id)
         {
             this.Id = id;
         }

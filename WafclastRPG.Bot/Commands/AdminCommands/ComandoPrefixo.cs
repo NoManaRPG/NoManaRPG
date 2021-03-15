@@ -35,7 +35,7 @@ namespace WafclastRPG.Bot.Comandos.Acao
                 return;
             }
 
-            var server = new BotServidor(ctx.Guild.Id);
+            var server = new Server(ctx.Guild.Id);
             server.SetPrefix(prefixo);
             await banco.ReplaceServerAsync(server.Id, server);
             await ctx.RespondAsync("Feito!");
