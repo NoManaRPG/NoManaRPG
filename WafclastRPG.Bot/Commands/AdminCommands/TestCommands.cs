@@ -14,7 +14,7 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
 {
     public class TestCommands : BaseCommandModule
     {
-        public BotDatabase banco;
+        public Database.Database banco;
 
         [Command("testevalor")]
         [RequireOwner]

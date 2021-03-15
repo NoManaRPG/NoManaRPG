@@ -1,13 +1,13 @@
 ﻿using MongoDB.Driver;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
-using WafclastRPG.Bot.Entidades;
+using WafclastRPG.Bot.Entities;
 using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game.Entities;
 
 namespace WafclastRPG.Bot.Database
 {
-    public class BotDatabase
+    public class Database
     {
         public IMongoClient MongoClient { get; }
         public IMongoDatabase MongoDatabase { get; }
@@ -19,7 +19,7 @@ namespace WafclastRPG.Bot.Database
         public ConcurrentDictionary<ulong, bool> PrefixLocker
         { get; }
 
-        public BotDatabase()
+        public Database()
         {
             #region Connection string
             MongoClient = new MongoClient("mongodb://localhost?retryWrites=true");
@@ -50,7 +50,7 @@ namespace WafclastRPG.Bot.Database
             #endregion
         }
 
-        public async Task<BotDatabaseSession> StartDatabaseSessionAsync() => new BotDatabaseSession(
+        public async Task<DatabaseSession> StartDatabaseSessionAsync() => new DatabaseSession(
             await MongoClient.StartSessionAsync(), this);
 
         /// <summary>

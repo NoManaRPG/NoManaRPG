@@ -5,17 +5,17 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WafclastRPG.Bot.Entidades;
+using WafclastRPG.Bot.Entities;
 using WafclastRPG.Game.Entities;
 
 namespace WafclastRPG.Bot.Database
 {
-    public class BotDatabaseSession : IDisposable
+    public class DatabaseSession : IDisposable
     {
         private IClientSessionHandle Session { get; }
-        private BotDatabase Database { get; }
+        private Database Database { get; }
 
-        public BotDatabaseSession(IClientSessionHandle session, BotDatabase database)
+        public DatabaseSession(IClientSessionHandle session, Database database)
         {
             Session = session;
             Database = database;

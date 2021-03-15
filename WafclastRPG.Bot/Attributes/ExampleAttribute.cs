@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WafclastRPG.Bot.Atributos
+namespace WafclastRPG.Bot.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class ExampleAttribute : Attribute

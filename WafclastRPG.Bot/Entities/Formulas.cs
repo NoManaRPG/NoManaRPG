@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WafclastRPG.Game
+namespace WafclastRPG.Bot.Entities
 {
     public class Formulas
     {

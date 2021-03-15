@@ -8,9 +8,9 @@ using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using WafclastRPG.Bot.Atributos;
+using WafclastRPG.Bot.Attributes;
 using WafclastRPG.Bot.Database;
-using WafclastRPG.Bot.Entidades;
+using WafclastRPG.Bot.Entities;
 using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game;
 using WafclastRPG.Game.Entities;
@@ -19,7 +19,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
 {
     class AttackCommand : BaseCommandModule
     {
-        public BotDatabase banco;
+        public Database.Database banco;
         public Formulas formulas;
 
         [Command("atacar")]

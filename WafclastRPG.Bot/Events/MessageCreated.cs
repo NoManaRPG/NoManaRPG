@@ -10,7 +10,7 @@ namespace WafclastRPG.Bot.Events
 {
     public class MessageCreated
     {
-        public static async Task Event(DiscordClient c, MessageCreateEventArgs e, CommandsNextExtension commandsNext, BotDatabase database)
+        public static async Task Event(DiscordClient c, MessageCreateEventArgs e, CommandsNextExtension commandsNext, Database.Database database)
         {
             if (e.Author.IsBot)
                 return;

@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using WafclastRPG.Bot.Atributos;
+using WafclastRPG.Bot.Attributes;
 using WafclastRPG.Bot.Database;
 using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game.Entities;
@@ -16,7 +16,7 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
 {
     public class DatabaseCommands : BaseCommandModule
     {
-        public BotDatabase banco;
+        public Database.Database banco;
 
         [Command("deletar-user")]
         [Description("Permite deletar o usuario informado.")]

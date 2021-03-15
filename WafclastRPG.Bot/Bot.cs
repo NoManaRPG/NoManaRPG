@@ -25,7 +25,7 @@ namespace WafclastRPG.Bot
 
         public Task ConectarAsync() => Client.ConnectAsync();
 
-        public void ModuleCommand(CommandsNextConfiguration ccfg, BotDatabase database)
+        public void ModuleCommand(CommandsNextConfiguration ccfg, Database.Database database)
         {
             this.CommandsNext = Client.UseCommandsNext(ccfg);
             this.CommandsNext.CommandExecuted += CommandExecuted.Event;

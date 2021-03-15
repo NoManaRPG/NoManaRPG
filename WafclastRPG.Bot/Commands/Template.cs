@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
-using WafclastRPG.Bot.Atributos;
+using WafclastRPG.Bot.Attributes;
 using WafclastRPG.Bot.Database;
 using WafclastRPG.Bot.Extensions;
 
@@ -13,7 +13,7 @@ namespace WafclastRPG.Bot.Commands
 {
     public class Template : BaseCommandModule
     {
-        public BotDatabase banco;
+        public Database.Database banco;
 
         [Command("")]
         [Description("Permite ")]

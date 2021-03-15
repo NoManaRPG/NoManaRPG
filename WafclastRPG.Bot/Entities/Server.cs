@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 
-namespace WafclastRPG.Bot.Entidades
+namespace WafclastRPG.Bot.Entities
 {
     [BsonIgnoreExtraElements]
     public class Server

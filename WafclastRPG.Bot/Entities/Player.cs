@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 using WafclastRPG.Bot.Database;
 using WafclastRPG.Game.Entities;
 
-namespace WafclastRPG.Bot.Entidades
+namespace WafclastRPG.Bot.Entities
 {
     public class Player : WafclastPlayer
     {
-        private readonly BotDatabaseSession banco;
+        private readonly DatabaseSession banco;
 
-        public Player(WafclastPlayer jogador, BotDatabaseSession banco) : base(jogador)
+        public Player(WafclastPlayer jogador, DatabaseSession banco) : base(jogador)
         {
             this.banco = banco;
         }

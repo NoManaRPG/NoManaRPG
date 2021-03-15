@@ -5,7 +5,7 @@ using DSharpPlus.Entities;
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using WafclastRPG.Bot.Atributos;
+using WafclastRPG.Bot.Attributes;
 using WafclastRPG.Bot.Database;
 using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game;
@@ -14,7 +14,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
 {
     public class StatusCommand : BaseCommandModule
     {
-        public BotDatabase banco;
+        public Database.Database banco;
 
         [Command("status")]
         [Description("Exibe o status do seu personagem.")]
