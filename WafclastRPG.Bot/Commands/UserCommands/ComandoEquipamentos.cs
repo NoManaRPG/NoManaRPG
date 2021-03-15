@@ -2,13 +2,12 @@
 using DSharpPlus.CommandsNext.Attributes;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Attributes;
-using WafclastRPG.Bot.Database;
 
 namespace WafclastRPG.Bot.Comandos.Exibir
 {
     public class ComandoEquipamentos : BaseCommandModule
     {
-        public Database.Database banco;
+        public Database banco;
 
         [Command("equipamentos")]
         [Aliases("eq")]

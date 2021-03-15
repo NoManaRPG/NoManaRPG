@@ -3,7 +3,6 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Attributes;
-using WafclastRPG.Bot.Database;
 using WafclastRPG.Bot.Entities;
 
 namespace WafclastRPG.Bot.Comandos.Acao
@@ -11,7 +10,7 @@ namespace WafclastRPG.Bot.Comandos.Acao
     public class ComandoPrefixo : BaseCommandModule
     {
 
-        public Database.Database banco;
+        public Database banco;
 
         [Command("prefixo")]
         [Description("Define um prefixo customizado para o servidor atual.")]

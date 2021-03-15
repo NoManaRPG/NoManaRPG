@@ -15,7 +15,7 @@ using System.Text;
 
 namespace WafclastRPG.Bot.DiscordEvents
 {
-    public static class CommandErrored
+    public static class CommandErroredEvent
     {
         //Envia mensagem ao receber um erro.
         public static async Task EventAsync(CommandsNextExtension cnt, CommandErrorEventArgs e)

@@ -6,7 +6,7 @@ using WafclastRPG.Bot.Extensions;
 
 namespace WafclastRPG.Bot.DiscordEvents
 {
-    public static class CommandExecuted
+    public static class CommandExecutedEvent
     {
         public static Task Event(CommandsNextExtension cne, CommandExecutionEventArgs e)
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WafclastRPG.Bot.DiscordEvents
 {
-    public static class ClientErrored
+    public static class ClientErroredEvent
     {
         public static Task Event(DiscordClient client, ClientErrorEventArgs e)
         {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WafclastRPG.Bot.DiscordEvents
 {
-    public static class Ready
+    public static class ReadyEvent
     {
         public static Task Event(DiscordClient client, ReadyEventArgs e)
         {

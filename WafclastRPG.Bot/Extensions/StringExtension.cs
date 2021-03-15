@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using DSharpPlus;
+using System;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -34,5 +36,11 @@ namespace WafclastRPG.Bot.Extensions
 
         public static string FirstUpper(this string texto)
             => texto.First().ToString().ToUpper() + texto.Substring(1);
+
+        public static string Url(this string texto, string site)
+            => Formatter.MaskedUrl($"`{texto}` ", new Uri(site));
+
+        public static string FormatarURLComando(string prefixo, string texto, string hover, string site = "https://discord.gg/zjvb5kUc8q")
+           => Formatter.MaskedUrl($"`{prefixo}{texto}` ", new Uri(site), hover);
     }
 }

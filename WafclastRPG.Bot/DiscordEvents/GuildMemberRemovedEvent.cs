@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace WafclastRPG.Bot.DiscordEvents
 {
-    public class GuildMemberAdded
+    public class GuildMemberRemovedEvent
     {
-        public static Task Event(DiscordClient c, GuildMemberAddEventArgs e, BotInfo botInfo)
+        public static Task Event(DiscordClient c, GuildMemberRemoveEventArgs e, BotInfo botInfo)
         {
-            Interlocked.Increment(ref botInfo.Membros);
+            Interlocked.Decrement(ref botInfo.Membros);
             return Task.CompletedTask;
         }
     }

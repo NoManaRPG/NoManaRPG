@@ -11,7 +11,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Attributes;
-using WafclastRPG.Bot.Database;
 using WafclastRPG.Bot.Entities;
 using WafclastRPG.Bot.Extensions;
 
@@ -19,7 +18,7 @@ namespace WafclastRPG.Bot.Commands.UserCommands
 {
     public class LookCommand : BaseCommandModule
     {
-        public Database.Database banco;
+        public Database banco;
 
         [Command("olhar")]
         [Description("Permiter ver o estado atual de monstros ou de alguém .")]

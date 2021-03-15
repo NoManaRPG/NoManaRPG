@@ -8,7 +8,7 @@ using WafclastRPG.Bot.Extensions;
 
 namespace WafclastRPG.Bot.DiscordEvents
 {
-    public static class GuildAvailable
+    public static class GuildAvailableEvent
     {
         public static Task Event(DiscordClient client, GuildCreateEventArgs e, BotInfo botInfo)
         {

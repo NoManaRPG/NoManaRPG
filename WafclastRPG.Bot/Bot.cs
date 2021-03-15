@@ -27,18 +27,18 @@ namespace WafclastRPG.Bot
         public void ModuleCommand(CommandsNextConfiguration ccfg, Database database)
         {
             this.CommandsNext = Client.UseCommandsNext(ccfg);
-            this.CommandsNext.CommandExecuted += CommandExecuted.Event;
-            this.CommandsNext.CommandErrored += CommandErrored.EventAsync;
-            this.Client.Ready += Ready.Event;
+            this.CommandsNext.CommandExecuted += CommandExecutedEvent.Event;
+            this.CommandsNext.CommandErrored += CommandErroredEvent.EventAsync;
+            this.Client.Ready += ReadyEvent.Event;
 
             var botInfo = (BotInfo)CommandsNext.Services.GetService(typeof(BotInfo));
-            this.Client.GuildAvailable += (c, e) => GuildAvailable.Event(c, e, botInfo);
-            this.Client.GuildMemberAdded += (c, e) => GuildMemberAdded.Event(c, e, botInfo);
-            this.Client.GuildMemberRemoved += (c, e) => GuildMemberRemoved.Event(c, e, botInfo);
-            this.Client.MessageCreated += (c, e) => MessageCreated.Event(c, e, CommandsNext, database);
-            this.Client.MessageDeleted += MessageDeleted.Event;
-            this.Client.MessageUpdated += MessageUpdated.Event;
-            this.Client.ClientErrored += ClientErrored.Event;
+            this.Client.GuildAvailable += (c, e) => GuildAvailableEvent.Event(c, e, botInfo);
+            this.Client.GuildMemberAdded += (c, e) => GuildMemberAddedEvent.Event(c, e, botInfo);
+            this.Client.GuildMemberRemoved += (c, e) => GuildMemberRemovedEvent.Event(c, e, botInfo);
+            this.Client.MessageCreated += (c, e) => MessageCreatedEvent.Event(c, e, CommandsNext, database);
+            this.Client.MessageDeleted += MessageDeletedEvent.Event;
+            this.Client.MessageUpdated += MessageUpdatedEvent.Event;
+            this.Client.ClientErrored += ClientErroredEvent.Event;
 
             this.Client.UseInteractivity(new InteractivityConfiguration
             {

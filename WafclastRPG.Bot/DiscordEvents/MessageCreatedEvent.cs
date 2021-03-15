@@ -8,7 +8,7 @@ using WafclastRPG.Game;
 
 namespace WafclastRPG.Bot.DiscordEvents
 {
-    public class MessageCreated
+    public class MessageCreatedEvent
     {
         public static async Task Event(DiscordClient c, MessageCreateEventArgs e, CommandsNextExtension commandsNext, Database database)
         {
