@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using WafclastRPG.Bot.Extensions;
 
-namespace WafclastRPG.Bot.Events
+namespace WafclastRPG.Bot.DiscordEvents
 {
     public static class CommandExecuted
     {

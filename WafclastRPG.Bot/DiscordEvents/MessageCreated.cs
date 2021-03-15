@@ -3,14 +3,14 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
 using System;
 using System.Threading.Tasks;
-using WafclastRPG.Bot.Database;
+using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game;
 
-namespace WafclastRPG.Bot.Events
+namespace WafclastRPG.Bot.DiscordEvents
 {
     public class MessageCreated
     {
-        public static async Task Event(DiscordClient c, MessageCreateEventArgs e, CommandsNextExtension commandsNext, Database.Database database)
+        public static async Task Event(DiscordClient c, MessageCreateEventArgs e, CommandsNextExtension commandsNext, Database database)
         {
             if (e.Author.IsBot)
                 return;
@@ -22,6 +22,7 @@ namespace WafclastRPG.Bot.Events
                 await commandsNext.ExecuteCommandAsync(fakeContext);
             }
 
+            Random rd = new Random();
             using var session = await database.StartDatabaseSessionAsync();
             await session.WithTransactionAsync(async (s, ct) =>
             {
@@ -32,7 +33,7 @@ namespace WafclastRPG.Bot.Events
 
                 if (player.Character.RegenDate > DateTime.UtcNow)
                     return Task.CompletedTask;
-                player.Character.RegenDate = DateTime.UtcNow + TimeSpan.FromSeconds(new Formulas().Sortear(90, 120));
+                player.Character.RegenDate = DateTime.UtcNow + TimeSpan.FromSeconds(rd.Sortear(90, 120));
 
                 player.Character.ReceberVida(player.Character.Atributo.Vitalidade * 0.2m);
                 await player.SaveAsync();

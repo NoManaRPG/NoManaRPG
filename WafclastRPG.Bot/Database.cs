@@ -5,7 +5,7 @@ using WafclastRPG.Bot.Entities;
 using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game.Entities;
 
-namespace WafclastRPG.Bot.Database
+namespace WafclastRPG.Bot
 {
     public class Database
     {

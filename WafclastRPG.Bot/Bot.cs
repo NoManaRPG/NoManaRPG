@@ -10,8 +10,7 @@ using WafclastRPG.Bot.Comandos.Exibir;
 using WafclastRPG.Bot.Commands.AdminCommands;
 using WafclastRPG.Bot.Commands.GeneralCommands;
 using WafclastRPG.Bot.Commands.UserCommands;
-using WafclastRPG.Bot.Database;
-using WafclastRPG.Bot.Events;
+using WafclastRPG.Bot.DiscordEvents;
 
 namespace WafclastRPG.Bot
 {
@@ -25,7 +24,7 @@ namespace WafclastRPG.Bot
 
         public Task ConectarAsync() => Client.ConnectAsync();
 
-        public void ModuleCommand(CommandsNextConfiguration ccfg, Database.Database database)
+        public void ModuleCommand(CommandsNextConfiguration ccfg, Database database)
         {
             this.CommandsNext = Client.UseCommandsNext(ccfg);
             this.CommandsNext.CommandExecuted += CommandExecuted.Event;

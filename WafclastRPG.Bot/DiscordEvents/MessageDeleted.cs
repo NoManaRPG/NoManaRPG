@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WafclastRPG.Bot.Events
+namespace WafclastRPG.Bot.DiscordEvents
 {
     public class MessageDeleted
     {

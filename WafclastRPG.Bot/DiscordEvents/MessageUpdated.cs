@@ -3,7 +3,7 @@ using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using System.Threading.Tasks;
 
-namespace WafclastRPG.Bot.Events
+namespace WafclastRPG.Bot.DiscordEvents
 {
     public class MessageUpdated
     {

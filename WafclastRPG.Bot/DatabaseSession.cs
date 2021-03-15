@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using WafclastRPG.Bot.Entities;
 using WafclastRPG.Game.Entities;
 
-namespace WafclastRPG.Bot.Database
+namespace WafclastRPG.Bot
 {
     public class DatabaseSession : IDisposable
     {

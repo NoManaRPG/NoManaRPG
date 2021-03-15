@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.Threading.Tasks;
-using WafclastRPG.Bot.Database;
 using WafclastRPG.Game.Entities;
 
 namespace WafclastRPG.Bot.Entities

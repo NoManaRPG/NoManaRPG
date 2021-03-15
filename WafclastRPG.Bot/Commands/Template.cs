@@ -6,14 +6,13 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Attributes;
-using WafclastRPG.Bot.Database;
 using WafclastRPG.Bot.Extensions;
 
 namespace WafclastRPG.Bot.Commands
 {
     public class Template : BaseCommandModule
     {
-        public Database.Database banco;
+        public Database banco;
 
         [Command("")]
         [Description("Permite ")]

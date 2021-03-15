@@ -5,7 +5,6 @@ using DSharpPlus.Entities;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using WafclastRPG.Bot.Database;
 using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
@@ -14,7 +13,7 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
 {
     public class TestCommands : BaseCommandModule
     {
-        public Database.Database banco;
+        public Database banco;
 
         [Command("testevalor")]
         [RequireOwner]
@@ -51,16 +50,6 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
             [Description("Valor com Valor 1")]
             ValorComValor1
         }
-
-        [Command("get")]
-        [RequireOwner]
-        public async Task criar(CommandContext ctx)
-        {
-            var sor = new Formulas().Sortear(90, 120);
-            var tempo = DateTime.UtcNow + TimeSpan.FromSeconds(sor);
-            await ctx.RespondAsync($"Sorteado: {sor}, tempo: {(tempo - DateTime.UtcNow).TotalSeconds:N0}s");
-        }
-
 
         [Command("editar")]
         [RequireOwner]

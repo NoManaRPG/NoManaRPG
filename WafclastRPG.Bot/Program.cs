@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using WafclastRPG.Game;
 using DSharpPlus.Entities;
-using WafclastRPG.Bot.Database;
 
 namespace WafclastRPG.Bot
 {
@@ -14,7 +13,7 @@ namespace WafclastRPG.Bot
     {
         public Config ConfigFile { get; private set; }
         public BotInfo BotInfo { get; private set; }
-        public Database.Database Database { get; private set; }
+        public Database Database { get; private set; }
 
         static void Main(string[] args) => new Program().RodarBotAsync().GetAwaiter().GetResult();
 
@@ -52,13 +51,12 @@ namespace WafclastRPG.Bot
                 MinimumLogLevel = logLevel,
             });
 
-            Database = new Database.Database();
+            Database = new Database();
             BotInfo = new BotInfo();
             var services = new ServiceCollection()
                 .AddSingleton(this.Database)
                 .AddSingleton(this.ConfigFile)
                 .AddSingleton(this.BotInfo)
-                .AddScoped<Formulas>()
                 .BuildServiceProvider();
 
             bot.ModuleCommand(new CommandsNextConfiguration

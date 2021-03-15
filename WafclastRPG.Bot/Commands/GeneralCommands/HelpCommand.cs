@@ -12,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using DSharpPlus;
 using System.Linq;
 using WafclastRPG.Bot.Attributes;
-using WafclastRPG.Bot.Database;
 
 namespace WafclastRPG.Bot.Comandos.Exibir
 {

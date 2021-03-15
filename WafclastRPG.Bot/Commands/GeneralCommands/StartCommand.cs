@@ -4,7 +4,6 @@ using DSharpPlus.CommandsNext.Attributes;
 using MongoDB.Driver;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Attributes;
-using WafclastRPG.Bot.Database;
 using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game.Entities;
 
@@ -12,7 +11,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
 {
     public class StartCommand : BaseCommandModule
     {
-        public Database.Database banco;
+        public Database banco;
 
         [Command("comecar")]
         [Aliases("start")]

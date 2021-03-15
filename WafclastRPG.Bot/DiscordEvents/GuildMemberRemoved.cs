@@ -3,7 +3,7 @@ using DSharpPlus.EventArgs;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WafclastRPG.Bot.Events
+namespace WafclastRPG.Bot.DiscordEvents
 {
     public class GuildMemberRemoved
     {

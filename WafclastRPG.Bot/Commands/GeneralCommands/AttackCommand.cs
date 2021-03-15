@@ -9,7 +9,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Attributes;
-using WafclastRPG.Bot.Database;
 using WafclastRPG.Bot.Entities;
 using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game;
@@ -19,8 +18,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
 {
     class AttackCommand : BaseCommandModule
     {
-        public Database.Database banco;
-        public Formulas formulas;
+        public Database banco;
 
         [Command("atacar")]
         [Aliases("at")]
@@ -56,6 +54,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
 
                 #region PvP
 
+                var rd = new Random();
                 var embed = new DiscordEmbedBuilder();
                 Task<Response> result;
                 using (var session = await this.banco.StartDatabaseSessionAsync())
@@ -94,7 +93,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
 
                         if (target.Character.Karma == 0)
                             player.Character.Karma -= 1;
-                        var playerDamage = formulas.Sortear(player.Character.Ataque);
+                        var playerDamage = rd.Sortear(player.Character.Ataque);
                         var _isTargetDead = target.Character.ReceberDano(playerDamage);
                         str.AppendLine($"{target.Mention()} recebeu {playerDamage:N2}({Emojis.Adaga}) de dano.");
 
@@ -164,6 +163,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
             {
                 #region PvM
 
+                var rd = new Random();
                 var embed = new DiscordEmbedBuilder();
                 Task<Response> result;
                 using (var session = await this.banco.StartDatabaseSessionAsync())
@@ -199,7 +199,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                         var str = new StringBuilder();
                         embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
 
-                        var playerDamage = formulas.Sortear(player.Character.Ataque);
+                        var playerDamage = rd.Sortear(player.Character.Ataque);
                         var _isTargetDead = target.ReceberDano(playerDamage);
                         str.AppendLine($"{target.Nome} recebeu {playerDamage:N2} de dano.");
 
@@ -218,7 +218,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                             return Task.FromResult(new Response(str, target.Nome));
                         }
 
-                        var targetDamage = formulas.Sortear(target.Ataque);
+                        var targetDamage = rd.Sortear(target.Ataque);
                         str.AppendLine($"{ctx.User.Mention} recebeu {targetDamage:N2} de dano.");
 
                         if (player.Character.ReceberDano(targetDamage))
