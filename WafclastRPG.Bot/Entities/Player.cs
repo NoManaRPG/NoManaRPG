@@ -16,8 +16,5 @@ namespace WafclastRPG.Bot.Entities
         public Task SaveAsync() => this.banco.ReplacePlayerAsync(new WafclastPlayer(this));
         public string Mention()
             => $"<@{Id.ToString(CultureInfo.InvariantCulture)}>";
-
-        public static string UserMention(ulong id)
-            => $"<@{id.ToString(CultureInfo.InvariantCulture)}>";
     }
 }
