@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using WafclastRPG.Bot.Attributes;
 using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game.Entities;
+using WafclastRPG.Game.Enums;
 
 namespace WafclastRPG.Bot.Commands.AdminCommands
 {
@@ -51,7 +52,7 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
 
             tipo = tipo.RemoverAcentos();
             tipo = Regex.Replace(tipo, @"\s+", "");
-            if (Enum.TryParse<WafclastMapaType>(tipo, true, out var mapType))
+            if (Enum.TryParse<MapType>(tipo, true, out var mapType))
             {
                 var mapa = new WafclastMapa(ctx.Channel.Id, mapType);
                 mapa.Coordinates = new WafclastCoordinates(x, y);

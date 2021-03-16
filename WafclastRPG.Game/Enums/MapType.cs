@@ -1,6 +1,6 @@
-﻿namespace WafclastRPG.Game.Entities
+﻿namespace WafclastRPG.Game.Enums
 {
-    public enum WafclastMapaType
+    public enum MapType : int
     {
         Cidade,
         Vila,

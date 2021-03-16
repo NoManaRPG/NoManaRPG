@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WafclastRPG.Bot.Attributes;
 using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game.Entities;
+using WafclastRPG.Game.Enums;
 
 namespace WafclastRPG.Bot.Commands.UserCommands
 {
@@ -41,7 +42,7 @@ namespace WafclastRPG.Bot.Commands.UserCommands
                         return Task.FromResult(new Response() { IsSamePlace = true });
 
                     if (player.Character.Karma < 0)
-                        if (map.Tipo == WafclastMapaType.Cidade)
+                        if (map.Tipo == MapType.Cidade)
                             return Task.FromResult(new Response() { IsKarmaNegative = true });
 
                     player.Character.LocalId = ctx.Channel.Id;

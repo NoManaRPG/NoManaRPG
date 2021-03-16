@@ -9,10 +9,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Attributes;
-using WafclastRPG.Bot.Entities;
 using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game;
-using WafclastRPG.Game.Entities;
+using WafclastRPG.Game.Enums;
 
 namespace WafclastRPG.Bot.Commands.GeneralCommands
 {
@@ -75,7 +74,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                             return Task.FromResult(new Response() { IsCommandInWrongChannel = true });
 
                         //Is the map is a city
-                        if (map.Tipo == WafclastMapaType.Cidade)
+                        if (map.Tipo == MapType.Cidade)
                             return Task.FromResult(new Response() { IsMapCity = true });
 
                         //Find target
@@ -184,7 +183,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                             return Task.FromResult(new Response() { IsCommandInWrongChannel = true });
 
                         //Is the map is a city
-                        if (map.Tipo == WafclastMapaType.Cidade)
+                        if (map.Tipo == MapType.Cidade)
                             return Task.FromResult(new Response() { IsMapCity = true });
 
                         //Find target

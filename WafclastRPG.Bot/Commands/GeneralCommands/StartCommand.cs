@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WafclastRPG.Bot.Attributes;
 using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game.Entities;
+using WafclastRPG.Game.Enums;
 
 namespace WafclastRPG.Bot.Commands.GeneralCommands
 {
@@ -21,7 +22,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
         {
             await ctx.TriggerTypingAsync();
             var rm = await banco.CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
-            if (rm == null || rm.Tipo != WafclastMapaType.Cidade)
+            if (rm == null || rm.Tipo != MapType.Cidade)
             {
                 await ctx.ResponderAsync("você precisa criar um personagem na cidade!");
                 return;
