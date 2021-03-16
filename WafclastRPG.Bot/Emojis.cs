@@ -1,4 +1,4 @@
-﻿namespace WafclastRPG.Game
+﻿namespace WafclastRPG.Bot
 {
     public static class Emojis
     {
