@@ -21,6 +21,7 @@ namespace WafclastRPG.Bot.Commands.UserCommands
         public Database banco;
 
         [Command("olhar")]
+        [Aliases("o", "look")]
         [Description("Permiter ver o estado atual de monstros ou de alguém .")]
         [Usage("olhar [ #id | @menção ]")]
         [Example("olhar #1", "Permite olhar o estado do monstro com o ID 1.")]

@@ -16,6 +16,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
         public Database banco;
 
         [Command("status")]
+        [Aliases("s")]
         [Description("Exibe o status do seu personagem.")]
         [Usage("status")]
         public async Task StatusCommandAsync(CommandContext ctx)

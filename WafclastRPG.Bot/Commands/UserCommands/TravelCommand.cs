@@ -14,6 +14,7 @@ namespace WafclastRPG.Bot.Commands.UserCommands
         public Database banco;
 
         [Command("viajar")]
+        [Aliases("v, travel")]
         [Description("Permite viajar para outra região.")]
         [Usage("viajar")]
         public async Task TravelCommandAsync(CommandContext ctx)
