@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson.Serialization;
 using System;
+using WafclastRPG.Game.Enums;
 
 namespace WafclastRPG.Game.Entities
 {
@@ -7,12 +8,11 @@ namespace WafclastRPG.Game.Entities
     {
         public WafclastCoins Coins { get; private set; } = new WafclastCoins(20);
         public WafclastCharacterAtributos Atributo { get; private set; } = new WafclastCharacterAtributos();
-        public ulong LocalId { get; set; } = 0;
-        public ulong ServerId { get; set; } = 0;
-        public ulong LocalIDSpawn { get; set; } = 0;
-        public ulong ServerIdSpawn { get; set; } = 0;
-        public decimal Defesa { get; private set; } = 0;
+        public WafclastLocalization Localization { get; set; } = new WafclastLocalization();
+        public WafclastLocalization LocalizationSpawnPoint { get; set; } = new WafclastLocalization();
+
         public decimal Ataque { get; private set; } = 0;
+        public decimal Defesa { get; private set; } = 0;
 
         public decimal VidaAtual { get; private set; } = 0;
         public decimal VidaMaxima { get; private set; } = 0;
@@ -20,6 +20,9 @@ namespace WafclastRPG.Game.Entities
         public int Karma { get; set; } = 0;
 
         public DateTime RegenDate { get; set; } = DateTime.UtcNow;
+
+        public StanceType Stance { get; set; } = StanceType.Parry;
+
 
         public WafclastCharacter()
         {
@@ -58,10 +61,9 @@ namespace WafclastRPG.Game.Entities
             if (VidaAtual <= 0)
             {
                 VidaAtual = VidaMaxima;
-                LocalId = LocalIDSpawn;
-                ServerId = ServerIdSpawn;
                 Karma = 0;
                 DiminuirLevel();
+                Localization = LocalizationSpawnPoint;
                 return true;
             }
             return false;

@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WafclastRPG.Bot.Attributes;
+using WafclastRPG.Bot.Entities;
 using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game;
 using WafclastRPG.Game.Enums;
@@ -70,7 +71,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                             return Task.FromResult(new Response() { IsChannelValid = false });
 
                         //Is using command in wrong channel
-                        if (map.Id != player.Character.LocalId)
+                        if (map.Id != player.Character.Localization.ChannelId)
                             return Task.FromResult(new Response() { IsCommandInWrongChannel = true });
 
                         //Is the map is a city
@@ -83,7 +84,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                             return Task.FromResult(new Response() { IsTargetFound = false });
 
                         //Is target different channel
-                        if (target.Character.LocalId != player.Character.LocalId)
+                        if (target.Character.Localization.ChannelId != player.Character.Localization.ChannelId)
                             return Task.FromResult(new Response() { IsTargetDiffentChannel = true, TargetId = target.Id });
 
                         //Combat
@@ -92,11 +93,49 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
 
                         if (target.Character.Karma == 0)
                             player.Character.Karma -= 1;
+
+                        //Verify Stance
+                        if (target.Character.Stance == StanceType.Parry)
+                        {
+                            
+
+                            if (Parry(player.Character.Atributo.Agilidade, target.Character.Atributo.Agilidade))
+                            {
+                                var _playerDamage = rd.Sortear(player.Character.Ataque);
+                                var _isTargetDead = target.Character.ReceberDano(_playerDamage);
+                                str.AppendLine($"{target.Mention()} recebeu {_playerDamage:N2}({Emojis.Adaga}) de dano.");
+
+                                if (_isTargetDead)
+                                {
+                                    if (target.Character.Karma == 0)
+                                        player.Character.Karma -= 10;
+                                    str.AppendLine($"{Emojis.CrossBone} {target.Mention()} morreu! {Emojis.CrossBone}");
+                                    var exp = target.Character.Level * 3;
+                                    str.AppendLine($"+{exp} exp");
+                                    if (player.Character.ReceberExperiencia(exp))
+                                        str.AppendLine($"{Emojis.Up} {player.Mention()} evoluiu de nível!");
+                                }
+
+                                await player.SaveAsync();
+                                await target.SaveAsync();
+                                return Task.FromResult(new Response(str, target.Id));
+                            }
+                            else
+                            {
+
+                                str.AppendLine($"{target.Mention()} desviou do ataque!");
+
+                                await player.SaveAsync();
+                                await target.SaveAsync();
+                                return Task.FromResult(new Response(str, target.Id));
+                            }
+                        }
+
                         var playerDamage = rd.Sortear(player.Character.Ataque);
-                        var _isTargetDead = target.Character.ReceberDano(playerDamage);
+                        var isTargetDead = target.Character.ReceberDano(playerDamage);
                         str.AppendLine($"{target.Mention()} recebeu {playerDamage:N2}({Emojis.Adaga}) de dano.");
 
-                        if (_isTargetDead)
+                        if (isTargetDead)
                         {
                             if (target.Character.Karma == 0)
                                 player.Character.Karma -= 10;
@@ -110,6 +149,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                         await player.SaveAsync();
                         await target.SaveAsync();
                         return Task.FromResult(new Response(str, target.Id));
+
                     });
                 var _response = await result;
 
@@ -179,7 +219,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                             return Task.FromResult(new Response() { IsChannelValid = false });
 
                         //Is using command in wrong channel
-                        if (map.Id != player.Character.LocalId)
+                        if (map.Id != player.Character.Localization.ChannelId)
                             return Task.FromResult(new Response() { IsCommandInWrongChannel = true });
 
                         //Is the map is a city
@@ -187,7 +227,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                             return Task.FromResult(new Response() { IsMapCity = true });
 
                         //Find target
-                        var target = await session.FindMonsterAsync(player.Character.LocalId + id);
+                        var target = await session.FindMonsterAsync(player.Character.Localization.ChannelId + id);
                         if (target == null)
                             return Task.FromResult(new Response() { IsTargetFound = false });
 
@@ -278,6 +318,14 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
             }
             else
                 await ctx.ResponderAsync(Strings.IdInvalido);
+        }
+
+        public bool Parry(int agilidade, int agilidadeTarget)
+        {
+            Random r = new Random();
+            var chance = (agilidade / agilidadeTarget) * 0.5;
+            var valor = r.Chance(chance);
+            return valor;
         }
 
         private class Response

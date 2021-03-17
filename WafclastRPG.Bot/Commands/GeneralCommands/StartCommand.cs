@@ -38,10 +38,8 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                         return Task.FromResult(false);
 
                     var newPlayer = new WafclastPlayer(ctx.User.Id);
-                    newPlayer.Character.LocalId = rm.Id;
-                    newPlayer.Character.LocalIDSpawn = rm.Id;
-                    newPlayer.Character.ServerId = ctx.Guild.Id;
-                    newPlayer.Character.ServerIdSpawn = ctx.Guild.Id;
+                    newPlayer.Character.Localization = new WafclastLocalization(rm.Id, ctx.Guild.Id);
+                    newPlayer.Character.LocalizationSpawnPoint = new WafclastLocalization(rm.Id, ctx.Guild.Id);
                     await session.InsertPlayerAsync(newPlayer);
                     return Task.FromResult(true);
                 });

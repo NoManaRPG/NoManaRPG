@@ -38,15 +38,14 @@ namespace WafclastRPG.Bot.Commands.UserCommands
                     if (player == null)
                         return Task.FromResult(new Response() { IsPlayerFound = false });
 
-                    if (player.Character.LocalId == ctx.Channel.Id)
+                    if (player.Character.Localization.ChannelId == ctx.Channel.Id)
                         return Task.FromResult(new Response() { IsSamePlace = true });
 
                     if (player.Character.Karma < 0)
                         if (map.Tipo == MapType.Cidade)
                             return Task.FromResult(new Response() { IsKarmaNegative = true });
 
-                    player.Character.LocalId = ctx.Channel.Id;
-                    player.Character.ServerId = ctx.Guild.Id;
+                    player.Character.Localization = new WafclastLocalization(ctx.Channel.Id, ctx.Guild.Id);
                     await player.SaveAsync();
 
                     return Task.FromResult(new Response());

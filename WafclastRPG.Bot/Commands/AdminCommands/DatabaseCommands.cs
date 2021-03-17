@@ -116,8 +116,7 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
 
                     foreach (WafclastPlayer player in usuarios)
                     {
-                        if (player.Character.ExperienciaAtual >= player.Character.ExperienciaProximoNivel)
-                            player.Character.ExperienciaAtual = 0;
+                        player.Character.Stance = StanceType.Parry;
 
                         await banco.CollectionJogadores.ReplaceOneAsync(x => x.Id == player.Id, player);
                     }

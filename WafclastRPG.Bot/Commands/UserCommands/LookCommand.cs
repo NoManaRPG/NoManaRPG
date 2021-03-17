@@ -33,7 +33,7 @@ namespace WafclastRPG.Bot.Commands.UserCommands
             if (!await ctx.HasPlayerAsync(player))
                 return;
 
-            if (player.Character.LocalId != ctx.Channel.Id)
+            if (player.Character.Localization.ChannelId != ctx.Channel.Id)
             {
                 await ctx.ResponderAsync(Strings.LocalDiferente(ctx.Channel.Name));
                 return;
@@ -59,7 +59,7 @@ namespace WafclastRPG.Bot.Commands.UserCommands
                     return;
                 }
 
-                if (playerTarget.Character.LocalId != player.Character.LocalId)
+                if (playerTarget.Character.Localization.ChannelId != player.Character.Localization.ChannelId)
                 {
                     await ctx.ResponderAsync("vocês não estão no mesmo lugar!");
                     return;

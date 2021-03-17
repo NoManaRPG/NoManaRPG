@@ -48,8 +48,8 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
             var lifePor = player.Character.VidaAtual / player.Character.VidaMaxima;
             embed.AddField("Vida".Titulo(), $"{Emojis.GerarVidaEmoji(lifePor)} {player.Character.VidaAtual:N2} / {player.Character.VidaMaxima:N2}");
 
-            var dg = await ctx.Client.GetGuildAsync(player.Character.ServerId, false);
-            var dc = dg.GetChannel(player.Character.LocalId);
+            var dg = await ctx.Client.GetGuildAsync(player.Character.Localization.ServerId, false);
+            var dc = dg.GetChannel(player.Character.Localization.ChannelId);
             var invite = await dc.CreateInviteAsync(60, 0);
             embed.AddField("Localização".Titulo(), $"{Emojis.Mapa} {Formatter.MaskedUrl(dc.Name, new Uri(invite.ToString()))}");
 
