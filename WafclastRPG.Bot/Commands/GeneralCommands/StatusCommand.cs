@@ -45,8 +45,8 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
             embed.AddField("Ataque".Titulo(), $"{Emojis.EspadasCruzadas} {player.Character.Ataque:N2}", true);
             embed.AddField("Defesa".Titulo(), $"{Emojis.Escudo} {player.Character.Defesa:N2}", true);
 
-            var lifePor = player.Character.VidaAtual / player.Character.VidaMaxima;
-            embed.AddField("Vida".Titulo(), $"{Emojis.GerarVidaEmoji(lifePor)} {player.Character.VidaAtual:N2} / {player.Character.VidaMaxima:N2}");
+            var lifePor = player.Character.LifePoints.CurrentValue / player.Character.LifePoints.MaxValue;
+            embed.AddField("Vida".Titulo(), $"{Emojis.GerarVidaEmoji(lifePor)} {player.Character.LifePoints.CurrentValue:N2} / {player.Character.LifePoints.MaxValue:N2}");
 
             var dg = await ctx.Client.GetGuildAsync(player.Character.Localization.ServerId, false);
             var dc = dg.GetChannel(player.Character.Localization.ChannelId);

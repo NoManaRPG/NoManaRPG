@@ -11,11 +11,11 @@ namespace WafclastRPG.Game.Entities
         public WafclastLocalization Localization { get; set; } = new WafclastLocalization();
         public WafclastLocalization LocalizationSpawnPoint { get; set; } = new WafclastLocalization();
 
+        public WafclastStatePoints LifePoints { get; set; } = new WafclastStatePoints();
+        public WafclastStatePoints Stamina { get; set; } = new WafclastStatePoints();
+
         public decimal Ataque { get; private set; } = 0;
         public decimal Defesa { get; private set; } = 0;
-
-        public decimal VidaAtual { get; private set; } = 0;
-        public decimal VidaMaxima { get; private set; } = 0;
 
         public int Karma { get; set; } = 0;
 
@@ -27,13 +27,15 @@ namespace WafclastRPG.Game.Entities
         public WafclastCharacter()
         {
             CalcStats();
-            VidaAtual = VidaMaxima;
+            LifePoints.Restart();
+            Stamina.Restart();
         }
 
         public void CalcStats()
         {
-            Ataque = Atributo.Forca * 2;
-            VidaMaxima = Atributo.Resistencia * 4;
+            Ataque = Atributo.Forca * 3;
+            LifePoints.MaxValue = Atributo.Resistencia * 8;
+            Stamina.MaxValue = Atributo.Resistencia * 4;
         }
 
         public new bool ReceberExperiencia(decimal exp)
@@ -41,7 +43,7 @@ namespace WafclastRPG.Game.Entities
             int levelUps = base.ReceberExperiencia(exp);
             for (int i = 0; i < levelUps; i++)
             {
-                VidaAtual = VidaMaxima;
+                LifePoints.Restart();
                 if (Level > LevelBloqueado)
                     Atributo.PontosLivreAtributo += 4;
             }
@@ -57,10 +59,10 @@ namespace WafclastRPG.Game.Entities
         /// <returns></returns>
         public bool ReceberDano(decimal valor)
         {
-            VidaAtual -= valor;
-            if (VidaAtual <= 0)
+            
+            if (LifePoints.Remove(valor))
             {
-                VidaAtual = VidaMaxima;
+                LifePoints.Restart();
                 Karma = 0;
                 DiminuirLevel();
                 Localization = LocalizationSpawnPoint;
@@ -69,12 +71,7 @@ namespace WafclastRPG.Game.Entities
             return false;
         }
 
-        public void ReceberVida(decimal valor)
-        {
-            VidaAtual += valor;
-            if (VidaAtual >= VidaMaxima)
-                VidaAtual = VidaMaxima;
-        }
+        public void ReceberVida(decimal valor) => LifePoints.Add(valor);
 
         public static void MapBuilder()
         {

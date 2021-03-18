@@ -65,7 +65,7 @@ namespace WafclastRPG.Bot.Commands.UserCommands
                     return;
                 }
 
-                var porcentagemLife = Convert.ToInt32((playerTarget.Character.VidaAtual / playerTarget.Character.VidaMaxima) * 100);
+                var porcentagemLife = Convert.ToInt32((playerTarget.Character.LifePoints.CurrentValue / playerTarget.Character.LifePoints.MaxValue) * 100);
 
                 await ctx.RespondAsync($"Estado do {playerTarget.Id.Mention()}: {VidaEmTexto(porcentagemLife)}");
                 return;

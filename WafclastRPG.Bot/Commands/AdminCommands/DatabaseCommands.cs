@@ -116,7 +116,7 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
 
                     foreach (WafclastPlayer player in usuarios)
                     {
-                        player.Character.Stance = StanceType.Parry;
+                        player.Character.CalcStats();
 
                         await banco.CollectionJogadores.ReplaceOneAsync(x => x.Id == player.Id, player);
                     }

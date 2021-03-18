@@ -3,12 +3,12 @@
     public class WafclastCharacterAtributos
     {
         /// <summary>
-        /// Aumenta o ataque máximo em 2 por cada ponto atribuído.
+        /// Aumenta o ataque máximo em 3 por cada ponto atribuído.
         /// </summary>
         public int Forca { get; private set; } = 4;
 
         /// <summary>
-        /// Aumenta a vida máxima em 4 e o vigor em 5 por cada ponto atribuído.
+        /// Aumenta a vida máxima em 8 e o vigor em 4 por cada ponto atribuído.
         /// </summary>
         public int Resistencia { get; private set; } = 4;
 
