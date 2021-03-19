@@ -63,12 +63,12 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
                 await ctx.RespondAsync($"{ctx.User.Mention}, você informou um tipo inexistente!");
         }
 
-        [Command("criar-monstro")]
+        [Command("monstro-criar")]
         [Description("Permite criar um monstro para o mapa atual.")]
-        [Usage("criar-monstro [ id ] [ nome ] [ defesa ] [ ataque ] [ vida ] [ exp ] [ spawn time ]")]
-        [Example("criar-monstro 1 Zombiee 5 1 20 3 4", "Cria um monstro com as informações fornecidas..")]
+        [Usage("monstro-criar [ id ] [ exp ] [ nome ]")]
+        [Example("monstro-criar 1 3 Zombiie Grandioso", "Cria um monstro com as informações fornecidas..")]
         [RequireOwner]
-        public async Task CriarMonstroAsync(CommandContext ctx, ulong id = 0, string nome = "", decimal defesa = 0, decimal ataque = 0, decimal vidaMaxima = 0, decimal exp = 0, int tempo = 0)
+        public async Task MonstroCriarAsync(CommandContext ctx, ulong id = 0, decimal exp = 0, [RemainingText] string nome = "")
         {
             await ctx.TriggerTypingAsync();
             var result = await banco.CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
@@ -78,24 +78,58 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
                 return;
             }
 
-            var monstro = new WafclastMonster(ctx.Channel.Id, id, nome, defesa, ataque, vidaMaxima, exp, TimeSpan.FromMinutes(tempo));
+            var hasMonster = await banco.CollectionMonsters.Find(x => x.Id == ctx.Channel.Id + id).FirstOrDefaultAsync();
+            if (hasMonster != null)
+            {
+                await ctx.ResponderAsync("já existe um monstro com o #ID informado!");
+                return;
+            }
+
+            var monstro = new WafclastMonster(ctx.Channel.Id + id, id, nome, exp);
             await banco.CollectionMonsters.InsertOneAsync(monstro);
 
-            await ctx.ResponderAsync($"monstro criado!");
+            await ctx.ResponderAsync($"monstro {Formatter.Bold(nome)} criado! Pode ser encontrado com o #ID {id}.");
         }
 
-        [Command("monstro-reduzir-vida")]
+
+        [Command("monstro-atributos")]
+        [Description("Permite editar os atributos de um monstro já criado no mapa atual.")]
+        [Usage("monstro-atributos [ id ] [ forca ] [ resistencia ] [ agilidade ] [ tempo ] [ s | m | h | d")]
+        [Example("monstro-atributos 1 5 4 5 360 s", "Edita o monstro de #ID 1 com os atributos fornecidos e o respawn definido em 360s..")]
         [RequireOwner]
-        public async Task MonstroReduzirVidaAsync(CommandContext ctx, ulong id, decimal quantidade)
+        public async Task MonstrosAtributosAsync(CommandContext ctx, ulong id = 0, int forca = 0, int resistencia = 0, int agilidade = 0, int tempo = 1, string duracao = "m")
         {
             await ctx.TriggerTypingAsync();
             var monster = await banco.CollectionMonsters.Find(x => x.Id == ctx.Channel.Id + id).FirstOrDefaultAsync();
+            if (monster == null)
+            {
+                await ctx.ResponderAsync("não existe um monstro com o #ID informado!");
+                return;
+            }
 
-            monster.SetVida(quantidade);
+            monster.Atributo = new WafclastMonsterAtributos(forca, resistencia, agilidade);
+            monster.CalcAtributos();
+            switch (duracao)
+            {
+                case "s":
+                    monster.RespawnTime = TimeSpan.FromSeconds(tempo);
+                    break;
+                case "m":
+                    monster.RespawnTime = TimeSpan.FromMinutes(tempo);
+                    break;
+                case "h":
+                    monster.RespawnTime = TimeSpan.FromHours(tempo);
+                    break;
+                case "d":
+                    monster.RespawnTime = TimeSpan.FromDays(tempo);
+                    break;
+                default:
+                    monster.RespawnTime = TimeSpan.FromMinutes(tempo);
+                    break;
+            }
 
-            await banco.CollectionMonsters.ReplaceOneAsync(x => x.Id == ctx.Channel.Id + id, monster);
-
-            await ctx.ResponderAsync($"{monster.Nome} está com {quantidade} de vida!");
+            await banco.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster);
+            await ctx.ResponderAsync($"monstro editado! Atributos atualizados!");
         }
 
         [Command("atualizar")]
