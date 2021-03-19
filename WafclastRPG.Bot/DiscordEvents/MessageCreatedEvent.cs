@@ -22,7 +22,6 @@ namespace WafclastRPG.Bot.DiscordEvents
                 await commandsNext.ExecuteCommandAsync(fakeContext);
             }
 
-            Random rd = new Random();
             using var session = await database.StartDatabaseSessionAsync();
             await session.WithTransactionAsync(async (s, ct) =>
             {
@@ -33,9 +32,11 @@ namespace WafclastRPG.Bot.DiscordEvents
 
                 if (player.Character.RegenDate > DateTime.UtcNow)
                     return Task.CompletedTask;
+                Random rd = new Random();
                 player.Character.RegenDate = DateTime.UtcNow + TimeSpan.FromSeconds(rd.Sortear(90, 120));
 
-                player.Character.ReceberVida(player.Character.Atributo.Vitalidade * 0.2m);
+                player.Character.LifePoints.Add(player.Character.Atributo.Vitalidade * 0.2m);
+                player.Character.Stamina.Add(player.Character.Atributo.Vitalidade * 0.1m);
                 await player.SaveAsync();
                 return Task.CompletedTask;
             });

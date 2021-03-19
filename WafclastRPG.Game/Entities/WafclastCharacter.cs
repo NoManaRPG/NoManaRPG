@@ -71,8 +71,6 @@ namespace WafclastRPG.Game.Entities
             return false;
         }
 
-        public void ReceberVida(decimal valor) => LifePoints.Add(valor);
-
         public static void MapBuilder()
         {
             BsonClassMap.RegisterClassMap<WafclastCharacter>(cm =>
