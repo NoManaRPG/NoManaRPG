@@ -42,7 +42,7 @@ namespace WafclastRPG.Bot
 
             this.Client.UseInteractivity(new InteractivityConfiguration
             {
-                Timeout = TimeSpan.FromSeconds(30),
+                Timeout = TimeSpan.FromSeconds(10),
                 PollBehaviour = PollBehaviour.KeepEmojis,
                 PaginationBehaviour = PaginationBehaviour.Ignore,
                 PaginationDeletion = PaginationDeletion.KeepEmojis,
@@ -60,6 +60,7 @@ namespace WafclastRPG.Bot
             this.CommandsNext.RegisterCommands<AttackCommand>();
             this.CommandsNext.RegisterCommands<TravelCommand>();
             this.CommandsNext.RegisterCommands<LookCommand>();
+            this.CommandsNext.RegisterCommands<StanceCommand>();
         }
     }
 }
