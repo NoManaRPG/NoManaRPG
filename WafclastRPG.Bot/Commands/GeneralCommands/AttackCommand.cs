@@ -12,6 +12,7 @@ using WafclastRPG.Bot.Attributes;
 using WafclastRPG.Bot.Entities;
 using WafclastRPG.Bot.Extensions;
 using WafclastRPG.Game;
+using WafclastRPG.Game.Entities;
 using WafclastRPG.Game.Enums;
 
 namespace WafclastRPG.Bot.Commands.GeneralCommands
@@ -97,24 +98,45 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                         //Verify Stance
                         if (target.Character.Stance == StanceType.Parry)
                         {
-                            
-
-                            if (Parry(player.Character.Atributo.Agilidade, target.Character.Atributo.Agilidade))
+                            if (target.Character.Stamina.CurrentValue >= 2)
                             {
-                                var _playerDamage = rd.Sortear(player.Character.Ataque);
-                                var _isTargetDead = target.Character.ReceberDano(_playerDamage);
-                                str.AppendLine($"{target.Mention()} recebeu {_playerDamage:N2}({Emojis.Adaga}) de dano.");
-
-                                if (_isTargetDead)
+                                target.Character.Stamina.Remove(2);
+                                if (Parry(player.Character.Atributo.Agilidade, target.Character.Atributo.Agilidade))
                                 {
-                                    if (target.Character.Karma == 0)
-                                        player.Character.Karma -= 10;
-                                    str.AppendLine($"{Emojis.CrossBone} {target.Mention()} morreu! {Emojis.CrossBone}");
-                                    var exp = target.Character.Level * 3;
-                                    str.AppendLine($"+{exp} exp");
-                                    if (player.Character.ReceberExperiencia(exp))
-                                        str.AppendLine($"{Emojis.Up} {player.Mention()} evoluiu de nível!");
+                                    str.AppendLine($"{target.Mention()} não conseguiu desviar!");
+                                    return Task.FromResult(await CombatePvP(rd, target, player, str));
                                 }
+                                else
+                                {
+                                    str.AppendLine($"{target.Mention()} desviou do ataque!");
+
+                                    await player.SaveAsync();
+                                    await target.SaveAsync();
+                                    return Task.FromResult(new Response(str, target.Id));
+                                }
+                            }
+                            else
+                            {
+                                str.AppendLine($"{target.Mention()} está muito cansado para desviar!");
+                                return Task.FromResult(await CombatePvP(rd, target, player, str));
+                            }
+                        }
+                        else
+                        {
+
+                            if (target.Character.Atributo.Agilidade < player.Character.Atributo.Agilidade)
+                            {
+                                str.AppendLine($"{target.Mention()} é muito lento para defender!");
+                                target.Character.Stamina.Remove(4);
+                                return Task.FromResult(await CombatePvP(rd, target, player, str));
+                            }
+
+                            var stamina = player.Character.Atributo.Forca / target.Character.Atributo.Resistencia;
+
+                            if (target.Character.Stamina.CurrentValue >= stamina)
+                            {
+                                target.Character.Stamina.Remove(stamina);
+                                str.AppendLine($"{target.Mention()} defendeu o ataque!");
 
                                 await player.SaveAsync();
                                 await target.SaveAsync();
@@ -122,34 +144,10 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                             }
                             else
                             {
-
-                                str.AppendLine($"{target.Mention()} desviou do ataque!");
-
-                                await player.SaveAsync();
-                                await target.SaveAsync();
-                                return Task.FromResult(new Response(str, target.Id));
+                                str.AppendLine($"{target.Mention()} está muito cansado para defender!");
+                                return Task.FromResult(await CombatePvP(rd, target, player, str));
                             }
                         }
-
-                        var playerDamage = rd.Sortear(player.Character.Ataque);
-                        var isTargetDead = target.Character.ReceberDano(playerDamage);
-                        str.AppendLine($"{target.Mention()} recebeu {playerDamage:N2}({Emojis.Adaga}) de dano.");
-
-                        if (isTargetDead)
-                        {
-                            if (target.Character.Karma == 0)
-                                player.Character.Karma -= 10;
-                            str.AppendLine($"{Emojis.CrossBone} {target.Mention()} morreu! {Emojis.CrossBone}");
-                            var exp = target.Character.Level * 3;
-                            str.AppendLine($"+{exp} exp");
-                            if (player.Character.ReceberExperiencia(exp))
-                                str.AppendLine($"{Emojis.Up} {player.Mention()} evoluiu de nível!");
-                        }
-
-                        await player.SaveAsync();
-                        await target.SaveAsync();
-                        return Task.FromResult(new Response(str, target.Id));
-
                     });
                 var _response = await result;
 
@@ -239,7 +237,10 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                         embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
 
                         var playerDamage = rd.Sortear(player.Character.Ataque);
+
+                        // Calc baseado no LoL
                         var _isTargetDead = target.ReceberDano(playerDamage);
+
                         str.AppendLine($"{target.Nome} recebeu {playerDamage:N2} de dano.");
 
                         if (_isTargetDead)
@@ -257,16 +258,59 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                             return Task.FromResult(new Response(str, target.Nome));
                         }
 
-                        var targetDamage = rd.Sortear(target.Ataque);
-                        str.AppendLine($"{ctx.User.Mention} recebeu {targetDamage:N2} de dano.");
 
-                        if (player.Character.ReceberDano(targetDamage))
-                            str.AppendLine($"{ctx.User.Mention} morreu!");
+                        //Verify Stance
+                        if (player.Character.Stance == StanceType.Parry)
+                        {
+                            if (player.Character.Stamina.CurrentValue >= 2)
+                            {
+                                player.Character.Stamina.Remove(2);
+                                if (Parry(target.Atributo.Agilidade, player.Character.Atributo.Agilidade))
+                                {
+                                    str.AppendLine($"{player.Mention()} não conseguiu desviar!");
+                                    return Task.FromResult(await CombatePvM(str, rd, player, target, session));
+                                }
+                                else
+                                {
+                                    str.AppendLine($"{player.Mention()} desviou do ataque!");
 
-                        await player.SaveAsync();
-                        await session.SaveMonsterAsync(target);
+                                    await player.SaveAsync();
+                                    await session.SaveMonsterAsync(target);
+                                    return Task.FromResult(new Response(str, target.Nome));
+                                }
+                            }
+                            else
+                            {
+                                str.AppendLine($"{player.Mention()} está muito cansado para desviar!");
+                                return Task.FromResult(await CombatePvM(str, rd, player, target, session));
+                            }
+                        }
+                        else
+                        {
+                            if (player.Character.Atributo.Agilidade < target.Atributo.Agilidade)
+                            {
+                                str.AppendLine($"{player.Mention()} é muito lento para defender!");
+                                player.Character.Stamina.Remove(4);
+                                return Task.FromResult(await CombatePvM(str, rd, player, target, session));
+                            }
 
-                        return Task.FromResult(new Response(str, target.Nome));
+                            var stamina = target.Atributo.Forca / player.Character.Atributo.Resistencia;
+
+                            if (player.Character.Stamina.CurrentValue >= stamina)
+                            {
+                                player.Character.Stamina.Remove(stamina);
+                                str.AppendLine($"{player.Mention()} defendeu o ataque!");
+
+                                await player.SaveAsync();
+                                await session.SaveMonsterAsync(target);
+                                return Task.FromResult(new Response(str, target.Nome));
+                            }
+                            else
+                            {
+                                str.AppendLine($"{player.Mention()} está muito cansado para defender!");
+                                return Task.FromResult(await CombatePvM(str, rd, player, target, session));
+                            }
+                        }
                     });
                 var _response = await result;
 
@@ -328,7 +372,44 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
             return valor;
         }
 
-        private class Response
+        public async Task<Response> CombatePvP(Random rd, Player target, Player player, StringBuilder str)
+        {
+            var _playerDamage = rd.Sortear(player.Character.Ataque);
+            var _isTargetDead = target.Character.ReceberDano(_playerDamage);
+
+            str.AppendLine($"{target.Mention()} recebeu {_playerDamage:N2}({Emojis.Adaga}) de dano.");
+
+            if (_isTargetDead)
+            {
+                if (target.Character.Karma == 0)
+                    player.Character.Karma -= 10;
+                str.AppendLine($"{Emojis.CrossBone} {target.Mention()} morreu! {Emojis.CrossBone}");
+                var exp = target.Character.Level * 3;
+                str.AppendLine($"+{exp} exp");
+                if (player.Character.ReceberExperiencia(exp))
+                    str.AppendLine($"{Emojis.Up} {player.Mention()} evoluiu de nível!");
+            }
+
+            await player.SaveAsync();
+            await target.SaveAsync();
+            return new Response(str, target.Id);
+        }
+
+        public async Task<Response> CombatePvM(StringBuilder str, Random rd, Player player, WafclastMonster target, DatabaseSession session)
+        {
+            var targetDamage = rd.Sortear(target.MaxAttack);
+            str.AppendLine($"{player.Mention()} recebeu {targetDamage:N2} de dano.");
+
+            if (player.Character.ReceberDano(targetDamage))
+                str.AppendLine($"{player.Mention()} morreu!");
+
+            await player.SaveAsync();
+            await session.SaveMonsterAsync(target);
+
+            return new Response(str, target.Nome);
+        }
+
+        public class Response
         {
             public StringBuilder BattleResult;
             public ulong TargetId = 0;
