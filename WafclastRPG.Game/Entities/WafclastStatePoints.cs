@@ -34,7 +34,10 @@
         {
             CurrentValue -= value;
             if (CurrentValue <= 0)
+            {
+                CurrentValue = 0;
                 return true;
+            }
             return false;
         }
     }

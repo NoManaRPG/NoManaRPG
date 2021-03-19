@@ -5,29 +5,42 @@ namespace WafclastRPG.Game.Entities
 {
     public class WafclastMonster
     {
+        /// <summary>
+        /// ChannelId + MonsterId
+        /// </summary>
         public ulong Id { get; private set; }
+
+        /// <summary>
+        /// MonsterId... #1, #2 ....
+        /// </summary>
         public ulong MonsterId { get; private set; }
         public string Nome { get; private set; }
-        public decimal Defesa { get; private set; }
-        public decimal Ataque { get; private set; }
-        public decimal VidaAtual { get; private set; }
-        public decimal VidaMaxima { get; private set; }
+
+        public decimal MaxAttack { get; private set; }
         public decimal Exp { get; private set; }
 
-        public DateTime DateSpawn { get; private set; } = DateTime.UtcNow;
-        public TimeSpan SpawnTime { get; private set; } = TimeSpan.FromMinutes(1);
+        public WafclastStatePoints Life { get; set; } = new WafclastStatePoints();
+        public WafclastMonsterAtributos Atributo { get; set; }
 
-        public WafclastMonster(ulong id, ulong monsterId, string nome, decimal defesa, decimal ataque, decimal vidaMaxima, decimal exp, TimeSpan spawnTime)
+        public DateTime DateSpawn { get; private set; } = DateTime.UtcNow;
+
+        /// <summary>
+        /// Tempo de respawn após morto.
+        /// </summary>
+        public TimeSpan RespawnTime { get; set; } = TimeSpan.FromMinutes(1);
+
+        public WafclastMonster(ulong id, ulong monsterId, string nome, decimal exp)
         {
-            Id = id + monsterId;
+            Id = id;
             MonsterId = monsterId;
             Nome = nome;
-            Defesa = defesa;
-            Ataque = ataque;
-            VidaMaxima = vidaMaxima;
-            VidaAtual = vidaMaxima;
             Exp = exp;
-            SpawnTime = spawnTime;
+        }
+
+        public void CalcAtributos()
+        {
+            MaxAttack = Atributo.Forca * 3;
+            Life = new WafclastStatePoints(Atributo.Resistencia * 8);
         }
 
         /// <summary>
@@ -37,17 +50,15 @@ namespace WafclastRPG.Game.Entities
         /// <returns></returns>
         public bool ReceberDano(decimal valor)
         {
-            VidaAtual -= valor;
-            if (VidaAtual <= 0)
+            Life.CurrentValue -= valor;
+            if (Life.CurrentValue <= 0)
             {
-                DateSpawn = DateTime.UtcNow + SpawnTime;
-                VidaAtual = VidaMaxima;
+                DateSpawn = DateTime.UtcNow + RespawnTime;
+                Life.Restart();
                 return true;
             }
             return false;
         }
-
-        public void SetVida(decimal valor) => VidaAtual = valor;
 
         public static void MapBuilder()
         {
