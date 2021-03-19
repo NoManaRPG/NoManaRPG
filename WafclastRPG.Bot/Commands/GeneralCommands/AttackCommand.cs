@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using WafclastRPG.Bot.Attributes;
 using WafclastRPG.Bot.Entities;
 using WafclastRPG.Bot.Extensions;
-using WafclastRPG.Game;
 using WafclastRPG.Game.Entities;
 using WafclastRPG.Game.Enums;
 
