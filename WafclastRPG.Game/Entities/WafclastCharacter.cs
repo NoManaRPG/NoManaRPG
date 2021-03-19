@@ -59,10 +59,11 @@ namespace WafclastRPG.Game.Entities
         /// <returns></returns>
         public bool ReceberDano(decimal valor)
         {
-            
+
             if (LifePoints.Remove(valor))
             {
                 LifePoints.Restart();
+                Stamina.Restart();
                 Karma = 0;
                 DiminuirLevel();
                 Localization = LocalizationSpawnPoint;
