@@ -80,7 +80,7 @@ namespace WafclastRPG.Bot.Commands.UserCommands
                         await ctx.ResponderAsync($"o monstro {Formatter.Bold(monster.Nome)} está morto!");
                     else
                     {
-                        var porcentagemLife = Convert.ToInt32((monster.VidaAtual / monster.VidaMaxima) * 100);
+                        var porcentagemLife = Convert.ToInt32((monster.Life.CurrentValue / monster.Life.MaxValue) * 100);
                         await ctx.RespondAsync($"Estado do {Formatter.Bold(monster.Nome)}: {VidaEmTexto(porcentagemLife)}");
                     }
                 }
