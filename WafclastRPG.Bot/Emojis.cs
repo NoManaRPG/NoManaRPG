@@ -37,6 +37,8 @@
         public const string Mago = ":man_mage:";
 
         public const string Mapa = ":map:";
+        public const string DiamanteLaranjaPequeno = ":small_orange_diamond:";
+        public const string Aviso = ":warning:";
 
         public static string GerarVidaEmoji(decimal porcentagem)
         {

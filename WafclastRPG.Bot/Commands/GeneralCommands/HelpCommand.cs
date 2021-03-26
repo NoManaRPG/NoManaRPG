@@ -129,17 +129,19 @@ namespace WafclastRPG.Bot.Comandos.Exibir
 
             var str = new StringBuilder();
 
-            str.Append($"**Geral** -");
-            str.Append($"{Formatter.InlineCode("comecar")} - ");
-            str.Append($"{Formatter.InlineCode("ajuda")} - ");
-            str.Append($"{Formatter.InlineCode("status")} - ");
-            str.Append($"{Formatter.InlineCode("viajar")} - ");
+            str.Append($"**Bot** -");
             str.AppendLine($"{Formatter.InlineCode("info")} ");
+            str.Append($"{Formatter.InlineCode("ajuda")} - ");
 
-            str.Append($"**Combate** -");
+            str.Append($"**Jogador** -");
+            str.Append($"{Formatter.InlineCode("comecar")} - ");
+            str.Append($"{Formatter.InlineCode("status")} - ");
+            str.Append($"{Formatter.InlineCode("postura")} - ");
+
+            str.Append($"**Canal de texto** -");
             str.Append($"{Formatter.InlineCode("atacar")} - ");
+            str.Append($"{Formatter.InlineCode("viajar")} - ");
             str.Append($"{Formatter.InlineCode("olhar")} - ");
-
 
             embed.WithDescription(str.ToString());
             embed.WithColor(DiscordColor.Violet);
