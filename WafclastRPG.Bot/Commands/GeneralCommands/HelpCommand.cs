@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using DSharpPlus;
 using System.Linq;
 using WafclastRPG.Bot.Attributes;
+using WafclastRPG.Bot.Extensions;
 
 namespace WafclastRPG.Bot.Comandos.Exibir
 {
@@ -127,23 +128,13 @@ namespace WafclastRPG.Bot.Comandos.Exibir
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
             embed.WithDescription("Digite `w.ajuda [comando]` para mais informações. Por exemplo: `w.ajuda bot`.");
 
-            var str = new StringBuilder();
 
-            str.Append($"**Bot** -");
-            str.AppendLine($"{Formatter.InlineCode("info")} ");
-            str.Append($"{Formatter.InlineCode("ajuda")} - ");
+            embed.AddField("Bot".Titulo(), $"{Formatter.InlineCode("ajuda")} {Formatter.InlineCode("info")}", true);
+            embed.AddField("Jogador".Titulo(), $"{Formatter.InlineCode("comecar")} {Formatter.InlineCode("status")} {Formatter.InlineCode("postura")}", true);
+            embed.AddField("Canal de texto".Titulo(), $"{Formatter.InlineCode("atacar")} {Formatter.InlineCode("viajar")} {Formatter.InlineCode("olhar")}", true);
 
-            str.Append($"**Jogador** -");
-            str.Append($"{Formatter.InlineCode("comecar")} - ");
-            str.Append($"{Formatter.InlineCode("status")} - ");
-            str.Append($"{Formatter.InlineCode("postura")} - ");
-
-            str.Append($"**Canal de texto** -");
-            str.Append($"{Formatter.InlineCode("atacar")} - ");
-            str.Append($"{Formatter.InlineCode("viajar")} - ");
-            str.Append($"{Formatter.InlineCode("olhar")} - ");
-
-            embed.WithDescription(str.ToString());
+            embed.WithDescription("Para mais informações a cerca de algum comando. O comando [ajuda + comado] mostra novas informações.");
+            embed.WithThumbnail("https://naomesmo.com.br/wp-content/uploads/2013/01/me-ajuda.gif");
             embed.WithColor(DiscordColor.Violet);
             embed.WithTimestamp(DateTime.Now);
             return embed.Build();
