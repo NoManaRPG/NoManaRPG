@@ -100,7 +100,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                             if (target.Character.Stamina.CurrentValue >= 2)
                             {
                                 target.Character.Stamina.Remove(2);
-                                if (Parry(player.Character.Atributo.Agilidade, target.Character.Atributo.Agilidade))
+                                if (Parry(player.Character.Atributos.Agilidade, target.Character.Atributos.Agilidade))
                                 {
                                     str.AppendLine($"{target.Mention()} não conseguiu desviar!");
                                     return Task.FromResult(await CombatePvP(rd, target, player, str));
@@ -123,14 +123,14 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                         else
                         {
 
-                            if (target.Character.Atributo.Agilidade < player.Character.Atributo.Agilidade)
+                            if (target.Character.Atributos.Agilidade < player.Character.Atributos.Agilidade)
                             {
                                 str.AppendLine($"{target.Mention()} é muito lento para defender!");
                                 target.Character.Stamina.Remove(4);
                                 return Task.FromResult(await CombatePvP(rd, target, player, str));
                             }
 
-                            var stamina = player.Character.Atributo.Forca / target.Character.Atributo.Resistencia;
+                            var stamina = (decimal)player.Character.Atributos.Forca / (decimal)target.Character.Atributos.Resistencia;
 
                             if (target.Character.Stamina.CurrentValue >= stamina)
                             {
@@ -249,7 +249,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                                 player.Character.Karma += 1;
 
                             str.AppendLine($"{Emojis.CrossBone} {target.Nome} morreu! {Emojis.CrossBone}");
-                            str.AppendLine($"+{target.Exp} exp");
+                            str.AppendLine($"+{target.Exp:N2} exp");
 
 
                             await player.SaveAsync();
@@ -264,7 +264,7 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                             if (player.Character.Stamina.CurrentValue >= 2)
                             {
                                 player.Character.Stamina.Remove(2);
-                                if (Parry(target.Atributo.Agilidade, player.Character.Atributo.Agilidade))
+                                if (Parry(target.Atributos.Agilidade, player.Character.Atributos.Agilidade))
                                 {
                                     str.AppendLine($"{player.Mention()} não conseguiu desviar!");
                                     return Task.FromResult(await CombatePvM(str, rd, player, target, session));
@@ -286,14 +286,14 @@ namespace WafclastRPG.Bot.Commands.GeneralCommands
                         }
                         else
                         {
-                            if (player.Character.Atributo.Agilidade < target.Atributo.Agilidade)
+                            if (player.Character.Atributos.Agilidade < target.Atributos.Agilidade)
                             {
                                 str.AppendLine($"{player.Mention()} é muito lento para defender!");
                                 player.Character.Stamina.Remove(4);
                                 return Task.FromResult(await CombatePvM(str, rd, player, target, session));
                             }
 
-                            var stamina = target.Atributo.Forca / player.Character.Atributo.Resistencia;
+                            var stamina = (decimal)target.Atributos.Forca / (decimal)player.Character.Atributos.Resistencia;
 
                             if (player.Character.Stamina.CurrentValue >= stamina)
                             {

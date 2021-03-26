@@ -2,30 +2,39 @@
 {
     public class WafclastMonsterAtributos
     {
-        /// <summary>
-        /// Aumenta o dano físico máximo em 3 por cada ponto.
-        /// </summary>
-        public int Forca { get; private set; }
+        public int ForcaMin { get; set; }
+        public int ForcaMax { get; set; }
+        public int Forca { get; set; }
 
-        /// <summary>
-        /// Aumenta a vida máxima em 8 por cada ponto.
-        /// </summary>
-        public int Resistencia { get; private set; }
+        public int ResistenciaMin { get; set; }
+        public int ResistenciaMax { get; set; }
+        public int Resistencia { get; set; }
 
-        /// <summary>
-        /// Aumenta a chance de desviar de um ataque inimigo.
-        /// </summary>
-        public int Agilidade { get; private set; }
+        public int AgilidadeMin { get; set; }
+        public int AgilidadeMax { get; set; }
+        public int Agilidade { get; set; }
 
-        public WafclastMonsterAtributos(int forca, int resistencia, int agilidade)
+        public decimal ExpMin { get; set; }
+        public decimal ExpMax { get; set; }
+
+        public WafclastMonsterAtributos(
+            int forcaMin,
+            int forcaMax,
+            int resistenciaMin,
+            int resistenciaMax,
+            int agilidadeMin,
+            int agilidadeMax,
+            decimal expMin,
+            decimal expMax)
         {
-            Forca = forca;
-            Resistencia = resistencia;
-            Agilidade = agilidade;
-        }
-
-        public WafclastMonsterAtributos()
-        {
+            ForcaMin = forcaMin;
+            ForcaMax = forcaMax;
+            ResistenciaMin = resistenciaMin;
+            ResistenciaMax = resistenciaMax;
+            AgilidadeMin = agilidadeMin;
+            AgilidadeMax = agilidadeMax;
+            ExpMin = expMin;
+            ExpMax = expMax;
         }
     }
 }

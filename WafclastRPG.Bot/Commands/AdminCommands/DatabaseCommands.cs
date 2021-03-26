@@ -65,10 +65,10 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
 
         [Command("monstro-criar")]
         [Description("Permite criar um monstro para o mapa atual.")]
-        [Usage("monstro-criar [ id ] [ exp ] [ nome ]")]
-        [Example("monstro-criar 1 3 Zombiie Grandioso", "Cria um monstro com as informações fornecidas..")]
+        [Usage("monstro-criar [ id ] [ nome ]")]
+        [Example("monstro-criar 1 Zombiie Grandioso", "Cria um monstro com as informações fornecidas..")]
         [RequireOwner]
-        public async Task MonstroCriarAsync(CommandContext ctx, ulong id = 0, decimal exp = 0, [RemainingText] string nome = "")
+        public async Task MonstroCriarAsync(CommandContext ctx, ulong id = 0, [RemainingText] string nome = "")
         {
             await ctx.TriggerTypingAsync();
             var result = await banco.CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
@@ -85,7 +85,7 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
                 return;
             }
 
-            var monstro = new WafclastMonster(ctx.Channel.Id + id, id, nome, exp);
+            var monstro = new WafclastMonster(ctx.Channel.Id, id) { Nome = nome };
             await banco.CollectionMonsters.InsertOneAsync(monstro);
 
             await ctx.ResponderAsync($"monstro {Formatter.Bold(nome)} criado! Pode ser encontrado com o #ID {id}.");
@@ -94,10 +94,13 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
 
         [Command("monstro-atributos")]
         [Description("Permite editar os atributos de um monstro já criado no mapa atual.")]
-        [Usage("monstro-atributos [ id ] [ forca ] [ resistencia ] [ agilidade ] [ tempo ] [ s | m | h | d")]
-        [Example("monstro-atributos 1 5 4 5 360 s", "Edita o monstro de #ID 1 com os atributos fornecidos e o respawn definido em 360s..")]
+        [Usage("monstro-atributos [ id ] [ forca min ] [ forca max ] [ resistencia min ] [ resistencia max ] [ agilidade min ] [ agilidade max ] [ exp min] [ exp max ] [ tempo ] [ s | m | h | d")]
+        [Example("monstro-atributos 1 4 5 6 7 2 3 2 3 1 m", "Edita o monstro de #ID 1 com os parâmetros fornecidos.")]
         [RequireOwner]
-        public async Task MonstrosAtributosAsync(CommandContext ctx, ulong id = 0, int forca = 0, int resistencia = 0, int agilidade = 0, int tempo = 1, string duracao = "m")
+        public async Task MonstrosAtributosAsync(CommandContext ctx, ulong id = 0, int forcaMin = 0, int forcaMax = 0,
+                                                 int resistenciaMin = 0, int resistenciaMax = 0, int agilidadeMin = 0,
+                                                 int agilidadeMax = 0, decimal expMin = 0, decimal expMax = 0,
+                                                 int tempo = 1, string duracao = "m")
         {
             await ctx.TriggerTypingAsync();
             var monster = await banco.CollectionMonsters.Find(x => x.Id == ctx.Channel.Id + id).FirstOrDefaultAsync();
@@ -107,7 +110,7 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
                 return;
             }
 
-            monster.Atributo = new WafclastMonsterAtributos(forca, resistencia, agilidade);
+            monster.Atributos = new WafclastMonsterAtributos(forcaMin, forcaMax, resistenciaMin, resistenciaMax, agilidadeMin, agilidadeMax, expMin, expMax);
             monster.CalcAtributos();
             switch (duracao)
             {
@@ -129,7 +132,24 @@ namespace WafclastRPG.Bot.Commands.AdminCommands
             }
 
             await banco.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster);
-            await ctx.ResponderAsync($"monstro editado! Atributos atualizados!");
+            var embed = new DiscordEmbedBuilder();
+            embed.WithTitle(monster.Nome.Titulo());
+            embed.AddField("Força".Titulo(), $"{monster.Atributos.ForcaMin} ~ {monster.Atributos.ForcaMax}");
+            embed.AddField("Resistencia".Titulo(), $"{monster.Atributos.ResistenciaMin} ~ {monster.Atributos.ResistenciaMax}");
+            embed.AddField("Agilidade".Titulo(), $"{monster.Atributos.AgilidadeMin} ~ {monster.Atributos.AgilidadeMax}");
+            embed.AddField("Experiencia".Titulo(), $"{monster.Atributos.ExpMin} ~ {monster.Atributos.ExpMax}");
+            embed.AddField("Respawn a cada".Titulo(), $"{monster.RespawnTime}");
+
+            /*
+Slime (Comum)
+Força: 3 ~ 5
+Resistencia: 3 ~ 5
+Agilidade: 1 ~ 2
+Experiencia: 2 ~ 4
+Drops:
+            */
+
+            await ctx.ResponderAsync($"monstro editado!", embed.Build());
         }
 
         [Command("atualizar")]

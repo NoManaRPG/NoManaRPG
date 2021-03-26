@@ -13,34 +13,38 @@ namespace WafclastRPG.Game.Entities
         /// <summary>
         /// MonsterId... #1, #2 ....
         /// </summary>
-        public ulong MonsterId { get; private set; }
-        public string Nome { get; private set; }
-
-        public decimal MaxAttack { get; private set; }
-        public decimal Exp { get; private set; }
+        public ulong MonsterId { get; set; }
+        public string Nome { get; set; }
 
         public WafclastStatePoints Life { get; set; } = new WafclastStatePoints();
-        public WafclastMonsterAtributos Atributo { get; set; }
+        public decimal MaxAttack { get; set; }
+        public decimal Exp { get; set; }
 
         public DateTime DateSpawn { get; private set; } = DateTime.UtcNow;
+
+        public WafclastMonsterAtributos Atributos { get; set; }
 
         /// <summary>
         /// Tempo de respawn após morto.
         /// </summary>
         public TimeSpan RespawnTime { get; set; } = TimeSpan.FromMinutes(1);
 
-        public WafclastMonster(ulong id, ulong monsterId, string nome, decimal exp)
+        public WafclastMonster(ulong id, ulong monsterId)
         {
-            Id = id;
+            Id = id + monsterId;
             MonsterId = monsterId;
-            Nome = nome;
-            Exp = exp;
         }
 
         public void CalcAtributos()
         {
-            MaxAttack = Atributo.Forca * 3;
-            Life = new WafclastStatePoints(Atributo.Resistencia * 8);
+            Random rd = new Random();
+            Atributos.Forca = rd.Next(Atributos.ForcaMin, Atributos.ForcaMin + 1);
+            Atributos.Resistencia = rd.Next(Atributos.ResistenciaMin, Atributos.ResistenciaMax + 1);
+            Atributos.Agilidade = rd.Next(Atributos.AgilidadeMin, Atributos.AgilidadeMax + 1);
+
+            MaxAttack = Atributos.Forca * 3;
+            Life = new WafclastStatePoints(Atributos.Resistencia * 8);
+            Exp = (decimal)rd.NextDouble() * (Atributos.ExpMax - Atributos.ExpMin) + Atributos.ExpMin;
         }
 
         /// <summary>
@@ -54,7 +58,7 @@ namespace WafclastRPG.Game.Entities
             if (Life.CurrentValue <= 0)
             {
                 DateSpawn = DateTime.UtcNow + RespawnTime;
-                Life.Restart();
+                CalcAtributos();
                 return true;
             }
             return false;

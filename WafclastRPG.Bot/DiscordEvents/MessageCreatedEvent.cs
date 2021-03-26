@@ -35,8 +35,8 @@ namespace WafclastRPG.Bot.DiscordEvents
                 Random rd = new Random();
                 player.Character.RegenDate = DateTime.UtcNow + TimeSpan.FromSeconds(rd.Sortear(90, 120));
 
-                player.Character.LifePoints.Add(player.Character.Atributo.Vitalidade * 0.2m);
-                player.Character.Stamina.Add(player.Character.Atributo.Vitalidade * 0.1m);
+                player.Character.LifePoints.Add(player.Character.Atributos.Vitalidade * 0.2m);
+                player.Character.Stamina.Add(player.Character.Atributos.Vitalidade * 0.1m);
                 await player.SaveAsync();
                 return Task.CompletedTask;
             });

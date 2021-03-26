@@ -7,7 +7,7 @@ namespace WafclastRPG.Game.Entities
     public class WafclastCharacter : WafclastLevel
     {
         public WafclastCoins Coins { get; private set; } = new WafclastCoins(20);
-        public WafclastCharacterAtributos Atributo { get; private set; } = new WafclastCharacterAtributos();
+        public WafclastCharacterAtributos Atributos { get; private set; } = new WafclastCharacterAtributos();
         public WafclastLocalization Localization { get; set; } = new WafclastLocalization();
         public WafclastLocalization LocalizationSpawnPoint { get; set; } = new WafclastLocalization();
 
@@ -33,9 +33,9 @@ namespace WafclastRPG.Game.Entities
 
         public void CalcStats()
         {
-            Ataque = Atributo.Forca * 3;
-            LifePoints.MaxValue = Atributo.Resistencia * 8;
-            Stamina.MaxValue = Atributo.Resistencia * 4;
+            Ataque = Atributos.Forca * 3;
+            LifePoints.MaxValue = Atributos.Resistencia * 8;
+            Stamina.MaxValue = Atributos.Resistencia * 4;
         }
 
         public new bool ReceberExperiencia(decimal exp)
@@ -45,7 +45,7 @@ namespace WafclastRPG.Game.Entities
             {
                 LifePoints.Restart();
                 if (Level > LevelBloqueado)
-                    Atributo.PontosLivreAtributo += 4;
+                    Atributos.PontosLivreAtributo += 4;
             }
             if (levelUps >= 1)
                 return true;
