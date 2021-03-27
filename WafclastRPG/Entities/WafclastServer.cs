@@ -3,13 +3,13 @@
 namespace WafclastRPG.Entities
 {
     [BsonIgnoreExtraElements]
-    public class Server
+    public class WafclastServer
     {
         [BsonId]
         public ulong Id { get; private set; }
         public string Prefix { get; private set; }
 
-        public Server(ulong id)
+        public WafclastServer(ulong id)
         {
             this.Id = id;
         }

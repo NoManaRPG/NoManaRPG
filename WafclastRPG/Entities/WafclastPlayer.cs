@@ -1,10 +1,15 @@
 ﻿using MongoDB.Bson.Serialization;
 using System;
+using System.Globalization;
+using System.Threading.Tasks;
+using WafclastRPG.DataBases;
 
 namespace WafclastRPG.Entities
 {
     public class WafclastPlayer
     {
+        public DatabaseSession banco;
+
         public ulong Id { get; private set; }
         public DateTime DateAccountCreation { get; private set; }
         public WafclastCharacter Character { get; private set; }
@@ -29,7 +34,12 @@ namespace WafclastRPG.Entities
                 cm.AutoMap();
                 cm.SetIgnoreExtraElements(true);
                 cm.MapIdMember(c => c.Id);
+                cm.UnmapMember(C => C.banco);
             });
         }
+
+        public Task SaveAsync() => this.banco.ReplacePlayerAsync(this);
+        public string Mention()
+            => $"<@{Id.ToString(CultureInfo.InvariantCulture)}>";
     }
 }

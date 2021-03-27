@@ -4,7 +4,6 @@ using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using WafclastRPG.Entities;
 using WafclastRPG.Extensions;
-using WafclastRPG.Entities;
 
 namespace WafclastRPG.DataBases
 {
@@ -13,7 +12,7 @@ namespace WafclastRPG.DataBases
         public IMongoClient MongoClient { get; }
         public IMongoDatabase MongoDatabase { get; }
         public IMongoCollection<WafclastPlayer> CollectionJogadores { get; }
-        public IMongoCollection<Server> CollectionServidores { get; }
+        public IMongoCollection<WafclastServer> CollectionServidores { get; }
         public IMongoCollection<WafclastMonster> CollectionMonsters { get; }
         public IMongoCollection<WafclastMapa> CollectionMaps { get; }
 
@@ -39,7 +38,7 @@ namespace WafclastRPG.DataBases
             WafclastPlayer.MapBuilder();
 
             CollectionJogadores = MongoDatabase.CriarCollection<WafclastPlayer>();
-            CollectionServidores = MongoDatabase.CriarCollection<Server>();
+            CollectionServidores = MongoDatabase.CriarCollection<WafclastServer>();
             CollectionMonsters = MongoDatabase.CriarCollection<WafclastMonster>();
             CollectionMaps = MongoDatabase.CriarCollection<WafclastMapa>();
             PrefixLocker = new ConcurrentDictionary<ulong, bool>();
@@ -95,7 +94,7 @@ namespace WafclastRPG.DataBases
         }
         public Task DeleteServerAsync(ulong serverId)
             => CollectionServidores.DeleteOneAsync(x => x.Id == serverId);
-        public Task ReplaceServerAsync(ulong serverId, Server server)
+        public Task ReplaceServerAsync(ulong serverId, WafclastServer server)
             => CollectionServidores.ReplaceOneAsync(x => x.Id == serverId, server, new ReplaceOptions { IsUpsert = true });
 
         #endregion

@@ -372,7 +372,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             return valor;
         }
 
-        public async Task<Response> CombatePvP(Random rd, Player target, Player player, StringBuilder str)
+        public async Task<Response> CombatePvP(Random rd, WafclastPlayer target, WafclastPlayer player, StringBuilder str)
         {
             var _playerDamage = rd.Sortear(player.Character.Ataque);
             var _isTargetDead = target.Character.ReceberDano(_playerDamage);
@@ -395,7 +395,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             return new Response(str, target.Id);
         }
 
-        public async Task<Response> CombatePvM(StringBuilder str, Random rd, Player player, WafclastMonster target, DatabaseSession session)
+        public async Task<Response> CombatePvM(StringBuilder str, Random rd, WafclastPlayer player, WafclastMonster target, DatabaseSession session)
         {
             var targetDamage = rd.Sortear(target.MaxAttack);
             str.AppendLine($"{player.Mention()} recebeu {targetDamage:N2} de dano.");

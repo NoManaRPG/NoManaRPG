@@ -28,19 +28,20 @@ namespace WafclastRPG.DataBases
         /// </summary>
         /// <param name="user"></param>
         /// <returns>O BotJogador ou null</returns>
-        public async Task<Player> FindPlayerAsync(DiscordUser user) => await FindPlayerAsync(user.Id);
+        public async Task<WafclastPlayer> FindPlayerAsync(DiscordUser user) => await FindPlayerAsync(user.Id);
 
         /// <summary>
         /// Procura no banco de dados pelo o Id informado.
         /// </summary>
         /// <param name="user"></param>
         /// <returns>O BotJogador ou null</returns>
-        public async Task<Player> FindPlayerAsync(ulong id)
+        public async Task<WafclastPlayer> FindPlayerAsync(ulong id)
         {
             var jogador = await Database.CollectionJogadores.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
             if (jogador == null)
                 return null;
-            return new Player(jogador, this);
+            jogador.banco = this;
+            return jogador;
         }
 
         /// <summary>
