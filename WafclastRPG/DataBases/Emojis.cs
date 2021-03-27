@@ -1,4 +1,4 @@
-﻿namespace WafclastRPG
+﻿namespace WafclastRPG.DataBases
 {
     public static class Emojis
     {

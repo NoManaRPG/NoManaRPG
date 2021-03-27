@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.Threading.Tasks;
-using WafclastRPG.Entities;
+using WafclastRPG.DataBases;
 
 namespace WafclastRPG.Entities
 {

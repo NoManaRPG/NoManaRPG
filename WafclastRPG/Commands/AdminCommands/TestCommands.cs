@@ -9,6 +9,7 @@ using WafclastRPG.Extensions;
 using WafclastRPG;
 using WafclastRPG.Entities;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
+using WafclastRPG.DataBases;
 
 namespace WafclastRPG.Commands.AdminCommands
 {

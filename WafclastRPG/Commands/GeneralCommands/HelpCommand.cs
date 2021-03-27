@@ -13,6 +13,7 @@ using DSharpPlus;
 using System.Linq;
 using WafclastRPG.Attributes;
 using WafclastRPG.Extensions;
+using WafclastRPG.DataBases;
 
 namespace WafclastRPG.Comandos.Exibir
 {

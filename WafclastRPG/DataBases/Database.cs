@@ -6,7 +6,7 @@ using WafclastRPG.Entities;
 using WafclastRPG.Extensions;
 using WafclastRPG.Entities;
 
-namespace WafclastRPG
+namespace WafclastRPG.DataBases
 {
     public class Database
     {

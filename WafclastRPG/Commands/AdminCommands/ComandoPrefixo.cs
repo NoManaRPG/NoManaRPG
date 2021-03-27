@@ -3,6 +3,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
+using WafclastRPG.DataBases;
 using WafclastRPG.Entities;
 
 namespace WafclastRPG.Comandos.Acao

@@ -10,6 +10,7 @@ using WafclastRPG.Comandos.Exibir;
 using WafclastRPG.Commands.AdminCommands;
 using WafclastRPG.Commands.GeneralCommands;
 using WafclastRPG.Commands.UserCommands;
+using WafclastRPG.DataBases;
 using WafclastRPG.DiscordEvents;
 
 namespace WafclastRPG

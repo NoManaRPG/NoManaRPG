@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using WafclastRPG.Extensions;
 using WafclastRPG;
+using WafclastRPG.DataBases;
 
 namespace WafclastRPG.DiscordEvents
 {

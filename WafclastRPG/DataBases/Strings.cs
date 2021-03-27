@@ -1,6 +1,6 @@
 ﻿using DSharpPlus;
 
-namespace WafclastRPG
+namespace WafclastRPG.DataBases
 {
     public static class Strings
     {

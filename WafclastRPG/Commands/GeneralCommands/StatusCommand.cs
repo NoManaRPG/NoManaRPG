@@ -4,8 +4,10 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System;
 using System.Text;
+using WafclastRPG.DataBases;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
+using WafclastRPG.DataBases;
 using WafclastRPG.Extensions;
 using WafclastRPG;
 

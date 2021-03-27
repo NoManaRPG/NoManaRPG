@@ -1,14 +1,11 @@
 ﻿using DSharpPlus.Entities;
 using MongoDB.Driver;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WafclastRPG.Entities;
-using WafclastRPG.Entities;
 
-namespace WafclastRPG
+namespace WafclastRPG.DataBases
 {
     public class DatabaseSession : IDisposable
     {
