@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WafclastRPG.Bot", "WafclastRPG.Bot\WafclastRPG.Bot.csproj", "{6D35FE2A-BEDB-4810-9D79-5CD7DE63ED4B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WafclastRPG.Game", "WafclastRPG.Game\WafclastRPG.Game.csproj", "{35B5E87F-7F21-4024-AFEE-5585910B044D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WafclastRPG", "WafclastRPG\WafclastRPG.csproj", "{6D35FE2A-BEDB-4810-9D79-5CD7DE63ED4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +15,6 @@ Global
 		{6D35FE2A-BEDB-4810-9D79-5CD7DE63ED4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D35FE2A-BEDB-4810-9D79-5CD7DE63ED4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D35FE2A-BEDB-4810-9D79-5CD7DE63ED4B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{35B5E87F-7F21-4024-AFEE-5585910B044D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{35B5E87F-7F21-4024-AFEE-5585910B044D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{35B5E87F-7F21-4024-AFEE-5585910B044D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{35B5E87F-7F21-4024-AFEE-5585910B044D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
