@@ -19,8 +19,12 @@ namespace WafclastRPG.Entities
         }
 
         public bool Equals([DisallowNull] WafclastLocalization other)
-        {
-            throw new NotImplementedException();
-        }
+            => ChannelId == other.ChannelId;
+
+        public static bool operator !=(WafclastLocalization loc1, WafclastLocalization loc2)
+            => loc1.ChannelId != loc2.ChannelId;
+
+        public static bool operator ==(WafclastLocalization loc1, WafclastLocalization loc2)
+            => loc1.ChannelId == loc2.ChannelId;
     }
 }
