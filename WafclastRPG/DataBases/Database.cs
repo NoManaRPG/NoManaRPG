@@ -1,4 +1,5 @@
 ﻿using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
 using MongoDB.Driver;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
@@ -52,6 +53,8 @@ namespace WafclastRPG.DataBases
         public async Task<DatabaseSession> StartDatabaseSessionAsync() => new DatabaseSession(
             await MongoClient.StartSessionAsync(), this);
 
+        #region Player
+
         /// <summary>
         /// Procura no banco de dados pelo o Id informado.
         /// </summary>
@@ -61,6 +64,14 @@ namespace WafclastRPG.DataBases
             => await CollectionJogadores.Find(x => x.Id == id).FirstOrDefaultAsync();
 
         /// <summary>
+        /// Procura no banco de dados pelo o DiscordUser informado.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>O Jogador ou null</returns>
+        public async Task<WafclastPlayer> FindPlayerAsync(DiscordUser user)
+            => await CollectionJogadores.Find(x => x.Id == user.Id).FirstOrDefaultAsync();
+
+        /// <summary>
         /// Procura no banco de dados pelo o Id informado.
         /// </summary>
         /// <param name="user"></param>
@@ -68,6 +79,18 @@ namespace WafclastRPG.DataBases
         public async Task<WafclastPlayer> FindPlayerAsync(CommandContext ctx)
             => await CollectionJogadores.Find(x => x.Id == ctx.User.Id).FirstOrDefaultAsync();
 
+        #endregion
+        #region Monster
+
+        public async Task<WafclastMonster> FindMonsterAsync(ulong id)
+        {
+            var monster = await CollectionMonsters.Find(x => x.Id == id).FirstOrDefaultAsync();
+            if (monster == null)
+                return null;
+            return monster;
+        }
+
+        #endregion
         #region Interactivity
 
         public bool IsExecutingInteractivity(ulong userId) => PrefixLocker.TryGetValue(userId, out _);
