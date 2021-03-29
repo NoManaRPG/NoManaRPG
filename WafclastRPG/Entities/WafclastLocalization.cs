@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DSharpPlus.CommandsNext;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace WafclastRPG.Entities
@@ -26,5 +27,11 @@ namespace WafclastRPG.Entities
 
         public static bool operator ==(WafclastLocalization loc1, WafclastLocalization loc2)
             => loc1.ChannelId == loc2.ChannelId;
+
+        public static bool operator !=(WafclastLocalization loc1, CommandContext ctx)
+            => loc1.ChannelId != ctx.Channel.Id;
+
+        public static bool operator ==(WafclastLocalization loc1, CommandContext ctx)
+            => loc1.ChannelId == ctx.Channel.Id;
     }
 }
