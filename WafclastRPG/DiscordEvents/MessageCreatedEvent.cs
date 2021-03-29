@@ -38,6 +38,7 @@ namespace WafclastRPG.DiscordEvents
 
                 player.Character.LifePoints.Add(player.Character.Atributos.Vitalidade * 0.2m);
                 player.Character.Stamina.Add(player.Character.Atributos.Vitalidade * 0.1m);
+                player.Character.Coins.Add(0, 0, (ulong)rd.Sortear(2, 4));
                 await player.SaveAsync();
                 return Task.CompletedTask;
             });
