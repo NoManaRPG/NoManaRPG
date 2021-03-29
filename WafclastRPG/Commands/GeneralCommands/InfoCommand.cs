@@ -20,7 +20,7 @@ namespace WafclastRPG.Comandos.Exibir
         {
             await ctx.TriggerTypingAsync();
             var embed = new DiscordEmbedBuilder();
-            embed.WithAuthor(ctx.Client.CurrentUser.Username + " v1.6", "https://discord.gg/MAR4NFq", ctx.Client.CurrentUser.AvatarUrl);
+            embed.WithAuthor(ctx.Client.CurrentUser.Username + ((BotInfo)ctx.Services.GetService(typeof(BotInfo))).Versão, "https://discord.gg/MAR4NFq", ctx.Client.CurrentUser.AvatarUrl);
             embed.WithThumbnail(ctx.Client.CurrentUser.AvatarUrl);
             embed.WithTitle("RPG para quem usa muito o discord!");
             var criador = ctx.Client.CurrentApplication.Owners.First();

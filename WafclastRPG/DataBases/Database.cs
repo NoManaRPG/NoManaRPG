@@ -16,8 +16,7 @@ namespace WafclastRPG.DataBases
         public IMongoCollection<WafclastMonster> CollectionMonsters { get; }
         public IMongoCollection<WafclastMapa> CollectionMaps { get; }
 
-        public ConcurrentDictionary<ulong, bool> PrefixLocker
-        { get; }
+        public ConcurrentDictionary<ulong, bool> PrefixLocker { get; }
 
         public Database()
         {
