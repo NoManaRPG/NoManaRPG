@@ -253,7 +253,7 @@ namespace WafclastRPG.Commands.GeneralCommands
                             str.AppendLine($"+{target.Exp:N2} {Emojis.Exp}");
                             if (player.Character.ReceberExperiencia(target.Exp))
                                 str.AppendLine($"{Emojis.Up} {player.Mention()} evoluiu de nível!");
-
+                            player.MonsterKill++;
 
                             await player.SaveAsync();
                             await session.SaveMonsterAsync(target);
@@ -390,6 +390,8 @@ namespace WafclastRPG.Commands.GeneralCommands
                 str.AppendLine($"+{exp} {Emojis.Exp}");
                 if (player.Character.ReceberExperiencia(exp))
                     str.AppendLine($"{Emojis.Up} {player.Mention()} evoluiu de nível!");
+                player.PlayerKill++;
+                target.Deaths++;
             }
 
             await player.SaveAsync();
@@ -404,6 +406,7 @@ namespace WafclastRPG.Commands.GeneralCommands
 
             if (player.Character.ReceberDano(targetDamage))
                 str.AppendLine($"{player.Mention()} morreu!");
+            player.Deaths++;
 
             await player.SaveAsync();
             await session.SaveMonsterAsync(target);

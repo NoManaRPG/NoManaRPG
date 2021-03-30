@@ -37,6 +37,9 @@ namespace WafclastRPG.Commands.GeneralCommands
             str.AppendLine($"Está carregando 0 itens.");
             str.AppendLine($"Regenerá {(player.Character.Atributos.Vitalidade * 0.2m):N2} pontos de vida na prox mensagem ({(player.Character.RegenDate - DateTime.UtcNow).TotalSeconds:N0}s).");
             str.AppendLine($"Está com {player.Character.Karma} pontos de Karma.");
+            str.AppendLine($"Eliminou {player.MonsterKill} monstros.");
+            str.AppendLine($"Eliminou {player.PlayerKill} jogadores.");
+            str.AppendLine($"Morreu {player.Deaths} vezes.");
 
             var embed = new DiscordEmbedBuilder();
             embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}] ", iconUrl: ctx.User.AvatarUrl);
@@ -49,8 +52,8 @@ namespace WafclastRPG.Commands.GeneralCommands
             embed.AddField(":white_large_square:", ":white_large_square:");
 
             var lifePor = player.Character.LifePoints.CurrentValue / player.Character.LifePoints.MaxValue;
-            embed.AddField("Vida".Titulo(), $"{Emojis.GerarVidaEmoji(lifePor)} {player.Character.LifePoints.CurrentValue:N2} / {player.Character.LifePoints.MaxValue:N2}",true);
-            embed.AddField("Estamina".Titulo(), $"{player.Character.Stamina.CurrentValue:N2} / {player.Character.Stamina.MaxValue:N2}",true);
+            embed.AddField("Vida".Titulo(), $"{Emojis.GerarVidaEmoji(lifePor)} {player.Character.LifePoints.CurrentValue:N2} / {player.Character.LifePoints.MaxValue:N2}", true);
+            embed.AddField("Estamina".Titulo(), $"{player.Character.Stamina.CurrentValue:N2} / {player.Character.Stamina.MaxValue:N2}", true);
 
             var dg = await ctx.Client.GetGuildAsync(player.Character.Localization.ServerId, false);
             var dc = dg.GetChannel(player.Character.Localization.ChannelId);

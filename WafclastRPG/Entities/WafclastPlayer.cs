@@ -14,17 +14,16 @@ namespace WafclastRPG.Entities
         public DateTime DateAccountCreation { get; private set; }
         public WafclastCharacter Character { get; private set; }
 
+        public ulong MonsterKill { get; set; }
+        public ulong PlayerKill { get; set; }
+        public ulong Deaths { get; set; }
+
+
         public WafclastPlayer(ulong id)
         {
             this.Id = id;
             this.DateAccountCreation = DateTime.UtcNow;
             this.Character = new WafclastCharacter();
-        }
-        public WafclastPlayer(WafclastPlayer jogador)
-        {
-            this.Id = jogador.Id;
-            this.DateAccountCreation = jogador.DateAccountCreation;
-            this.Character = jogador.Character;
         }
 
         public static void MapBuilder()
