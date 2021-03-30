@@ -1,13 +1,9 @@
-﻿using DSharpPlus;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using MongoDB.Driver;
 using System.Threading.Tasks;
 using WafclastRPG.DataBases;
 using WafclastRPG.Attributes;
 using WafclastRPG.Extensions;
-using WafclastRPG.Entities;
-using WafclastRPG.Enums;
 using DSharpPlus.Entities;
 
 namespace WafclastRPG.Commands.GeneralCommands

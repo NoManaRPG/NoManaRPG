@@ -7,9 +7,7 @@ using System.Text;
 using WafclastRPG.DataBases;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
-using WafclastRPG.DataBases;
 using WafclastRPG.Extensions;
-using WafclastRPG;
 
 namespace WafclastRPG.Commands.GeneralCommands
 {

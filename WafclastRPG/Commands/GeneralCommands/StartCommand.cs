@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
 using WafclastRPG.Extensions;
-using WafclastRPG.DataBases;
 using WafclastRPG.Entities;
 using WafclastRPG.Enums;
 

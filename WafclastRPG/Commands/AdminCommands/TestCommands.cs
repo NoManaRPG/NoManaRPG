@@ -1,12 +1,8 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using System;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WafclastRPG.Extensions;
-using WafclastRPG;
 using WafclastRPG.Entities;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 using WafclastRPG.DataBases;
