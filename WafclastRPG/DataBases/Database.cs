@@ -60,35 +60,30 @@ namespace WafclastRPG.DataBases
         /// </summary>
         /// <param name="user"></param>
         /// <returns>O BotJogador ou null</returns>
-        public async Task<WafclastPlayer> FindPlayerAsync(ulong id)
-            => await CollectionJogadores.Find(x => x.Id == id).FirstOrDefaultAsync();
+        public Task<WafclastPlayer> FindPlayerAsync(ulong id)
+            => CollectionJogadores.Find(x => x.Id == id).FirstOrDefaultAsync();
 
         /// <summary>
         /// Procura no banco de dados pelo o DiscordUser informado.
         /// </summary>
         /// <param name="user"></param>
         /// <returns>O Jogador ou null</returns>
-        public async Task<WafclastPlayer> FindPlayerAsync(DiscordUser user)
-            => await CollectionJogadores.Find(x => x.Id == user.Id).FirstOrDefaultAsync();
+        public Task<WafclastPlayer> FindPlayerAsync(DiscordUser user)
+            => CollectionJogadores.Find(x => x.Id == user.Id).FirstOrDefaultAsync();
 
         /// <summary>
         /// Procura no banco de dados pelo o Id informado.
         /// </summary>
         /// <param name="user"></param>
         /// <returns>O BotJogador ou null</returns>
-        public async Task<WafclastPlayer> FindPlayerAsync(CommandContext ctx)
-            => await CollectionJogadores.Find(x => x.Id == ctx.User.Id).FirstOrDefaultAsync();
+        public Task<WafclastPlayer> FindPlayerAsync(CommandContext ctx)
+            => CollectionJogadores.Find(x => x.Id == ctx.User.Id).FirstOrDefaultAsync();
 
         #endregion
         #region Monster
 
-        public async Task<WafclastMonster> FindMonsterAsync(ulong id)
-        {
-            var monster = await CollectionMonsters.Find(x => x.Id == id).FirstOrDefaultAsync();
-            if (monster == null)
-                return null;
-            return monster;
-        }
+        public Task<WafclastMonster> FindMonsterAsync(ulong id)
+            => CollectionMonsters.Find(x => x.Id == id).FirstOrDefaultAsync();
 
         #endregion
         #region Interactivity
@@ -120,6 +115,14 @@ namespace WafclastRPG.DataBases
             => CollectionServidores.ReplaceOneAsync(x => x.Id == serverId, server, new ReplaceOptions { IsUpsert = true });
 
         #endregion
+        #region Map
 
+        public Task<WafclastMapa> FindMapAsync(ulong id)
+            => CollectionMaps.Find(x => x.Id == id).FirstOrDefaultAsync();
+
+        public Task<WafclastMapa> FindMapAsync(CommandContext ctx)
+          => CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
+
+        #endregion
     }
 }

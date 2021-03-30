@@ -69,27 +69,23 @@ namespace WafclastRPG.Commands.AdminCommands
         [Usage("monstro-criar [ id ] [ nome ]")]
         [Example("monstro-criar 1 Zombiie Grandioso", "Cria um monstro com as informações fornecidas..")]
         [RequireOwner]
-        public async Task MonstroCriarAsync(CommandContext ctx, ulong id = 0, [RemainingText] string nome = "")
+        public async Task MonstroCriarAsync(CommandContext ctx, [RemainingText] string nome = "")
         {
             await ctx.TriggerTypingAsync();
-            var result = await banco.CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
-            if (result == null)
+            var map = await banco.CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
+            if (map == null)
             {
                 await ctx.ResponderAsync("não existe um mapa no canal atual!");
                 return;
             }
 
-            var hasMonster = await banco.CollectionMonsters.Find(x => x.Id == ctx.Channel.Id + id).FirstOrDefaultAsync();
-            if (hasMonster != null)
-            {
-                await ctx.ResponderAsync("já existe um monstro com o #ID informado!");
-                return;
-            }
-
-            var monstro = new WafclastMonster(ctx.Channel.Id, id) { Nome = nome };
+            var monstro = new WafclastMonster(ctx.Channel.Id, (ulong)map.QuantidadeMonstros + 1) { Nome = nome };
             await banco.CollectionMonsters.InsertOneAsync(monstro);
 
-            await ctx.ResponderAsync($"monstro {Formatter.Bold(nome)} criado! Pode ser encontrado com o #ID {id}.");
+            map.QuantidadeMonstros++;
+            await banco.CollectionMaps.ReplaceOneAsync(x => x.Id == map.Id, map);
+
+            await ctx.ResponderAsync($"monstro {Formatter.Bold(nome)} criado! Pode ser encontrado com o #ID {monstro.MonsterId}.");
         }
 
 

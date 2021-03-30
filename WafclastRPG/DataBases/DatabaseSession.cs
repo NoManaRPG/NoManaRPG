@@ -28,7 +28,8 @@ namespace WafclastRPG.DataBases
         /// </summary>
         /// <param name="user"></param>
         /// <returns>O BotJogador ou null</returns>
-        public async Task<WafclastPlayer> FindPlayerAsync(DiscordUser user) => await FindPlayerAsync(user.Id);
+        public Task<WafclastPlayer> FindPlayerAsync(DiscordUser user)
+            => FindPlayerAsync(user.Id);
 
         /// <summary>
         /// Procura no banco de dados pelo o Id informado.
@@ -51,21 +52,18 @@ namespace WafclastRPG.DataBases
         /// <param name="id"></param>
         /// <param name="jogador"></param>
         /// <returns></returns>
-        public Task ReplacePlayerAsync(WafclastPlayer jogador) => Database.CollectionJogadores.ReplaceOneAsync(Session, x => x.Id == jogador.Id, jogador, new ReplaceOptions { IsUpsert = true });
+        public Task ReplacePlayerAsync(WafclastPlayer jogador)
+            => Database.CollectionJogadores.ReplaceOneAsync(Session, x => x.Id == jogador.Id, jogador, new ReplaceOptions { IsUpsert = true });
 
-        public Task InsertPlayerAsync(WafclastPlayer jogador) => Database.CollectionJogadores.InsertOneAsync(Session, jogador);
+        public Task InsertPlayerAsync(WafclastPlayer jogador)
+            => Database.CollectionJogadores.InsertOneAsync(Session, jogador);
 
         #endregion
 
         #region Monstro
 
-        public async Task<WafclastMonster> FindMonsterAsync(ulong id)
-        {
-            var monster = await Database.CollectionMonsters.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
-            if (monster == null)
-                return null;
-            return monster;
-        }
+        public Task<WafclastMonster> FindMonsterAsync(ulong id)
+            => Database.CollectionMonsters.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
 
         public Task SaveMonsterAsync(WafclastMonster monster)
             => Database.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster);
@@ -74,13 +72,8 @@ namespace WafclastRPG.DataBases
 
         #region Mapa
 
-        public async Task<WafclastMapa> FindMapAsync(ulong id)
-        {
-            var map = await Database.CollectionMaps.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
-            if (map == null)
-                return null;
-            return map;
-        }
+        public Task<WafclastMapa> FindMapAsync(ulong id)
+            => Database.CollectionMaps.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
 
         public Task SaveMapAsync(WafclastMapa map)
             => Database.CollectionMaps.ReplaceOneAsync(x => x.Id == map.Id, map);
