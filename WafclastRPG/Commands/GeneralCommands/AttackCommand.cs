@@ -405,8 +405,11 @@ namespace WafclastRPG.Commands.GeneralCommands
             str.AppendLine($"{player.Mention()} recebeu {targetDamage:N2} de dano.");
 
             if (player.Character.ReceberDano(targetDamage))
+            {
                 str.AppendLine($"{player.Mention()} morreu!");
-            player.Deaths++;
+                player.Deaths++;
+            }
+            
 
             await player.SaveAsync();
             await session.SaveMonsterAsync(target);

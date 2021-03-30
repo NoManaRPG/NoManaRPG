@@ -161,7 +161,7 @@ namespace WafclastRPG.Commands.AdminCommands
 
                     foreach (WafclastPlayer player in usuarios)
                     {
-                        player.Character.CalcStats();
+                        player.Deaths = 0;
 
                         await banco.CollectionJogadores.ReplaceOneAsync(x => x.Id == player.Id, player);
                     }

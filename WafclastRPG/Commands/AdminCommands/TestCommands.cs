@@ -18,7 +18,7 @@ namespace WafclastRPG.Commands.AdminCommands
     {
         public Database banco;
 
-        [Command("testar")]
+        [Command("reset")]
         [RequireOwner]
         public async Task CommmandEnumTest(CommandContext ctx)
         {
