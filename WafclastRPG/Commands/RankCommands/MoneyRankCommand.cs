@@ -9,7 +9,7 @@ using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
 using WafclastRPG.Entities;
 
-namespace WafclastRPG.Commands.GeneralCommands
+namespace WafclastRPG.Commands.RankCommands
 {
     public class MoneyRankCommand : BaseCommandModule
     {
