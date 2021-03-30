@@ -10,6 +10,7 @@ using WafclastRPG;
 using WafclastRPG.Entities;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 using WafclastRPG.DataBases;
+using System.Text;
 
 namespace WafclastRPG.Commands.AdminCommands
 {
@@ -24,7 +25,7 @@ namespace WafclastRPG.Commands.AdminCommands
             WafclastLocalization g = new WafclastLocalization();
             WafclastLocalization h = new WafclastLocalization(1, 2);
 
-            if (g.Equals( h))
+            if (g.Equals(h))
             {
                 await ctx.ResponderAsync("asd");
             }
@@ -80,6 +81,21 @@ namespace WafclastRPG.Commands.AdminCommands
 
             if (await result == true)
                 await ctx.ResponderAsync("zerado");
+        }
+
+        [Command("emojis")]
+        [RequireOwner]
+        public async Task EmojisAsync(CommandContext ctx)
+        {
+            var emojis = await ctx.Guild.GetEmojisAsync();
+            var str = new StringBuilder();
+            foreach (var emoji in emojis)
+            {
+                //<a:NAME:ID>
+                str.AppendLine($"{emoji} : {Formatter.InlineCode($"<a:{emoji.Name}:{emoji.Id}")}");
+            }
+
+            await ctx.RespondAsync(str.ToString());
         }
     }
 }

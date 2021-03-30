@@ -140,16 +140,6 @@ namespace WafclastRPG.Commands.AdminCommands
             embed.AddField("Agilidade".Titulo(), $"{monster.Atributos.AgilidadeMin} ~ {monster.Atributos.AgilidadeMax}");
             embed.AddField("Experiencia".Titulo(), $"{monster.Atributos.ExpMin} ~ {monster.Atributos.ExpMax}");
             embed.AddField("Respawn a cada".Titulo(), $"{monster.RespawnTime}");
-
-            /*
-Slime (Comum)
-Força: 3 ~ 5
-Resistencia: 3 ~ 5
-Agilidade: 1 ~ 2
-Experiencia: 2 ~ 4
-Drops:
-            */
-
             await ctx.ResponderAsync($"monstro editado!", embed.Build());
         }
 
