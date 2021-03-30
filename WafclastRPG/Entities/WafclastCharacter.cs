@@ -14,6 +14,8 @@ namespace WafclastRPG.Entities
         public WafclastStatePoints LifePoints { get; set; } = new WafclastStatePoints();
         public WafclastStatePoints Stamina { get; set; } = new WafclastStatePoints();
 
+        public WafclastInventory Inventory { get; set; } = new WafclastInventory();
+
         public decimal Ataque { get; private set; } = 0;
         public decimal Defesa { get; private set; } = 0;
 

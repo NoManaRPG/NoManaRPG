@@ -1,4 +1,4 @@
-﻿namespace WafclastRPG.Entities
+﻿namespace WafclastRPG.Entities.Monsters
 {
     public class WafclastMonsterAtributos
     {

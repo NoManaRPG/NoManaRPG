@@ -3,6 +3,7 @@ using System;
 using System.Globalization;
 using System.Threading.Tasks;
 using WafclastRPG.DataBases;
+using WafclastRPG.Entities.Itens;
 
 namespace WafclastRPG.Entities
 {
@@ -40,5 +41,40 @@ namespace WafclastRPG.Entities
         public Task SaveAsync() => this.banco.ReplacePlayerAsync(this);
         public string Mention()
             => $"<@{Id.ToString(CultureInfo.InvariantCulture)}>";
+
+        /// <summary>
+        /// Não salva o usuario.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
+        public async Task ItemAdd(WafclastBaseItem item, int quantity)
+        {
+            if (!item.CanStack)
+            {
+                item.Quantity = 1;
+                for (int i = 0; i < quantity; i++)
+                {
+                    await this.banco.InsertItemAsync(item);
+                    Character.Inventory.Quantity++;
+                    Character.Inventory.QuantityDifferentItens++;
+                }
+                return;
+            }
+
+            var itemFound = await this.banco.FindItemAsync(item.Name, Id);
+            if (itemFound == null)
+            {
+                item.Quantity = quantity;
+                await this.banco.InsertItemAsync(item);
+                Character.Inventory.Quantity += quantity;
+                Character.Inventory.QuantityDifferentItens++;
+                return;
+            }
+
+            itemFound.Quantity += quantity;
+            await this.banco.ReplaceItemAsync(itemFound);
+            Character.Inventory.Quantity += quantity;
+        }
     }
 }

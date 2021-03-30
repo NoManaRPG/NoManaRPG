@@ -4,18 +4,20 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using WafclastRPG.Entities;
+using WafclastRPG.Entities.Itens;
+using WafclastRPG.Entities.Monsters;
 
 namespace WafclastRPG.DataBases
 {
     public class DatabaseSession : IDisposable
     {
         private IClientSessionHandle Session { get; }
-        private Database Database { get; }
+        private Database ds { get; }
 
         public DatabaseSession(IClientSessionHandle session, Database database)
         {
             Session = session;
-            Database = database;
+            ds = database;
         }
 
         public Task<TResult> WithTransactionAsync<TResult>(Func<IClientSessionHandle, CancellationToken, Task<TResult>> callbackAsync) => Session.WithTransactionAsync(callbackAsync: callbackAsync);
@@ -38,7 +40,7 @@ namespace WafclastRPG.DataBases
         /// <returns>O BotJogador ou null</returns>
         public async Task<WafclastPlayer> FindPlayerAsync(ulong id)
         {
-            var jogador = await Database.CollectionJogadores.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
+            var jogador = await ds.CollectionJogadores.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
             if (jogador == null)
                 return null;
             jogador.banco = this;
@@ -53,30 +55,43 @@ namespace WafclastRPG.DataBases
         /// <param name="jogador"></param>
         /// <returns></returns>
         public Task ReplacePlayerAsync(WafclastPlayer jogador)
-            => Database.CollectionJogadores.ReplaceOneAsync(Session, x => x.Id == jogador.Id, jogador, new ReplaceOptions { IsUpsert = true });
+            => ds.CollectionJogadores.ReplaceOneAsync(Session, x => x.Id == jogador.Id, jogador, new ReplaceOptions { IsUpsert = true });
 
         public Task InsertPlayerAsync(WafclastPlayer jogador)
-            => Database.CollectionJogadores.InsertOneAsync(Session, jogador);
+            => ds.CollectionJogadores.InsertOneAsync(Session, jogador);
 
         #endregion
 
         #region Monstro
 
-        public Task<WafclastMonster> FindMonsterAsync(ulong id)
-            => Database.CollectionMonsters.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
+        public Task<WafclastMonster> FindMonsterAsync(string id)
+            => ds.CollectionMonsters.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
 
         public Task SaveMonsterAsync(WafclastMonster monster)
-            => Database.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster);
+            => ds.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster);
 
         #endregion
 
         #region Mapa
 
         public Task<WafclastMapa> FindMapAsync(ulong id)
-            => Database.CollectionMaps.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
+            => ds.CollectionMaps.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
 
         public Task SaveMapAsync(WafclastMapa map)
-            => Database.CollectionMaps.ReplaceOneAsync(x => x.Id == map.Id, map);
+            => ds.CollectionMaps.ReplaceOneAsync(x => x.Id == map.Id, map);
+
+        #endregion
+
+        #region Itens
+
+        public Task<WafclastBaseItem> FindItemAsync(string name, ulong playerId)
+          => ds.CollectionItens.Find(Session, x => x.PlayerId == playerId && x.Name == name).FirstOrDefaultAsync();
+
+        public Task ReplaceItemAsync(WafclastBaseItem item)
+            => ds.CollectionItens.ReplaceOneAsync(Session, x => x.Id == item.Id, item, new ReplaceOptions { IsUpsert = true });
+
+        public Task InsertItemAsync(WafclastBaseItem item)
+           => ds.CollectionItens.InsertOneAsync(Session, item);
 
         #endregion
     }

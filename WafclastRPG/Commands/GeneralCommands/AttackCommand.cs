@@ -13,6 +13,7 @@ using WafclastRPG.Entities;
 using WafclastRPG.Extensions;
 using WafclastRPG.Enums;
 using WafclastRPG.DataBases;
+using WafclastRPG.Entities.Monsters;
 
 namespace WafclastRPG.Commands.GeneralCommands
 {
@@ -224,7 +225,7 @@ namespace WafclastRPG.Commands.GeneralCommands
                             return Task.FromResult(new Response() { IsMapCity = true });
 
                         //Find target
-                        var target = await session.FindMonsterAsync(player.Character.Localization.ChannelId + id);
+                        var target = await session.FindMonsterAsync($"{player.Character.Localization.ChannelId}:{id}");
                         if (target == null)
                             return Task.FromResult(new Response() { IsTargetFound = false });
 

@@ -1,14 +1,15 @@
 ﻿using MongoDB.Bson.Serialization;
 using System;
+using System.Collections.Generic;
 
-namespace WafclastRPG.Entities
+namespace WafclastRPG.Entities.Monsters
 {
     public class WafclastMonster
     {
         /// <summary>
         /// ChannelId + MonsterId
         /// </summary>
-        public ulong Id { get; private set; }
+        public string Id { get; private set; }
 
         /// <summary>
         /// MonsterId... #1, #2 ....
@@ -24,14 +25,13 @@ namespace WafclastRPG.Entities
 
         public WafclastMonsterAtributos Atributos { get; set; }
 
-        /// <summary>
-        /// Tempo de respawn após morto.
-        /// </summary>
         public TimeSpan RespawnTime { get; set; } = TimeSpan.FromMinutes(1);
+
+        public List<ItemChance> Drops { get; set; } = new List<ItemChance>();
 
         public WafclastMonster(ulong id, ulong monsterId)
         {
-            Id = id + monsterId;
+            Id = $"{id}:{monsterId}";
             MonsterId = monsterId;
         }
 

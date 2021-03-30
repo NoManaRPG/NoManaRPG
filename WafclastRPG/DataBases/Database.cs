@@ -4,6 +4,8 @@ using MongoDB.Driver;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using WafclastRPG.Entities;
+using WafclastRPG.Entities.Itens;
+using WafclastRPG.Entities.Monsters;
 using WafclastRPG.Extensions;
 
 namespace WafclastRPG.DataBases
@@ -16,6 +18,7 @@ namespace WafclastRPG.DataBases
         public IMongoCollection<WafclastServer> CollectionServidores { get; }
         public IMongoCollection<WafclastMonster> CollectionMonsters { get; }
         public IMongoCollection<WafclastMapa> CollectionMaps { get; }
+        public IMongoCollection<WafclastBaseItem> CollectionItens { get; }
 
         public ConcurrentDictionary<ulong, bool> PrefixLocker { get; }
 
@@ -36,11 +39,13 @@ namespace WafclastRPG.DataBases
             WafclastMapa.MapBuilder();
             WafclastMonster.MapBuilder();
             WafclastPlayer.MapBuilder();
+            WafclastBaseItem.MapBuilder();
 
             CollectionJogadores = MongoDatabase.CriarCollection<WafclastPlayer>();
             CollectionServidores = MongoDatabase.CriarCollection<WafclastServer>();
             CollectionMonsters = MongoDatabase.CriarCollection<WafclastMonster>();
             CollectionMaps = MongoDatabase.CriarCollection<WafclastMapa>();
+            CollectionItens = MongoDatabase.CriarCollection<WafclastBaseItem>();
             PrefixLocker = new ConcurrentDictionary<ulong, bool>();
 
             #region Usar no futuro
@@ -82,7 +87,7 @@ namespace WafclastRPG.DataBases
         #endregion
         #region Monster
 
-        public Task<WafclastMonster> FindMonsterAsync(ulong id)
+        public Task<WafclastMonster> FindMonsterAsync(string id)
             => CollectionMonsters.Find(x => x.Id == id).FirstOrDefaultAsync();
 
         #endregion
@@ -122,6 +127,12 @@ namespace WafclastRPG.DataBases
 
         public Task<WafclastMapa> FindMapAsync(CommandContext ctx)
           => CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
+
+        #endregion
+        #region Itens
+
+        public Task<WafclastBaseItem> FindItemAsync(string name, ulong playerId)
+           => CollectionItens.Find(x => x.PlayerId == playerId && x.Name == name).FirstOrDefaultAsync();
 
         #endregion
     }

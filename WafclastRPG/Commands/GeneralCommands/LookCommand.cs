@@ -44,7 +44,7 @@ namespace WafclastRPG.Commands.GeneralCommands
 
             if (monsterIdString.TryParseID(out ulong id))
             {
-                var monster = await banco.FindMonsterAsync(ctx.Channel.Id + id);
+                var monster = await banco.FindMonsterAsync($"{player.Character.Localization.ChannelId}:{id}");
                 if (monster == null)
                 {
                     await ctx.ResponderAsync(Strings.MonstroNaoEncontrado(id));

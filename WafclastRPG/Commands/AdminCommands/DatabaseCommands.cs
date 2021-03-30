@@ -12,6 +12,7 @@ using WafclastRPG.Extensions;
 using WafclastRPG.Entities;
 using WafclastRPG.Enums;
 using WafclastRPG.DataBases;
+using WafclastRPG.Entities.Monsters;
 
 namespace WafclastRPG.Commands.AdminCommands
 {
@@ -100,7 +101,7 @@ namespace WafclastRPG.Commands.AdminCommands
                                                  int tempo = 1, string duracao = "m")
         {
             await ctx.TriggerTypingAsync();
-            var monster = await banco.CollectionMonsters.Find(x => x.Id == ctx.Channel.Id + id).FirstOrDefaultAsync();
+            var monster = await banco.CollectionMonsters.Find(x => x.Id == $"{ctx.Channel.Id}:{id}").FirstOrDefaultAsync();
             if (monster == null)
             {
                 await ctx.ResponderAsync("não existe um monstro com o #ID informado!");
