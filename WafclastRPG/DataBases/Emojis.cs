@@ -28,8 +28,8 @@
         public const string Fome = ":poultry_leg:";
         public const string Sede = ":cup_with_straw:";
 
-        public const string Coins = "<a:coins:775750607738896436>";
-        public const string Exp = "<:xp:758439721016885308>";
+        public const string Coins = "<a:ee:826260040741552128>";
+        public const string Exp = "<:xp:826263422202544139>";
 
         public const string Relogio = ":stopwatch:";
         public const string Demonio = ":smiling_imp:";

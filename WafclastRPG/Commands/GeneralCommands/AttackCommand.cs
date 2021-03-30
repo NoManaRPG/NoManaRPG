@@ -244,12 +244,15 @@ namespace WafclastRPG.Commands.GeneralCommands
 
                         if (_isTargetDead)
                         {
-                            player.Character.ReceberExperiencia(target.Exp);
+
                             if (player.Character.Karma < 0)
                                 player.Character.Karma += 1;
 
                             str.AppendLine($"{Emojis.CrossBone} {target.Nome} morreu! {Emojis.CrossBone}");
-                            str.AppendLine($"+{target.Exp:N2} exp");
+
+                            str.AppendLine($"+{target.Exp:N2} {Emojis.Exp}");
+                            if (player.Character.ReceberExperiencia(target.Exp))
+                                str.AppendLine($"{Emojis.Up} {player.Mention()} evoluiu de nível!");
 
 
                             await player.SaveAsync();
@@ -384,7 +387,7 @@ namespace WafclastRPG.Commands.GeneralCommands
                     player.Character.Karma -= 10;
                 str.AppendLine($"{Emojis.CrossBone} {target.Mention()} morreu! {Emojis.CrossBone}");
                 var exp = target.Character.Level * 3;
-                str.AppendLine($"+{exp} exp");
+                str.AppendLine($"+{exp} {Emojis.Exp}");
                 if (player.Character.ReceberExperiencia(exp))
                     str.AppendLine($"{Emojis.Up} {player.Mention()} evoluiu de nível!");
             }
