@@ -62,6 +62,7 @@ namespace WafclastRPG
             this.CommandsNext.RegisterCommands<TravelCommand>();
             this.CommandsNext.RegisterCommands<LookCommand>();
             this.CommandsNext.RegisterCommands<StanceCommand>();
+            this.CommandsNext.RegisterCommands<InventoryCommand>();
         }
     }
 }
