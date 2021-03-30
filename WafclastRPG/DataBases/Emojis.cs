@@ -30,6 +30,7 @@
 
         public const string Coins = "<a:ee:826260040741552128>";
         public const string Exp = "<:xp:826263422202544139>";
+        public const string Nada = "<:nada:826438756193533953>";
 
         public const string Relogio = ":stopwatch:";
         public const string Demonio = ":smiling_imp:";

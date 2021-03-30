@@ -49,7 +49,7 @@ namespace WafclastRPG.Commands.GeneralCommands
 
             embed.AddField("Ataque".Titulo(), $"{Emojis.EspadasCruzadas} {player.Character.Ataque:N2}", true);
             embed.AddField("Defesa".Titulo(), $"{Emojis.Escudo} {player.Character.Defesa:N2}", true);
-            embed.AddField(":white_large_square:", ":white_large_square:");
+            embed.AddField(Emojis.Nada, Emojis.Nada);
 
             var lifePor = player.Character.LifePoints.CurrentValue / player.Character.LifePoints.MaxValue;
             embed.AddField("Vida".Titulo(), $"{Emojis.GerarVidaEmoji(lifePor)} {player.Character.LifePoints.CurrentValue:N2} / {player.Character.LifePoints.MaxValue:N2}", true);
