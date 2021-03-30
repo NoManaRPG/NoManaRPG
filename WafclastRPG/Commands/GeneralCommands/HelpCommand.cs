@@ -133,6 +133,7 @@ namespace WafclastRPG.Comandos.Exibir
             embed.AddField("Bot".Titulo(), $"{Formatter.InlineCode("ajuda")} {Formatter.InlineCode("info")}", true);
             embed.AddField("Jogador".Titulo(), $"{Formatter.InlineCode("comecar")} {Formatter.InlineCode("status")} {Formatter.InlineCode("postura")} {Formatter.InlineCode("inventario")}", true);
             embed.AddField("Canal de texto".Titulo(), $"{Formatter.InlineCode("atacar")} {Formatter.InlineCode("viajar")} {Formatter.InlineCode("olhar")}", true);
+            embed.AddField("Ranks".Titulo(), $"{Formatter.InlineCode("rank-moedas")}", true);
 
             embed.WithDescription("Para mais informações a cerca de algum comando. O comando [ajuda + comado] mostra novas informações.");
             embed.WithThumbnail("https://naomesmo.com.br/wp-content/uploads/2013/01/me-ajuda.gif");

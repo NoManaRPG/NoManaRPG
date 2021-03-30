@@ -8,7 +8,7 @@ namespace WafclastRPG.Entities
         private const ulong GoldInCopper = SilverInCopper * 100;
         private const ulong PlatinumInCopper = GoldInCopper * 100;
 
-        private ulong Coins { get; set; } = 0;
+        public ulong Coins { get; set; } = 0;
 
         public WafclastCoins() { }
         public WafclastCoins(ulong startCoins) => Coins = startCoins;
@@ -54,7 +54,6 @@ namespace WafclastRPG.Entities
             {
                 cm.AutoMap();
                 cm.SetIgnoreExtraElements(true);
-                cm.MapProperty(c => c.Coins);
             });
         }
         #endregion

@@ -1,14 +1,10 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
 using WafclastRPG.Extensions;
-using WafclastRPG.DataBases;
 
 namespace WafclastRPG.Commands
 {
