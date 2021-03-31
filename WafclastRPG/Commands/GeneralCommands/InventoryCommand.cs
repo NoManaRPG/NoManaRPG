@@ -40,7 +40,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             var pagina = 1;
             var maxPag = (int)Math.Ceiling((double)player.Character.Inventory.QuantityDifferentItens / 5);
 
-            var msgEmbed = await ctx.ResponderAsync("carregando inventário...");
+            DiscordMessage msgEmbed = null;
             var temporaryInventory = await CreatePlayerInventory(pagina, maxPag, player, msgEmbed, ctx);
             msgEmbed = temporaryInventory.message;
 
@@ -57,7 +57,7 @@ namespace WafclastRPG.Commands.GeneralCommands
 
                 if (int.TryParse(msg.Result.Content, out int id))
                 {
-                    id = Math.Clamp(id - 1, 0, 5);
+                    id = Math.Clamp(id - 1, 0, 4);
                     var item = temporaryInventory.itens[id];
 
                     var embed = new DiscordEmbedBuilder();
@@ -67,26 +67,36 @@ namespace WafclastRPG.Commands.GeneralCommands
                     embed.WithThumbnail(item.ImageURL);
                     embed.WithColor(DiscordColor.Blue);
                     embed.AddField("Quantidade".Titulo(), Formatter.InlineCode(item.Quantity.ToString()), true);
+                    embed.AddField("Pode empilhar".Titulo(), item.CanStack ? "Sim" : "Não", true);
+                    embed.AddField("Pode vender".Titulo(), item.CanSell ? "Sim" : "Não", true);
                     embed.AddField("Preço de compra".Titulo(), $"{Emojis.Coins} {Formatter.InlineCode(item.Price.ToString())}", true);
                     embed.AddField("Preço de venda".Titulo(), $"{Emojis.Coins} {Formatter.InlineCode((item.Price / 2).ToString())}", true);
                     embed.AddField("Tipo".Titulo(), item.Type.GetEnumDescription(), true);
-                    embed.AddField("Nível".Titulo(), item.Level.ToString(), true);
-                    embed.AddField("Pode vender".Titulo(), item.CanSell ? "Sim" : "Não", true);
-                    embed.AddField("Pode empilhar".Titulo(), item.CanStack ? "Sim" : "Não", true);
-                    embed.WithFooter($"ID: {item.ItemID}", ctx.User.AvatarUrl);
+                    embed.AddField("Nível".Titulo(), Formatter.InlineCode(item.Level.ToString()), true);
+                    embed.AddField("Item ID".Titulo(), Formatter.InlineCode(item.ItemID.ToString()), true);
+                    embed.AddField("Inventario ID".Titulo(), Formatter.InlineCode(item.Id.ToString()), true);
+                    embed.WithFooter(iconUrl: ctx.User.AvatarUrl);
                     embed.WithTimestamp(DateTime.Now);
+
+                    switch (item)
+                    {
+                        case WafclastFood wf:
+                            embed.AddField("Cura".Titulo(), wf.LifeGain.ToString("N2"), true);
+                            break;
+                    }
+
                     await ctx.ResponderAsync(embed.Build());
                     break;
                 }
 
-                switch (msg.Result.Content)
+                switch (msg.Result.Content.ToLower())
                 {
                     case "proximo":
-                        if(pagina == maxPag)
+                        if (pagina == maxPag)
                         {
                             await msg.Result.DeleteAsync();
                             break;
-                        }    
+                        }
 
                         pagina++;
                         var temp = await CreatePlayerInventory(pagina, maxPag, player, msgEmbed, ctx);
@@ -151,8 +161,12 @@ namespace WafclastRPG.Commands.GeneralCommands
             timer.Stop();
 
             embed.WithDescription($"{Emojis.Coins} {player.Character.Coins.ToString()}");
-            embed.WithFooter($"Digite um número para escolher ou {Formatter.InlineCode("sair")} para fechar | Demorou: {timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.", ctx.User.AvatarUrl);
-            return new TemporaryInventory(await msgEmbed.ModifyAsync(ctx.User.Mention, embed.Build()), itens);
+            embed.WithFooter($"Digite 1 - 5 para escolher ou sair para fechar | Demorou: {timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.", ctx.User.AvatarUrl);
+            if (msgEmbed == null)
+                msgEmbed = await ctx.RespondAsync(ctx.User.Mention, embed.Build());
+            else
+                msgEmbed = await msgEmbed.ModifyAsync(ctx.User.Mention, embed.Build());
+            return new TemporaryInventory(msgEmbed, itens);
         }
 
         public class TemporaryInventory
