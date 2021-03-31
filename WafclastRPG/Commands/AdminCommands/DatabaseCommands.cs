@@ -13,6 +13,10 @@ using WafclastRPG.Entities;
 using WafclastRPG.Enums;
 using WafclastRPG.DataBases;
 using WafclastRPG.Entities.Monsters;
+using WafclastRPG.Entities.Itens;
+using DSharpPlus.Interactivity.Extensions;
+using System.Text;
+using System.Linq;
 
 namespace WafclastRPG.Commands.AdminCommands
 {
@@ -87,6 +91,129 @@ namespace WafclastRPG.Commands.AdminCommands
             await banco.CollectionMaps.ReplaceOneAsync(x => x.Id == map.Id, map);
 
             await ctx.ResponderAsync($"monstro {Formatter.Bold(nome)} criado! Pode ser encontrado com o #ID {monstro.MonsterId}.");
+        }
+
+        [Command("item-criar")]
+        [Description("Permite criar um item.")]
+        [Usage("item-criar")]
+        [RequireOwner]
+        public async Task ItemEditarAsync(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+            banco.StartExecutingInteractivity(ctx.User.Id);
+            var item = new WafclastBaseItem();
+            var time = TimeSpan.FromMinutes(10);
+
+            await ctx.ResponderNegritoAsync("Ok! Vamos criar um item...");
+
+            await ctx.ResponderNegritoAsync("Informe um ID:");
+            var msg = await ctx.WaitForMessageContentAsync(time);
+            item.ItemID = ulong.Parse(msg);
+
+            await ctx.ResponderNegritoAsync("Informe um NOME:");
+            msg = await ctx.WaitForMessageContentAsync(time);
+            item.Name = msg;
+
+            var str = new StringBuilder();
+            foreach (var itens in Enum.GetValues(typeof(ItemType)).Cast<ItemType>())
+                str.Append($"`{itens.GetEnumDescription()}[{(int)itens}]` ");
+            await ctx.ResponderNegritoAsync("Informe um TIPO: " + str.ToString());
+            msg = await ctx.WaitForMessageContentAsync(time);
+            item.Type = (ItemType)int.Parse(msg);
+
+            await ctx.ResponderNegritoAsync("Informe o NÍVEL minimo:");
+            msg = await ctx.WaitForMessageContentAsync(time);
+            item.Level = int.Parse(msg);
+
+            await ctx.ResponderNegritoAsync("Informe um PREÇO de compra, o valor de venda será a metade:");
+            msg = await ctx.WaitForMessageContentAsync(time);
+            item.Price = int.Parse(msg);
+
+            await ctx.ResponderNegritoAsync("É possível vender?: Sim ou Não");
+            msg = await ctx.WaitForMessageContentAsync(time);
+            if (msg.ToLower() == "sim")
+                item.CanSell = true;
+            else
+                item.CanSell = false;
+
+            await ctx.ResponderNegritoAsync("É possível empilhar?: Sim ou Não");
+            msg = await ctx.WaitForMessageContentAsync(time);
+            if (msg.ToLower() == "sim")
+                item.CanStack = true;
+            else
+                item.CanStack = false;
+
+            await ctx.ResponderNegritoAsync("Informe uma URL para imagem:");
+            msg = await ctx.WaitForMessageContentAsync(time);
+            item.ImageURL = msg;
+
+            await ctx.ResponderNegritoAsync("Informe uma descrição:");
+            msg = await ctx.WaitForMessageContentAsync(time);
+            item.Description = msg;
+
+            await banco.InsertItemAsync(item);
+
+            banco.StopExecutingInteractivity(ctx.User.Id);
+
+            var embed = new DiscordEmbedBuilder();
+            embed.WithTitle($"[{item.ItemID}] {item.Name.Titulo()}");
+            embed.WithDescription(item.Description);
+            embed.WithThumbnail(item.ImageURL);
+            embed.WithColor(DiscordColor.Blue);
+            embed.AddField("Tipo".Titulo(), item.Type.GetEnumDescription(), true);
+            embed.AddField("Level".Titulo(), item.Level.ToString(), true);
+            embed.AddField("Preço compra".Titulo(), item.Price.ToString(), true);
+            embed.AddField("Preço venda".Titulo(), (item.Price / 2).ToString(), true);
+            embed.AddField("Pode vender".Titulo(), item.CanSell ? "Sim" : "Não", true);
+            embed.AddField("Pode empilhar".Titulo(), item.CanStack ? "Sim" : "Não", true);
+
+
+
+            await ctx.RespondAsync("Feito!", embed.Build());
+        }
+
+        [Command("monstro-drop")]
+        [Description("Permite editar um drop.")]
+        [Usage("monstro-criar [ monstro id] [ posicao ] [ item id ] [ chance ] [ quant. min ] [ quant. max]")]
+        [Example("monstro-drop 1 1 1 0.5 1 1", "Adiciona um drop com as informações fornecidas..")]
+        [RequireOwner]
+        public async Task MonstroDropAsync(CommandContext ctx, ulong monstroId, int posicao, ulong itemId, double chance, int quantMin, int quantMax)
+        {
+            await ctx.TriggerTypingAsync();
+            var map = await banco.CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
+            if (map == null)
+            {
+                await ctx.ResponderAsync("não existe um mapa no canal atual!");
+                return;
+            }
+
+            var monster = await banco.CollectionMonsters.Find(x => x.Id == $"{ctx.Channel.Id}:{monstroId}").FirstOrDefaultAsync();
+            if (monster == null)
+            {
+                await ctx.ResponderAsync("não existe um monstro com o #ID informado!");
+                return;
+            }
+
+            var item = await banco.FindItemByItemIdAsync(itemId, 0);
+            if (item == null)
+            {
+                await ctx.ResponderAsync("não existe um item com o #ID informado!");
+                return;
+            }
+
+            var embed = new DiscordEmbedBuilder();
+            embed.AddField("Item".Titulo(), item.Name);
+            embed.AddField("Monstro".Titulo(), monster.Nome);
+            embed.AddField("Chance".Titulo(), (chance * 100).ToString());
+            embed.AddField("Quantia".Titulo(), $"{quantMin} ~ {quantMax}");
+
+            if (monster.Drops.Count > posicao)
+                monster.Drops[posicao] = new ItemChance(item.Id, chance, quantMin, quantMax);
+            else
+                monster.Drops.Add(new ItemChance(item.Id, chance, quantMin, quantMax));
+            await banco.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster);
+
+            await ctx.ResponderAsync($"monstro {Formatter.Bold(monster.Nome)} editado! Agora pode cair {Formatter.Bold(item.Name)}.");
         }
 
 

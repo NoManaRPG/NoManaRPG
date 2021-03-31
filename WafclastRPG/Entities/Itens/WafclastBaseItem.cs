@@ -45,7 +45,7 @@ namespace WafclastRPG.Entities.Itens
                 cm.MapIdMember(c => c.Id).SetIdGenerator(ObjectIdGenerator.Instance);
                 cm.SetIsRootClass(true);
             });
-            BsonClassMap.RegisterClassMap<WafclastBaseItem>();
+            //BsonClassMap.RegisterClassMap<WafclastBaseItem>();
         }
     }
 }

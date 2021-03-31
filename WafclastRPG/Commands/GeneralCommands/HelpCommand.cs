@@ -48,6 +48,8 @@ namespace WafclastRPG.Comandos.Exibir
             str.Append($"{Formatter.InlineCode("monstro-atributos")} - ");
             str.Append($"{Formatter.InlineCode("atualizar")} - ");
             str.Append($"{Formatter.InlineCode("everyone-role")} - ");
+            str.Append($"{Formatter.InlineCode("monstro-drop")} - ");
+            str.Append($"{Formatter.InlineCode("item-criar")} - ");
 
 
             embed.WithDescription(str.ToString());

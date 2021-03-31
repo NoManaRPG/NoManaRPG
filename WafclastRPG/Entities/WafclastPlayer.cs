@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson.Serialization;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -50,6 +51,7 @@ namespace WafclastRPG.Entities
         /// <returns></returns>
         public async Task ItemAdd(WafclastBaseItem item, int quantity)
         {
+            item.PlayerId = Id;
             if (!item.CanStack)
             {
                 item.Quantity = 1;

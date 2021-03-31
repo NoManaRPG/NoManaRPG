@@ -1,4 +1,5 @@
 ﻿using DSharpPlus.Entities;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Threading;
@@ -91,7 +92,10 @@ namespace WafclastRPG.DataBases
             => ds.CollectionItens.ReplaceOneAsync(Session, x => x.Id == item.Id, item, new ReplaceOptions { IsUpsert = true });
 
         public Task InsertItemAsync(WafclastBaseItem item)
-           => ds.CollectionItens.InsertOneAsync(Session, item);
+        {
+            item.Id = ObjectId.Empty;
+            return ds.CollectionItens.InsertOneAsync(Session, item);
+        }
 
         #endregion
     }

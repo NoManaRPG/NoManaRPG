@@ -1,5 +1,6 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
@@ -131,8 +132,17 @@ namespace WafclastRPG.DataBases
         #endregion
         #region Itens
 
-        public Task<WafclastBaseItem> FindItemAsync(string name, ulong playerId)
+        public Task<WafclastBaseItem> FindItemByNameAsync(string name, ulong playerId)
            => CollectionItens.Find(x => x.PlayerId == playerId && x.Name == name).FirstOrDefaultAsync();
+
+        public Task<WafclastBaseItem> FindItemByItemIdAsync(ulong itemId, ulong playerId)
+          => CollectionItens.Find(x => x.PlayerId == playerId && x.ItemID == itemId).FirstOrDefaultAsync();
+
+        public Task<WafclastBaseItem> FindItemByObjectIdAsync(ObjectId id, ulong playerId)
+        => CollectionItens.Find(x => x.PlayerId == playerId && x.Id == id).FirstOrDefaultAsync();
+
+        public Task InsertItemAsync(WafclastBaseItem item)
+          => CollectionItens.InsertOneAsync(item);
 
         #endregion
     }

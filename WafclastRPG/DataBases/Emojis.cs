@@ -37,6 +37,14 @@
 
         public const string Mago = ":man_mage:";
 
+        public const string Um = "<:um:826799998367825940>";
+        public const string Dois = "<:dois:826799998372020264>";
+        public const string Tres = "<:tres:826799998380671076>";
+        public const string Quatro = "<:quatro:826799998590255114>";
+        public const string Cinco = "<:cinco:826799998372937728>";
+        public const string Direita = "<:direita:826799998159159337>";
+        public const string Esquerda = "<:esquerda:826799998360485938>";
+
         public const string Mapa = ":map:";
         public const string DiamanteLaranjaPequeno = ":small_orange_diamond:";
         public const string Aviso = ":warning:";
@@ -53,6 +61,24 @@
                     return Emojis.CoracaoLaranja;
             }
             return Emojis.CoracaoVermelho;
+        }
+
+        public static string GerarNumber(int numero)
+        {
+            switch (numero)
+            {
+                case 1:
+                    return Um;
+                case 2:
+                    return Dois;
+                case 3:
+                    return Tres;
+                case 4:
+                    return Quatro;
+                case 5:
+                    return Cinco;
+            }
+            return "Emoji não encontrado";
         }
     }
 }
