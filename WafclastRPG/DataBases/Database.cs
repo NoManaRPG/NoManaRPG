@@ -132,9 +132,6 @@ namespace WafclastRPG.DataBases
         #endregion
         #region Itens
 
-        public Task<WafclastBaseItem> FindItemByNameAsync(string name, ulong playerId)
-           => CollectionItens.Find(x => x.PlayerId == playerId && x.Name == name).FirstOrDefaultAsync();
-
         public Task<WafclastBaseItem> FindItemByItemIdAsync(ulong itemId, ulong playerId)
           => CollectionItens.Find(x => x.PlayerId == playerId && x.ItemID == itemId).FirstOrDefaultAsync();
 
@@ -144,6 +141,13 @@ namespace WafclastRPG.DataBases
         public Task InsertItemAsync(WafclastBaseItem item)
           => CollectionItens.InsertOneAsync(item);
 
+        public async Task<ulong> FindLastItem(CommandContext ctx)
+        {
+            var item = await CollectionItens.Find(x => x.PlayerId == 0).SortByDescending(x => x.ItemID).Limit(1).FirstOrDefaultAsync();
+            if (item == null)
+                return 1;
+            return item.ItemID + 1;
+        }
         #endregion
     }
 }

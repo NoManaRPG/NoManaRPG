@@ -133,7 +133,7 @@ namespace WafclastRPG.Comandos.Exibir
 
 
             embed.AddField("Bot".Titulo(), $"{Formatter.InlineCode("ajuda")} {Formatter.InlineCode("info")}", true);
-            embed.AddField("Jogador".Titulo(), $"{Formatter.InlineCode("comecar")} {Formatter.InlineCode("status")} {Formatter.InlineCode("postura")} {Formatter.InlineCode("inventario")}", true);
+            embed.AddField("Jogador".Titulo(), $"{Formatter.InlineCode("comecar")} {Formatter.InlineCode("status")} {Formatter.InlineCode("postura")} {Formatter.InlineCode("inventario")} {Formatter.InlineCode("comer")}", true);
             embed.AddField("Canal de texto".Titulo(), $"{Formatter.InlineCode("atacar")} {Formatter.InlineCode("viajar")} {Formatter.InlineCode("olhar")}", true);
             embed.AddField("Ranks".Titulo(), $"{Formatter.InlineCode("rank-moedas")} {Formatter.InlineCode("rank-nivel")}", true);
 

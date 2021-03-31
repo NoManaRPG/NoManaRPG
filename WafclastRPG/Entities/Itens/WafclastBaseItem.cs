@@ -20,6 +20,26 @@ namespace WafclastRPG.Entities.Itens
         public string ImageURL { get; set; } = "";
         public string Description { get; set; } = "Sem descrição";
 
+        public WafclastBaseItem()
+        {
+        }
+
+        public WafclastBaseItem(WafclastBaseItem baseItem)
+        {
+            Id = baseItem.Id;
+            ItemID = baseItem.ItemID;
+            PlayerId = baseItem.PlayerId;
+            Name = baseItem.Name;
+            Type = baseItem.Type;
+            Level = baseItem.Level;
+            Price = baseItem.Price;
+            CanSell = baseItem.CanSell;
+            CanStack = baseItem.CanStack;
+            Quantity = baseItem.Quantity;
+            ImageURL = baseItem.ImageURL;
+            Description = baseItem.Description;
+        }
+
         public static void MapBuilder()
         {
             BsonClassMap.RegisterClassMap<WafclastBaseItem>(cm =>
@@ -29,7 +49,7 @@ namespace WafclastRPG.Entities.Itens
                 cm.MapIdMember(c => c.Id).SetIdGenerator(ObjectIdGenerator.Instance);
                 cm.SetIsRootClass(true);
             });
-            //BsonClassMap.RegisterClassMap<WafclastBaseItem>();
+            BsonClassMap.RegisterClassMap<WafclastFood>();
         }
     }
 }

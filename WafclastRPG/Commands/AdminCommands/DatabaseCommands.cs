@@ -101,60 +101,54 @@ namespace WafclastRPG.Commands.AdminCommands
         {
             await ctx.TriggerTypingAsync();
             banco.StartExecutingInteractivity(ctx.User.Id);
-            var item = new WafclastBaseItem();
+
             var time = TimeSpan.FromMinutes(10);
 
             await ctx.ResponderNegritoAsync("Ok! Vamos criar um item...");
 
-            await ctx.ResponderNegritoAsync("Informe um ID:");
-            var msg = await ctx.WaitForMessageContentAsync(time);
-            item.ItemID = ulong.Parse(msg);
-
-            await ctx.ResponderNegritoAsync("Informe um NOME:");
-            msg = await ctx.WaitForMessageContentAsync(time);
-            item.Name = msg;
-
             var str = new StringBuilder();
+            var item = new WafclastBaseItem();
+
             foreach (var itens in Enum.GetValues(typeof(ItemType)).Cast<ItemType>())
                 str.Append($"`{itens.GetEnumDescription()}[{(int)itens}]` ");
-            await ctx.ResponderNegritoAsync("Informe um TIPO: " + str.ToString());
-            msg = await ctx.WaitForMessageContentAsync(time);
-            item.Type = (ItemType)int.Parse(msg);
 
-            await ctx.ResponderNegritoAsync("Informe o NÍVEL minimo:");
-            msg = await ctx.WaitForMessageContentAsync(time);
-            item.Level = int.Parse(msg);
+            item.Type = await ctx.WaitForEnumAsync<ItemType>($"Informe um TIPO: {str.ToString()}", time);
+            item.ItemID = await banco.FindLastItem(ctx);
+            item.Name = await ctx.WaitForStringAsync("Informe um NOME:", time);
+            item.Level = await ctx.WaitForIntAsync("Informe o NÍVEL minimo:", time);
+            item.Price = await ctx.WaitForIntAsync("Informe um PREÇO de compra, o valor de venda será a metade:", time);
 
-            await ctx.ResponderNegritoAsync("Informe um PREÇO de compra, o valor de venda será a metade:");
-            msg = await ctx.WaitForMessageContentAsync(time);
-            item.Price = int.Parse(msg);
-
-            await ctx.ResponderNegritoAsync("É possível vender?: Sim ou Não");
-            msg = await ctx.WaitForMessageContentAsync(time);
-            if (msg.ToLower() == "sim")
-                item.CanSell = true;
-            else
+            if ((await ctx.WaitForStringAsync("É possível vender?: Sim ou Não", time)).ToLower() == "nao")
                 item.CanSell = false;
 
-            await ctx.ResponderNegritoAsync("É possível empilhar?: Sim ou Não");
-            msg = await ctx.WaitForMessageContentAsync(time);
-            if (msg.ToLower() == "sim")
-                item.CanStack = true;
-            else
+            if ((await ctx.WaitForStringAsync("É possível empilhar?: Sim ou Não", time)).ToLower() == "nao")
                 item.CanStack = false;
 
-            await ctx.ResponderNegritoAsync("Informe uma URL para imagem:");
-            msg = await ctx.WaitForMessageContentAsync(time);
-            item.ImageURL = msg;
+            item.ImageURL = await ctx.WaitForStringAsync("Informe uma URL para imagem:", time);
+            item.Description = await ctx.WaitForStringAsync("Informe uma descrição:", time);
 
-            await ctx.ResponderNegritoAsync("Informe uma descrição:");
-            msg = await ctx.WaitForMessageContentAsync(time);
-            item.Description = msg;
+            var embed = ItemBuilder(item);
+            switch (item.Type)
+            {
+                case ItemType.Food:
+                    WafclastFood comida = new WafclastFood(item);
+                    comida.LifeGain = await ctx.WaitForIntAsync("Valor de cura:", time);
+                    await banco.InsertItemAsync(comida);
 
-            await banco.InsertItemAsync(item);
+                    embed.AddField("Cura".Titulo(), comida.LifeGain.ToString());
+                    break;
+                default:
 
+                    await banco.InsertItemAsync(item);
+                    break;
+            }
             banco.StopExecutingInteractivity(ctx.User.Id);
 
+            await ctx.RespondAsync("Feito!", embed.Build());
+        }
+
+        private DiscordEmbedBuilder ItemBuilder(WafclastBaseItem item)
+        {
             var embed = new DiscordEmbedBuilder();
             embed.WithTitle($"[{item.ItemID}] {item.Name.Titulo()}");
             embed.WithDescription(item.Description);
@@ -166,10 +160,7 @@ namespace WafclastRPG.Commands.AdminCommands
             embed.AddField("Preço venda".Titulo(), (item.Price / 2).ToString(), true);
             embed.AddField("Pode vender".Titulo(), item.CanSell ? "Sim" : "Não", true);
             embed.AddField("Pode empilhar".Titulo(), item.CanStack ? "Sim" : "Não", true);
-
-
-
-            await ctx.RespondAsync("Feito!", embed.Build());
+            return embed;
         }
 
         [Command("monstro-drop")]
