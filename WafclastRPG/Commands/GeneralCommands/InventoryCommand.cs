@@ -82,6 +82,12 @@ namespace WafclastRPG.Commands.GeneralCommands
                 switch (msg.Result.Content)
                 {
                     case "proximo":
+                        if(pagina == maxPag)
+                        {
+                            await msg.Result.DeleteAsync();
+                            break;
+                        }    
+
                         pagina++;
                         var temp = await CreatePlayerInventory(pagina, maxPag, player, msgEmbed, ctx);
                         msgEmbed = temp.message;

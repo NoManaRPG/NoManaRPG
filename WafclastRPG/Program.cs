@@ -77,12 +77,13 @@ namespace WafclastRPG
 
         private async Task<int> ResolvePrefixAsync(DiscordMessage msg)
         {
+            // Private Messages
             var gld = msg.Channel.Guild;
             if (gld == null)
                 return await Task.FromResult(-1);
-#if DEBUG
             if (Database.IsExecutingInteractivity(msg.Author.Id))
                 return await Task.FromResult(-1);
+#if DEBUG
             var prefix = await Database.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixDebug);
             var pfixLocation = msg.GetStringPrefixLength(prefix);
 #else

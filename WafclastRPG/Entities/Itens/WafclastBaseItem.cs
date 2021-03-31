@@ -7,22 +7,6 @@ namespace WafclastRPG.Entities.Itens
 {
     public class WafclastBaseItem
     {
-        /*
-         * ID
-         * ITEMID = ...
-         * PlayerID = ...
-         * IsStackable
-         * 
-         * 
-         * Ao entrar item novo no inventario do jogador o que fazer:
-         * Adicionad um item com o playerId, se for empilhavel, procurar outro com o mesmo ItemID
-         * 
-         * Para mostrar todos os items, procura pelo o playerid
-         * 
-         * Sobre as moedas, acredito que é melhor deixalas separadas
-         * */
-
-
         public ObjectId Id { get; set; }
         public ulong ItemID { get; set; }
         public ulong PlayerId { get; set; }
