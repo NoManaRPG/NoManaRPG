@@ -42,6 +42,7 @@ namespace WafclastRPG.Commands.GeneralCommands
 
             var msgEmbed = await ctx.ResponderAsync("carregando inventário...");
             var temporaryInventory = await CreatePlayerInventory(pagina, maxPag, player, msgEmbed, ctx);
+            msgEmbed = temporaryInventory.message;
 
             var vity = ctx.Client.GetInteractivity();
             bool exitLoop = false;
@@ -72,7 +73,7 @@ namespace WafclastRPG.Commands.GeneralCommands
                     embed.AddField("Nível".Titulo(), item.Level.ToString(), true);
                     embed.AddField("Pode vender".Titulo(), item.CanSell ? "Sim" : "Não", true);
                     embed.AddField("Pode empilhar".Titulo(), item.CanStack ? "Sim" : "Não", true);
-                    embed.WithFooter($"ID: {item.ItemID}",ctx.User.AvatarUrl);
+                    embed.WithFooter($"ID: {item.ItemID}", ctx.User.AvatarUrl);
                     embed.WithTimestamp(DateTime.Now);
                     await ctx.ResponderAsync(embed.Build());
                     break;
@@ -82,7 +83,8 @@ namespace WafclastRPG.Commands.GeneralCommands
                 {
                     case "proximo":
                         pagina++;
-                        await CreatePlayerInventory(pagina, maxPag, player, msgEmbed, ctx);
+                        var temp = await CreatePlayerInventory(pagina, maxPag, player, msgEmbed, ctx);
+                        msgEmbed = temp.message;
                         await msg.Result.DeleteAsync();
                         break;
                     case "voltar":
@@ -93,13 +95,15 @@ namespace WafclastRPG.Commands.GeneralCommands
                         }
 
                         pagina--;
-                        await CreatePlayerInventory(pagina, maxPag, player, msgEmbed, ctx);
+                        var temp2 = await CreatePlayerInventory(pagina, maxPag, player, msgEmbed, ctx);
+                        msgEmbed = temp2.message;
                         await msg.Result.DeleteAsync();
                         break;
                     case "sair":
                         exitLoop = true;
                         break;
                     default:
+                        var asd = msgEmbed;
                         msgEmbed = await ctx.RespondAsync(ctx.User.Mention, msgEmbed.Embeds[0]);
                         await msg.Result.DeleteAsync();
                         break;

@@ -71,8 +71,8 @@ namespace WafclastRPG.Commands.AdminCommands
 
         [Command("monstro-criar")]
         [Description("Permite criar um monstro para o mapa atual.")]
-        [Usage("monstro-criar [ id ] [ nome ]")]
-        [Example("monstro-criar 1 Zombiie Grandioso", "Cria um monstro com as informações fornecidas..")]
+        [Usage("monstro-criar [ nome ]")]
+        [Example("monstro-criar Zombiie Grandioso", "Cria um monstro com o nome fornecido..")]
         [RequireOwner]
         public async Task MonstroCriarAsync(CommandContext ctx, [RemainingText] string nome = "")
         {
@@ -174,10 +174,10 @@ namespace WafclastRPG.Commands.AdminCommands
 
         [Command("monstro-drop")]
         [Description("Permite editar um drop.")]
-        [Usage("monstro-criar [ monstro id] [ posicao ] [ item id ] [ chance ] [ quant. min ] [ quant. max]")]
-        [Example("monstro-drop 1 1 1 0.5 1 1", "Adiciona um drop com as informações fornecidas..")]
+        [Usage("monstro-criar [ posicao ] [ item id ] [ chance ] [ quant. min ] [ quant. max] [ monstro id]")]
+        [Example("monstro-drop 1 1 0.5 1 1 1", "Adiciona um drop com as informações fornecidas..")]
         [RequireOwner]
-        public async Task MonstroDropAsync(CommandContext ctx, ulong monstroId, int posicao, ulong itemId, double chance, int quantMin, int quantMax)
+        public async Task MonstroDropAsync(CommandContext ctx, int posicao, ulong itemId, double chance, int quantMin, int quantMax, ulong monstroId)
         {
             await ctx.TriggerTypingAsync();
             var map = await banco.CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
@@ -219,13 +219,13 @@ namespace WafclastRPG.Commands.AdminCommands
 
         [Command("monstro-atributos")]
         [Description("Permite editar os atributos de um monstro já criado no mapa atual.")]
-        [Usage("monstro-atributos [ id ] [ forca min ] [ forca max ] [ resistencia min ] [ resistencia max ] [ agilidade min ] [ agilidade max ] [ exp min] [ exp max ] [ tempo ] [ s | m | h | d")]
-        [Example("monstro-atributos 1 4 5 6 7 2 3 2 3 1 m", "Edita o monstro de #ID 1 com os parâmetros fornecidos.")]
+        [Usage("monstro-atributos [ forca min ] [ forca max ] [ resistencia min ] [ resistencia max ] [ agilidade min ] [ agilidade max ] [ exp min] [ exp max ] [ tempo ] [ s | m | h | d ] [ id ]")]
+        [Example("monstro-atributos 4 5 6 7 2 3 2 3 1 m 1", "Edita o monstro de #ID 1 com os parâmetros fornecidos.")]
         [RequireOwner]
-        public async Task MonstrosAtributosAsync(CommandContext ctx, ulong id = 0, int forcaMin = 0, int forcaMax = 0,
+        public async Task MonstrosAtributosAsync(CommandContext ctx, int forcaMin = 0, int forcaMax = 0,
                                                  int resistenciaMin = 0, int resistenciaMax = 0, int agilidadeMin = 0,
                                                  int agilidadeMax = 0, decimal expMin = 0, decimal expMax = 0,
-                                                 int tempo = 1, string duracao = "m")
+                                                 int tempo = 1, string duracao = "m", ulong id = 0)
         {
             await ctx.TriggerTypingAsync();
             var monster = await banco.CollectionMonsters.Find(x => x.Id == $"{ctx.Channel.Id}:{id}").FirstOrDefaultAsync();
