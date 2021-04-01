@@ -101,7 +101,7 @@ namespace WafclastRPG.DataBases
            => ds.CollectionItens.DeleteOneAsync(Session, x => x.Id == item.Id);
 
         public Task<WafclastBaseItem> FindItemByNameAsync(string name, ulong playerId)
-          => ds.CollectionItens.Find(Session, x => x.PlayerId == playerId && x.Name == name, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Secondary) }).FirstOrDefaultAsync();
+          => ds.CollectionItens.Find(Session, x => x.PlayerId == playerId && x.Name == name, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
 
         #endregion
     }
