@@ -124,6 +124,7 @@ namespace WafclastRPG.Comandos.Exibir
             embed.AddField("Jogador".Titulo(), $"{Formatter.InlineCode("comecar")} {Formatter.InlineCode("status")} {Formatter.InlineCode("postura")} {Formatter.InlineCode("inventario")} {Formatter.InlineCode("comer")}", true);
             embed.AddField("Canal de texto".Titulo(), $"{Formatter.InlineCode("atacar")} {Formatter.InlineCode("viajar")} {Formatter.InlineCode("olhar")}", true);
             embed.AddField("Ranks".Titulo(), $"{Formatter.InlineCode("rank-moedas")} {Formatter.InlineCode("rank-nivel")}", true);
+            embed.AddField("Outros".Titulo(), $"{Formatter.InlineCode("admin")}", true);
 
             embed.WithThumbnail("https://naomesmo.com.br/wp-content/uploads/2013/01/me-ajuda.gif");
             embed.WithColor(DiscordColor.Violet);
