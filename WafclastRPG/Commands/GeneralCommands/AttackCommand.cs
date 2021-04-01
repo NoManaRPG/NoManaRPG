@@ -4,9 +4,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
@@ -100,29 +98,23 @@ namespace WafclastRPG.Commands.GeneralCommands
                         str.AppendLine($"{Emojis.CrossBone} {target.Nome} morreu! {Emojis.CrossBone}");
                         str.AppendLine($"+{target.Exp:N2} {Emojis.Exp}");
 
-                        try
+                        foreach (var item in target.Drops)
                         {
-                            foreach (var item in target.Drops)
+                            if (rd.Chance(item.Chance))
                             {
-                                if (rd.Chance(item.Chance))
-                                {
-                                    var quant = rd.Sortear(item.MinQuantity, item.MaxQuantity);
-                                    var _item = await banco.FindItemByObjectIdAsync(item.ItemId, 0);
-                                    await player.ItemAdd(_item, quant);
-                                    str.AppendLine($"+{_item.Name}*x*{quant}");
-                                }
+                                var quant = rd.Sortear(item.MinQuantity, item.MaxQuantity);
+                                var _item = await banco.FindItemByObjectIdAsync(item.ItemId, ctx.Guild.Id);
+                                await player.ItemAdd(_item, quant);
+                                str.AppendLine($"+{_item.Name}*x*{quant}");
                             }
-
-                            if (player.Character.ReceberExperiencia(target.Exp))
-                                str.AppendLine($"{Emojis.Up} {player.Mention()} evoluiu de nível!");
-
-                            await player.SaveAsync();
-                            await session.SaveMonsterAsync(target);
                         }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex);
-                        }
+
+                        if (player.Character.ReceberExperiencia(target.Exp))
+                            str.AppendLine($"{Emojis.Up} {player.Mention()} evoluiu de nível!");
+
+                        await player.SaveAsync();
+                        await session.SaveMonsterAsync(target);
+
                         return Task.FromResult(new Response(str, target.Nome));
                     }
 

@@ -32,7 +32,6 @@ namespace WafclastRPG.Commands.UserCommands
 
             Task<Response> result;
             using (var session = await this.banco.StartDatabaseSessionAsync())
-            {
                 result = await session.WithTransactionAsync(async (s, ct) =>
                 {
                     var player = await session.FindPlayerAsync(ctx.User);
@@ -46,17 +45,25 @@ namespace WafclastRPG.Commands.UserCommands
                         if (map.Tipo == MapType.Cidade)
                             return Task.FromResult(new Response() { IsKarmaNegative = true });
 
-                    player.Character.Localization = new WafclastLocalization(ctx.Channel.Id, ctx.Guild.Id);
+                    if (player.Character.Localization.ServerId != ctx.Guild.Id)
+                        return Task.FromResult(new Response() { IsOtherServer = true });
+
+                    player.Character.Localization.ChannelId = ctx.Channel.Id;
                     await player.SaveAsync();
 
                     return Task.FromResult(new Response());
                 });
-            };
             var _response = await result;
 
             if (_response.IsPlayerFound == false)
             {
                 await ctx.ResponderAsync(Strings.NovoJogador);
+                return;
+            }
+
+            if (_response.IsOtherServer)
+            {
+                await ctx.ResponderAsync($"o seu personagem é de outro servidor! Use o comando {Formatter.InlineCode("comecar")} para criar um novo personagem!");
                 return;
             }
 
@@ -80,6 +87,7 @@ namespace WafclastRPG.Commands.UserCommands
             public bool IsPlayerFound = true;
             public bool IsSamePlace = false;
             public bool IsKarmaNegative = false;
+            public bool IsOtherServer = false;
         }
     }
 }

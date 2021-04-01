@@ -96,7 +96,9 @@ namespace WafclastRPG.DataBases
 
         public bool IsExecutingInteractivity(ulong userId) => PrefixLocker.TryGetValue(userId, out _);
         public void StopExecutingInteractivity(ulong userId) => PrefixLocker.TryRemove(userId, out _);
+        public void StopExecutingInteractivity(CommandContext ctx) => PrefixLocker.TryRemove(ctx.User.Id, out _);
         public void StartExecutingInteractivity(ulong userId) => PrefixLocker.TryAdd(userId, true);
+        public void StartExecutingInteractivity(CommandContext ctx) => PrefixLocker.TryAdd(ctx.User.Id, true);
 
         #endregion
         #region Server
@@ -143,7 +145,7 @@ namespace WafclastRPG.DataBases
 
         public async Task<ulong> FindLastItem(CommandContext ctx)
         {
-            var item = await CollectionItens.Find(x => x.PlayerId == 0).SortByDescending(x => x.ItemID).Limit(1).FirstOrDefaultAsync();
+            var item = await CollectionItens.Find(x => x.PlayerId == ctx.Guild.Id).SortByDescending(x => x.ItemID).Limit(1).FirstOrDefaultAsync();
             if (item == null)
                 return 1;
             return item.ItemID + 1;

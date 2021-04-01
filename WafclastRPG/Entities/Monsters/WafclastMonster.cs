@@ -7,7 +7,7 @@ namespace WafclastRPG.Entities.Monsters
     public class WafclastMonster
     {
         /// <summary>
-        /// ChannelId + MonsterId
+        /// ChannelId:MonsterId
         /// </summary>
         public string Id { get; private set; }
 

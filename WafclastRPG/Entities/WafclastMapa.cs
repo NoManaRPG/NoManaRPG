@@ -8,16 +8,16 @@ namespace WafclastRPG.Entities
         /// <summary>
         /// Text Channel Id
         /// </summary>
-        public ulong Id { get; private set; }
-        public ulong ServerID { get; private set; }
-        public MapType Tipo { get; private set; }
+        public ulong Id { get; set; }
+        public ulong ServerID { get; set; }
+        public MapType Tipo { get; set; }
         public WafclastCoordinates Coordinates { get; set; }
         public int QuantidadeMonstros { get; set; } = 0;
 
-        public WafclastMapa(ulong id, MapType tipo)
+        public WafclastMapa(ulong id, ulong serverID)
         {
             Id = id;
-            Tipo = tipo;
+            ServerID = serverID;
         }
 
         public static void MapBuilder()

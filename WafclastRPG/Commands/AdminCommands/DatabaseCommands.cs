@@ -22,7 +22,8 @@ namespace WafclastRPG.Commands.AdminCommands
 {
     public class DatabaseCommands : BaseCommandModule
     {
-        public Database banco;
+        public Database database;
+        public TimeSpan timeoutoverride = TimeSpan.FromMinutes(2);
 
         [Command("deletar-user")]
         [Description("Permite deletar o usuario informado.")]
@@ -34,117 +35,458 @@ namespace WafclastRPG.Commands.AdminCommands
         {
             await ctx.TriggerTypingAsync();
             if (user == null) user = ctx.User;
-            var result = await banco.CollectionJogadores.DeleteOneAsync(x => x.Id == user.Id);
+            var result = await database.CollectionJogadores.DeleteOneAsync(x => x.Id == user.Id);
             if (result.DeletedCount >= 1)
                 await ctx.ResponderAsync("usuario deletado!");
             else
                 await ctx.ResponderAsync("não foi possível deletar! Tente novamente");
         }
 
-        [Command("criar-mapa")]
-        [Description("Permite transforma o canal atual em um mapa.")]
-        [Usage("criar-mapa [ coordenada x ] [ coordenada y ] [ tipo: < Cidade, Vila, Aldeia, Floresta > ]")]
-        [Example("criar-mapa 5 10 Cidade", "Transforma o canal atual em um mapa com as informações fornecidas..")]
-        [RequireOwner]
-        public async Task CriarMapaAsync(CommandContext ctx, double x = 0, double y = 0, string tipo = "")
+        [Command("mapa-criar")]
+        [Description("Permite transforma o canal atual em um mapa para se tornar jogável.")]
+        [Usage("mapa-criar")]
+        [RequireUserPermissions(Permissions.Administrator)]
+        public async Task CriarMapaAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            var result = await banco.CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
+            var result = await database.FindMapAsync(ctx.Channel.Id);
             if (result != null)
             {
-                await ctx.ResponderAsync("já existe um mapa neste canal!");
+                await ctx.ResponderAsync("já existe um mapa neste canal! Você não queria editar?");
                 return;
             }
 
-            tipo = tipo.RemoverAcentos();
-            tipo = Regex.Replace(tipo, @"\s+", "");
-            if (Enum.TryParse<MapType>(tipo, true, out var mapType))
+            var mapa = new WafclastMapa(ctx.Channel.Id, ctx.Guild.Id);
+
+            var x = await ctx.WaitForIntAsync("Informe um valor para a coordenada X. Ela será usada futuramente.", database, timeoutoverride);
+            if (x.TimedOut)
+                return;
+
+            var y = await ctx.WaitForIntAsync("Informe um valor para a coordenada Y. Ela será usada futuramente.", database, timeoutoverride);
+            if (y.TimedOut)
+                return;
+            mapa.Coordinates = new WafclastCoordinates(x.Result, y.Result);
+
+            var str = new StringBuilder();
+            int ind = 0;
+            foreach (var item in Enum.GetValues(typeof(MapType)).Cast<MapType>())
             {
-                var mapa = new WafclastMapa(ctx.Channel.Id, mapType);
-                mapa.Coordinates = new WafclastCoordinates(x, y);
-                await banco.CollectionMaps.InsertOneAsync(mapa);
-                await ctx.ResponderAsync($"mapa {Formatter.InlineCode(ctx.Channel.Name)} criado! Nas coordenadas {Formatter.Bold($"({x} | {y})")} com o tipo {Formatter.Bold(mapType.ToString())}.");
+                str.AppendLine($"{ind} -> {item.GetEnumDescription()}");
+                ind++;
             }
-            else
-                await ctx.RespondAsync($"{ctx.User.Mention}, você informou um tipo inexistente!");
+
+            var tipo = await ctx.WaitForEnumAsync<MapType>("Informe o numero correspondente ao tipo desejado do seu mapa\n" + str.ToString(), database, timeoutoverride);
+            if (tipo.TimedOut)
+                return;
+            mapa.Tipo = tipo.Result;
+
+            await database.CollectionMaps.InsertOneAsync(mapa);
+            await ctx.ResponderAsync($"mapa {Formatter.InlineCode(ctx.Channel.Name)} criado! Nas coordenadas {Formatter.Bold($"({x.Result} | {y.Result})")} com o tipo {Formatter.Bold(mapa.Tipo.ToString())}.");
+        }
+
+        [Command("mapa-editar")]
+        [Description("Permite editar o mapa  atual.")]
+        [Usage("mapa-editar")]
+        [RequireUserPermissions(Permissions.Administrator)]
+        public async Task EditarMapaAsync(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+            var mapaAnterior = await database.FindMapAsync(ctx.Channel.Id);
+            if (mapaAnterior == null)
+            {
+                await ctx.ResponderAsync("não existe um mapa neste canal! Você não queria criar?");
+                return;
+            }
+
+            var mapa = new WafclastMapa(ctx.Channel.Id, ctx.Guild.Id);
+
+            var x = await ctx.WaitForIntAsync("Informe um valor para a coordenada X. Ela será usada futuramente.", database, timeoutoverride);
+            if (x.TimedOut)
+                return;
+
+            var y = await ctx.WaitForIntAsync("Informe um valor para a coordenada Y. Ela será usada futuramente.", database, timeoutoverride);
+            if (y.TimedOut)
+                return;
+            mapa.Coordinates = new WafclastCoordinates(x.Result, y.Result);
+
+            var str = new StringBuilder();
+            int ind = 0;
+            foreach (var item in Enum.GetValues(typeof(MapType)).Cast<MapType>())
+            {
+                str.AppendLine($"{ind} -> {item.GetEnumDescription()}");
+                ind++;
+            }
+
+            var tipo = await ctx.WaitForEnumAsync<MapType>("Informe o numero correspondente ao tipo desejado do seu mapa\n" + str.ToString(), database, timeoutoverride);
+            if (tipo.TimedOut)
+                return;
+            mapa.Tipo = tipo.Result;
+            mapa.QuantidadeMonstros = mapaAnterior.QuantidadeMonstros;
+
+            await database.CollectionMaps.ReplaceOneAsync(x => x.Id == mapa.Id, mapa);
+            await ctx.ResponderAsync($"mapa {Formatter.InlineCode(ctx.Channel.Name)} editado! Novas coordenadas {Formatter.Bold($"({x.Result} | {y.Result})")} com o tipo {Formatter.Bold(mapa.Tipo.ToString())}.");
         }
 
         [Command("monstro-criar")]
         [Description("Permite criar um monstro para o mapa atual.")]
-        [Usage("monstro-criar [ nome ]")]
-        [Example("monstro-criar Zombiie Grandioso", "Cria um monstro com o nome fornecido..")]
-        [RequireOwner]
-        public async Task MonstroCriarAsync(CommandContext ctx, [RemainingText] string nome = "")
+        [Usage("monstro-criar")]
+        [RequireUserPermissions(Permissions.Administrator)]
+        public async Task MonstroCriarAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            var map = await banco.CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
+            var map = await database.FindMapAsync(ctx);
             if (map == null)
             {
-                await ctx.ResponderAsync("não existe um mapa no canal atual!");
+                await ctx.ResponderAsync("não existe um mapa no canal atual! Crie um antes!");
                 return;
             }
 
-            var monstro = new WafclastMonster(ctx.Channel.Id, (ulong)map.QuantidadeMonstros + 1) { Nome = nome };
-            await banco.CollectionMonsters.InsertOneAsync(monstro);
+            var monster = new WafclastMonster(ctx.Channel.Id, (ulong)map.QuantidadeMonstros + 1);
+
+            var name = await ctx.WaitForStringAsync("Informe um nome.", database, timeoutoverride);
+            if (name.TimedOut)
+                return;
+
+            var respawnTime = await ctx.WaitForIntAsync("Quanto tempo para voltar a vida. (em segundos)", database, timeoutoverride);
+            if (respawnTime.TimedOut)
+                return;
+
+            var forcaMin = await ctx.WaitForIntAsync($"Quantos de força minima {name.Result} pode ter?", database, timeoutoverride);
+            if (forcaMin.TimedOut)
+                return;
+
+            var forcaMax = await ctx.WaitForIntAsync($"Quantos de força máxima {name.Result} pode ter? Deve ser maior que a força minima.", database, timeoutoverride, forcaMin.Result);
+            if (forcaMax.TimedOut)
+                return;
+
+            var resistenciaMin = await ctx.WaitForIntAsync($"Quantos de resistencia minima {name.Result} pode ter?", database, timeoutoverride);
+            if (resistenciaMin.TimedOut)
+                return;
+
+            var resistenciaMax = await ctx.WaitForIntAsync($"Quantos de resistencia máxima {name.Result} pode ter? Deve ser maior que a resistencia minima.", database, timeoutoverride, resistenciaMin.Result);
+            if (resistenciaMax.TimedOut)
+                return;
+
+            var agilidadeMin = await ctx.WaitForIntAsync($"Quantos de agilidade minima {name.Result} pode ter?", database, timeoutoverride);
+            if (agilidadeMin.TimedOut)
+                return;
+
+            var agilidadeMax = await ctx.WaitForIntAsync($"Quantos de agilidade máxima {name.Result} pode ter? Deve ser maior que a agilidade minima.", database, timeoutoverride, agilidadeMin.Result);
+            if (agilidadeMax.TimedOut)
+                return;
+
+            var experienciaMin = await ctx.WaitForIntAsync($"Quantos de experiencia minima os jogadores recebem ao eliminar {name.Result}?", database, timeoutoverride);
+            if (experienciaMin.TimedOut)
+                return;
+
+            var experienciaMax = await ctx.WaitForIntAsync($"Quantos de experiencia máxima os jogadores recebem ao eliminar {name.Result}? Deve ser maior que a experiencia minima.", database, timeoutoverride, experienciaMin.Result);
+            if (experienciaMax.TimedOut)
+                return;
+
+            monster.Atributos = new WafclastMonsterAtributos(forcaMin.Result, forcaMax.Result, resistenciaMin.Result,
+                                                             resistenciaMax.Result, agilidadeMin.Result,
+                                                             agilidadeMax.Result, experienciaMin.Result,
+                                                             experienciaMax.Result);
+
+            monster.Nome = name.Result;
+            monster.RespawnTime = TimeSpan.FromSeconds(respawnTime.Result);
+            monster.CalcAtributos();
+
+            await database.CollectionMonsters.InsertOneAsync(monster);
 
             map.QuantidadeMonstros++;
-            await banco.CollectionMaps.ReplaceOneAsync(x => x.Id == map.Id, map);
+            await database.CollectionMaps.ReplaceOneAsync(x => x.Id == map.Id, map);
 
-            await ctx.ResponderAsync($"monstro {Formatter.Bold(nome)} criado! Pode ser encontrado com o #ID {monstro.MonsterId}.");
+            var embed = new DiscordEmbedBuilder();
+            embed.WithTitle(monster.Nome.Titulo());
+            embed.AddField("Força".Titulo(), $"{monster.Atributos.ForcaMin} ~ {monster.Atributos.ForcaMax}");
+            embed.AddField("Resistencia".Titulo(), $"{monster.Atributos.ResistenciaMin} ~ {monster.Atributos.ResistenciaMax}");
+            embed.AddField("Agilidade".Titulo(), $"{monster.Atributos.AgilidadeMin} ~ {monster.Atributos.AgilidadeMax}");
+            embed.AddField("Experiencia".Titulo(), $"{monster.Atributos.ExpMin} ~ {monster.Atributos.ExpMax}");
+            embed.AddField("Respawn a cada".Titulo(), $"{monster.RespawnTime}");
+
+            await ctx.ResponderAsync($"monstro {Formatter.Bold(monster.Nome)} criado! Pode ser encontrado com o #ID {monster.MonsterId}.", embed.Build());
+        }
+
+        [Command("monstro-editar")]
+        [Description("Permite editar um monstro que percente ao mapa atual.")]
+        [Usage("monstro-editar [ id ]")]
+        [Example("monstro-editar 3", "Começa a editar o monstro de ID 3")]
+        [RequireUserPermissions(Permissions.Administrator)]
+        public async Task MonstroEditarAsync(CommandContext ctx, string stringId = "")
+        {
+            await ctx.TriggerTypingAsync();
+            var map = await database.FindMapAsync(ctx);
+            if (map == null)
+            {
+                await ctx.ResponderAsync("não existe um mapa no canal atual! Crie um antes!");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(stringId))
+            {
+                await ctx.ResponderAsync("informe um ID para editar!");
+                return;
+            }
+
+            if (!int.TryParse(stringId, out int id))
+            {
+                await ctx.ResponderAsync("o ID precisa ser um número inteiro!");
+                return;
+            }
+
+            var monsterOld = await database.FindMonsterAsync($"{ctx.Channel.Id}:{id}");
+            if (monsterOld == null)
+            {
+                await ctx.ResponderAsync("monstro não encontrado. Você não queria criar?");
+                return;
+            }
+
+            var monster = new WafclastMonster(ctx.Channel.Id, monsterOld.MonsterId);
+
+            var name = await ctx.WaitForStringAsync("Informe um novo nome.", database, timeoutoverride);
+            if (name.TimedOut)
+                return;
+
+            var respawnTime = await ctx.WaitForIntAsync("Quanto tempo para voltar a vida. (em segundos)", database, timeoutoverride);
+            if (respawnTime.TimedOut)
+                return;
+
+            var forcaMin = await ctx.WaitForIntAsync($"Quantos de força minima {name.Result} pode ter?", database, timeoutoverride);
+            if (forcaMin.TimedOut)
+                return;
+
+            var forcaMax = await ctx.WaitForIntAsync($"Quantos de força máxima {name.Result} pode ter? Deve ser maior que a força minima.", database, timeoutoverride, forcaMin.Result);
+            if (forcaMax.TimedOut)
+                return;
+
+            var resistenciaMin = await ctx.WaitForIntAsync($"Quantos de resistencia minima {name.Result} pode ter?", database, timeoutoverride);
+            if (resistenciaMin.TimedOut)
+                return;
+
+            var resistenciaMax = await ctx.WaitForIntAsync($"Quantos de resistencia máxima {name.Result} pode ter? Deve ser maior que a resistencia minima.", database, timeoutoverride, resistenciaMin.Result);
+            if (resistenciaMax.TimedOut)
+                return;
+
+            var agilidadeMin = await ctx.WaitForIntAsync($"Quantos de agilidade minima {name.Result} pode ter?", database, timeoutoverride);
+            if (agilidadeMin.TimedOut)
+                return;
+
+            var agilidadeMax = await ctx.WaitForIntAsync($"Quantos de agilidade máxima {name.Result} pode ter? Deve ser maior que a agilidade minima.", database, timeoutoverride, agilidadeMin.Result);
+            if (agilidadeMax.TimedOut)
+                return;
+
+            var experienciaMin = await ctx.WaitForIntAsync($"Quantos de experiencia minima os jogadores recebem ao eliminar {name.Result}?", database, timeoutoverride);
+            if (experienciaMin.TimedOut)
+                return;
+
+            var experienciaMax = await ctx.WaitForIntAsync($"Quantos de experiencia máxima os jogadores recebem ao eliminar {name.Result}? Deve ser maior que a experiencia minima.", database, timeoutoverride, experienciaMin.Result);
+            if (experienciaMax.TimedOut)
+                return;
+
+            monster.Atributos = new WafclastMonsterAtributos(forcaMin.Result, forcaMax.Result, resistenciaMin.Result,
+                                                             resistenciaMax.Result, agilidadeMin.Result,
+                                                             agilidadeMax.Result, experienciaMin.Result,
+                                                             experienciaMax.Result);
+
+            monster.Nome = name.Result;
+            monster.RespawnTime = TimeSpan.FromSeconds(respawnTime.Result);
+            monster.CalcAtributos();
+
+            await database.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster);
+
+            var embed = new DiscordEmbedBuilder();
+            embed.WithTitle(monster.Nome.Titulo());
+            embed.AddField("Força".Titulo(), $"{monster.Atributos.ForcaMin} ~ {monster.Atributos.ForcaMax}");
+            embed.AddField("Resistencia".Titulo(), $"{monster.Atributos.ResistenciaMin} ~ {monster.Atributos.ResistenciaMax}");
+            embed.AddField("Agilidade".Titulo(), $"{monster.Atributos.AgilidadeMin} ~ {monster.Atributos.AgilidadeMax}");
+            embed.AddField("Experiencia".Titulo(), $"{monster.Atributos.ExpMin} ~ {monster.Atributos.ExpMax}");
+            embed.AddField("Respawn a cada".Titulo(), $"{monster.RespawnTime}");
+
+            await ctx.ResponderAsync($"monstro {Formatter.Bold(monster.Nome)} editado! Pode ser encontrado com o #ID {monster.MonsterId}.", embed.Build());
         }
 
         [Command("item-criar")]
         [Description("Permite criar um item.")]
         [Usage("item-criar")]
-        [RequireOwner]
-        public async Task ItemEditarAsync(CommandContext ctx)
+        [RequireUserPermissions(Permissions.Administrator)]
+        public async Task ItemCriarAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            banco.StartExecutingInteractivity(ctx.User.Id);
-
-            var time = TimeSpan.FromMinutes(10);
-
-            await ctx.ResponderNegritoAsync("Ok! Vamos criar um item...");
 
             var str = new StringBuilder();
+            int ind = 0;
+            foreach (var i in Enum.GetValues(typeof(ItemType)).Cast<ItemType>())
+            {
+                str.AppendLine($"{ind} -> {i.GetEnumDescription()}");
+                ind++;
+            }
+
+            var type = await ctx.WaitForEnumAsync<ItemType>($"Informe o numero correspondente ao tipo desejado do seu item\n" + str.ToString(), database, timeoutoverride);
+            if (type.TimedOut)
+                return;
+
+            var name = await ctx.WaitForStringAsync("Informe um nome.", database, timeoutoverride);
+            if (name.TimedOut)
+                return;
+
+            var level = await ctx.WaitForIntAsync("Informe o nível minimo que permite o item ser usado.", database, timeoutoverride);
+            if (level.TimedOut)
+                return;
+
+            var price = await ctx.WaitForIntAsync("Informe um valor de compra, o valor de venda será a metade.", database, timeoutoverride);
+            if (price.TimedOut)
+                return;
+
+            var embed = new DiscordEmbedBuilder();
+            embed.WithDescription($"É possível vender o item?");
+            embed.WithFooter("Sim ou Não?");
+            bool canSell = await ctx.WaitForBoolAsync(database, embed.Build());
+
+            embed = new DiscordEmbedBuilder();
+            embed.WithDescription($"É possível fazer pilhas do mesmo item?");
+            embed.WithFooter("Sim ou Não?");
+            bool canStack = await ctx.WaitForBoolAsync(database, embed.Build());
+
+            var description = await ctx.WaitForStringAsync("Informe uma descrição para o item.", database, timeoutoverride);
+            if (name.TimedOut)
+                return;
+
+            var itemId = await database.FindLastItem(ctx);
+
             var item = new WafclastBaseItem();
+            item.PlayerId = ctx.Guild.Id;
+            item.ItemID = itemId;
+            item.Type = type.Result;
+            item.Name = name.Result;
+            item.Level = level.Result;
+            item.Price = price.Result;
+            item.CanSell = canSell;
+            item.CanStack = canStack;
+            item.Description = description.Result;
 
-            foreach (var itens in Enum.GetValues(typeof(ItemType)).Cast<ItemType>())
-                str.Append($"`{itens.GetEnumDescription()}[{(int)itens}]` ");
-
-            item.Type = await ctx.WaitForEnumAsync<ItemType>($"Informe um TIPO: {str.ToString()}", time);
-            item.ItemID = await banco.FindLastItem(ctx);
-            item.Name = await ctx.WaitForStringAsync("Informe um NOME:", time);
-            item.Level = await ctx.WaitForIntAsync("Informe o NÍVEL minimo:", time);
-            item.Price = await ctx.WaitForIntAsync("Informe um PREÇO de compra, o valor de venda será a metade:", time);
-
-            if ((await ctx.WaitForStringAsync("É possível vender?: Sim ou Não", time)).ToLower() == "nao")
-                item.CanSell = false;
-
-            if ((await ctx.WaitForStringAsync("É possível empilhar?: Sim ou Não", time)).ToLower() == "nao")
-                item.CanStack = false;
-
-            item.ImageURL = await ctx.WaitForStringAsync("Informe uma URL para imagem:", time);
-            item.Description = await ctx.WaitForStringAsync("Informe uma descrição:", time);
-
-            var embed = ItemBuilder(item);
+            embed = ItemBuilder(item);
             switch (item.Type)
             {
                 case ItemType.Food:
+
+                    var lifeGain = await ctx.WaitForIntAsync("Por ser do tipo Comida, é preciso informar quantos de vida recupera ao comer.", database, timeoutoverride);
+                    if (lifeGain.TimedOut)
+                        return;
+
                     WafclastFood comida = new WafclastFood(item);
-                    comida.LifeGain = await ctx.WaitForIntAsync("Valor de cura:", time);
-                    await banco.InsertItemAsync(comida);
+                    comida.LifeGain = lifeGain.Result;
+                    await database.InsertItemAsync(comida);
 
                     embed.AddField("Cura".Titulo(), comida.LifeGain.ToString());
                     break;
                 default:
-
-                    await banco.InsertItemAsync(item);
+                    await database.InsertItemAsync(item);
                     break;
             }
-            banco.StopExecutingInteractivity(ctx.User.Id);
+            await ctx.RespondAsync("Item criado!", embed.Build());
+        }
 
-            await ctx.RespondAsync("Feito!", embed.Build());
+        [Command("item-editar")]
+        [Description("Permite editar um item.")]
+        [Usage("item-editar")]
+        [RequireUserPermissions(Permissions.Administrator)]
+        public async Task ItemEditarAsync(CommandContext ctx, string stringId = "")
+        {
+            await ctx.TriggerTypingAsync();
+
+            if (string.IsNullOrEmpty(stringId))
+            {
+                await ctx.ResponderAsync("informe um ID para editar!");
+                return;
+            }
+
+            if (!ulong.TryParse(stringId, out ulong id))
+            {
+                await ctx.ResponderAsync("o ID precisa ser um número inteiro!");
+                return;
+            }
+
+            var oldItem = await database.FindItemByItemIdAsync(id, ctx.Guild.Id);
+            if (oldItem == null)
+            {
+                await ctx.ResponderAsync("item não encontrado. Você não queria criar?");
+                return;
+            }
+
+
+            var str = new StringBuilder();
+            int ind = 0;
+            foreach (var i in Enum.GetValues(typeof(ItemType)).Cast<ItemType>())
+            {
+                str.AppendLine($"{ind} -> {i.GetEnumDescription()}");
+                ind++;
+            }
+
+            var type = await ctx.WaitForEnumAsync<ItemType>($"Informe o numero correspondente ao tipo desejado do seu item\n" + str.ToString(), database, timeoutoverride);
+            if (type.TimedOut)
+                return;
+
+            var name = await ctx.WaitForStringAsync("Informe um nome.", database, timeoutoverride);
+            if (name.TimedOut)
+                return;
+
+            var level = await ctx.WaitForIntAsync("Informe o nível minimo que permite o item ser usado.", database, timeoutoverride);
+            if (level.TimedOut)
+                return;
+
+            var price = await ctx.WaitForIntAsync("Informe um valor de compra, o valor de venda será a metade.", database, timeoutoverride);
+            if (price.TimedOut)
+                return;
+
+            var embed = new DiscordEmbedBuilder();
+            embed.WithDescription($"É possível vender o item?");
+            embed.WithFooter("Sim ou Não?");
+            bool canSell = await ctx.WaitForBoolAsync(database, embed.Build());
+
+            embed = new DiscordEmbedBuilder();
+            embed.WithDescription($"É possível fazer pilhas do mesmo item?");
+            embed.WithFooter("Sim ou Não?");
+            bool canStack = await ctx.WaitForBoolAsync(database, embed.Build());
+
+            var description = await ctx.WaitForStringAsync("Informe uma descrição para o item.", database, timeoutoverride);
+            if (name.TimedOut)
+                return;
+
+            var itemId = await database.FindLastItem(ctx);
+
+            var item = new WafclastBaseItem();
+            item.Id = oldItem.Id;
+            item.PlayerId = ctx.Guild.Id;
+            item.ItemID = itemId;
+            item.Type = type.Result;
+            item.Name = name.Result;
+            item.Level = level.Result;
+            item.Price = price.Result;
+            item.CanSell = canSell;
+            item.CanStack = canStack;
+            item.Description = description.Result;
+
+            embed = ItemBuilder(item);
+            switch (item.Type)
+            {
+                case ItemType.Food:
+
+                    var lifeGain = await ctx.WaitForIntAsync("Por ser do tipo Comida, é preciso informar quantos de vida recupera ao comer.", database, timeoutoverride);
+                    if (lifeGain.TimedOut)
+                        return;
+
+                    WafclastFood comida = new WafclastFood(item);
+                    comida.LifeGain = lifeGain.Result;
+                    await database.CollectionItens.ReplaceOneAsync(x => x.Id == oldItem.Id, comida);
+
+                    embed.AddField("Cura".Titulo(), comida.LifeGain.ToString());
+                    break;
+                default:
+                    await database.CollectionItens.ReplaceOneAsync(x => x.Id == oldItem.Id, item);
+                    break;
+            }
+            await ctx.RespondAsync("Item editado!", embed.Build());
         }
 
         private DiscordEmbedBuilder ItemBuilder(WafclastBaseItem item)
@@ -163,122 +505,71 @@ namespace WafclastRPG.Commands.AdminCommands
             return embed;
         }
 
-        [Command("monstro-drop")]
-        [Description("Permite editar um drop.")]
-        [Usage("monstro-criar [ posicao ] [ item id ] [ chance ] [ quant. min ] [ quant. max] [ monstro id]")]
-        [Example("monstro-drop 1 1 0.5 1 1 1", "Adiciona um drop com as informações fornecidas..")]
-        [RequireOwner]
-        public async Task MonstroDropAsync(CommandContext ctx, int posicao, ulong itemId, double chance, int quantMin, int quantMax, ulong monstroId)
-        {
-            await ctx.TriggerTypingAsync();
-            var map = await banco.CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
-            if (map == null)
-            {
-                await ctx.ResponderAsync("não existe um mapa no canal atual!");
-                return;
-            }
+        //[Command("monstro-recompensa")]
+        //[Description("Permite adicionar uma recompensa ao monstro informado.")]
+        //[Usage("monstro-recompensa [ id ]")]
+        //[Example("monstro-recompensa 1", "Adiciona uma nova recompensa para quando alguem eliminar o monstro de ID 1")]
+        //[RequireUserPermissions(Permissions.Administrator)]
+        //public async Task MonstroDropAsync(CommandContext ctx, string stringId)
+        //{
+        //    await ctx.TriggerTypingAsync();
+        //    var map = await database.CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
+        //    if (map == null)
+        //    {
+        //        await ctx.ResponderAsync("não existe um mapa no canal atual!");
+        //        return;
+        //    }
 
-            var monster = await banco.CollectionMonsters.Find(x => x.Id == $"{ctx.Channel.Id}:{monstroId}").FirstOrDefaultAsync();
-            if (monster == null)
-            {
-                await ctx.ResponderAsync("não existe um monstro com o #ID informado!");
-                return;
-            }
+        //    var monster = await database.CollectionMonsters.Find(x => x.Id == $"{ctx.Channel.Id}:{stringId}").FirstOrDefaultAsync();
+        //    if (monster == null)
+        //    {
+        //        await ctx.ResponderAsync("não existe um monstro com o #ID informado!");
+        //        return;
+        //    }
 
-            var item = await banco.FindItemByItemIdAsync(itemId, 0);
-            if (item == null)
-            {
-                await ctx.ResponderAsync("não existe um item com o #ID informado!");
-                return;
-            }
+        //    var item = await database.FindItemByItemIdAsync(itemId, 0);
+        //    if (item == null)
+        //    {
+        //        await ctx.ResponderAsync("não existe um item com o #ID informado!");
+        //        return;
+        //    }
 
-            var embed = new DiscordEmbedBuilder();
-            embed.AddField("Item".Titulo(), item.Name);
-            embed.AddField("Monstro".Titulo(), monster.Nome);
-            embed.AddField("Chance".Titulo(), (chance * 100).ToString());
-            embed.AddField("Quantia".Titulo(), $"{quantMin} ~ {quantMax}");
+        //    var embed = new DiscordEmbedBuilder();
+        //    embed.AddField("Item".Titulo(), item.Name);
+        //    embed.AddField("Monstro".Titulo(), monster.Nome);
+        //    embed.AddField("Chance".Titulo(), (chance * 100).ToString());
+        //    embed.AddField("Quantia".Titulo(), $"{quantMin} ~ {quantMax}");
 
-            if (monster.Drops.Count > posicao)
-                monster.Drops[posicao] = new ItemChance(item.Id, chance, quantMin, quantMax);
-            else
-                monster.Drops.Add(new ItemChance(item.Id, chance, quantMin, quantMax));
-            await banco.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster);
+        //    if (monster.Drops.Count > posicao)
+        //        monster.Drops[posicao] = new ItemChance(item.Id, chance, quantMin, quantMax);
+        //    else
+        //        monster.Drops.Add(new ItemChance(item.Id, chance, quantMin, quantMax));
+        //    await database.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster);
 
-            await ctx.ResponderAsync($"monstro {Formatter.Bold(monster.Nome)} editado! Agora pode cair {Formatter.Bold(item.Name)}.");
-        }
-
-
-        [Command("monstro-atributos")]
-        [Description("Permite editar os atributos de um monstro já criado no mapa atual.")]
-        [Usage("monstro-atributos [ forca min ] [ forca max ] [ resistencia min ] [ resistencia max ] [ agilidade min ] [ agilidade max ] [ exp min] [ exp max ] [ tempo ] [ s | m | h | d ] [ id ]")]
-        [Example("monstro-atributos 4 5 6 7 2 3 2 3 1 m 1", "Edita o monstro de #ID 1 com os parâmetros fornecidos.")]
-        [RequireOwner]
-        public async Task MonstrosAtributosAsync(CommandContext ctx, int forcaMin = 0, int forcaMax = 0,
-                                                 int resistenciaMin = 0, int resistenciaMax = 0, int agilidadeMin = 0,
-                                                 int agilidadeMax = 0, decimal expMin = 0, decimal expMax = 0,
-                                                 int tempo = 1, string duracao = "m", ulong id = 0)
-        {
-            await ctx.TriggerTypingAsync();
-            var monster = await banco.CollectionMonsters.Find(x => x.Id == $"{ctx.Channel.Id}:{id}").FirstOrDefaultAsync();
-            if (monster == null)
-            {
-                await ctx.ResponderAsync("não existe um monstro com o #ID informado!");
-                return;
-            }
-
-            monster.Atributos = new WafclastMonsterAtributos(forcaMin, forcaMax, resistenciaMin, resistenciaMax, agilidadeMin, agilidadeMax, expMin, expMax);
-            monster.CalcAtributos();
-            switch (duracao)
-            {
-                case "s":
-                    monster.RespawnTime = TimeSpan.FromSeconds(tempo);
-                    break;
-                case "m":
-                    monster.RespawnTime = TimeSpan.FromMinutes(tempo);
-                    break;
-                case "h":
-                    monster.RespawnTime = TimeSpan.FromHours(tempo);
-                    break;
-                case "d":
-                    monster.RespawnTime = TimeSpan.FromDays(tempo);
-                    break;
-                default:
-                    monster.RespawnTime = TimeSpan.FromMinutes(tempo);
-                    break;
-            }
-
-            await banco.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster);
-            var embed = new DiscordEmbedBuilder();
-            embed.WithTitle(monster.Nome.Titulo());
-            embed.AddField("Força".Titulo(), $"{monster.Atributos.ForcaMin} ~ {monster.Atributos.ForcaMax}");
-            embed.AddField("Resistencia".Titulo(), $"{monster.Atributos.ResistenciaMin} ~ {monster.Atributos.ResistenciaMax}");
-            embed.AddField("Agilidade".Titulo(), $"{monster.Atributos.AgilidadeMin} ~ {monster.Atributos.AgilidadeMax}");
-            embed.AddField("Experiencia".Titulo(), $"{monster.Atributos.ExpMin} ~ {monster.Atributos.ExpMax}");
-            embed.AddField("Respawn a cada".Titulo(), $"{monster.RespawnTime}");
-            await ctx.ResponderAsync($"monstro editado!", embed.Build());
-        }
+        //    await ctx.ResponderAsync($"monstro {Formatter.Bold(monster.Nome)} editado! Agora pode cair {Formatter.Bold(item.Name)}.");
+        //}
 
         [Command("atualizar")]
         [RequireOwner]
         public async Task AtualizarAsync(CommandContext ctx)
         {
-            FilterDefinition<WafclastPlayer> filter = FilterDefinition<WafclastPlayer>.Empty;
-            FindOptions<WafclastPlayer> options = new FindOptions<WafclastPlayer>
+            FilterDefinition<WafclastMapa> filter = FilterDefinition<WafclastMapa>.Empty;
+            FindOptions<WafclastMapa> options = new FindOptions<WafclastMapa>
             {
                 BatchSize = 8,
                 NoCursorTimeout = false
             };
 
-            using (IAsyncCursor<WafclastPlayer> cursor = await banco.CollectionJogadores.FindAsync(filter, options))
+            using (IAsyncCursor<WafclastMapa> cursor = await database.CollectionMaps.FindAsync(filter, options))
                 while (await cursor.MoveNextAsync())
                 {
-                    IEnumerable<WafclastPlayer> usuarios = cursor.Current;
+                    IEnumerable<WafclastMapa> list = cursor.Current;
 
-                    foreach (WafclastPlayer player in usuarios)
+                    foreach (WafclastMapa item in list)
                     {
-                        player.Deaths = 0;
+                        item.ServerID = ctx.Guild.Id;
 
-                        await banco.CollectionJogadores.ReplaceOneAsync(x => x.Id == player.Id, player);
+                        await database.CollectionMaps.ReplaceOneAsync(x => x.Id == item.Id, item);
                     }
                 }
 

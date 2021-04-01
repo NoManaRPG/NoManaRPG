@@ -36,26 +36,15 @@ namespace WafclastRPG.Comandos.Exibir
         public async Task HelpCommandAdminAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
+            embed.WithDescription("Digite `w.ajuda [comando]` para mais informações. Por exemplo: `w.ajuda mapa`.");
 
-            var str = new StringBuilder();
+            embed.AddField("Mapa".Titulo(), $"{Formatter.InlineCode("mapa-criar")} {Formatter.InlineCode("mapa-editar")}", true);
+            embed.AddField("Monstro".Titulo(), $"{Formatter.InlineCode("monstro-criar")} {Formatter.InlineCode("monstro-editar")}", true);
+            embed.AddField("Item".Titulo(), $"{Formatter.InlineCode("item-criar")} {Formatter.InlineCode("item-editar")}", true);
 
-            str.Append($"**Geral** -");
-            str.Append($"{Formatter.InlineCode("deletar-user")} - ");
-            str.Append($"{Formatter.InlineCode("criar-mapa")} - ");
-            str.Append($"{Formatter.InlineCode("monstro-criar")} - ");
-            str.Append($"{Formatter.InlineCode("monstro-atributos")} - ");
-            str.Append($"{Formatter.InlineCode("atualizar")} - ");
-            str.Append($"{Formatter.InlineCode("everyone-role")} - ");
-            str.Append($"{Formatter.InlineCode("monstro-drop")} - ");
-            str.Append($"{Formatter.InlineCode("item-criar")} - ");
-
-
-            embed.WithDescription(str.ToString());
             embed.WithColor(DiscordColor.Violet);
             embed.WithTimestamp(DateTime.Now);
-
             await ctx.RespondAsync(embed.Build());
         }
     }
@@ -131,13 +120,11 @@ namespace WafclastRPG.Comandos.Exibir
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
             embed.WithDescription("Digite `w.ajuda [comando]` para mais informações. Por exemplo: `w.ajuda bot`.");
 
-
             embed.AddField("Bot".Titulo(), $"{Formatter.InlineCode("ajuda")} {Formatter.InlineCode("info")}", true);
             embed.AddField("Jogador".Titulo(), $"{Formatter.InlineCode("comecar")} {Formatter.InlineCode("status")} {Formatter.InlineCode("postura")} {Formatter.InlineCode("inventario")} {Formatter.InlineCode("comer")}", true);
             embed.AddField("Canal de texto".Titulo(), $"{Formatter.InlineCode("atacar")} {Formatter.InlineCode("viajar")} {Formatter.InlineCode("olhar")}", true);
             embed.AddField("Ranks".Titulo(), $"{Formatter.InlineCode("rank-moedas")} {Formatter.InlineCode("rank-nivel")}", true);
 
-            embed.WithDescription("Para mais informações a cerca de algum comando. O comando [ajuda + comado] mostra novas informações.");
             embed.WithThumbnail("https://naomesmo.com.br/wp-content/uploads/2013/01/me-ajuda.gif");
             embed.WithColor(DiscordColor.Violet);
             embed.WithTimestamp(DateTime.Now);
