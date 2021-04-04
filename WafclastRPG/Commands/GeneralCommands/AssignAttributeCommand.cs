@@ -14,9 +14,9 @@ namespace WafclastRPG.Commands.GeneralCommands
     {
         public Database database;
 
-        [Command("atribuir")]
+        [Command("evoluir-atributo")]
         [Description("Permite atribuir pontos de atributos")]
-        [Usage("atribuir")]
+        [Usage("evoluir-atributo")]
         public async Task AssignAttributeCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
