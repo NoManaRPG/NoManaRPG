@@ -46,7 +46,7 @@ namespace WafclastRPG.Entities
             if (Level == 1)
                 return;
 
-            if (Level > LevelBloqueado)
+            if (Level > LevelBloqueado + 1)
                 LevelBloqueado = Level;
 
             Level--;

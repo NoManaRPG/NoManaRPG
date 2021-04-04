@@ -109,6 +109,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             }
 
             player.Character.Atributos.PontosLivreAtributo -= quantityResponse.Result;
+            player.Character.CalcStats();
             database.StopExecutingInteractivity(ctx);
             await database.ReplacePlayerAsync(player);
             await ctx.ResponderAsync($"você atribuiu {Formatter.Bold(quantityResponse.Result.ToString())} em {attribute.Titulo()}");
