@@ -38,7 +38,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             }
 
 
-            if (!alvo.TryParseID(out ulong id))
+            if (!alvo.TryParseID(out int id))
             {
                 await ctx.ResponderAsync(Strings.IdInvalido);
                 return;
@@ -69,7 +69,7 @@ namespace WafclastRPG.Commands.GeneralCommands
                         return Task.FromResult(new Response() { IsMapCity = true });
 
                     //Find target
-                    var target = await session.FindMonsterAsync($"{player.Character.Localization.ChannelId}:{id}");
+                    var target = await session.FindMonsterAsync(player.Character.Localization.ChannelId, id);
                     if (target == null)
                         return Task.FromResult(new Response() { IsTargetFound = false });
 
