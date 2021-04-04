@@ -235,7 +235,7 @@ namespace WafclastRPG.Commands.AdminCommands
                 return;
             }
 
-            var monsterOld = await database.FindMonsterAsync($"{ctx.Channel.Id}:{id}");
+            var monsterOld = await database.FindMonsterAsync(ctx.Channel.Id,id);
             if (monsterOld == null)
             {
                 await ctx.ResponderAsync("monstro não encontrado. Você não queria criar?");

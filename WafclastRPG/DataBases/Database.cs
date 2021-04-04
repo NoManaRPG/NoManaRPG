@@ -88,8 +88,8 @@ namespace WafclastRPG.DataBases
         #endregion
         #region Monster
 
-        public Task<WafclastMonster> FindMonsterAsync(string id)
-            => CollectionMonsters.Find(x => x.Id == id).FirstOrDefaultAsync();
+        public Task<WafclastMonster> FindMonsterAsync(ulong channelId, int monsterId)
+            => CollectionMonsters.Find(x => x.Id == $"{channelId}:{monsterId}").FirstOrDefaultAsync();
 
         #endregion
         #region Interactivity

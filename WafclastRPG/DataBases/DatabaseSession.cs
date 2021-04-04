@@ -65,8 +65,8 @@ namespace WafclastRPG.DataBases
 
         #region Monstro
 
-        public Task<WafclastMonster> FindMonsterAsync(string id)
-            => ds.CollectionMonsters.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
+        public Task<WafclastMonster> FindMonsterAsync(ulong channelId, int monsterId)
+          => ds.CollectionMonsters.Find(Session, x => x.Id == $"{channelId}:{monsterId}").FirstOrDefaultAsync();
 
         public Task SaveMonsterAsync(WafclastMonster monster)
             => ds.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster);
