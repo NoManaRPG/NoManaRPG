@@ -59,8 +59,13 @@ namespace WafclastRPG.Commands.GeneralCommands
 
                     var embed = new DiscordEmbedBuilder();
                     embed.WithTitle(monster.Nome.Titulo());
-                    embed.WithDescription("Parece perigoso...");
                     embed.AddField("Vida".Titulo(), $"{Emojis.GerarVidaEmoji(porcentagemLife)} {monster.Life.CurrentValue:N2} / {monster.Life.MaxValue}");
+                    embed.AddField("Força".Titulo(), $"{monster.Atributos.ForcaMin} ~ {monster.Atributos.ForcaMax}");
+                    embed.AddField("Resistencia".Titulo(), $"{monster.Atributos.ResistenciaMin} ~ {monster.Atributos.ResistenciaMax}");
+                    embed.AddField("Agilidade".Titulo(), $"{monster.Atributos.AgilidadeMin} ~ {monster.Atributos.AgilidadeMax}");
+                    embed.AddField("Experiencia".Titulo(), $"{monster.Atributos.ExpMin} ~ {monster.Atributos.ExpMax}");
+                    embed.AddField("Respawn a cada".Titulo(), $"{monster.RespawnTime}");
+                    embed.WithDescription("Parece perigoso...");
                     await ctx.ResponderAsync(embed.Build());
                 }
             }
