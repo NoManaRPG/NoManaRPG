@@ -138,7 +138,7 @@ namespace WafclastRPG.DataBases
           => CollectionItens.Find(x => x.PlayerId == playerId && x.ItemID == itemId).FirstOrDefaultAsync();
 
         public Task<WafclastBaseItem> FindItemByObjectIdAsync(ObjectId id, ulong playerId)
-        => CollectionItens.Find(x => x.PlayerId == playerId && x.Id == id).FirstOrDefaultAsync();
+        => CollectionItens.Find(x => x.Id == id).FirstOrDefaultAsync();
 
         public Task InsertItemAsync(WafclastBaseItem item)
           => CollectionItens.InsertOneAsync(item);

@@ -14,17 +14,11 @@ namespace WafclastRPG.Commands.AdminCommands
     {
         public Database banco;
 
-        [Command("reset")]
+        [Command("image")]
         [RequireOwner]
         public async Task CommmandEnumTest(CommandContext ctx)
         {
-            WafclastLocalization g = new WafclastLocalization();
-            WafclastLocalization h = new WafclastLocalization(1, 2);
-
-            if (g.Equals(h))
-            {
-                await ctx.ResponderAsync("asd");
-            }
+            await ctx.ResponderAsync(ctx.Guild.IconUrl);
         }
 
         public enum enumtest
