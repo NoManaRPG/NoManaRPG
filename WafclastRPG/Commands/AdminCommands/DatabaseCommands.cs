@@ -235,7 +235,7 @@ namespace WafclastRPG.Commands.AdminCommands
                 return;
             }
 
-            var monsterOld = await database.FindMonsterAsync(ctx.Channel.Id,id);
+            var monsterOld = await database.FindMonsterAsync(ctx.Channel.Id, id);
             if (monsterOld == null)
             {
                 await ctx.ResponderAsync("monstro não encontrado. Você não queria criar?");
@@ -553,23 +553,24 @@ namespace WafclastRPG.Commands.AdminCommands
         [RequireOwner]
         public async Task AtualizarAsync(CommandContext ctx)
         {
-            FilterDefinition<WafclastMapa> filter = FilterDefinition<WafclastMapa>.Empty;
-            FindOptions<WafclastMapa> options = new FindOptions<WafclastMapa>
+            FilterDefinition<WafclastPlayer> filter = FilterDefinition<WafclastPlayer>.Empty;
+            FindOptions<WafclastPlayer> options = new FindOptions<WafclastPlayer>
             {
                 BatchSize = 8,
                 NoCursorTimeout = false
             };
 
-            using (IAsyncCursor<WafclastMapa> cursor = await database.CollectionMaps.FindAsync(filter, options))
+            using (IAsyncCursor<WafclastPlayer> cursor = await database.CollectionJogadores.FindAsync(filter, options))
                 while (await cursor.MoveNextAsync())
                 {
-                    IEnumerable<WafclastMapa> list = cursor.Current;
+                    IEnumerable<WafclastPlayer> list = cursor.Current;
 
-                    foreach (WafclastMapa item in list)
+                    foreach (WafclastPlayer item in list)
                     {
-                        item.ServerID = ctx.Guild.Id;
+                        item.Character.LevelBloqueado = 0;
+                        item.Character.Atributos.PontosLivreAtributo = item.Character.Level * 4;
 
-                        await database.CollectionMaps.ReplaceOneAsync(x => x.Id == item.Id, item);
+                        await database.CollectionJogadores.ReplaceOneAsync(x => x.Id == item.Id, item);
                     }
                 }
 
