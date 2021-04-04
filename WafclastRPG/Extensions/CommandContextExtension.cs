@@ -58,7 +58,6 @@ namespace WafclastRPG.Extensions
 
             while (true)
             {
-                //ARRUMAR
                 var embed = new DiscordEmbedBuilder();
                 embed.WithDescription(message);
                 embed.WithFooter("Digite um numero ou 'sair' para fechar | Somente numeros inteiros");
@@ -83,9 +82,6 @@ namespace WafclastRPG.Extensions
                     database.StopExecutingInteractivity(ctx);
                     return new AnswerResult<T>(true, default(T));
                 }
-
-                //T conv = (T)Enum.ToObject(typeof(T), result);
-                //return conv;
             }
         }
 

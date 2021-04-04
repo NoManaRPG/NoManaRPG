@@ -85,6 +85,9 @@ namespace WafclastRPG.DataBases
         public Task<WafclastPlayer> FindPlayerAsync(CommandContext ctx)
             => CollectionJogadores.Find(x => x.Id == ctx.User.Id).FirstOrDefaultAsync();
 
+        public Task ReplacePlayerAsync(WafclastPlayer jogador)
+         => CollectionJogadores.ReplaceOneAsync(x => x.Id == jogador.Id, jogador);
+
         #endregion
         #region Monster
 

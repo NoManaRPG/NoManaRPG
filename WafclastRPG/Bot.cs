@@ -67,6 +67,7 @@ namespace WafclastRPG
             this.CommandsNext.RegisterCommands<MoneyRankCommand>();
             this.CommandsNext.RegisterCommands<LevelRankCommand>();
             this.CommandsNext.RegisterCommands<EatCommand>();
+            this.CommandsNext.RegisterCommands<AssignAttributeCommand>();
         }
     }
 }
