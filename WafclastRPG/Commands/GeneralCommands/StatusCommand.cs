@@ -33,7 +33,7 @@ namespace WafclastRPG.Commands.GeneralCommands
 
             str.AppendLine($"Tem {player.Character.ExperienciaAtual:N2} pontos de experiencia e precisa de {(player.Character.ExperienciaProximoNivel - player.Character.ExperienciaAtual):N2} para o nível {player.Character.Level + 1}.");
             str.AppendLine($"Está carregando 0 itens.");
-            str.AppendLine($"Regenerá {(player.Character.Atributos.Vitalidade * 0.2m):N2} pontos de vida na prox mensagem ({(player.Character.RegenDate - DateTime.UtcNow).TotalSeconds:N0}s).");
+            str.AppendLine($"Regenerá {(player.Character.Atributos.Vitalidade * 0.2m):N2} de vida e {(player.Character.Atributos.Vitalidade * 0.1m):N2} de estamina na prox mensagem ({(player.Character.RegenDate - DateTime.UtcNow).TotalSeconds:N0}s).");
             str.AppendLine($"Está com {player.Character.Karma} pontos de Karma.");
             str.AppendLine($"Eliminou {player.MonsterKill} monstros.");
             str.AppendLine($"Eliminou {player.PlayerKill} jogadores.");
