@@ -1,4 +1,6 @@
 ﻿using MongoDB.Bson.Serialization;
+using System.Collections.Generic;
+using WafclastRPG.Entities.Itens;
 using WafclastRPG.Enums;
 
 namespace WafclastRPG.Entities
@@ -13,6 +15,8 @@ namespace WafclastRPG.Entities
         public MapType Tipo { get; set; }
         public WafclastCoordinates Coordinates { get; set; }
         public int QuantidadeMonstros { get; set; } = 0;
+
+        public List<WafclastBaseItem> ShopItens { get; set; } = new List<WafclastBaseItem>();
 
         public WafclastMapa(ulong id, ulong serverID)
         {

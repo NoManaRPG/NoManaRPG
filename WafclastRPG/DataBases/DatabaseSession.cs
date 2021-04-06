@@ -88,6 +88,9 @@ namespace WafclastRPG.DataBases
         public Task<WafclastBaseItem> FindItemAsync(string name, ulong playerId)
           => ds.CollectionItens.Find(Session, x => x.PlayerId == playerId && x.Name == name).FirstOrDefaultAsync();
 
+        public Task<WafclastBaseItem> FindItemByItemIdAsync(ulong itemId, ulong playerId)
+         => ds.CollectionItens.Find(Session, x => x.PlayerId == playerId && x.ItemID == itemId).FirstOrDefaultAsync();
+
         public Task ReplaceItemAsync(WafclastBaseItem item)
             => ds.CollectionItens.ReplaceOneAsync(Session, x => x.Id == item.Id, item, new ReplaceOptions { IsUpsert = true });
 

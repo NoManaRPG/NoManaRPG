@@ -69,6 +69,7 @@ namespace WafclastRPG
             this.CommandsNext.RegisterCommands<EatCommand>();
             this.CommandsNext.RegisterCommands<AssignAttributeCommand>();
             this.CommandsNext.RegisterCommands<AttributesCommand>();
+            this.CommandsNext.RegisterCommands<ShopCommand>();
         }
     }
 }

@@ -64,7 +64,7 @@ namespace WafclastRPG.Entities
                 return;
             }
 
-            var itemFound = await this.banco.FindItemAsync(item.Name, Id);
+            var itemFound = await this.banco.FindItemByItemIdAsync(item.ItemID, Id);
             if (itemFound == null)
             {
                 item.Quantity = quantity;

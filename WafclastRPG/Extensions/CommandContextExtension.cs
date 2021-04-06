@@ -85,7 +85,7 @@ namespace WafclastRPG.Extensions
             }
         }
 
-        public static async Task<AnswerResult<int>> WaitForIntAsync(this CommandContext ctx, string message, Database database, TimeSpan? timeoutoverride = null, int? minValue = null)
+        public static async Task<AnswerResult<int>> WaitForIntAsync(this CommandContext ctx, string message, Database database, TimeSpan? timeoutoverride = null, int? minValue = null, int? maxValue = null)
         {
             database.StartExecutingInteractivity(ctx);
 
@@ -108,6 +108,9 @@ namespace WafclastRPG.Extensions
                 {
                     if (minValue != null)
                         if (result < minValue)
+                            continue;
+                    if (maxValue != null)
+                        if (result > maxValue)
                             continue;
                     database.StopExecutingInteractivity(ctx);
                     return new AnswerResult<int>(false, result);

@@ -505,6 +505,38 @@ namespace WafclastRPG.Commands.AdminCommands
             return embed;
         }
 
+        [Command("loja-adicionar-item")]
+        [Description("Permite adicionar um item na loja.")]
+        [Usage("loja-adicionar-item")]
+        [RequireUserPermissions(Permissions.Administrator)]
+        public async Task LojaAdicionarItemAsync(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+
+            var map = await database.FindMapAsync(ctx);
+            if (map == null || map.Tipo != MapType.Cidade)
+            {
+                await ctx.ResponderAsync("você precisa usar este comando em uma cidade!");
+                return;
+            }
+
+            var itemId = await ctx.WaitForIntAsync("Informe o numero correspondente ao id do item desejado", database, timeoutoverride);
+            if (itemId.TimedOut)
+                return;
+
+            var item = await database.FindItemByItemIdAsync((ulong)itemId.Result, ctx.Guild.Id);
+            if (item == null)
+            {
+                await ctx.ResponderAsync("o item com este id não foi encontrado!");
+                return;
+            }
+
+            map.ShopItens.Add(item);
+            await database.CollectionMaps.ReplaceOneAsync(x => x.Id == map.Id, map);
+
+            await ctx.RespondAsync($"Item {item.Name.Titulo()} foi adicionado a loja!");
+        }
+
         //[Command("monstro-recompensa")]
         //[Description("Permite adicionar uma recompensa ao monstro informado.")]
         //[Usage("monstro-recompensa [ id ]")]
@@ -549,7 +581,7 @@ namespace WafclastRPG.Commands.AdminCommands
         //    await ctx.ResponderAsync($"monstro {Formatter.Bold(monster.Nome)} editado! Agora pode cair {Formatter.Bold(item.Name)}.");
         //}
 
-        [Command("atualizar")]
+        [Command("atualizar-jogadores")]
         [RequireOwner]
         public async Task AtualizarAsync(CommandContext ctx)
         {
@@ -577,6 +609,33 @@ namespace WafclastRPG.Commands.AdminCommands
             await ctx.RespondAsync("Banco foi atualizado!");
         }
 
+        [Command("atualizar-mapa")]
+        [RequireOwner]
+        public async Task AtualizarMapAsync(CommandContext ctx)
+        {
+            FilterDefinition<WafclastMapa> filter = FilterDefinition<WafclastMapa>.Empty;
+            FindOptions<WafclastMapa> options = new FindOptions<WafclastMapa>
+            {
+                BatchSize = 8,
+                NoCursorTimeout = false
+            };
+
+            using (IAsyncCursor<WafclastMapa> cursor = await database.CollectionMaps.FindAsync(filter, options))
+                while (await cursor.MoveNextAsync())
+                {
+                    IEnumerable<WafclastMapa> list = cursor.Current;
+
+                    foreach (WafclastMapa item in list)
+                    {
+                        item.ShopItens = new List<WafclastBaseItem>();
+
+                        await database.CollectionMaps.ReplaceOneAsync(x => x.Id == item.Id, item);
+                    }
+                }
+
+            await ctx.RespondAsync("Banco foi atualizado!");
+        }
+
         [Command("everyone-role")]
         [Description("Permite dar a todos os membros um cargo especifico.")]
         [Usage("everyone-role [ cargo ]")]
@@ -597,5 +656,23 @@ namespace WafclastRPG.Commands.AdminCommands
 
             await ctx.ResponderAsync($"{members.Count} ganharam a badge!");
         }
+
+        [Command("sudo")]
+        [RequireOwner]
+        public async Task Sudo(CommandContext ctx, DiscordUser member, [RemainingText] string command)
+        {
+            await ctx.TriggerTypingAsync();
+            var invocation = command.Substring(2);
+            var cmd = ctx.CommandsNext.FindCommand(invocation, out var args);
+            if (cmd == null)
+            {
+                await ctx.RespondAsync("Comando não encontrado");
+                return;
+            }
+
+            var cfx = ctx.CommandsNext.CreateFakeContext(member, ctx.Channel, "", "w.", cmd, args);
+            await ctx.CommandsNext.ExecuteCommandAsync(cfx);
+        }
+
     }
 }
