@@ -28,22 +28,21 @@
         public const string Fome = ":poultry_leg:";
         public const string Sede = ":cup_with_straw:";
 
-        public const string Coins = "<a:ee:826260040741552128>";
-        public const string Exp = "<:xp:826263422202544139>";
-        public const string Nada = "<:nada:826438756193533953>";
+        public const string Coins = "<a:coins:828775068540469269>";
+        public const string Exp = "<:exp:828775431499022366>";
 
         public const string Relogio = ":stopwatch:";
         public const string Demonio = ":smiling_imp:";
 
         public const string Mago = ":man_mage:";
 
-        public const string Um = "<:um:826799998367825940>";
-        public const string Dois = "<:dois:826799998372020264>";
-        public const string Tres = "<:tres:826799998380671076>";
-        public const string Quatro = "<:quatro:826799998590255114>";
-        public const string Cinco = "<:cinco:826799998372937728>";
-        public const string Direita = "<:direita:826799998159159337>";
-        public const string Esquerda = "<:esquerda:826799998360485938>";
+        public const string Um = "<:um:828775068917956668>";
+        public const string Dois = "<:dois:828775068955574342>";
+        public const string Tres = "<:tres:828775068858712124>";
+        public const string Quatro = "<:quatro:828775068828958750>";
+        public const string Cinco = "<:cinco:828775068485025793>";
+        public const string Direita = "<:direita:828775068942991370>";
+        public const string Esquerda = "<:esquerda:828775068921233408>";
 
         public const string Mapa = ":map:";
         public const string DiamanteLaranjaPequeno = ":small_orange_diamond:";
