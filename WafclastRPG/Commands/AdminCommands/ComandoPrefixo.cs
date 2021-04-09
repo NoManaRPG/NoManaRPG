@@ -11,15 +11,15 @@ namespace WafclastRPG.Comandos.Acao
     public class ComandoPrefixo : BaseCommandModule
     {
 
-        public Database banco;
+        public DataBase banco;
 
         [Command("prefixo")]
         [Description("Define um prefixo customizado para o servidor atual.")]
         [Cooldown(1, 5, CooldownBucketType.Guild)]
-        [RequireUserPermissions(Permissions.Administrator)]
         [Example("prefixo !", "Define o prefixo do servidor para *!*.")]
         [Example("prefixo", "Volta ao prefixo original do bot.")]
         [Usage("prefixo [ prefix ]")]
+        [RequireUserPermissions(Permissions.Administrator)]
         public async Task ComandoPrefixoAsync(CommandContext ctx, string prefixo = "")
         {
             if (string.IsNullOrWhiteSpace(prefixo))
@@ -37,7 +37,7 @@ namespace WafclastRPG.Comandos.Acao
 
             var server = new WafclastServer(ctx.Guild.Id);
             server.SetPrefix(prefixo);
-            await banco.ReplaceServerAsync(server.Id, server);
+            await banco.ReplaceAsync(server);
             await ctx.RespondAsync("Feito!");
         }
     }

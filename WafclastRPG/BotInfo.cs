@@ -6,7 +6,7 @@ namespace WafclastRPG
     {
         public int Membros;
         public int Guildas;
-        public string Versão = " v1.9.3";
+        public string Versão = " v1.9.4";
         public DateTime TempoAtivo { get; set; } = DateTime.Now;
     }
 }

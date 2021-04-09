@@ -11,7 +11,7 @@ namespace WafclastRPG.Commands.GeneralCommands
 {
     public class AttributesCommand : BaseCommandModule
     {
-        public Database database;
+        public DataBase database;
 
         [Command("atributos")]
         [Description("Permite ver os atributos do seu personagem")]
@@ -19,7 +19,7 @@ namespace WafclastRPG.Commands.GeneralCommands
         public async Task AttributesCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            var player = await database.FindPlayerAsync(ctx);
+            var player = await database.FindAsync(ctx.User);
             if (player == null)
             {
                 await ctx.ResponderAsync(Strings.NovoJogador);
@@ -29,11 +29,10 @@ namespace WafclastRPG.Commands.GeneralCommands
             var embed = new DiscordEmbedBuilder();
             embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}] ", iconUrl: ctx.User.AvatarUrl);
             embed.WithColor(DiscordColor.Blue);
-            embed.AddField("Força".Titulo(), player.Character.Atributos.Forca.ToString(), true);
-            embed.AddField("Resistencia".Titulo(), player.Character.Atributos.Resistencia.ToString(), true);
-            embed.AddField("Agilidade".Titulo(), player.Character.Atributos.Agilidade.ToString(), true);
-            embed.AddField("Vitalidade".Titulo(), player.Character.Atributos.Vitalidade.ToString(), true);
-            embed.AddField("Pontos Livres".Titulo(), player.Character.Atributos.PontosLivreAtributo.ToString(), true);
+            embed.AddField("Força".Titulo(), player.Character.Strength.CurrentValue.ToString(), true);
+            embed.AddField("Dextreza".Titulo(), player.Character.Dexterity.CurrentValue.ToString(), true);
+            embed.AddField("Inteligencia".Titulo(), player.Character.Intelligence.CurrentValue.ToString(), true);
+            embed.AddField("Pontos Livres".Titulo(), player.Character.AttributePoints.ToString(), true);
             await ctx.ResponderAsync(embed.Build());
         }
     }

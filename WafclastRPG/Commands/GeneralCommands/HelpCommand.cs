@@ -58,7 +58,7 @@ namespace WafclastRPG.Comandos.Exibir
         public IComandoAjuda(CommandContext ctx) : base(ctx)
         {
             var defaultPrefix = ctx.Services.GetService<Config>().PrefixRelease;
-            var banco = ctx.Services.GetService<Database>();
+            var banco = ctx.Services.GetService<DataBase>();
             prefix = banco.GetServerPrefix(ctx.Guild.Id, defaultPrefix);
 
             if (ctx.RawArguments.Count == 0)

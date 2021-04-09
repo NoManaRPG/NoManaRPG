@@ -100,7 +100,7 @@ namespace WafclastRPG.DiscordEvents
                     //await ctx.RespondAsync("Aconteceu um erro! Reporte no servidor oficial o que você fez!");
                     break;
             }
-            var banco = (Database)ctx.Services.GetService(typeof(Database));
+            var banco = (DataBase)ctx.Services.GetService(typeof(DataBase));
             banco.StopExecutingInteractivity(ctx.User.Id);
         }
 

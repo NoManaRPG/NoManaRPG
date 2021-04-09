@@ -4,7 +4,7 @@ namespace WafclastRPG.Extensions
 {
     public static class UlongExtensions
     {
-        public static string Mention(this ulong id)
+        public static string UserMention(this ulong id)
             => $"<@{id.ToString(CultureInfo.InvariantCulture)}>";
     }
 }

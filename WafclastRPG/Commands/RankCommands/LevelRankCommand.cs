@@ -13,7 +13,7 @@ namespace WafclastRPG.Commands.RankCommands
 {
     class LevelRankCommand : BaseCommandModule
     {
-        public Database banco;
+        public DataBase banco;
 
         [Command("rank-nivel")]
         [Aliases("rn")]
@@ -26,14 +26,14 @@ namespace WafclastRPG.Commands.RankCommands
 
             await ctx.TriggerTypingAsync();
 
-            var f = await banco.CollectionJogadores.Find(FilterDefinition<WafclastPlayer>.Empty).Limit(10)
+            var f = await banco.CollectionPlayers.Find(x => x.Character.Localization.ServerId == ctx.Guild.Id).Limit(10)
                 .SortByDescending(x => x.Character.Level).ToListAsync();
             var str = new StringBuilder();
 
             int pos = 1;
             foreach (var item in f)
             {
-                str.AppendLine($"{pos}. {item.Mention()} - Nv.{item.Character.Level}");
+                str.AppendLine($"{pos}. {item.Mention} - Nv.{item.Character.Level}");
                 pos++;
             }
 

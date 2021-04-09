@@ -13,7 +13,7 @@ namespace WafclastRPG
     {
         public Config ConfigFile { get; private set; }
         public BotInfo BotInfo { get; private set; }
-        public Database Database { get; private set; }
+        public DataBase Database { get; private set; }
 
         static void Main(string[] args) => new Program().RodarBotAsync().GetAwaiter().GetResult();
 
@@ -51,7 +51,7 @@ namespace WafclastRPG
                 MinimumLogLevel = logLevel,
             });
 
-            Database = new Database();
+            Database = new DataBase();
             BotInfo = new BotInfo();
             var services = new ServiceCollection()
                 .AddSingleton(this.Database)

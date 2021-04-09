@@ -5,6 +5,8 @@ using DSharpPlus.Entities;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
+using WafclastRPG.Entities;
+using WafclastRPG.Entities.Maps;
 using WafclastRPG.Enums;
 using WafclastRPG.Extensions;
 
@@ -12,7 +14,7 @@ namespace WafclastRPG.Commands.GeneralCommands
 {
     public class AssignAttributeCommand : BaseCommandModule
     {
-        public Database database;
+        public DataBase database;
 
         [Command("evoluir-atributo")]
         [Description("Permite atribuir pontos de atributos")]
@@ -20,23 +22,23 @@ namespace WafclastRPG.Commands.GeneralCommands
         public async Task AssignAttributeCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            var player = await database.FindPlayerAsync(ctx);
+            var player = await database.FindAsync(ctx.User);
             if (player == null)
             {
                 await ctx.ResponderAsync(Strings.NovoJogador);
                 return;
             }
 
-            var map = await database.FindMapAsync(player.Character.Localization.ChannelId);
+            var map = await database.FindAsync(player.Character.Localization);
             if (map.Tipo != MapType.Cidade)
             {
                 await ctx.ResponderAsync(Strings.SomenteNaCidade);
                 return;
             }
 
-            if (player.Character.Atributos.PontosLivreAtributo == 0)
+            if (player.Character.AttributePoints == 0)
             {
-                await ctx.ResponderAsync("você não tem pontos de atributos livres para atribuir! Evolua o seu personagem antes.");
+                await ctx.ResponderAsync("você não tem pontos de atributos livres! Evolua o seu personagem antes.");
                 return;
             }
 
@@ -44,9 +46,9 @@ namespace WafclastRPG.Commands.GeneralCommands
             if (quantityResponse.TimedOut)
                 return;
 
-            if (quantityResponse.Result > player.Character.Atributos.PontosLivreAtributo)
+            if (quantityResponse.Value > player.Character.AttributePoints)
             {
-                await ctx.ResponderAsync($"você não tem {quantityResponse.Result} pontos disponível!");
+                await ctx.ResponderAsync($"você não tem {quantityResponse.Value} pontos disponível!");
                 return;
             }
 
@@ -54,8 +56,8 @@ namespace WafclastRPG.Commands.GeneralCommands
 
             var embed = new DiscordEmbedBuilder();
             embed.WithDescription("Qual atributo você deseja evoluir?\n" +
-                $"{Formatter.InlineCode("Força")} - {Formatter.InlineCode("Resistencia")} - " +
-                $"{Formatter.InlineCode("Agilidade")} - { Formatter.InlineCode("Vitalidade")}");
+                $"{Formatter.InlineCode("Força")} - {Formatter.InlineCode("Dextreza")} - " +
+                $"{Formatter.InlineCode("Inteligencia")}");
             embed.WithFooter("Digite o nome do atributo ou 'sair' para fechar");
 
             bool continueLoop = true;
@@ -83,36 +85,44 @@ namespace WafclastRPG.Commands.GeneralCommands
                 switch (response)
                 {
                     case "forca":
-                        player.Character.Atributos.Forca += quantityResponse.Result;
+                        player.Character.Strength.BaseValue += quantityResponse.Value;
+
+                        player.Character.Life.BaseValue += quantityResponse.Value * 0.5M;
+                        player.Character.PhysicalDamage.MultValue += quantityResponse.Value * 0.2M;
+                        player.Character.PhysicalDamage.Restart();
+
                         attribute = "força";
                         continueLoop = false;
                         break;
 
-                    case "resistencia":
-                        player.Character.Atributos.Resistencia += quantityResponse.Result;
-                        attribute = "resistencia";
+                    case "destreza":
+                        player.Character.Dexterity.BaseValue += quantityResponse.Value;
+
+                        player.Character.Accuracy.BaseValue += quantityResponse.Value * 2;
+                        player.Character.Accuracy.Restart();
+                        player.Character.Evasion.MultValue += quantityResponse.Value * 0.2M;
+                        player.Character.Evasion.Restart();
+
+                        attribute = "dextreza";
                         continueLoop = false;
                         break;
 
-                    case "agilidade":
-                        player.Character.Atributos.Agilidade += quantityResponse.Result;
-                        attribute = "agilidade";
-                        continueLoop = false;
-                        break;
+                    case "inteligencia":
+                        player.Character.Intelligence.BaseValue += quantityResponse.Value;
 
-                    case "vitalidade":
-                        player.Character.Atributos.Vitalidade += quantityResponse.Result;
-                        attribute = "vitalidade";
+                        player.Character.Mana.BaseValue += quantityResponse.Value * 0.5M;
+                        player.Character.ManaRegen = new WafclastStatePoints(player.Character.Mana.MaxValue * 0.08M);
+                        player.Character.EnergyShield.MultValue += quantityResponse.Value * 0.2M;
+
+                        attribute = "inteligencia";
                         continueLoop = false;
                         break;
                 }
             }
-
-            player.Character.Atributos.PontosLivreAtributo -= quantityResponse.Result;
-            player.Character.CalcStats();
+            player.Character.AttributePoints -= quantityResponse.Value;
             database.StopExecutingInteractivity(ctx);
-            await database.ReplacePlayerAsync(player);
-            await ctx.ResponderAsync($"você atribuiu {Formatter.Bold(quantityResponse.Result.ToString())} em {attribute.Titulo()}");
+            await database.ReplaceAsync(player);
+            await ctx.ResponderAsync($"você atribuiu {Formatter.Bold(quantityResponse.Value.ToString())} em {attribute.Titulo()}");
         }
     }
 }

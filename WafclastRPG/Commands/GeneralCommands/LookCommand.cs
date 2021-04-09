@@ -6,13 +6,14 @@ using System;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
+using WafclastRPG.Entities.Monsters;
 using WafclastRPG.Extensions;
 
 namespace WafclastRPG.Commands.GeneralCommands
 {
     public class LookCommand : BaseCommandModule
     {
-        public Database banco;
+        public DataBase banco;
 
         [Command("olhar")]
         [Aliases("look", "l")]
@@ -20,57 +21,35 @@ namespace WafclastRPG.Commands.GeneralCommands
         [Usage("olhar [ ID | @menção ]")]
         [Example("olhar 1", "Permite olhar a vida do monstro de ID 1.")]
         [Priority(1)]
-        public async Task LookCommandAsync(CommandContext ctx, string monsterIdString)
+        public async Task LookCommandAsync(CommandContext ctx, int monsterId)
         {
             await ctx.TriggerTypingAsync();
-            var player = await banco.FindPlayerAsync(ctx);
+            var player = await banco.FindAsync(ctx.User);
             if (player == null)
             {
                 await ctx.ResponderAsync(Strings.NovoJogador);
                 return;
             }
 
-            if (player.Character.Localization != ctx)
+            var monster = await banco.FindAsync(new WafclastMonsterBase(ctx.Channel.Id, monsterId));
+            if (monster == null)
             {
-                await ctx.ResponderAsync(Strings.LocalDiferente(ctx.Channel.Name));
+                await ctx.ResponderAsync("não foi encontrado nenhum monstro com o ID informado!");
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(monsterIdString))
-            {
-                await ctx.ResponderAsync($"você precisa informar um {Formatter.Bold("#ID")} para olhar");
-                return;
-            }
-
-            if (monsterIdString.TryParseID(out int id))
-            {
-                var monster = await banco.FindMonsterAsync(player.Character.Localization.ChannelId, id);
-                if (monster == null)
-                {
-                    await ctx.ResponderAsync(Strings.MonstroNaoEncontrado(id));
-                    return;
-                }
-
-                if (monster.DateSpawn > DateTime.UtcNow)
-                    await ctx.ResponderAsync($"o monstro {monster.Nome.Titulo()} está morto!");
-                else
-                {
-                    var porcentagemLife = Convert.ToInt32(monster.Life.CurrentValue / monster.Life.MaxValue);
-
-                    var embed = new DiscordEmbedBuilder();
-                    embed.WithTitle(monster.Nome.Titulo());
-                    embed.AddField("Vida".Titulo(), $"{Emojis.GerarVidaEmoji(porcentagemLife)} {monster.Life.CurrentValue:N2} / {monster.Life.MaxValue}");
-                    embed.AddField("Força".Titulo(), $"{monster.Atributos.ForcaMin} ~ {monster.Atributos.ForcaMax}");
-                    embed.AddField("Resistencia".Titulo(), $"{monster.Atributos.ResistenciaMin} ~ {monster.Atributos.ResistenciaMax}");
-                    embed.AddField("Agilidade".Titulo(), $"{monster.Atributos.AgilidadeMin} ~ {monster.Atributos.AgilidadeMax}");
-                    embed.AddField("Experiencia".Titulo(), $"{monster.Atributos.ExpMin} ~ {monster.Atributos.ExpMax}");
-                    embed.AddField("Respawn a cada".Titulo(), $"{monster.RespawnTime}");
-                    embed.WithDescription("Parece perigoso...");
-                    await ctx.ResponderAsync(embed.Build());
-                }
-            }
+            if (monster.DateSpawn > DateTime.UtcNow)
+                await ctx.ResponderAsync($"o monstro {monster.Name.Titulo()} está morto!");
             else
-                await ctx.ResponderAsync(Strings.IdInvalido);
+            {
+                var porcentagemLife = Convert.ToInt32(monster.Life.CurrentValue / monster.Life.MaxValue);
+
+                var embed = new DiscordEmbedBuilder();
+                embed.WithTitle(monster.Name.Titulo());
+                embed.AddField("Vida".Titulo(), $"{Emojis.GerarVidaEmoji(porcentagemLife)} {monster.Life.CurrentValue:N2} / {monster.Life.MaxValue}");
+                embed.WithDescription("Parece perigoso...");
+                await ctx.ResponderAsync(embed.Build());
+            }
         }
 
         [Command("olhar")]
@@ -79,20 +58,20 @@ namespace WafclastRPG.Commands.GeneralCommands
         public async Task LookCommandAsync(CommandContext ctx, DiscordUser target)
         {
             await ctx.TriggerTypingAsync();
-            var player = await banco.FindPlayerAsync(ctx);
+            var player = await banco.FindAsync(ctx.User);
             if (player == null)
             {
                 await ctx.ResponderAsync(Strings.NovoJogador);
                 return;
             }
 
-            if (player.Character.Localization != ctx)
+            if (player.Character.Localization.ChannelId != ctx.Channel.Id)
             {
                 await ctx.ResponderAsync(Strings.LocalDiferente(ctx.Channel.Name));
                 return;
             }
 
-            var playerTarget = await banco.FindPlayerAsync(target);
+            var playerTarget = await banco.FindAsync(target);
             if (playerTarget == null)
             {
                 await ctx.ResponderAsync("o jogador ainda não criou um personagem!");
@@ -105,11 +84,11 @@ namespace WafclastRPG.Commands.GeneralCommands
                 return;
             }
 
-            decimal porcentagemLife = Convert.ToInt32(playerTarget.Character.LifePoints.CurrentValue / playerTarget.Character.LifePoints.MaxValue);
+            decimal porcentagemLife = Convert.ToInt32(playerTarget.Character.Life.CurrentValue / playerTarget.Character.Life.MaxValue);
 
             var embed = new DiscordEmbedBuilder();
             embed.WithTitle(target.Username.Titulo());
-            embed.AddField("Vida".Titulo(), $"{Emojis.GerarVidaEmoji(porcentagemLife)} {playerTarget.Character.LifePoints.CurrentValue:N2} / {playerTarget.Character.LifePoints.MaxValue:N2}");
+            embed.AddField("Vida".Titulo(), $"{Emojis.GerarVidaEmoji(porcentagemLife)} {playerTarget.Character.Life.CurrentValue:N2} / {playerTarget.Character.Life.MaxValue:N2}");
             await ctx.ResponderAsync($"você olha para {target.Mention}", embed.Build());
         }
 
@@ -118,20 +97,20 @@ namespace WafclastRPG.Commands.GeneralCommands
         public async Task LookCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            var player = await banco.FindPlayerAsync(ctx);
+            var player = await banco.FindAsync(ctx.User);
             if (player == null)
             {
                 await ctx.ResponderAsync(Strings.NovoJogador);
                 return;
             }
 
-            if (player.Character.Localization != ctx)
+            if (player.Character.Localization.ChannelId != ctx.Channel.Id)
             {
                 await ctx.ResponderAsync(Strings.LocalDiferente(ctx.Channel.Name));
                 return;
             }
 
-            var map = await banco.FindMapAsync(ctx);
+            var map = await banco.FindAsync(ctx.Channel);
 
             var embed = new DiscordEmbedBuilder();
             embed.WithTitle(ctx.Channel.Name.Titulo());

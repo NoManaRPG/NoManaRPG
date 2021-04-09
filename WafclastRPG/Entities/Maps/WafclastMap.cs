@@ -3,30 +3,34 @@ using System.Collections.Generic;
 using WafclastRPG.Entities.Itens;
 using WafclastRPG.Enums;
 
-namespace WafclastRPG.Entities
+namespace WafclastRPG.Entities.Maps
 {
-    public class WafclastMapa
+    public class WafclastMap
     {
         /// <summary>
         /// Text Channel Id
         /// </summary>
         public ulong Id { get; set; }
-        public ulong ServerID { get; set; }
+
+        /// <summary>
+        /// Discord Guild Id
+        /// </summary>
+        public ulong GuildId { get; set; }
         public MapType Tipo { get; set; }
         public WafclastCoordinates Coordinates { get; set; }
         public int QuantidadeMonstros { get; set; } = 0;
 
         public List<WafclastBaseItem> ShopItens { get; set; } = new List<WafclastBaseItem>();
 
-        public WafclastMapa(ulong id, ulong serverID)
+        public WafclastMap(ulong textChannelId, ulong guildId)
         {
-            Id = id;
-            ServerID = serverID;
+            Id = textChannelId;
+            GuildId = guildId;
         }
 
         public static void MapBuilder()
         {
-            BsonClassMap.RegisterClassMap<WafclastMapa>(cm =>
+            BsonClassMap.RegisterClassMap<WafclastMap>(cm =>
             {
                 cm.AutoMap();
                 cm.SetIgnoreExtraElements(true);

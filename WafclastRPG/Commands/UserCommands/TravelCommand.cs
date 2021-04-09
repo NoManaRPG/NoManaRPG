@@ -1,19 +1,18 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using MongoDB.Driver;
 using System.Threading.Tasks;
 using WafclastRPG.DataBases;
 using WafclastRPG.Attributes;
 using WafclastRPG.Extensions;
-using WafclastRPG.Entities;
 using WafclastRPG.Enums;
+using WafclastRPG.Properties;
 
 namespace WafclastRPG.Commands.UserCommands
 {
     public class TravelCommand : BaseCommandModule
     {
-        public Database banco;
+        public DataBase banco;
 
         [Command("viajar")]
         [Aliases("v", "travel")]
@@ -23,71 +22,36 @@ namespace WafclastRPG.Commands.UserCommands
         {
             await ctx.TriggerTypingAsync();
 
-            var map = await banco.CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
+            var map = await banco.FindAsync(ctx.Channel);
             if (map == null)
             {
-                await ctx.ResponderAsync("você não pode viajar até aqui!");
+                await ctx.ResponderAsync("você só pode viajar entre mapas, e aqui não é um.");
                 return;
             }
 
-            Task<Response> result;
+            Response response;
             using (var session = await this.banco.StartDatabaseSessionAsync())
-                result = await session.WithTransactionAsync(async (s, ct) =>
+                response = await session.WithTransactionAsync(async (s, ct) =>
                 {
-                    var player = await session.FindPlayerAsync(ctx.User);
-                    if (player == null)
-                        return Task.FromResult(new Response() { IsPlayerFound = false });
+                    var player = await session.FindAsync(ctx.User);
+                    if (player.Character == null)
+                        return new Response(Messages.NaoEscreveuComecar);
 
                     if (player.Character.Localization.ChannelId == ctx.Channel.Id)
-                        return Task.FromResult(new Response() { IsSamePlace = true });
+                        return new Response("não tem como viajar para o mesmo lugar! Você precisa ir em outro canal de texto.");
 
-                    if (player.Character.Karma < 0)
-                        if (map.Tipo == MapType.Cidade)
-                            return Task.FromResult(new Response() { IsKarmaNegative = true });
+                    if (player.Character.Karma < 0 && map.Tipo == MapType.Cidade)
+                        return new Response("seu Karma está negativo, os guardas não deixarão você entrar na cidade!");
 
                     if (player.Character.Localization.ServerId != ctx.Guild.Id)
-                        return Task.FromResult(new Response() { IsOtherServer = true });
+                        return new Response($"o seu personagem é de outro servidor! Use o comando {Formatter.InlineCode("comecar")} para criar um novo personagem!");
 
                     player.Character.Localization.ChannelId = ctx.Channel.Id;
-                    await player.SaveAsync();
+                    await session.ReplaceAsync(player);
 
-                    return Task.FromResult(new Response());
+                    return new Response($"você acaba de chegar em {Formatter.Bold(ctx.Channel.Name)}!");
                 });
-            var _response = await result;
-
-            if (_response.IsPlayerFound == false)
-            {
-                await ctx.ResponderAsync(Strings.NovoJogador);
-                return;
-            }
-
-            if (_response.IsOtherServer)
-            {
-                await ctx.ResponderAsync($"o seu personagem é de outro servidor! Use o comando {Formatter.InlineCode("comecar")} para criar um novo personagem!");
-                return;
-            }
-
-            if (_response.IsSamePlace)
-            {
-                await ctx.ResponderAsync("não tem como viajar para o mesmo lugar! Você precisa ir em outro canal de texto.");
-                return;
-            }
-
-            if (_response.IsKarmaNegative)
-            {
-                await ctx.ResponderAsync("seu Karma está negativo, os guardas não deixarão você entrar na cidade!");
-                return;
-            }
-
-            await ctx.ResponderAsync($"você acaba de chegar em {Formatter.Bold(ctx.Channel.Name)}!");
-        }
-
-        public class Response
-        {
-            public bool IsPlayerFound = true;
-            public bool IsSamePlace = false;
-            public bool IsKarmaNegative = false;
-            public bool IsOtherServer = false;
+            await ctx.ResponderAsync(response.Message);
         }
     }
 }

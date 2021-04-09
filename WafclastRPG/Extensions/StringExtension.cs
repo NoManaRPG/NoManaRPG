@@ -26,7 +26,7 @@ namespace WafclastRPG.Extensions
         }
 
         public static bool TryParseID(this string texto, out int id)
-            => int.TryParse(texto.Replace("#", string.Empty), out id);
+            => int.TryParse(texto, out id);
 
         public static bool TryParseID(this string texto, out ulong id)
             => ulong.TryParse(texto.Replace("#", string.Empty), out id);

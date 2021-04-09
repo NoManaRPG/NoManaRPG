@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization;
+using System;
 
 namespace WafclastRPG.Entities
 {
@@ -20,20 +21,7 @@ namespace WafclastRPG.Entities
             Coins += copper;
         }
 
-        public bool Subtract(ulong gold, ulong silver, ulong copper)
-        {
-            ulong total = 0;
-            total += gold * GoldInCopper;
-            total += silver * SilverInCopper;
-            total += copper;
-
-            if (Coins >= total)
-            {
-                Coins -= total;
-                return true;
-            }
-            return false;
-        }
+        public void Subtract(int coins) => Coins -= Convert.ToUInt64(coins);
 
         public override string ToString()
         {

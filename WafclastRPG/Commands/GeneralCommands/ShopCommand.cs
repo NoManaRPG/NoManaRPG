@@ -14,7 +14,7 @@ namespace WafclastRPG.Commands.GeneralCommands
 {
     public class ShopCommand : BaseCommandModule
     {
-        public Database database;
+        public DataBase database;
 
         [Command("loja")]
         [Description("Permite comprar e ver os itens a venda da loja.")]
@@ -22,15 +22,15 @@ namespace WafclastRPG.Commands.GeneralCommands
         public async Task ShopCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            var player = await database.FindPlayerAsync(ctx);
+            var player = await database.FindAsync(ctx.User);
             if (player == null)
             {
                 await ctx.ResponderAsync(Strings.NovoJogador);
                 return;
             }
 
-            var map = await database.FindMapAsync(player.Character.Localization.ChannelId);
-            if (map.Tipo != MapType.Cidade)
+            var map = await database.FindAsync(player.Character.Localization);
+            if (map.Tipo != MapType.Cidade || player.Character.Localization != map)
             {
                 await ctx.ResponderAsync(Strings.SomenteNaCidade);
                 return;
@@ -38,10 +38,9 @@ namespace WafclastRPG.Commands.GeneralCommands
 
             if (map.ShopItens.Count == 0)
             {
-                await ctx.ResponderAsync("Está loja não tem itens a venda!");
+                await ctx.ResponderAsync("esta loja não tem itens a venda!");
                 return;
             }
-
 
             var embed = new DiscordEmbedBuilder();
             embed.WithTitle("Loja");
@@ -55,38 +54,26 @@ namespace WafclastRPG.Commands.GeneralCommands
                 ind++;
             }
 
-
-
-            database.StartExecutingInteractivity(ctx);
-
             var itemDesejado = await ctx.WaitForIntAsync(str.ToString(), database, minValue: 1, maxValue: map.ShopItens.Count);
             if (itemDesejado.TimedOut)
                 return;
-            var item = map.ShopItens[itemDesejado.Result - 1];
+            var item = map.ShopItens[itemDesejado.Value - 1];
 
             var quantidadeDesejada = await ctx.WaitForIntAsync("Quantos itens você deseja comprar?", database, minValue: 1);
             if (quantidadeDesejada.TimedOut)
                 return;
 
-            if (quantidadeDesejada.Result * item.Price > Convert.ToInt32(player.Character.Coins.Coins))
+            if (quantidadeDesejada.Value * item.Price > Convert.ToInt32(player.Character.Coins.Coins))
             {
                 await ctx.ResponderAsync("você não tem moedas o suficiente!");
                 return;
             }
 
-            using (var session = await this.database.StartDatabaseSessionAsync())
-            {
-                var result = await session.WithTransactionAsync(async (s, ct) =>
-                 {
-                     var ff = await session.FindPlayerAsync(ctx.User);
-                     await ff.ItemAdd(item, quantidadeDesejada.Result);
-                     ff.Character.Coins.Coins -= Convert.ToUInt64(quantidadeDesejada.Result * item.Price);
-                     await ff.SaveAsync();
-                     return Task.CompletedTask;
-                 });
-            }
+            await database.InsertAsync(item, quantidadeDesejada.Value, player);
+            player.Character.Coins.Subtract(quantidadeDesejada.Value * item.Price);
+            await database.ReplaceAsync(player);
 
-            await ctx.ResponderAsync($"você comprou {quantidadeDesejada.Result} {item.Name}!");
+            await ctx.ResponderAsync($"você comprou {quantidadeDesejada.Value} {item.Name}!");
         }
     }
 }

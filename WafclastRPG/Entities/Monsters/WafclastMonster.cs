@@ -1,51 +1,25 @@
-﻿using MongoDB.Bson.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace WafclastRPG.Entities.Monsters
 {
-    public class WafclastMonster
+    public class WafclastMonster : WafclastMonsterBase
     {
-        /// <summary>
-        /// ChannelId:MonsterId
-        /// </summary>
-        public string Id { get; private set; }
+        public string Name { get; set; }
 
-        /// <summary>
-        /// MonsterId... #1, #2 ....
-        /// </summary>
-        public ulong MonsterId { get; set; }
-        public string Nome { get; set; }
-
-        public WafclastStatePoints Life { get; set; } = new WafclastStatePoints();
-        public decimal MaxAttack { get; set; }
-        public decimal Exp { get; set; }
+        public WafclastStatePoints PhysicalDamage { get; set; }
+        public WafclastStatePoints Evasion { get; set; }
+        public WafclastStatePoints Accuracy { get; set; }
+        public WafclastStatePoints Armour { get; set; }
+        public WafclastStatePoints Life { get; set; }
 
         public DateTime DateSpawn { get; private set; } = DateTime.UtcNow;
-
-        public WafclastMonsterAtributos Atributos { get; set; }
-
         public TimeSpan RespawnTime { get; set; } = TimeSpan.FromMinutes(1);
 
-        public List<ItemChance> Drops { get; set; } = new List<ItemChance>();
+        public bool ItsPillaged { get; set; } = true;
+        public List<ItemChance> ChanceDrops { get; set; } = new List<ItemChance>();
 
-        public WafclastMonster(ulong id, ulong monsterId)
-        {
-            Id = $"{id}:{monsterId}";
-            MonsterId = monsterId;
-        }
-
-        public void CalcAtributos()
-        {
-            Random rd = new Random();
-            Atributos.Forca = rd.Next(Atributos.ForcaMin, Atributos.ForcaMin + 1);
-            Atributos.Resistencia = rd.Next(Atributos.ResistenciaMin, Atributos.ResistenciaMax + 1);
-            Atributos.Agilidade = rd.Next(Atributos.AgilidadeMin, Atributos.AgilidadeMax + 1);
-
-            MaxAttack = Atributos.Forca * 3;
-            Life = new WafclastStatePoints(Atributos.Resistencia * 8);
-            Exp = (decimal)rd.NextDouble() * (Atributos.ExpMax - Atributos.ExpMin) + Atributos.ExpMin;
-        }
+        public WafclastMonster(ulong channelId, int monsterId) : base(channelId, monsterId) { }
 
         /// <summary>
         /// Retorna true caso tenha sido abatido.
@@ -57,21 +31,30 @@ namespace WafclastRPG.Entities.Monsters
             Life.CurrentValue -= valor;
             if (Life.CurrentValue <= 0)
             {
-                DateSpawn = DateTime.UtcNow + RespawnTime;
-                CalcAtributos();
+                ItsPillaged = false;
                 return true;
             }
             return false;
         }
 
-        public static void MapBuilder()
+        public void Restart()
         {
-            BsonClassMap.RegisterClassMap<WafclastMonster>(cm =>
-            {
-                cm.AutoMap();
-                cm.SetIgnoreExtraElements(true);
-                cm.MapIdMember(c => c.Id);
-            });
+            DateSpawn = DateTime.UtcNow + RespawnTime;
+
+            PhysicalDamage.Restart();
+            Evasion.Restart();
+            Accuracy.Restart();
+            Life.Restart();
+
+            ItsPillaged = true;
+        }
+
+        public decimal DamageReduction(decimal damage)
+        {
+            var first = Armour.CurrentValue * damage;
+            var second = (Armour.CurrentValue + 10) * damage;
+            var dr = first / second;
+            return damage - damage * dr;
         }
     }
 }

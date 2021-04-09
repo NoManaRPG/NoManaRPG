@@ -26,7 +26,7 @@ namespace WafclastRPG
 
         public Task ConectarAsync() => Client.ConnectAsync();
 
-        public void ModuleCommand(CommandsNextConfiguration ccfg, Database database)
+        public void ModuleCommand(CommandsNextConfiguration ccfg, DataBase database)
         {
             this.CommandsNext = Client.UseCommandsNext(ccfg);
             this.CommandsNext.CommandExecuted += CommandExecutedEvent.Event;
@@ -62,7 +62,6 @@ namespace WafclastRPG
             this.CommandsNext.RegisterCommands<AttackCommand>();
             this.CommandsNext.RegisterCommands<TravelCommand>();
             this.CommandsNext.RegisterCommands<LookCommand>();
-            this.CommandsNext.RegisterCommands<StanceCommand>();
             this.CommandsNext.RegisterCommands<InventoryCommand>();
             this.CommandsNext.RegisterCommands<MoneyRankCommand>();
             this.CommandsNext.RegisterCommands<LevelRankCommand>();

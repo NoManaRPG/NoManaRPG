@@ -6,48 +6,51 @@ using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using WafclastRPG.Entities;
 using WafclastRPG.Entities.Itens;
+using WafclastRPG.Entities.Maps;
 using WafclastRPG.Entities.Monsters;
 using WafclastRPG.Extensions;
 
 namespace WafclastRPG.DataBases
 {
-    public class Database
+    public class DataBase
     {
-        public IMongoClient MongoClient { get; }
-        public IMongoDatabase MongoDatabase { get; }
-        public IMongoCollection<WafclastPlayer> CollectionJogadores { get; }
-        public IMongoCollection<WafclastServer> CollectionServidores { get; }
+        public IMongoClient Client { get; }
+        public IMongoDatabase Database { get; }
+
+        public IMongoCollection<WafclastPlayer> CollectionPlayers { get; }
+        public IMongoCollection<WafclastServer> CollectionGuilds { get; }
         public IMongoCollection<WafclastMonster> CollectionMonsters { get; }
-        public IMongoCollection<WafclastMapa> CollectionMaps { get; }
-        public IMongoCollection<WafclastBaseItem> CollectionItens { get; }
+        public IMongoCollection<WafclastMap> CollectionMaps { get; }
+        public IMongoCollection<WafclastBaseItem> CollectionItems { get; }
 
-        public ConcurrentDictionary<ulong, bool> PrefixLocker { get; }
+        public ConcurrentDictionary<ulong, bool> InteractivityLocker { get; }
 
-        public Database()
+        public DataBase()
         {
             #region Connection string
-            MongoClient = new MongoClient("mongodb://localhost?retryWrites=true");
+            Client = new MongoClient("mongodb://localhost?retryWrites=true");
 #if DEBUG
-            MongoDatabase = MongoClient.GetDatabase("WafclastV2Debug");
+            Database = Client.GetDatabase("WafclastV2Debug");
 #else
-            MongoDatabase = MongoClient.GetDatabase("WafclastV2");
+            Database = Client.GetDatabase("WafclastV2");
 #endif
             #endregion
 
             WafclastCharacter.MapBuilder();
             WafclastCoins.MapBuilder();
             WafclastLevel.MapBuilderLevel();
-            WafclastMapa.MapBuilder();
-            WafclastMonster.MapBuilder();
+            WafclastMap.MapBuilder();
+            WafclastMonsterBase.MapBuilder();
             WafclastPlayer.MapBuilder();
             WafclastBaseItem.MapBuilder();
 
-            CollectionJogadores = MongoDatabase.CriarCollection<WafclastPlayer>();
-            CollectionServidores = MongoDatabase.CriarCollection<WafclastServer>();
-            CollectionMonsters = MongoDatabase.CriarCollection<WafclastMonster>();
-            CollectionMaps = MongoDatabase.CriarCollection<WafclastMapa>();
-            CollectionItens = MongoDatabase.CriarCollection<WafclastBaseItem>();
-            PrefixLocker = new ConcurrentDictionary<ulong, bool>();
+            CollectionPlayers = Database.CriarCollection<WafclastPlayer>();
+            CollectionGuilds = Database.CriarCollection<WafclastServer>();
+            CollectionMonsters = Database.CriarCollection<WafclastMonster>();
+            CollectionMaps = Database.CriarCollection<WafclastMap>();
+            CollectionItems = Database.CriarCollection<WafclastBaseItem>();
+
+            InteractivityLocker = new ConcurrentDictionary<ulong, bool>();
 
             #region Usar no futuro
             //var notificationLogBuilder = Builders<RPGJogador>.IndexKeys;
@@ -56,103 +59,125 @@ namespace WafclastRPG.DataBases
             #endregion
         }
 
-        public async Task<DatabaseSession> StartDatabaseSessionAsync() => new DatabaseSession(
-            await MongoClient.StartSessionAsync(), this);
+        public async Task<DatabaseSession> StartDatabaseSessionAsync()
+            => new DatabaseSession(await Client.StartSessionAsync(), this);
 
-        #region Player
+        #region FindAsync
 
-        /// <summary>
-        /// Procura no banco de dados pelo o Id informado.
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns>O BotJogador ou null</returns>
-        public Task<WafclastPlayer> FindPlayerAsync(ulong id)
-            => CollectionJogadores.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-        /// <summary>
-        /// Procura no banco de dados pelo o DiscordUser informado.
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns>O Jogador ou null</returns>
-        public Task<WafclastPlayer> FindPlayerAsync(DiscordUser user)
-            => CollectionJogadores.Find(x => x.Id == user.Id).FirstOrDefaultAsync();
+        public Task<WafclastPlayer> FindAsync(DiscordUser user)
+          => CollectionPlayers.Find(x => x.Id == user.Id).FirstOrDefaultAsync();
+        public Task<WafclastMonster> FindAsync(WafclastMonsterBase monster)
+          => CollectionMonsters.Find(x => x.Id == monster.Id).FirstOrDefaultAsync();
+        public Task<WafclastMap> FindAsync(WafclastLocalization localization)
+          => CollectionMaps.Find(x => x.Id == localization.ChannelId).FirstOrDefaultAsync();
+        public Task<WafclastMap> FindAsync(DiscordChannel discordChannel)
+          => CollectionMaps.Find(x => x.Id == discordChannel.Id).FirstOrDefaultAsync();
 
         /// <summary>
-        /// Procura no banco de dados pelo o Id informado.
+        /// Procura o ID + 1 do último item feito na Guilda.
         /// </summary>
-        /// <param name="user"></param>
-        /// <returns>O BotJogador ou null</returns>
-        public Task<WafclastPlayer> FindPlayerAsync(CommandContext ctx)
-            => CollectionJogadores.Find(x => x.Id == ctx.User.Id).FirstOrDefaultAsync();
+        /// <param name="ctx"></param>
+        /// <returns>Retorna 1 caso não encontre nenhum item feito na Guilda.</returns>
+        public async Task<ulong> GetLastIDAsync(DiscordGuild guild)
+        {
+            var item = await CollectionItems.Find(x => x.PlayerId == guild.Id).SortByDescending(x => x.ItemID).Limit(1).FirstOrDefaultAsync();
+            if (item == null)
+                return 1;
+            return item.ItemID + 1;
+        }
+        public Task<WafclastBaseItem> FindAsync(ObjectId id)
+          => CollectionItems.Find(x => x.Id == id).FirstOrDefaultAsync();
+        public Task<WafclastBaseItem> FindAsync(ulong itemId, DiscordGuild guild)
+        => CollectionItems.Find(x => x.PlayerId == guild.Id && x.ItemID == guild.Id).FirstOrDefaultAsync();
+        public Task<WafclastBaseItem> FindAsync(ulong itemId, WafclastPlayer player)
+        => CollectionItems.Find(x => x.PlayerId == player.Id && x.ItemID == itemId).FirstOrDefaultAsync();
+        public Task<WafclastBaseItem> FindAsync(string itemName, WafclastPlayer player)
+                => CollectionItems.Find(x => x.PlayerId == player.Id && x.Name == itemName,
+                    new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
 
-        public Task ReplacePlayerAsync(WafclastPlayer jogador)
-         => CollectionJogadores.ReplaceOneAsync(x => x.Id == jogador.Id, jogador);
 
         #endregion
-        #region Monster
+        #region Replace
 
-        public Task<WafclastMonster> FindMonsterAsync(ulong channelId, int monsterId)
-            => CollectionMonsters.Find(x => x.Id == $"{channelId}:{monsterId}").FirstOrDefaultAsync();
+
+        public Task ReplaceAsync(WafclastPlayer jogador)
+          => CollectionPlayers.ReplaceOneAsync(x => x.Id == jogador.Id, jogador, new ReplaceOptions { IsUpsert = true });
+        public Task ReplaceAsync(WafclastServer server)
+          => CollectionGuilds.ReplaceOneAsync(x => x.Id == server.Id, server, new ReplaceOptions { IsUpsert = true });
+        public Task ReplaceAsync(WafclastBaseItem item)
+         => CollectionItems.ReplaceOneAsync(x => x.Id == item.Id, item, new ReplaceOptions { IsUpsert = true });
+        public Task ReplaceAsync(WafclastMap map)
+            => CollectionMaps.ReplaceOneAsync(x => x.Id == map.Id, map, new ReplaceOptions { IsUpsert = true });
+        public Task ReplaceAsync(WafclastMonster monster)
+          => CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster, new ReplaceOptions { IsUpsert = true });
+
+        #endregion
+        #region Insert
+
+
+        public async Task InsertAsync(WafclastBaseItem item)
+        {
+            item.Id = ObjectId.Empty;
+            await CollectionItems.InsertOneAsync(item);
+        }
+        public async Task InsertAsync(WafclastBaseItem item, int quantity, WafclastPlayer player)
+        {
+            item.PlayerId = player.Id;
+            item.Quantity = 1;
+            if (!item.CanStack)
+            {
+                item.Quantity = 1;
+                for (int i = 0; i < quantity; i++)
+                {
+                    await InsertAsync(item);
+                    player.Character.Inventory.Quantity++;
+                    player.Character.Inventory.QuantityDifferentItens++;
+                }
+                return;
+            }
+            var itemFound = await FindAsync(item.ItemID, player);
+            if (itemFound == null)
+            {
+                item.Quantity = quantity;
+                await InsertAsync(item);
+                player.Character.Inventory.Quantity += quantity;
+                player.Character.Inventory.QuantityDifferentItens++;
+                return;
+            }
+
+            itemFound.Quantity += quantity;
+            await ReplaceAsync(itemFound);
+            player.Character.Inventory.Quantity += quantity;
+        }
+
 
         #endregion
         #region Interactivity
 
-        public bool IsExecutingInteractivity(ulong userId) => PrefixLocker.TryGetValue(userId, out _);
-        public void StopExecutingInteractivity(ulong userId) => PrefixLocker.TryRemove(userId, out _);
-        public void StopExecutingInteractivity(CommandContext ctx) => PrefixLocker.TryRemove(ctx.User.Id, out _);
-        public void StartExecutingInteractivity(ulong userId) => PrefixLocker.TryAdd(userId, true);
-        public void StartExecutingInteractivity(CommandContext ctx) => PrefixLocker.TryAdd(ctx.User.Id, true);
+        public bool IsExecutingInteractivity(ulong userId) => InteractivityLocker.TryGetValue(userId, out _);
+        public void StopExecutingInteractivity(ulong userId) => InteractivityLocker.TryRemove(userId, out _);
+        public void StopExecutingInteractivity(CommandContext ctx) => InteractivityLocker.TryRemove(ctx.User.Id, out _);
+        public void StartExecutingInteractivity(ulong userId) => InteractivityLocker.TryAdd(userId, true);
+        public void StartExecutingInteractivity(CommandContext ctx) => InteractivityLocker.TryAdd(ctx.User.Id, true);
 
         #endregion
-        #region Server
 
         public async Task<string> GetServerPrefixAsync(ulong serverId, string defaultPrefix)
         {
-            var svl = await CollectionServidores.Find(x => x.Id == serverId).FirstOrDefaultAsync();
+            var svl = await CollectionGuilds.Find(x => x.Id == serverId).FirstOrDefaultAsync();
             if (svl == null)
                 return defaultPrefix;
             return svl.Prefix;
         }
         public string GetServerPrefix(ulong serverId, string defaultPrefix)
         {
-            var svl = CollectionServidores.Find(x => x.Id == serverId).FirstOrDefault();
+            var svl = CollectionGuilds.Find(x => x.Id == serverId).FirstOrDefault();
             if (svl == null)
                 return defaultPrefix;
             return svl.Prefix;
         }
         public Task DeleteServerAsync(ulong serverId)
-            => CollectionServidores.DeleteOneAsync(x => x.Id == serverId);
-        public Task ReplaceServerAsync(ulong serverId, WafclastServer server)
-            => CollectionServidores.ReplaceOneAsync(x => x.Id == serverId, server, new ReplaceOptions { IsUpsert = true });
-
-        #endregion
-        #region Map
-
-        public Task<WafclastMapa> FindMapAsync(ulong id)
-            => CollectionMaps.Find(x => x.Id == id).FirstOrDefaultAsync();
-
-        public Task<WafclastMapa> FindMapAsync(CommandContext ctx)
-          => CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
-
-        #endregion
-        #region Itens
-
-        public Task<WafclastBaseItem> FindItemByItemIdAsync(ulong itemId, ulong playerId)
-          => CollectionItens.Find(x => x.PlayerId == playerId && x.ItemID == itemId).FirstOrDefaultAsync();
-
-        public Task<WafclastBaseItem> FindItemByObjectIdAsync(ObjectId id, ulong playerId)
-        => CollectionItens.Find(x => x.Id == id).FirstOrDefaultAsync();
-
-        public Task InsertItemAsync(WafclastBaseItem item)
-          => CollectionItens.InsertOneAsync(item);
-
-        public async Task<ulong> FindLastItem(CommandContext ctx)
-        {
-            var item = await CollectionItens.Find(x => x.PlayerId == ctx.Guild.Id).SortByDescending(x => x.ItemID).Limit(1).FirstOrDefaultAsync();
-            if (item == null)
-                return 1;
-            return item.ItemID + 1;
-        }
-        #endregion
+            => CollectionGuilds.DeleteOneAsync(x => x.Id == serverId);
     }
 }

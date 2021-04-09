@@ -8,7 +8,7 @@ namespace WafclastRPG.Comandos.Exibir
 {
     public class ComandoEquipamentos : BaseCommandModule
     {
-        public Database banco;
+        public DataBase banco;
 
         [Command("equipamentos")]
         [Aliases("eq")]

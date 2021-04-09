@@ -1,224 +1,138 @@
-﻿using DSharpPlus;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
-using WafclastRPG.Entities;
 using WafclastRPG.Entities.Monsters;
 using WafclastRPG.Enums;
 using WafclastRPG.Extensions;
+using WafclastRPG.Properties;
 
 namespace WafclastRPG.Commands.GeneralCommands
 {
     class AttackCommand : BaseCommandModule
     {
-        public Database banco;
+        public DataBase database;
 
         [Command("atacar")]
         [Aliases("at")]
-        [Description("Permite atacar um monstro ou um jogador, note que os dois precisam estar na mesma localização.")]
-        [Usage("atacar [ #ID 1 | @menção ]")]
-        [Example("atacar #1", "Você ataca o monstro de #ID 1.")]
-        public async Task AttackCommandAsync(CommandContext ctx, string alvo)
+        [Description("Permite executar um ataque físico em um monstro ou jogador.")]
+        [Usage("atacar [ ID do Monstro | Jogador ]")]
+        [Example("atacar 1", "Faz você atacar o monstro de ID 1.")]
+        public async Task AttackCommandAsync(CommandContext ctx, int monsterId = 1)
         {
             var timer = new Stopwatch();
             timer.Start();
 
             await ctx.TriggerTypingAsync();
 
-            if (string.IsNullOrWhiteSpace(alvo))
-            {
-                await ctx.ResponderAsync("não é possível atacar o vento! Por favor especifique um alvo.");
-                return;
-            }
-
-
-            if (!alvo.TryParseID(out int id))
-            {
-                await ctx.ResponderAsync(Strings.IdInvalido);
-                return;
-            }
-
-            var rd = new Random();
-            var embed = new DiscordEmbedBuilder();
-            Task<Response> result;
-            using (var session = await this.banco.StartDatabaseSessionAsync())
-                result = await session.WithTransactionAsync(async (s, ct) =>
+            Response response;
+            using (var session = await database.StartDatabaseSessionAsync())
+                response = await session.WithTransactionAsync(async (s, ct) =>
                 {
-                    //Find player
-                    var player = await session.FindPlayerAsync(ctx.User.Id);
-                    if (player == null)
-                        return Task.FromResult(new Response() { IsPlayerFound = false });
+                    var player = await session.FindAsync(ctx.User);
 
-                    //Is the channel is a map
-                    var map = await session.FindMapAsync(ctx.Channel.Id);
+                    Thread.CurrentThread.CurrentUICulture = new CultureInfo(player.Language);
+
+                    if (player.Character == null)
+                        return new Response(Messages.NaoEscreveuComecar);
+                    #region Questions
+                    var map = await session.FindAsync(ctx.Channel);
                     if (map == null)
-                        return Task.FromResult(new Response() { IsChannelValid = false });
+                        return new Response(Messages.CanalNaoEsMapa);
 
-                    //Is using command in wrong channel
-                    if (map.Id != player.Character.Localization.ChannelId)
-                        return Task.FromResult(new Response() { IsCommandInWrongChannel = true });
+                    if (player.Character.Localization != map)
+                        return new Response(Messages.ComandoEmLocalizacaoDiferente);
 
-                    //Is the map is a city
                     if (map.Tipo == MapType.Cidade)
-                        return Task.FromResult(new Response() { IsMapCity = true });
+                        return new Response(Messages.NaoPodeAtacarNaCidade);
 
-                    //Find target
-                    var target = await session.FindMonsterAsync(player.Character.Localization.ChannelId, id);
+                    var target = await session.FindAsync(new WafclastMonsterBase(ctx.Channel.Id, monsterId));
                     if (target == null)
-                        return Task.FromResult(new Response() { IsTargetFound = false });
+                        return new Response("você procurou, mas não encontrou nenhum monstro com este ID!");
+
+                    if (!target.ItsPillaged)
+                        return new Response("o monstro não foi saqueado ainda!");
 
                     if (target.DateSpawn > DateTime.UtcNow)
-                        return Task.FromResult(new Response() { IsTargetAlreadyDead = true, TargetName = target.Nome });
-
+                        return new Response($"este monstro já está morto! Tente atacar outro!");
+                    #endregion
                     //Combat
+                    var random = new Random();
                     var str = new StringBuilder();
+                    var embed = new DiscordEmbedBuilder();
+                    embed.WithColor(DiscordColor.Red);
                     embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
+                    embed.WithTitle($"Relatorio do combate contra {target.Name}.");
 
-                    var playerDamage = rd.Sortear(player.Character.Ataque);
-
-                    // Calc baseado no LoL
-                    var _isTargetDead = target.ReceberDano(playerDamage);
-
-                    str.AppendLine($"{target.Nome} recebeu {playerDamage:N2} de dano.");
-
-                    if (_isTargetDead)
+                    if (!random.Chance(player.Character.HitChance(target.Evasion.MaxValue)))
                     {
+                        var playerDamage = random.Sortear(player.Character.PhysicalDamage.CurrentValue);
+                        playerDamage = target.DamageReduction(playerDamage);
 
-                        player.MonsterKill++;
+                        var isTargetDead = target.ReceberDano(playerDamage);
+                        str.AppendLine($"{target.Name} não conseguiu desviar!");
+                        str.AppendLine($"{target.Name} recebeu {playerDamage:N2} de dano.");
 
-                        if (player.Character.Karma < 0)
-                            player.Character.Karma += 1;
-
-                        str.AppendLine($"{Emojis.CrossBone} {target.Nome} morreu! {Emojis.CrossBone}");
-                        str.AppendLine($"+{target.Exp:N2} {Emojis.Exp}");
-
-                        foreach (var item in target.Drops)
+                        if (isTargetDead)
                         {
-                            if (rd.Chance(item.Chance))
-                            {
-                                var quant = rd.Sortear(item.MinQuantity, item.MaxQuantity);
-                                var _item = await banco.FindItemByObjectIdAsync(item.ItemId, ctx.Guild.Id);
-                                await player.ItemAdd(_item, quant);
-                                str.AppendLine($"+{_item.Name}*x*{quant}");
-                            }
-                        }
+                            player.MonsterKill++;
 
-                        if (player.Character.ReceberExperiencia(target.Exp))
-                            str.AppendLine($"{Emojis.Up} {player.Mention()} evoluiu de nível!");
+                            if (player.Character.Karma < 0)
+                                player.Character.Karma += 1;
 
-                        await player.SaveAsync();
-                        await session.SaveMonsterAsync(target);
+                            str.AppendLine($"{Emojis.CrossBone} {target.Name.Titulo()} {Emojis.CrossBone}");
 
-                        return Task.FromResult(new Response(str, target.Nome));
-                    }
-
-                    //Verify Stance
-                    if (player.Character.Stance == StanceType.Parry)
-                    {
-                        if (player.Character.Stamina.CurrentValue >= 2)
-                        {
-                            player.Character.Stamina.Remove(2);
-                            if (Parry(target.Atributos.Agilidade, player.Character.Atributos.Agilidade))
-                            {
-                                str.AppendLine($"{player.Mention()} não conseguiu desviar!");
-                                return Task.FromResult(await CombatePvM(str, rd, player, target, session));
-                            }
-                            else
-                            {
-                                str.AppendLine($"{player.Mention()} desviou do ataque!");
-
-                                await player.SaveAsync();
-                                await session.SaveMonsterAsync(target);
-                                return Task.FromResult(new Response(str, target.Nome));
-                            }
-                        }
-                        else
-                        {
-                            str.AppendLine($"{player.Mention()} está muito cansado para desviar!");
-                            return Task.FromResult(await CombatePvM(str, rd, player, target, session));
+                            await session.ReplaceAsync(player);
+                            await session.ReplaceAsync(target);
+                            embed.WithDescription(str.ToString());
+                            return new Response(embed);
                         }
                     }
                     else
+                        str.AppendLine($"{target.Name} conseguiu desviar!");
+
+                    if (!random.Chance(player.Character.DodgeChance(target.Accuracy.MaxValue)))
+                        str.AppendLine($"{player.Mention} desviou do ataque!");
+                    else
                     {
-                        if (player.Character.Atributos.Agilidade < target.Atributos.Agilidade)
-                        {
-                            str.AppendLine($"{player.Mention()} é muito lento para defender!");
-                            player.Character.Stamina.Remove(4);
-                            return Task.FromResult(await CombatePvM(str, rd, player, target, session));
-                        }
+                        var targetDamage = random.Sortear(target.PhysicalDamage.MaxValue);
+                        targetDamage = player.Character.DamageReduction(targetDamage);
 
-                        var stamina = (decimal)target.Atributos.Forca / (decimal)player.Character.Atributos.Resistencia;
+                        str.AppendLine($"{player.Mention} não conseguiu desviar!");
+                        str.AppendLine($"{player.Mention} recebeu {targetDamage:N2} de dano.");
 
-                        if (player.Character.Stamina.CurrentValue >= stamina)
+                        if (player.Character.ReceiveDamage(targetDamage))
                         {
-                            player.Character.Stamina.Remove(stamina);
-                            str.AppendLine($"{player.Mention()} defendeu o ataque!");
-
-                            await player.SaveAsync();
-                            await session.SaveMonsterAsync(target);
-                            return Task.FromResult(new Response(str, target.Nome));
-                        }
-                        else
-                        {
-                            str.AppendLine($"{player.Mention()} está muito cansado para defender!");
-                            return Task.FromResult(await CombatePvM(str, rd, player, target, session));
+                            str.AppendLine($"{player.Mention} morreu!");
+                            player.Deaths++;
                         }
                     }
+
+                    await session.ReplaceAsync(player);
+                    await session.ReplaceAsync(target);
+                    return new Response(embed.WithDescription(str.ToString()));
                 });
-            var _response = await result;
 
-            if (_response.IsPlayerFound == false)
+            if (!string.IsNullOrWhiteSpace(response.Message))
             {
-                await ctx.ResponderAsync(Strings.NovoJogador);
+                await ctx.ResponderAsync(response.Message);
                 return;
             }
 
-            if (_response.IsChannelValid == false)
-            {
-                await ctx.ResponderAsync("você não está em um canal jogável!");
-                return;
-            }
-
-            if (_response.IsCommandInWrongChannel)
-            {
-                await ctx.ResponderAsync("você precisa estar no mesmo canal da sua localização para usar este comando!");
-                return;
-            }
-
-            if (_response.IsMapCity)
-            {
-                await ctx.ResponderAsync("você não pode causar problemas dentro dos muros da cidade, os guardas lhe matariam!");
-                return;
-            }
-
-            if (_response.IsTargetFound == false)
-            {
-                await ctx.ResponderAsync("você procura mais não encontra nenhum monstro!");
-                return;
-            }
-
-            if (_response.IsTargetAlreadyDead)
-            {
-                await ctx.ResponderAsync($"{Formatter.Bold(_response.TargetName)} já está morto! Tente atacar outro.");
-                return;
-            }
-
-            embed.WithColor(DiscordColor.DarkRed);
-            embed.WithTitle("Combate PvM");
-            embed.WithDescription(_response.BattleResult.ToString());
             timer.Stop();
-            embed.WithFooter($"Tempo de resposta: {timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.");
-            await ctx.RespondAsync($"{ctx.User.Mention} {Emojis.Adaga} {Formatter.Bold(_response.TargetName)}", embed: embed.Build());
+            response.Embed.WithFooter($"Tempo de resposta: {timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.");
+            await ctx.RespondAsync(ctx.User.Mention, response.Embed.Build());
         }
 
         [Command("atacar")]
-        [Example("atacar @Talion", "Você ataca o jogador mencionado.")]
+        [Example("atacar @Talion", "Faz você atacar o jogador mencionado.")]
         [Priority(1)]
         public async Task AttackCommandAsync(CommandContext ctx, DiscordUser targetUser)
         {
@@ -227,231 +141,83 @@ namespace WafclastRPG.Commands.GeneralCommands
 
             await ctx.TriggerTypingAsync();
 
-            if (targetUser.Id == ctx.User.Id)
-            {
-                await ctx.ResponderAsync("por que você se atacaria?");
-                return;
-            }
+            if (targetUser == ctx.User) return;
 
-            var rd = new Random();
-            var embed = new DiscordEmbedBuilder();
-            Task<Response> result;
-            using (var session = await this.banco.StartDatabaseSessionAsync())
-                result = await session.WithTransactionAsync(async (s, ct) =>
+            Response response;
+            using (var session = await database.StartDatabaseSessionAsync())
+                response = await session.WithTransactionAsync(async (s, ct) =>
                 {
-                    //Find player
-                    var player = await session.FindPlayerAsync(ctx.User.Id);
-                    if (player == null)
-                        return Task.FromResult(new Response() { IsPlayerFound = false });
+                    var player = await session.FindAsync(ctx.User);
 
-                    //Is the channel is a map
-                    var map = await session.FindMapAsync(ctx.Channel.Id);
+                    Thread.CurrentThread.CurrentUICulture = new CultureInfo(player.Language);
+
+                    if (player.Character == null)
+                        return new Response(Messages.NaoEscreveuComecar);
+                    #region Questions
+                    var map = await session.FindAsync(ctx.Channel);
                     if (map == null)
-                        return Task.FromResult(new Response() { IsChannelValid = false });
+                        return new Response(Messages.CanalNaoEsMapa);
 
-                    //Is using command in wrong channel
                     if (map.Id != player.Character.Localization.ChannelId)
-                        return Task.FromResult(new Response() { IsCommandInWrongChannel = true });
+                        return new Response(Messages.ComandoEmLocalizacaoDiferente);
 
-                    //Is the map is a city
                     if (map.Tipo == MapType.Cidade)
-                        return Task.FromResult(new Response() { IsMapCity = true });
+                        return new Response(Messages.NaoPodeAtacarNaCidade);
 
-                    //Find target
-                    var target = await session.FindPlayerAsync(targetUser);
-                    if (target == null)
-                        return Task.FromResult(new Response() { IsTargetFound = false });
+                    var target = await session.FindAsync(targetUser);
+                    if (target.Character == null)
+                        return new Response(Messages.JogadorAlvoNaoCriouPersonagem);
 
-                    //Is target different channel
-                    if (target.Character.Localization.ChannelId != player.Character.Localization.ChannelId)
-                        return Task.FromResult(new Response() { IsTargetDiffentChannel = true, TargetId = target.Id });
-
+                    if (target.Character.Localization != player.Character.Localization)
+                        return new Response(Messages.JogadorAlvoEstaEmOutraLocalizacao);
+                    #endregion
                     //Combat
+                    var random = new Random();
                     var str = new StringBuilder();
+                    var embed = new DiscordEmbedBuilder();
+                    embed.WithColor(DiscordColor.Red);
                     embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
+                    embed.WithTitle($"Relatorio do combate contra {targetUser.Username}.");
 
                     if (target.Character.Karma == 0)
                         player.Character.Karma -= 1;
 
-                    //Verify Stance
-                    if (target.Character.Stance == StanceType.Parry)
-                    {
-                        if (target.Character.Stamina.CurrentValue >= 2)
-                        {
-                            target.Character.Stamina.Remove(2);
-                            if (Parry(player.Character.Atributos.Agilidade, target.Character.Atributos.Agilidade))
-                            {
-                                str.AppendLine($"{target.Mention()} não conseguiu desviar!");
-                                return Task.FromResult(await CombatePvP(rd, target, player, str));
-                            }
-                            else
-                            {
-                                str.AppendLine($"{target.Mention()} desviou do ataque!");
-
-                                await player.SaveAsync();
-                                await target.SaveAsync();
-                                return Task.FromResult(new Response(str, target.Id));
-                            }
-                        }
-                        else
-                        {
-                            str.AppendLine($"{target.Mention()} está muito cansado para desviar!");
-                            return Task.FromResult(await CombatePvP(rd, target, player, str));
-                        }
-                    }
+                    if (random.Chance(player.Character.HitChance(target.Character.Evasion.CurrentValue)))
+                        str.AppendLine($"{target.Mention} conseguiu desviar.");
                     else
                     {
+                        var playerDamage = random.Sortear(player.Character.PhysicalDamage.CurrentValue);
+                        playerDamage = target.Character.DamageReduction(playerDamage);
+                        var isTargetDead = target.Character.ReceiveDamage(playerDamage);
 
-                        if (target.Character.Atributos.Agilidade < player.Character.Atributos.Agilidade)
+                        str.AppendLine($"{target.Mention} não conseguiu desviar.");
+                        str.AppendLine($"{target.Mention} recebeu {playerDamage:N2}({Emojis.Adaga}) de dano.");
+
+                        if (isTargetDead)
                         {
-                            str.AppendLine($"{target.Mention()} é muito lento para defender!");
-                            target.Character.Stamina.Remove(4);
-                            return Task.FromResult(await CombatePvP(rd, target, player, str));
-                        }
-
-                        var stamina = (decimal)player.Character.Atributos.Forca / (decimal)target.Character.Atributos.Resistencia;
-
-                        if (target.Character.Stamina.CurrentValue >= stamina)
-                        {
-                            target.Character.Stamina.Remove(stamina);
-                            str.AppendLine($"{target.Mention()} defendeu o ataque!");
-
-                            await player.SaveAsync();
-                            await target.SaveAsync();
-                            return Task.FromResult(new Response(str, target.Id));
-                        }
-                        else
-                        {
-                            str.AppendLine($"{target.Mention()} está muito cansado para defender!");
-                            return Task.FromResult(await CombatePvP(rd, target, player, str));
+                            if (target.Character.Karma == 0)
+                                player.Character.Karma -= 10;
+                            str.AppendLine($"{Emojis.CrossBone} {target.Mention} {Emojis.CrossBone}");
+                            player.PlayerKill++;
+                            target.Deaths++;
                         }
                     }
+
+                    await session.ReplaceAsync(player);
+                    await session.ReplaceAsync(target);
+                    embed.WithDescription(str.ToString());
+                    return new Response(embed);
                 });
-            var _response = await result;
 
-            if (_response.IsPlayerFound == false)
+            if (!string.IsNullOrWhiteSpace(response.Message))
             {
-                await ctx.ResponderAsync(Strings.NovoJogador);
+                await ctx.ResponderAsync(response.Message);
                 return;
             }
 
-            if (_response.IsChannelValid == false)
-            {
-                await ctx.ResponderAsync("você não está em um canal jogável!");
-                return;
-            }
-
-            if (_response.IsCommandInWrongChannel)
-            {
-                await ctx.ResponderAsync("você precisa estar no mesmo canal da sua localização para usar este comando!");
-                return;
-            }
-
-            if (_response.IsMapCity)
-            {
-                await ctx.ResponderAsync("você não pode causar problemas dentro dos muros da cidade, os guardas lhe matariam!");
-                return;
-            }
-
-            if (_response.IsTargetFound == false)
-            {
-                await ctx.ResponderAsync("parece que o seu alvo ainda não criou um personagem!");
-                return;
-            }
-
-            if (_response.IsTargetDiffentChannel)
-            {
-                await ctx.ResponderAsync($"parece que {_response.TargetId.Mention()} não está em {ctx.Channel.Name}! Não é possível atacar.");
-                return;
-            }
-
-            embed.WithColor(DiscordColor.DarkRed);
-            embed.WithTitle("Combate PvP");
-            embed.WithDescription(_response.BattleResult.ToString());
             timer.Stop();
-            embed.WithFooter($"Tempo de resposta: {timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.");
-            await ctx.RespondAsync($"{ctx.User.Mention} {Emojis.Adaga} { _response.TargetId.Mention()}", embed: embed.Build());
-        }
-
-        public bool Parry(int agilidade, int agilidadeTarget)
-        {
-            Random r = new Random();
-            var chance = ((double)agilidade / (double)agilidadeTarget) * 0.5;
-            var valor = r.Chance(chance);
-            return valor;
-        }
-
-        public async Task<Response> CombatePvP(Random rd, WafclastPlayer target, WafclastPlayer player, StringBuilder str)
-        {
-            var _playerDamage = rd.Sortear(player.Character.Ataque);
-            var _isTargetDead = target.Character.ReceberDano(_playerDamage);
-
-            str.AppendLine($"{target.Mention()} recebeu {_playerDamage:N2}({Emojis.Adaga}) de dano.");
-
-            if (_isTargetDead)
-            {
-                if (target.Character.Karma == 0)
-                    player.Character.Karma -= 10;
-                str.AppendLine($"{Emojis.CrossBone} {target.Mention()} morreu! {Emojis.CrossBone}");
-                var exp = target.Character.Level * 3;
-                str.AppendLine($"+{exp} {Emojis.Exp}");
-                if (player.Character.ReceberExperiencia(exp))
-                    str.AppendLine($"{Emojis.Up} {player.Mention()} evoluiu de nível!");
-                player.PlayerKill++;
-                target.Deaths++;
-            }
-
-            await player.SaveAsync();
-            await target.SaveAsync();
-            return new Response(str, target.Id);
-        }
-
-        public async Task<Response> CombatePvM(StringBuilder str, Random rd, WafclastPlayer player, WafclastMonster target, DatabaseSession session)
-        {
-            var targetDamage = rd.Sortear(target.MaxAttack);
-            str.AppendLine($"{player.Mention()} recebeu {targetDamage:N2} de dano.");
-
-            if (player.Character.ReceberDano(targetDamage))
-            {
-                str.AppendLine($"{player.Mention()} morreu!");
-                player.Deaths++;
-            }
-
-
-            await player.SaveAsync();
-            await session.SaveMonsterAsync(target);
-
-            return new Response(str, target.Nome);
-        }
-
-        public class Response
-        {
-            public StringBuilder BattleResult;
-            public ulong TargetId = 0;
-            public string TargetName;
-            public bool IsPlayerFound = true;
-            public bool IsChannelValid = true;
-            public bool IsCommandInWrongChannel = false;
-            public bool IsMapCity = false;
-            public bool IsTargetFound = true;
-            public bool IsTargetDiffentChannel = false;
-            public bool IsTargetAlreadyDead = false;
-
-            public Response()
-            {
-            }
-
-            public Response(StringBuilder battleResult, string targetName)
-            {
-                BattleResult = battleResult;
-                TargetName = targetName;
-            }
-
-            public Response(StringBuilder battleResult, ulong id)
-            {
-                BattleResult = battleResult;
-                TargetId = id;
-            }
+            response.Embed.WithFooter($"Tempo de resposta: {timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.");
+            await ctx.RespondAsync($"{ctx.User.Mention} {targetUser.Mention}", response.Embed.Build());
         }
     }
 }

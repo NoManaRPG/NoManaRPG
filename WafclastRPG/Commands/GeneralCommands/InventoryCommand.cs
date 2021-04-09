@@ -19,7 +19,7 @@ namespace WafclastRPG.Commands.GeneralCommands
 {
     public class InventoryCommand : BaseCommandModule
     {
-        public Database banco;
+        public DataBase banco;
 
         [Command("inventario")]
         [Description("Veja e use itens do seu inventário")]
@@ -28,7 +28,7 @@ namespace WafclastRPG.Commands.GeneralCommands
         public async Task InventoryCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            var player = await banco.FindPlayerAsync(ctx.User);
+            var player = await banco.FindAsync(ctx.User);
             if (player == null)
             {
                 await ctx.ResponderAsync(Strings.NovoJogador);
@@ -133,7 +133,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             var timer = new Stopwatch();
             timer.Start();
 
-            var itens = await banco.CollectionItens.Find(x => x.PlayerId == player.Id)
+            var itens = await banco.CollectionItems.Find(x => x.PlayerId == player.Id)
                .SortByDescending(x => x.Quantity)
                .Skip((pagina - 1) * 5)
                .Limit(5)

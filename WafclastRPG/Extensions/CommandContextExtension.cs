@@ -12,23 +12,17 @@ namespace WafclastRPG.Extensions
     public struct AnswerResult<T>
     {
         public bool TimedOut;
-        public T Result;
+        public T Value;
 
         public AnswerResult(bool timedOut, T result)
         {
             TimedOut = timedOut;
-            Result = result;
+            Value = result;
         }
     }
 
     public static class CommandContextExtension
     {
-        public static Task ResponderNegritoAsync(this CommandContext ctx, string mensagem)
-            => ctx.RespondAsync(Formatter.Bold(mensagem));
-
-        public static Task ResponderNegritoAsync(this CommandContext ctx, string mensagem, DiscordEmbed embed)
-           => ctx.RespondAsync(Formatter.Bold(mensagem), embed);
-
         public static Task<DiscordMessage> ResponderAsync(this CommandContext ctx, string mensagem)
             => ctx.RespondAsync($"{ctx.User.Mention}, {mensagem}");
 
@@ -38,21 +32,14 @@ namespace WafclastRPG.Extensions
         public static Task ResponderAsync(this CommandContext ctx, DiscordEmbed embed)
             => ctx.RespondAsync(ctx.User.Mention, embed: embed);
 
-        public static async Task<InteractivityResult<DiscordMessage>> WaitForMessageAsync(this CommandContext ctx, string message, TimeSpan? timeoutoverride = null)
-        {
-            var vity = ctx.Client.GetInteractivity();
-            await ctx.ResponderNegritoAsync(message);
-            return await vity.WaitForMessageAsync(x => x.Author.Id == ctx.User.Id && x.ChannelId == ctx.Channel.Id, timeoutoverride: timeoutoverride);
-        }
-
         public static async Task<InteractivityResult<DiscordMessage>> WaitForMessageAsync(this CommandContext ctx, string message, DiscordEmbed embed, TimeSpan? timeoutoverride = null)
         {
             var vity = ctx.Client.GetInteractivity();
-            await ctx.ResponderNegritoAsync(message, embed);
+            await ctx.ResponderAsync(message, embed);
             return await vity.WaitForMessageAsync(x => x.Author.Id == ctx.User.Id && x.ChannelId == ctx.Channel.Id, timeoutoverride: timeoutoverride);
         }
 
-        public static async Task<AnswerResult<T>> WaitForEnumAsync<T>(this CommandContext ctx, string message, Database database, TimeSpan? timeoutoverride = null) where T : Enum
+        public static async Task<AnswerResult<T>> WaitForEnumAsync<T>(this CommandContext ctx, string message, DataBase database, TimeSpan? timeoutoverride = null) where T : Enum
         {
             database.StartExecutingInteractivity(ctx);
 
@@ -85,7 +72,7 @@ namespace WafclastRPG.Extensions
             }
         }
 
-        public static async Task<AnswerResult<int>> WaitForIntAsync(this CommandContext ctx, string message, Database database, TimeSpan? timeoutoverride = null, int? minValue = null, int? maxValue = null)
+        public static async Task<AnswerResult<int>> WaitForIntAsync(this CommandContext ctx, string message, DataBase database, TimeSpan? timeoutoverride = null, int? minValue = null, int? maxValue = null)
         {
             database.StartExecutingInteractivity(ctx);
 
@@ -93,7 +80,7 @@ namespace WafclastRPG.Extensions
             {
                 var embed = new DiscordEmbedBuilder();
                 embed.WithDescription(message);
-                embed.WithFooter("Digite um numero ou 'sair' para fechar | Somente numeros inteiros");
+                embed.WithFooter("Digite um numero ou 'sair' para fechar.");
 
                 var wait = await WaitForMessageAsync(ctx, ctx.User.Mention, embed.Build(), timeoutoverride);
 
@@ -121,10 +108,49 @@ namespace WafclastRPG.Extensions
                     database.StopExecutingInteractivity(ctx);
                     return new AnswerResult<int>(true, 0);
                 }
+            }   
+        }
+
+        public static async Task<AnswerResult<ulong>> WaitForUlongAsync(this CommandContext ctx, string message, DataBase database, TimeSpan? timeoutoverride = null, ulong? minValue = null, ulong? maxValue = null)
+        {
+            database.StartExecutingInteractivity(ctx);
+
+            while (true)
+            {
+                var embed = new DiscordEmbedBuilder();
+                embed.WithDescription(message);
+                embed.WithFooter("Digite um numero ou 'sair' para fechar | Somente numeros inteiros");
+
+                var wait = await WaitForMessageAsync(ctx, ctx.User.Mention, embed.Build(), timeoutoverride);
+
+                if (wait.TimedOut)
+                {
+                    await ctx.ResponderAsync("tempo de resposta expirado!");
+                    database.StopExecutingInteractivity(ctx);
+                    return new AnswerResult<ulong>(true, 0);
+                }
+
+                if (ulong.TryParse(wait.Result.Content, out ulong result))
+                {
+                    if (minValue != null)
+                        if (result < minValue)
+                            continue;
+                    if (maxValue != null)
+                        if (result > maxValue)
+                            continue;
+                    database.StopExecutingInteractivity(ctx);
+                    return new AnswerResult<ulong>(false, result);
+                }
+
+                if (wait.Result.Content.ToLower().Trim() == "sair")
+                {
+                    database.StopExecutingInteractivity(ctx);
+                    return new AnswerResult<ulong>(true, 0);
+                }
             }
         }
 
-        public static async Task<bool> WaitForBoolAsync(this CommandContext ctx, Database banco, DiscordEmbed embed, TimeSpan? timeoutoverride = null)
+        public static async Task<bool> WaitForBoolAsync(this CommandContext ctx, DataBase banco, DiscordEmbed embed, TimeSpan? timeoutoverride = null)
         {
             bool isWrong = false;
             banco.StartExecutingInteractivity(ctx.User.Id);
@@ -161,20 +187,13 @@ namespace WafclastRPG.Extensions
             }
         }
 
-        public static async Task<ulong> WaitForUlongAsync(this CommandContext ctx, string message, TimeSpan? timeoutoverride = null)
-        {
-            var wait = await WaitForMessageAsync(ctx, message, timeoutoverride);
-            ulong.TryParse(wait.Result.Content, out ulong result);
-            return result;
-        }
-
-        public static async Task<AnswerResult<string>> WaitForStringAsync(this CommandContext ctx, string message, Database banco, TimeSpan? timeoutoverride = null)
+        public static async Task<AnswerResult<string>> WaitForStringAsync(this CommandContext ctx, string message, DataBase banco, TimeSpan? timeoutoverride = null)
         {
             banco.StartExecutingInteractivity(ctx.User.Id);
 
             var embed = new DiscordEmbedBuilder();
             embed.WithDescription(message);
-            embed.WithFooter("Digite um numero ou 'sair' para fechar | Somente numeros inteiros");
+            embed.WithFooter("Digite 'sair' para fechar.");
 
             var wait = await WaitForMessageAsync(ctx, ctx.User.Mention, embed.Build(), timeoutoverride);
             if (wait.TimedOut)
@@ -191,12 +210,6 @@ namespace WafclastRPG.Extensions
             }
 
             return new AnswerResult<string>(false, wait.Result.Content);
-        }
-
-        public static async Task<string> WaitForStringAsync(this CommandContext ctx, string message, DiscordEmbed embed, TimeSpan? timeoutoverride = null)
-        {
-            var wait = await WaitForMessageAsync(ctx, message, embed, timeoutoverride);
-            return wait.Result.Content;
         }
     }
 }

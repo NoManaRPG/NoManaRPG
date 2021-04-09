@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using WafclastRPG.Extensions;
 using WafclastRPG;
 using WafclastRPG.DataBases;
+using WafclastRPG.Entities;
 
 namespace WafclastRPG.DiscordEvents
 {
     public class MessageCreatedEvent
     {
-        public static async Task Event(DiscordClient c, MessageCreateEventArgs e, CommandsNextExtension commandsNext, Database database)
+        public static async Task Event(DiscordClient c, MessageCreateEventArgs e, CommandsNextExtension commandsNext, DataBase database)
         {
             if (e.Author.IsBot)
                 return;
@@ -23,25 +24,30 @@ namespace WafclastRPG.DiscordEvents
                 await commandsNext.ExecuteCommandAsync(fakeContext);
             }
 
-            using var session = await database.StartDatabaseSessionAsync();
-            await session.WithTransactionAsync(async (s, ct) =>
-            {
-                //Find player
-                var player = await session.FindPlayerAsync(e.Author.Id);
-                if (player == null)
-                    return Task.CompletedTask;
+            using (var session = await database.StartDatabaseSessionAsync())
+                await session.Session.WithTransactionAsync(async (s, ct) =>
+                {
+                    var player = await session.FindAsync(e.Author);
+                    if (player == null)
+                    {
+                        player = new WafclastPlayer(e.Author.Id, false);
+                        await session.ReplaceAsync(player);
+                    }
 
-                if (player.Character.RegenDate > DateTime.UtcNow)
-                    return Task.CompletedTask;
-                Random rd = new Random();
-                player.Character.RegenDate = DateTime.UtcNow + TimeSpan.FromSeconds(rd.Sortear(90, 120));
+                    if (player.Character == null)
+                        return Task.CompletedTask;
 
-                player.Character.LifePoints.Add(player.Character.Atributos.Vitalidade * 0.2m);
-                player.Character.Stamina.Add(player.Character.Atributos.Vitalidade * 0.1m);
-                player.Character.Coins.Add(0, 0, (ulong)rd.Sortear(1, 2));
-                await player.SaveAsync();
-                return Task.CompletedTask;
-            });
+                    if (player.Character.RegenDate > DateTime.UtcNow)
+                        return Task.CompletedTask;
+
+                    Random rd = new Random();
+                    player.Character.RegenDate = DateTime.UtcNow + TimeSpan.FromSeconds(rd.Sortear(90, 120));
+
+                    player.Character.Mana.Add(player.Character.ManaRegen.MaxValue);
+                    player.Character.Coins.Add(0, 0, (ulong)rd.Sortear(1, 2));
+                    await session.ReplaceAsync(player);
+                    return Task.CompletedTask;
+                });
         }
     }
 }

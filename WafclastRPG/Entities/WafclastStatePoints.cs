@@ -5,20 +5,36 @@
         public decimal CurrentValue { get; set; }
         public decimal MaxValue { get; set; }
 
-        public WafclastStatePoints(decimal minValue, decimal maxValue)
+        public decimal _baseValue;
+        public decimal BaseValue
         {
-            CurrentValue = minValue;
-            MaxValue = maxValue;
+            get => _baseValue;
+            set
+            {
+                _baseValue = value;
+                MaxValue = _baseValue * (_multValue / 100);
+            }
         }
 
-        public WafclastStatePoints(decimal maxValue)
+        private decimal _multValue;
+        /// <summary>
+        /// Por padrão é 1.
+        /// </summary>
+        public decimal MultValue
         {
-            MaxValue = maxValue;
-            CurrentValue = maxValue;
+            get => _multValue;
+            set
+            {
+                _multValue = value;
+                MaxValue = BaseValue * (_multValue / 100);
+            }
         }
 
-        public WafclastStatePoints()
+        public WafclastStatePoints(decimal baseValue)
         {
+            CurrentValue = baseValue;
+            BaseValue = baseValue;
+            MultValue = 100;
         }
 
         public void Restart() => CurrentValue = MaxValue;
