@@ -31,7 +31,7 @@ namespace WafclastRPG.Commands.GeneralCommands
                 {
                     //Procura jogador
                     var player = await session.FindAsync(ctx.User);
-                    if (player == null)
+                    if (player.Character == null)
                         return new Response(Messages.NaoEscreveuComecar);
 
                     //Pega item

@@ -29,7 +29,7 @@ namespace WafclastRPG.Commands.GeneralCommands
         {
             await ctx.TriggerTypingAsync();
             var player = await banco.FindAsync(ctx.User);
-            if (player == null)
+            if (player.Character == null)
             {
                 await ctx.ResponderAsync(Strings.NovoJogador);
                 return;

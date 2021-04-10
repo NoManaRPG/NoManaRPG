@@ -28,7 +28,7 @@ namespace WafclastRPG.DiscordEvents
                 await session.Session.WithTransactionAsync(async (s, ct) =>
                 {
                     var player = await session.FindAsync(e.Author);
-                    if (player == null)
+                    if (player.Character == null)
                     {
                         player = new WafclastPlayer(e.Author.Id, false);
                         await session.ReplaceAsync(player);

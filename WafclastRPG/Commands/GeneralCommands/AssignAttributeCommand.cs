@@ -23,7 +23,7 @@ namespace WafclastRPG.Commands.GeneralCommands
         {
             await ctx.TriggerTypingAsync();
             var player = await database.FindAsync(ctx.User);
-            if (player == null)
+            if (player.Character == null)
             {
                 await ctx.ResponderAsync(Strings.NovoJogador);
                 return;
