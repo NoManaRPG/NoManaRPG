@@ -71,7 +71,7 @@ namespace WafclastRPG.Commands.PlayerCommands
                              var quantity = random.Sortear(drop.MinQuantity, drop.MaxQuantity);
                              var item = await banco.FindAsync(drop.Id);
                              await session.InsertAsync(item, quantity, player);
-                             str.AppendLine($"+{quantity} {item.Name.Titulo()}");
+                             str.AppendLine($"**+ {quantity} {item.Name.Titulo()}.**");
                          }
                      }
                      monster.Restart();
@@ -80,9 +80,15 @@ namespace WafclastRPG.Commands.PlayerCommands
 
                      var embed = new DiscordEmbedBuilder();
                      if (str.Length > 0)
+                     {
                          embed.WithDescription(str.ToString());
+                         embed.WithColor(DiscordColor.Gold);
+                     }
                      else
+                     {
                          embed.WithDescription("Você procurou mas não encontrou nada valioso!");
+                         embed.WithColor(DiscordColor.DarkRed);
+                     }
                      return new Response(embed);
                  });
 
