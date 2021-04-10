@@ -4,6 +4,7 @@ namespace WafclastRPG.Enums
 {
     public enum ItemType : int
     {
+        [Description("Nada")]
         Nothing,
         [Description("Livro")]
         Book,
@@ -21,9 +22,11 @@ namespace WafclastRPG.Enums
         Weapon,
         [Description("Lixo")]
         Trash,
-        [Description("Livro de Fabricação")]
+        [Description("Livro de Projeto")]
         CraftingBook,
-        [Description("Armadura")]
-        Armour
+        [Description("Mão primária")]
+        PrimaryHand,
+        [Description("Mão secundária")]
+        SecondaryHand,
     }
 }
