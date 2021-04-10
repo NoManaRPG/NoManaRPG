@@ -71,6 +71,7 @@ namespace WafclastRPG
             this.CommandsNext.RegisterCommands<AttributesCommand>();
             this.CommandsNext.RegisterCommands<ShopCommand>();
             this.CommandsNext.RegisterCommands<LootCommand>();
+            this.CommandsNext.RegisterCommands<EvolveGroupCommands>();
         }
     }
 }

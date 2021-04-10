@@ -2,7 +2,7 @@
 
 namespace WafclastRPG.Attributes
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
     public class ExampleAttribute : Attribute
     {
         public string Command { get; }

@@ -39,7 +39,7 @@ namespace WafclastRPG.Commands.GeneralCommands
                     if (item == null)
                         return new Response($"não foi encontrado o item chamado {Formatter.Bold(itemName.Titulo())}!");
 
-                    quantity = Math.Clamp(quantity, 1, item.Quantity);
+                    quantity = Math.Abs(quantity);
 
                     //Usa item
                     switch (item)

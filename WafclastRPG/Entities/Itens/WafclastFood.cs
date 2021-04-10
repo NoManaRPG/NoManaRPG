@@ -4,8 +4,6 @@
     {
         public decimal LifeGain { get; set; }
 
-        public WafclastFood(WafclastBaseItem baseItem) : base(baseItem)
-        {
-        }
+        public WafclastFood(WafclastBaseItem baseItem) : base(baseItem) { }
     }
 }

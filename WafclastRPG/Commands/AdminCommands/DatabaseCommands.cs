@@ -281,7 +281,20 @@ namespace WafclastRPG.Commands.AdminCommands
                     comida.LifeGain = lifeGain.Value;
                     await database.InsertAsync(comida);
 
-                    embed.AddField("Cura".Titulo(), comida.LifeGain.ToString());
+                    embed.AddField("Vira Ganha".Titulo(), comida.LifeGain.ToString());
+                    break;
+
+                case ItemType.MonsterCore:
+
+                    var experienceGain = await ctx.WaitForDoubleAsync("Por ser do tipo Núcleo, é preciso informar quantos de experiencia ganha ao infundir.", database, timeoutoverride);
+                    if (experienceGain.TimedOut)
+                        return;
+
+                    WafclastMonsterCore core = new WafclastMonsterCore(item);
+                    core.ExperienceGain = Convert.ToDecimal(experienceGain.Value);
+                    await database.InsertAsync(core);
+
+                    embed.AddField("Experiencia Ganha".Titulo(), core.ExperienceGain.ToString());
                     break;
                 default:
                     await database.InsertAsync(item);

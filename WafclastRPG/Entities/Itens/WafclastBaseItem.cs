@@ -50,6 +50,7 @@ namespace WafclastRPG.Entities.Itens
                 cm.SetIsRootClass(true);
             });
             BsonClassMap.RegisterClassMap<WafclastFood>();
+            BsonClassMap.RegisterClassMap<WafclastMonsterCore>();
         }
     }
 }

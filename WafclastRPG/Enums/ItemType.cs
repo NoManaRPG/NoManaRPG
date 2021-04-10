@@ -28,5 +28,7 @@ namespace WafclastRPG.Enums
         PrimaryHand,
         [Description("Mão secundária")]
         SecondaryHand,
+        [Description("Núcleo")]
+        MonsterCore
     }
 }
