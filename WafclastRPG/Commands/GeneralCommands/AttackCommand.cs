@@ -98,7 +98,11 @@ namespace WafclastRPG.Commands.GeneralCommands
                     else
                         str.AppendLine($"{target.Name} conseguiu desviar!");
 
-                    if (!random.Chance(player.Character.DodgeChance(target.Accuracy.MaxValue)))
+                    embed.AddField(target.Name, $"{Emojis.GerarVidaEmoji(target.Life.CurrentValue / target.Life.MaxValue)} {target.Life.CurrentValue:N2} ", true);
+
+                    var isPlayerDead = false;
+
+                    if (random.Chance(player.Character.DodgeChance(target.Accuracy.MaxValue)))
                         str.AppendLine($"{player.Mention} desviou do ataque!");
                     else
                     {
@@ -108,12 +112,19 @@ namespace WafclastRPG.Commands.GeneralCommands
                         str.AppendLine($"{player.Mention} não conseguiu desviar!");
                         str.AppendLine($"{player.Mention} recebeu {targetDamage:N2} de dano.");
 
-                        if (player.Character.ReceiveDamage(targetDamage))
+                        isPlayerDead = player.Character.ReceiveDamage(targetDamage);
+
+                        if (isPlayerDead)
                         {
                             str.AppendLine($"{player.Mention} morreu!");
                             player.Deaths++;
                         }
                     }
+
+                    if (isPlayerDead)
+                        embed.AddField(ctx.User.Username, $"{Emojis.GerarVidaEmoji(0 / player.Character.Life.MaxValue)} 0 ", true);
+                    else
+                        embed.AddField(ctx.User.Username, $"{Emojis.GerarVidaEmoji(player.Character.Life.CurrentValue / player.Character.Life.MaxValue)} {player.Character.Life.CurrentValue:N2} ", true);
 
                     await session.ReplaceAsync(player);
                     await session.ReplaceAsync(target);
@@ -127,7 +138,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             }
 
             timer.Stop();
-            response.Embed.WithFooter($"Tempo de resposta: {timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.");
+            response.Embed.WithFooter($"{timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.");
             await ctx.RespondAsync(ctx.User.Mention, response.Embed.Build());
         }
 
@@ -216,7 +227,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             }
 
             timer.Stop();
-            response.Embed.WithFooter($"Tempo de resposta: {timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.");
+            response.Embed.WithFooter($"{timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.");
             await ctx.RespondAsync($"{ctx.User.Mention} {targetUser.Mention}", response.Embed.Build());
         }
     }

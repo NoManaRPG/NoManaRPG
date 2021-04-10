@@ -82,7 +82,7 @@ namespace WafclastRPG.Entities
         }
 
         /// <summary>
-        /// Retorna true case acerte. False caso não acerte.
+        /// Retorna false case acerte. True caso não acerte.
         /// </summary>
         /// <param name="defenderEvasion"></param>
         /// <returns></returns>
