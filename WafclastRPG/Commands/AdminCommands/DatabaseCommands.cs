@@ -442,6 +442,24 @@ namespace WafclastRPG.Commands.AdminCommands
             await ctx.RespondAsync($"Item {item.Name.Titulo()} foi adicionado a loja!");
         }
 
+        [Command("ver-item")]
+        [Description("Permite ver um item.")]
+        [Usage("ver-item [ ID ]")]
+        [RequireUserPermissions(Permissions.Administrator)]
+        public async Task VerItemAsync(CommandContext ctx, ulong id = 0)
+        {
+            await ctx.TriggerTypingAsync();
+
+            var item = await database.FindAsync(id, ctx.Guild);
+            if (item == null)
+            {
+                await ctx.ResponderAsync("não foi encontrado este item!");
+                return;
+            }
+
+            await ctx.RespondAsync(ItemBuilder(item));
+        }
+
         [Command("monstro-drop")]
         [Description("Permite adicionar uma recompensa ao monstro.")]
         [Usage("monstro-drop [ Monstro ID ] [ Item ID ] [ Posição }")]
