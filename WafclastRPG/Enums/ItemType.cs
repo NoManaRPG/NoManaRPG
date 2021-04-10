@@ -25,6 +25,5 @@ namespace WafclastRPG.Enums
         CraftingBook,
         [Description("Armadura")]
         Armour
-
     }
 }

@@ -30,7 +30,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}] ", iconUrl: ctx.User.AvatarUrl);
             embed.WithColor(DiscordColor.Blue);
             embed.AddField("Força".Titulo(), player.Character.Strength.CurrentValue.ToString(), true);
-            embed.AddField("Dextreza".Titulo(), player.Character.Dexterity.CurrentValue.ToString(), true);
+            embed.AddField("Destreza".Titulo(), player.Character.Dexterity.CurrentValue.ToString(), true);
             embed.AddField("Inteligencia".Titulo(), player.Character.Intelligence.CurrentValue.ToString(), true);
             embed.AddField("Pontos Livres".Titulo(), player.Character.AttributePoints.ToString(), true);
             await ctx.ResponderAsync(embed.Build());
