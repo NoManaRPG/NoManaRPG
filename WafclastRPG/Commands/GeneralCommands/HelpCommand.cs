@@ -120,9 +120,8 @@ namespace WafclastRPG.Comandos.Exibir
             DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
             embed.WithDescription("Digite `w.ajuda [comando]` para mais informações. Por exemplo: `w.ajuda bot`.");
 
-            embed.AddField("Bot".Titulo(), $"{Formatter.InlineCode("ajuda")} {Formatter.InlineCode("info")}", true);
-            embed.AddField("Jogador".Titulo(), $"{Formatter.InlineCode("comecar")} {Formatter.InlineCode("status")} {Formatter.InlineCode("postura")} {Formatter.InlineCode("inventario")} {Formatter.InlineCode("comer")} {Formatter.InlineCode("evoluir-atributo")} {Formatter.InlineCode("atributos")} {Formatter.InlineCode("loja")}", true);
-            embed.AddField("Canal de texto".Titulo(), $"{Formatter.InlineCode("atacar")} {Formatter.InlineCode("viajar")} {Formatter.InlineCode("olhar")}", true);
+            embed.AddField("Bot".Titulo(), $"{Formatter.InlineCode("ajuda")} - {Formatter.InlineCode("info")}", true);
+            embed.AddField("Jogador".Titulo(), $"{Formatter.InlineCode("comecar")} - {Formatter.InlineCode("saquear")} - {Formatter.InlineCode("olhar")} - {Formatter.InlineCode("viajar")} - {Formatter.InlineCode("atacar")} - {Formatter.InlineCode("status")} - {Formatter.InlineCode("inventario")} - {Formatter.InlineCode("comer")} - {Formatter.InlineCode("evoluir-atributo")} - {Formatter.InlineCode("atributos")} - {Formatter.InlineCode("loja")}", true);
             embed.AddField("Ranks".Titulo(), $"{Formatter.InlineCode("rank-moedas")} {Formatter.InlineCode("rank-nivel")}", true);
             embed.AddField("Outros".Titulo(), $"{Formatter.InlineCode("admin")}", true);
 

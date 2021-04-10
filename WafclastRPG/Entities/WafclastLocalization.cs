@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DSharpPlus.Entities;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using WafclastRPG.Entities.Maps;
 
@@ -18,19 +19,14 @@ namespace WafclastRPG.Entities
             ServerId = serverId;
         }
 
-        public bool Equals([DisallowNull] WafclastLocalization other)
-            => ChannelId == other.ChannelId;
-
-        public static bool operator !=(WafclastLocalization loc, WafclastLocalization loc1)
-            => loc.ChannelId != loc1.ChannelId;
-
-        public static bool operator ==(WafclastLocalization loc, WafclastLocalization loc1)
-            => loc.ChannelId == loc1.ChannelId;
-
-        public static bool operator !=(WafclastLocalization loc, WafclastMap map)
-            => loc.ChannelId != map.Id;
-
-        public static bool operator ==(WafclastLocalization loc, WafclastMap map)
-            => loc.ChannelId == map.Id;
+        public bool Equals([DisallowNull] WafclastLocalization other) => ChannelId == other.ChannelId;
+        public static bool operator !=(WafclastLocalization loc, WafclastLocalization loc1) => loc.ChannelId != loc1.ChannelId;
+        public static bool operator !=(WafclastLocalization loc, WafclastMap map) => loc.ChannelId != map.Id;
+        public static bool operator !=(WafclastLocalization loc, DiscordChannel channel) => loc.ChannelId != channel.Id;
+        public static bool operator !=(DiscordChannel channel, WafclastLocalization loc) => loc.ChannelId != channel.Id;
+        public static bool operator ==(WafclastLocalization loc, WafclastLocalization loc1) => loc.ChannelId == loc1.ChannelId;
+        public static bool operator ==(WafclastLocalization loc, WafclastMap map) => loc.ChannelId == map.Id;
+        public static bool operator ==(WafclastLocalization loc, DiscordChannel channel) => loc.ChannelId == channel.Id;
+        public static bool operator ==(DiscordChannel channel, WafclastLocalization loc) => loc.ChannelId == channel.Id;
     }
 }

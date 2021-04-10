@@ -89,7 +89,7 @@ namespace WafclastRPG.DataBases
         public Task<WafclastBaseItem> FindAsync(ObjectId id)
           => CollectionItems.Find(x => x.Id == id).FirstOrDefaultAsync();
         public Task<WafclastBaseItem> FindAsync(ulong itemId, DiscordGuild guild)
-        => CollectionItems.Find(x => x.PlayerId == guild.Id && x.ItemID == guild.Id).FirstOrDefaultAsync();
+        => CollectionItems.Find(x => x.PlayerId == guild.Id && x.ItemID == itemId).FirstOrDefaultAsync();
         public Task<WafclastBaseItem> FindAsync(ulong itemId, WafclastPlayer player)
         => CollectionItems.Find(x => x.PlayerId == player.Id && x.ItemID == itemId).FirstOrDefaultAsync();
         public Task<WafclastBaseItem> FindAsync(string itemName, WafclastPlayer player)

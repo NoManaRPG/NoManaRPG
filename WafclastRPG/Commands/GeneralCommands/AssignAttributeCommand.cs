@@ -86,6 +86,7 @@ namespace WafclastRPG.Commands.GeneralCommands
                 {
                     case "forca":
                         player.Character.Strength.BaseValue += quantityResponse.Value;
+                        player.Character.Strength.Restart();
 
                         player.Character.Life.BaseValue += quantityResponse.Value * 0.5M;
                         player.Character.PhysicalDamage.MultValue += quantityResponse.Value * 0.2M;
@@ -97,6 +98,7 @@ namespace WafclastRPG.Commands.GeneralCommands
 
                     case "destreza":
                         player.Character.Dexterity.BaseValue += quantityResponse.Value;
+                        player.Character.Dexterity.Restart();
 
                         player.Character.Accuracy.BaseValue += quantityResponse.Value * 2;
                         player.Character.Accuracy.Restart();
@@ -109,6 +111,7 @@ namespace WafclastRPG.Commands.GeneralCommands
 
                     case "inteligencia":
                         player.Character.Intelligence.BaseValue += quantityResponse.Value;
+                        player.Character.Intelligence.Restart();
 
                         player.Character.Mana.BaseValue += quantityResponse.Value * 0.5M;
                         player.Character.ManaRegen = new WafclastStatePoints(player.Character.Mana.MaxValue * 0.08M);

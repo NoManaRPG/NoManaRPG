@@ -429,49 +429,64 @@ namespace WafclastRPG.Commands.AdminCommands
             await ctx.RespondAsync($"Item {item.Name.Titulo()} foi adicionado a loja!");
         }
 
-        //[Command("monstro-recompensa")]
-        //[Description("Permite adicionar uma recompensa ao monstro informado.")]
-        //[Usage("monstro-recompensa [ id ]")]
-        //[Example("monstro-recompensa 1", "Adiciona uma nova recompensa para quando alguem eliminar o monstro de ID 1")]
-        //[RequireUserPermissions(Permissions.Administrator)]
-        //public async Task MonstroDropAsync(CommandContext ctx, string stringId)
-        //{
-        //    await ctx.TriggerTypingAsync();
-        //    var map = await database.CollectionMaps.Find(x => x.Id == ctx.Channel.Id).FirstOrDefaultAsync();
-        //    if (map == null)
-        //    {
-        //        await ctx.ResponderAsync("não existe um mapa no canal atual!");
-        //        return;
-        //    }
+        [Command("monstro-drop")]
+        [Description("Permite adicionar uma recompensa ao monstro.")]
+        [Usage("monstro-drop [ Monstro ID ] [ Item ID ] [ Posição }")]
+        [Example("monstro-drop 1 1 0", "Adiciona uma nova recompensa para quando alguem eliminar o monstro de ID 1")]
+        [RequireUserPermissions(Permissions.Administrator)]
+        public async Task MonstroDropAsync(CommandContext ctx, int monsterId = 0, ulong itemId = 0, int pos = 0)
+        {
+            await ctx.TriggerTypingAsync();
+            var map = await database.FindAsync(ctx.Channel);
+            if (map == null)
+            {
+                await ctx.ResponderAsync("não existe um mapa no canal atual!");
+                return;
+            }
 
-        //    var monster = await database.CollectionMonsters.Find(x => x.Id == $"{ctx.Channel.Id}:{stringId}").FirstOrDefaultAsync();
-        //    if (monster == null)
-        //    {
-        //        await ctx.ResponderAsync("não existe um monstro com o #ID informado!");
-        //        return;
-        //    }
+            var monster = await database.FindAsync(new WafclastMonsterBase(ctx.Channel.Id, monsterId));
+            if (monster == null)
+            {
+                await ctx.ResponderAsync("não existe um monstro com o #ID informado!");
+                return;
+            }
 
-        //    var item = await database.FindItemByItemIdAsync(itemId, 0);
-        //    if (item == null)
-        //    {
-        //        await ctx.ResponderAsync("não existe um item com o #ID informado!");
-        //        return;
-        //    }
+            var item = await database.FindAsync(itemId, ctx.Guild);
+            if (item == null)
+            {
+                await ctx.ResponderAsync("não existe um item com o ID informado!");
+                return;
+            }
 
-        //    var embed = new DiscordEmbedBuilder();
-        //    embed.AddField("Item".Titulo(), item.Name);
-        //    embed.AddField("Monstro".Titulo(), monster.Nome);
-        //    embed.AddField("Chance".Titulo(), (chance * 100).ToString());
-        //    embed.AddField("Quantia".Titulo(), $"{quantMin} ~ {quantMax}");
+            var chance = await ctx.WaitForDoubleAsync("Qual a chance do item cair?", database, timeoutoverride, 0);
+            if (chance.TimedOut)
+                return;
 
-        //    if (monster.Drops.Count > posicao)
-        //        monster.Drops[posicao] = new ItemChance(item.Id, chance, quantMin, quantMax);
-        //    else
-        //        monster.Drops.Add(new ItemChance(item.Id, chance, quantMin, quantMax));
-        //    await database.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster);
+            var minQuantity = await ctx.WaitForIntAsync("Qual o minimo de quantidade que pode cair?", database, timeoutoverride, 1);
+            if (minQuantity.TimedOut)
+                return;
 
-        //    await ctx.ResponderAsync($"monstro {Formatter.Bold(monster.Nome)} editado! Agora pode cair {Formatter.Bold(item.Name)}.");
-        //}
+            var maxQuantity = await ctx.WaitForIntAsync("Qual o máximo de quantidade que pode cair?", database, timeoutoverride, minQuantity.Value);
+            if (maxQuantity.TimedOut)
+                return;
+
+            var drop = new ItemChance(item.Id, chance.Value / 100, minQuantity.Value, maxQuantity.Value);
+
+
+            var embed = new DiscordEmbedBuilder();
+            embed.AddField("Item".Titulo(), item.Name);
+            embed.AddField("Monstro".Titulo(), monster.Name);
+            embed.AddField("Chance".Titulo(), (drop.Chance * 100).ToString());
+            embed.AddField("Quantia".Titulo(), $"{drop.MinQuantity} ~ {drop.MaxQuantity}");
+
+            if (monster.ChanceDrops.Count > pos)
+                monster.ChanceDrops[pos] = drop;
+            else
+                monster.ChanceDrops.Add(drop);
+            await database.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster);
+
+            await ctx.ResponderAsync($"monstro {Formatter.Bold(monster.Name)} editado! Agora pode cair {Formatter.Bold(item.Name)}.");
+        }
 
         [Command("atualizar-jogadores")]
         [RequireOwner]
@@ -510,6 +525,7 @@ namespace WafclastRPG.Commands.AdminCommands
                             item.Character.Evasion.Restart();
 
                             item.Character.Accuracy = new WafclastStatePoints(item.Character.Dexterity.CurrentValue * 2);
+                            item.Character.Accuracy.BaseValue += 2 * item.Character.Level;
 
                             item.Character.Armour = new WafclastStatePoints(0);
 
@@ -518,6 +534,7 @@ namespace WafclastRPG.Commands.AdminCommands
 
                             item.Character.Life = new WafclastStatePoints(50);
                             item.Character.Life.BaseValue += item.Character.Strength.CurrentValue * 0.5M;
+                            item.Character.Life.BaseValue += 12 * item.Character.Level;
                             item.Character.Life.Restart();
 
                             item.Character.Mana = new WafclastStatePoints(40);

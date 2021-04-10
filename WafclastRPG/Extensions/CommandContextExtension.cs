@@ -111,6 +111,45 @@ namespace WafclastRPG.Extensions
             }   
         }
 
+        public static async Task<AnswerResult<double>> WaitForDoubleAsync(this CommandContext ctx, string message, DataBase database, TimeSpan? timeoutoverride = null, double? minValue = null, double? maxValue = null)
+        {
+            database.StartExecutingInteractivity(ctx);
+
+            while (true)
+            {
+                var embed = new DiscordEmbedBuilder();
+                embed.WithDescription(message);
+                embed.WithFooter("Digite um numero ou 'sair' para fechar.");
+
+                var wait = await WaitForMessageAsync(ctx, ctx.User.Mention, embed.Build(), timeoutoverride);
+
+                if (wait.TimedOut)
+                {
+                    await ctx.ResponderAsync("tempo de resposta expirado!");
+                    database.StopExecutingInteractivity(ctx);
+                    return new AnswerResult<double>(true, 0);
+                }
+
+                if (double.TryParse(wait.Result.Content, out double result))
+                {
+                    if (minValue != null)
+                        if (result < minValue)
+                            continue;
+                    if (maxValue != null)
+                        if (result > maxValue)
+                            continue;
+                    database.StopExecutingInteractivity(ctx);
+                    return new AnswerResult<double>(false, result);
+                }
+
+                if (wait.Result.Content.ToLower().Trim() == "sair")
+                {
+                    database.StopExecutingInteractivity(ctx);
+                    return new AnswerResult<double>(true, 0);
+                }
+            }
+        }
+
         public static async Task<AnswerResult<ulong>> WaitForUlongAsync(this CommandContext ctx, string message, DataBase database, TimeSpan? timeoutoverride = null, ulong? minValue = null, ulong? maxValue = null)
         {
             database.StartExecutingInteractivity(ctx);
