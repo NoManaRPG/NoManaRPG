@@ -47,7 +47,7 @@ namespace WafclastRPG.DiscordEvents
                     break;
                 case CommandNotFoundException cnfe:
                     if (e.Command?.Name == "ajuda")
-                        await ctx.RespondAsync($":no_entry_sign: | {ctx.User.Mention} o comando {e.Context.RawArgumentString} não existe.*");
+                        await ctx.RespondAsync($":no_entry_sign: | {ctx.User.Mention} o comando `{e.Context.RawArgumentString}` não existe!");
                     break;
                 case NotFoundException nfe:
                     await ctx.RespondAsync($"{ctx.User.Mention}, o usuario informado não foi encontrado.");

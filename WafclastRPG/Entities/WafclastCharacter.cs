@@ -1,15 +1,12 @@
 ﻿using MongoDB.Bson.Serialization;
 using System;
+using WafclastRPG.Entities.Monsters;
 
 namespace WafclastRPG.Entities
 {
     public class WafclastCharacter : WafclastLevel
     {
         public WafclastCoins Coins { get; private set; } = new WafclastCoins(20);
-        #region Localization
-        public WafclastLocalization Localization { get; set; }
-        public WafclastLocalization LocalizationSpawnPoint { get; set; }
-        #endregion
 
         public WafclastStatePoints PhysicalDamage { get; set; }
         public WafclastStatePoints Evasion { get; set; }
@@ -27,11 +24,10 @@ namespace WafclastRPG.Entities
         public WafclastStatePoints LifeRegen { get; set; }
         public WafclastStatePoints ManaRegen { get; set; }
 
+        public int AttributePoints { get; set; }
+        public int CurrentFloor { get; set; }
+        public WafclastMonster Monster { get; set; }
 
-        public int AttributePoints = 0;
-        public int Karma { get; set; } = 0;
-
-        public WafclastInventory Inventory { get; set; } = new WafclastInventory();
         public DateTime RegenDate { get; set; } = DateTime.UtcNow;
 
         public WafclastCharacter()
@@ -67,11 +63,6 @@ namespace WafclastRPG.Entities
             ManaRegen = new WafclastStatePoints(Mana.MaxValue * 0.08M);
         }
 
-        /// <summary>
-        /// Retorna false case acerte. True caso não acerte.
-        /// </summary>
-        /// <param name="defenderEvasion"></param>
-        /// <returns></returns>
         public double DodgeChance(decimal attackerkAccuracy)
         {
             var attack = 1.15M * attackerkAccuracy;
@@ -81,11 +72,6 @@ namespace WafclastRPG.Entities
             return div / 100;
         }
 
-        /// <summary>
-        /// Retorna false case acerte. True caso não acerte.
-        /// </summary>
-        /// <param name="defenderEvasion"></param>
-        /// <returns></returns>
         public double HitChance(decimal defenderEvasion)
         {
             var attack = 1.15M * Accuracy.CurrentValue;
@@ -110,7 +96,7 @@ namespace WafclastRPG.Entities
             {
                 Life.BaseValue += 12;
                 Accuracy.BaseValue += 2;
-                if (Level > LevelBloqueado)
+                if (Level > BlockedLevel)
                     AttributePoints += 10;
             }
 
@@ -132,9 +118,6 @@ namespace WafclastRPG.Entities
         {
             if (Life.Remove(valor))
             {
-                Localization = LocalizationSpawnPoint;
-                Karma = 0;
-
                 if (Level != 1)
                 {
                     Life.BaseValue -= 12;

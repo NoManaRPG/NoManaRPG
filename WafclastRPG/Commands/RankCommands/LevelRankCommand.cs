@@ -26,7 +26,7 @@ namespace WafclastRPG.Commands.RankCommands
 
             await ctx.TriggerTypingAsync();
 
-            var f = await banco.CollectionPlayers.Find(x => x.Character.Localization.ServerId == ctx.Guild.Id).Limit(10)
+            var f = await banco.CollectionPlayers.Find(FilterDefinition<WafclastPlayer>.Empty).Limit(10)
                 .SortByDescending(x => x.Character.Level).ToListAsync();
             var str = new StringBuilder();
 

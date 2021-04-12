@@ -9,53 +9,53 @@ namespace WafclastRPG.Entities
     public abstract class WafclastLevel
     {
         public int Level { get; set; } = 1;
-        public decimal ExperienciaAtual { get; set; }
-        public decimal ExperienciaProximoNivel { get; private set; }
-        public int LevelBloqueado { get; set; } = 0;
+        public decimal CurrentExperience { get; set; }
+        public decimal ExperienceForNextLevel { get; set; }
+        public int BlockedLevel { get; set; }
 
-        public WafclastLevel() => this.ExperienciaProximoNivel = this.ExperienceTotalLevel(2);
+        public WafclastLevel() => this.ExperienceForNextLevel = this.ExperienceTotalLevel(2);
 
         public WafclastLevel(int startLevel)
         {
             this.Level = startLevel;
-            this.ExperienciaProximoNivel = this.ExperienceTotalLevel(startLevel + 1);
+            this.ExperienceForNextLevel = this.ExperienceTotalLevel(startLevel + 1);
         }
 
         public int AddExperience(decimal experience)
         {
             int niveisEv = 0;
-            decimal expResultante = this.ExperienciaAtual + experience;
-            if (expResultante >= this.ExperienciaProximoNivel)
+            decimal expResultante = this.CurrentExperience + experience;
+            if (expResultante >= this.ExperienceForNextLevel)
             {
                 do
                 {
-                    expResultante = expResultante - this.ExperienciaProximoNivel;
+                    expResultante = expResultante - this.ExperienceForNextLevel;
                     this.Evolve();
                     niveisEv++;
-                } while (expResultante >= this.ExperienciaProximoNivel);
-                this.ExperienciaAtual += expResultante;
+                } while (expResultante >= this.ExperienceForNextLevel);
+                this.CurrentExperience += expResultante;
                 return niveisEv;
             }
-            this.ExperienciaAtual += experience;
+            this.CurrentExperience += experience;
             return niveisEv;
         }
 
         public void RemoveOneLevel()
         {
-            ExperienciaAtual = 0;
+            CurrentExperience = 0;
 
-            if (Level > LevelBloqueado + 1)
-                LevelBloqueado = Level;
+            if (Level > BlockedLevel + 1)
+                BlockedLevel = Level;
 
             Level--;
-            ExperienciaProximoNivel = this.ExperienceTotalLevel(Level + 1);
-            this.ExperienciaAtual = this.ExperienceTotalLevel(Level);
+            ExperienceForNextLevel = this.ExperienceTotalLevel(Level + 1);
+            this.CurrentExperience = this.ExperienceTotalLevel(Level);
         }
 
         private void Evolve()
         {
             this.Level++;
-            this.ExperienciaProximoNivel = this.ExperienceTotalLevel(Level + 1);
+            this.ExperienceForNextLevel = this.ExperienceTotalLevel(Level + 1);
         }
 
         // Needs to be 83 for level 2.
@@ -73,8 +73,8 @@ namespace WafclastRPG.Entities
             {
                 cm.AutoMap();
                 cm.SetIgnoreExtraElements(true);
-                cm.MapMember(c => c.ExperienciaAtual).SetSerializer(new DecimalSerializer(BsonType.Decimal128, new RepresentationConverter(true, true)));
-                cm.MapMember(c => c.ExperienciaProximoNivel).SetSerializer(new DecimalSerializer(BsonType.Decimal128, new RepresentationConverter(true, true)));
+                cm.MapMember(c => c.CurrentExperience).SetSerializer(new DecimalSerializer(BsonType.Decimal128, new RepresentationConverter(true, true)));
+                cm.MapMember(c => c.ExperienceForNextLevel).SetSerializer(new DecimalSerializer(BsonType.Decimal128, new RepresentationConverter(true, true)));
             });
         }
     }

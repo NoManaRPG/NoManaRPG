@@ -1,5 +1,4 @@
-﻿using DSharpPlus.CommandsNext;
-using DSharpPlus.Entities;
+﻿using DSharpPlus.Entities;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
@@ -93,8 +92,6 @@ namespace WafclastRPG.DataBases
                 for (int i = 0; i < quantity; i++)
                 {
                     await InsertAsync(item);
-                    player.Character.Inventory.Quantity++;
-                    player.Character.Inventory.QuantityDifferentItens++;
                 }
                 return;
             }
@@ -103,14 +100,11 @@ namespace WafclastRPG.DataBases
             {
                 item.Quantity = quantity;
                 await InsertAsync(item);
-                player.Character.Inventory.Quantity += quantity;
-                player.Character.Inventory.QuantityDifferentItens++;
                 return;
             }
 
             itemFound.Quantity += quantity;
             await ReplaceAsync(itemFound);
-            player.Character.Inventory.Quantity += quantity;
         }
 
 
@@ -128,8 +122,8 @@ namespace WafclastRPG.DataBases
     public class Response
     {
         public DiscordEmbedBuilder Embed;
-        public ulong TargetId;
-        public string Message = null;
+        public ulong? TargetId;
+        public string Message;
         public Response(DiscordEmbedBuilder embed) => Embed = embed;
         public Response(string message) => Message = message;
     }

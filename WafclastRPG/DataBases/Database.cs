@@ -69,8 +69,6 @@ namespace WafclastRPG.DataBases
           => CollectionPlayers.Find(x => x.Id == user.Id).FirstOrDefaultAsync();
         public Task<WafclastMonster> FindAsync(WafclastMonsterBase monster)
           => CollectionMonsters.Find(x => x.Id == monster.Id).FirstOrDefaultAsync();
-        public Task<WafclastMap> FindAsync(WafclastLocalization localization)
-          => CollectionMaps.Find(x => x.Id == localization.ChannelId).FirstOrDefaultAsync();
         public Task<WafclastMap> FindAsync(DiscordChannel discordChannel)
           => CollectionMaps.Find(x => x.Id == discordChannel.Id).FirstOrDefaultAsync();
 
@@ -131,8 +129,6 @@ namespace WafclastRPG.DataBases
                 for (int i = 0; i < quantity; i++)
                 {
                     await InsertAsync(item);
-                    player.Character.Inventory.Quantity++;
-                    player.Character.Inventory.QuantityDifferentItens++;
                 }
                 return;
             }
@@ -141,14 +137,11 @@ namespace WafclastRPG.DataBases
             {
                 item.Quantity = quantity;
                 await InsertAsync(item);
-                player.Character.Inventory.Quantity += quantity;
-                player.Character.Inventory.QuantityDifferentItens++;
                 return;
             }
 
             itemFound.Quantity += quantity;
             await ReplaceAsync(itemFound);
-            player.Character.Inventory.Quantity += quantity;
         }
 
 

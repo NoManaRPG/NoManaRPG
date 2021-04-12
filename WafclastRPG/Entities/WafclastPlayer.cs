@@ -16,15 +16,12 @@ namespace WafclastRPG.Entities
 
         public string Language { get; set; } = "pt-BR";
 
-        public WafclastPlayer(ulong id, bool createCharacter = true)
+        public WafclastPlayer(ulong id)
         {
             Id = id;
             DateAccountCreation = DateTime.UtcNow;
-            if (createCharacter)
-                Character = new WafclastCharacter();
+            Character = new WafclastCharacter();
         }
-
-        public void NewCharacter() => Character = new WafclastCharacter();
 
         public string Mention { get => $"<@{Id.ToString(CultureInfo.InvariantCulture)}>"; }
 

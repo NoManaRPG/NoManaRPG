@@ -22,7 +22,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             var player = await database.FindAsync(ctx.User);
             if (player.Character == null)
             {
-                await ctx.ResponderAsync(Strings.NovoJogador);
+               // await ctx.ResponderAsync(Strings.NovoJogador);
                 return;
             }
 

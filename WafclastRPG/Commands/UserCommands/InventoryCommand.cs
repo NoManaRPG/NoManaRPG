@@ -14,6 +14,7 @@ using System;
 using WafclastRPG.Entities;
 using WafclastRPG.Entities.Itens;
 using System.Collections.Generic;
+using WafclastRPG.Properties;
 
 namespace WafclastRPG.Commands.GeneralCommands
 {
@@ -31,14 +32,15 @@ namespace WafclastRPG.Commands.GeneralCommands
             var player = await banco.FindAsync(ctx.User);
             if (player.Character == null)
             {
-                await ctx.ResponderAsync(Strings.NovoJogador);
+                await ctx.ResponderAsync(Messages.NaoEscreveuComecar);
                 return;
             }
 
             banco.StartExecutingInteractivity(ctx.User.Id);
 
             var pagina = 1;
-            var maxPag = (int)Math.Ceiling((double)player.Character.Inventory.QuantityDifferentItens / 5);
+            double maxPag = Convert.ToDouble(await banco.CollectionItems.CountDocumentsAsync(x => x.PlayerId == ctx.User.Id));
+            maxPag /= 5;
 
             DiscordMessage msgEmbed = null;
             var temporaryInventory = await CreatePlayerInventory(pagina, maxPag, player, msgEmbed, ctx);
@@ -128,7 +130,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             banco.StopExecutingInteractivity(ctx.User.Id);
         }
 
-        public async Task<TemporaryInventory> CreatePlayerInventory(int pagina, int maxPag, WafclastPlayer player, DiscordMessage msgEmbed, CommandContext ctx)
+        public async Task<TemporaryInventory> CreatePlayerInventory(int pagina, double maxPag, WafclastPlayer player, DiscordMessage msgEmbed, CommandContext ctx)
         {
             var timer = new Stopwatch();
             timer.Start();

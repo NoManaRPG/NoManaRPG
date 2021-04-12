@@ -24,7 +24,6 @@ namespace WafclastRPG.Commands.PlayerCommands
         [Aliases("loot")]
         [Description("Permite saquear corpos de monstros mortos.")]
         [Usage("saquear [ ID ]")]
-        [Example("saquear 1", "Faz você procurar por itens no corpo do monstro de ID 1.")]
         public async Task LootCommandAsync(CommandContext ctx, int monsterId = 1)
         {
             var timer = new Stopwatch();
@@ -41,9 +40,6 @@ namespace WafclastRPG.Commands.PlayerCommands
 
                      if (player.Character == null)
                          return new Response(Messages.NaoEscreveuComecar);
-
-                     if (player.Character.Localization != ctx.Channel)
-                         return new Response(Messages.ComandoEmLocalizacaoDiferente);
 
                      var map = await session.FindAsync(ctx.Channel);
                      if (map == null)

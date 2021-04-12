@@ -22,9 +22,8 @@ namespace WafclastRPG.Commands.GeneralCommands
 
         [Command("atacar")]
         [Aliases("at")]
-        [Description("Permite executar um ataque físico em um monstro ou jogador.")]
-        [Usage("atacar [ ID do Monstro | Jogador ]")]
-        [Example("atacar 1", "Faz você atacar o monstro de ID 1.")]
+        [Description("Permite executar um ataque físico em um monstro.")]
+        [Usage("atacar [ ID do Monstro ]")]
         public async Task AttackCommandAsync(CommandContext ctx, int monsterId = 1)
         {
             var timer = new Stopwatch();
@@ -47,8 +46,6 @@ namespace WafclastRPG.Commands.GeneralCommands
                     if (map == null)
                         return new Response(Messages.CanalNaoEsMapa);
 
-                    if (player.Character.Localization != map)
-                        return new Response(Messages.ComandoEmLocalizacaoDiferente);
 
                     if (map.Tipo == MapType.Cidade)
                         return new Response(Messages.NaoPodeAtacarNaCidade);
@@ -84,8 +81,6 @@ namespace WafclastRPG.Commands.GeneralCommands
                         {
                             player.MonsterKill++;
 
-                            if (player.Character.Karma < 0)
-                                player.Character.Karma += 1;
 
                             str.AppendLine($"{Emojis.CrossBone} {target.Name.Titulo()} {Emojis.CrossBone}");
 
@@ -140,95 +135,6 @@ namespace WafclastRPG.Commands.GeneralCommands
             timer.Stop();
             response.Embed.WithFooter($"{timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.");
             await ctx.RespondAsync(ctx.User.Mention, response.Embed.Build());
-        }
-
-        [Command("atacar")]
-        [Example("atacar @Talion", "Faz você atacar o jogador mencionado.")]
-        [Priority(1)]
-        public async Task AttackCommandAsync(CommandContext ctx, DiscordUser targetUser)
-        {
-            var timer = new Stopwatch();
-            timer.Start();
-
-            await ctx.TriggerTypingAsync();
-
-            if (targetUser == ctx.User) return;
-
-            Response response;
-            using (var session = await database.StartDatabaseSessionAsync())
-                response = await session.WithTransactionAsync(async (s, ct) =>
-                {
-                    var player = await session.FindAsync(ctx.User);
-
-                    Thread.CurrentThread.CurrentUICulture = new CultureInfo(player.Language);
-
-                    if (player.Character == null)
-                        return new Response(Messages.NaoEscreveuComecar);
-                    #region Questions
-                    var map = await session.FindAsync(ctx.Channel);
-                    if (map == null)
-                        return new Response(Messages.CanalNaoEsMapa);
-
-                    if (map.Id != player.Character.Localization.ChannelId)
-                        return new Response(Messages.ComandoEmLocalizacaoDiferente);
-
-                    if (map.Tipo == MapType.Cidade)
-                        return new Response(Messages.NaoPodeAtacarNaCidade);
-
-                    var target = await session.FindAsync(targetUser);
-                    if (target.Character == null)
-                        return new Response(Messages.JogadorAlvoNaoCriouPersonagem);
-
-                    if (target.Character.Localization != player.Character.Localization)
-                        return new Response(Messages.JogadorAlvoEstaEmOutraLocalizacao);
-                    #endregion
-                    //Combat
-                    var random = new Random();
-                    var str = new StringBuilder();
-                    var embed = new DiscordEmbedBuilder();
-                    embed.WithColor(DiscordColor.Red);
-                    embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
-                    embed.WithTitle($"Relatorio do combate contra {targetUser.Username}.");
-
-                    if (target.Character.Karma == 0)
-                        player.Character.Karma -= 1;
-
-                    if (random.Chance(player.Character.HitChance(target.Character.Evasion.CurrentValue)))
-                        str.AppendLine($"{target.Mention} conseguiu desviar.");
-                    else
-                    {
-                        var playerDamage = random.Sortear(player.Character.PhysicalDamage.CurrentValue);
-                        playerDamage = target.Character.DamageReduction(playerDamage);
-                        var isTargetDead = target.Character.ReceiveDamage(playerDamage);
-
-                        str.AppendLine($"{target.Mention} não conseguiu desviar.");
-                        str.AppendLine($"{target.Mention} recebeu {playerDamage:N2}({Emojis.Adaga}) de dano.");
-
-                        if (isTargetDead)
-                        {
-                            if (target.Character.Karma == 0)
-                                player.Character.Karma -= 10;
-                            str.AppendLine($"{Emojis.CrossBone} {target.Mention} {Emojis.CrossBone}");
-                            player.PlayerKill++;
-                            target.Deaths++;
-                        }
-                    }
-
-                    await session.ReplaceAsync(player);
-                    await session.ReplaceAsync(target);
-                    embed.WithDescription(str.ToString());
-                    return new Response(embed);
-                });
-
-            if (!string.IsNullOrWhiteSpace(response.Message))
-            {
-                await ctx.ResponderAsync(response.Message);
-                return;
-            }
-
-            timer.Stop();
-            response.Embed.WithFooter($"{timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.");
-            await ctx.RespondAsync($"{ctx.User.Mention} {targetUser.Mention}", response.Embed.Build());
         }
     }
 }

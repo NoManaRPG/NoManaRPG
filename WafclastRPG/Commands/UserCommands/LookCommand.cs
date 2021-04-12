@@ -19,7 +19,6 @@ namespace WafclastRPG.Commands.GeneralCommands
         [Aliases("look", "l")]
         [Description("Permite ver a vida de algum monstro, jogador ou examinar uma região.")]
         [Usage("olhar [ ID | @menção ]")]
-        [Example("olhar 1", "Permite olhar a vida do monstro de ID 1.")]
         [Priority(1)]
         public async Task LookCommandAsync(CommandContext ctx, int monsterId)
         {
@@ -27,7 +26,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             var player = await banco.FindAsync(ctx.User);
             if (player.Character == null)
             {
-                await ctx.ResponderAsync(Strings.NovoJogador);
+                //   await ctx.ResponderAsync(Strings.NovoJogador);
                 return;
             }
 
@@ -53,60 +52,13 @@ namespace WafclastRPG.Commands.GeneralCommands
         }
 
         [Command("olhar")]
-        [Example("olhar @Talion", "Permite olhar a vida do jogador mencionado.")]
-        [Priority(2)]
-        public async Task LookCommandAsync(CommandContext ctx, DiscordUser target)
-        {
-            await ctx.TriggerTypingAsync();
-            var player = await banco.FindAsync(ctx.User);
-            if (player.Character == null)
-            {
-                await ctx.ResponderAsync(Strings.NovoJogador);
-                return;
-            }
-
-            if (player.Character.Localization.ChannelId != ctx.Channel.Id)
-            {
-                await ctx.ResponderAsync(Strings.LocalDiferente(ctx.Channel.Name));
-                return;
-            }
-
-            var playerTarget = await banco.FindAsync(target);
-            if (playerTarget == null)
-            {
-                await ctx.ResponderAsync("o jogador ainda não criou um personagem!");
-                return;
-            }
-
-            if (playerTarget.Character.Localization != player.Character.Localization)
-            {
-                await ctx.ResponderAsync("vocês não estão no mesmo lugar!");
-                return;
-            }
-
-            decimal porcentagemLife = Convert.ToInt32(playerTarget.Character.Life.CurrentValue / playerTarget.Character.Life.MaxValue);
-
-            var embed = new DiscordEmbedBuilder();
-            embed.WithTitle(target.Username.Titulo());
-            embed.AddField("Vida".Titulo(), $"{Emojis.GerarVidaEmoji(porcentagemLife)} {playerTarget.Character.Life.CurrentValue:N2} / {playerTarget.Character.Life.MaxValue:N2}");
-            await ctx.ResponderAsync($"você olha para {target.Mention}", embed.Build());
-        }
-
-        [Command("olhar")]
-        [Example("olhar", "Permite olhar o mapa.")]
         public async Task LookCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
             var player = await banco.FindAsync(ctx.User);
             if (player.Character == null)
             {
-                await ctx.ResponderAsync(Strings.NovoJogador);
-                return;
-            }
-
-            if (player.Character.Localization.ChannelId != ctx.Channel.Id)
-            {
-                await ctx.ResponderAsync(Strings.LocalDiferente(ctx.Channel.Name));
+                // await ctx.ResponderAsync(Strings.NovoJogador);
                 return;
             }
 

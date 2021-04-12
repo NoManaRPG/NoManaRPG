@@ -16,8 +16,6 @@ namespace WafclastRPG.Comandos.Acao
         [Command("prefixo")]
         [Description("Define um prefixo customizado para o servidor atual.")]
         [Cooldown(1, 5, CooldownBucketType.Guild)]
-        [Example("prefixo !", "Define o prefixo do servidor para *!*.")]
-        [Example("prefixo", "Volta ao prefixo original do bot.")]
         [Usage("prefixo [ prefix ]")]
         [RequireUserPermissions(Permissions.Administrator)]
         public async Task ComandoPrefixoAsync(CommandContext ctx, string prefixo = "")

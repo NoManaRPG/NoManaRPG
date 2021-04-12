@@ -25,16 +25,14 @@ namespace WafclastRPG.Commands.GeneralCommands
             var player = await banco.FindAsync(ctx.User);
             if (player.Character == null)
             {
-                await ctx.ResponderAsync(Strings.NovoJogador);
+              //  await ctx.ResponderAsync(Strings.NovoJogador);
                 return;
             }
 
             var str = new StringBuilder();
 
-            str.AppendLine($"{player.Character.ExperienciaAtual:N2} de experiencia e precisa {(player.Character.ExperienciaProximoNivel - player.Character.ExperienciaAtual):N2} para o nível {player.Character.Level + 1}.");
-            str.AppendLine($"Carregando {player.Character.Inventory.Quantity} itens.");
+            str.AppendLine($"{player.Character.CurrentExperience:N2} de experiencia e precisa {(player.Character.ExperienceForNextLevel - player.Character.CurrentExperience):N2} para o nível {player.Character.Level + 1}.");
             str.AppendLine($"Recupera {player.Character.LifeRegen.CurrentValue:N2} vida e {player.Character.ManaRegen.CurrentValue:N2} mana em {(player.Character.RegenDate - DateTime.UtcNow).TotalSeconds:N0}s.");
-            str.AppendLine($"{player.Character.Karma} pontos de Karma.");
             str.AppendLine($"{player.MonsterKill} monstros eliminado.");
             str.AppendLine($"{player.PlayerKill} jogadores eliminado.");
             str.AppendLine($"{player.Deaths} vezes morto.");
@@ -55,10 +53,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             embed.AddField("Mana".Titulo(), $"{player.Character.Mana.CurrentValue:N2} / {player.Character.Mana.MaxValue:N2}", true);
             embed.AddField("Escudo mágico".Titulo(), $"{player.Character.EnergyShield.CurrentValue:N2} / {player.Character.EnergyShield.MaxValue:N2}", true);
 
-            var dg = await ctx.Client.GetGuildAsync(player.Character.Localization.ServerId, false);
-            var dc = dg.GetChannel(player.Character.Localization.ChannelId);
-            var invite = await dc.CreateInviteAsync(60, 0);
-            embed.AddField("Localização".Titulo(), $"{Emojis.Mapa} {Formatter.MaskedUrl(dc.Name, new Uri(invite.ToString()))}");
+            embed.AddField("Localização".Titulo(), $"{Emojis.Mapa} {player.Character.CurrentFloor}");
 
             await ctx.ResponderAsync(embed.Build());
         }

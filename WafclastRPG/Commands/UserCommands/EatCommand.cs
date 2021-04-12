@@ -20,7 +20,6 @@ namespace WafclastRPG.Commands.GeneralCommands
         [Aliases("eat")]
         [Description("Permite comer um item do tipo Comida")]
         [Usage("comer [ quantidade ] [ nome ]")]
-        [Example("comer 2 frango ", "Come duas vezes o item chamado frango")]
         public async Task UseCommandAsync(CommandContext ctx, int quantity = 1, [RemainingText] string itemName = "")
         {
             await ctx.TriggerTypingAsync();

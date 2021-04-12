@@ -15,20 +15,21 @@ using WafclastRPG.Attributes;
 using WafclastRPG.Extensions;
 using WafclastRPG.DataBases;
 
-namespace WafclastRPG.Comandos.Exibir
+namespace WafclastRPG.Commands.GeneralCommands
 {
     public class HelpCommand : BaseCommandModule
     {
         [Command("ajuda")]
         [Aliases("h", "?", "help")]
         [Description("Explica como usar um comando, suas abreviações e exemplos.")]
-        [Example("ajuda status", "Exibe o que é o comando *status*, seus argumentos e abreviações..")]
-        [Example("ajuda", "Exibe todos os comandos.")]
         [Usage("ajuda [ comando ]")]
         public async Task HelpCommanAsync(CommandContext ctx, params string[] comando)
         {
             await ctx.TriggerTypingAsync();
-            await new DefaultHelpModule().DefaultHelpAsync(ctx, comando);
+            if (comando.Length == 0)
+                await ctx.ResponderAsync($"Oi! Eu sou Wafclast RPG! Para a lista dos comandos que eu conheço, você pode digitar `w.comandos`, ou {ctx.Client.CurrentUser.Mention} comandos");
+            else
+                await new DefaultHelpModule().DefaultHelpAsync(ctx, comando);
         }
 
         [Command("admin")]
@@ -52,7 +53,6 @@ namespace WafclastRPG.Comandos.Exibir
     public class IComandoAjuda : BaseHelpFormatter
     {
         DiscordEmbedBuilder embed;
-        bool isCommandHelp;
         string prefix;
 
         public IComandoAjuda(CommandContext ctx) : base(ctx)
@@ -61,45 +61,24 @@ namespace WafclastRPG.Comandos.Exibir
             var banco = ctx.Services.GetService<DataBase>();
             prefix = banco.GetServerPrefix(ctx.Guild.Id, defaultPrefix);
 
-            if (ctx.RawArguments.Count == 0)
-                isCommandHelp = true;
-            else
-            {
-                embed = new DiscordEmbedBuilder();
-                embed.WithAuthor("Menu de ajuda do Wafclast", null, ctx.Client.CurrentUser.AvatarUrl);
-                isCommandHelp = false;
-            }
+            embed = new DiscordEmbedBuilder();
+            embed.WithAuthor("Menu de ajuda do Wafclast", null, ctx.Client.CurrentUser.AvatarUrl);
         }
 
         public override BaseHelpFormatter WithCommand(Command command)
         {
-            if (!isCommandHelp)
-            {
-                embed.WithTitle(Formatter.Bold($"{prefix}{command.Name}"));
-                embed.WithDescription($"```{command.Description}```");
+            embed.WithTitle(Formatter.Bold($"{prefix}{command.Name}"));
+            embed.WithDescription($"```{command.Description}```");
 
-                var str = new StringBuilder();
-                var examples = command.CustomAttributes.Where(x => x.GetType() == typeof(ExampleAttribute));
-                var usage = command.CustomAttributes.Where(x => x.GetType() == typeof(UsageAttribute)).FirstOrDefault();
+            var usage = command.CustomAttributes.Where(x => x.GetType() == typeof(UsageAttribute)).FirstOrDefault();
 
-                foreach (var item in examples)
-                {
-                    str.AppendLine(Formatter.InlineCode($"{prefix}{(item as ExampleAttribute).Command}"));
-                    str.AppendLine((item as ExampleAttribute).Description);
-                    str.AppendLine();
-                }
+            if (usage != null)
+                embed.AddField(Formatter.Bold(Formatter.Italic("Usos")), Formatter.InlineCode($"{prefix}{(usage as UsageAttribute).Command}"), true);
 
-                if (!string.IsNullOrWhiteSpace(str.ToString()))
-                    embed.AddField(Formatter.Bold(Formatter.Italic("Exemplos")), str.ToString(), true);
-
-                if (usage != null)
-                    embed.AddField(Formatter.Bold(Formatter.Italic("Usos")), Formatter.InlineCode($"{prefix}{(usage as UsageAttribute).Command}"), true);
-
-                StringBuilder strAliases = new StringBuilder();
-                foreach (var al in command.Aliases)
-                    strAliases.Append($"__*{al}*__ ,");
-                embed.AddField(Formatter.Bold(Formatter.Italic("Atalhos")), $"{ (string.IsNullOrWhiteSpace(strAliases.ToString()) ? "__*nenhum*__" : strAliases.ToString()) }");
-            }
+            StringBuilder strAliases = new StringBuilder();
+            foreach (var al in command.Aliases)
+                strAliases.Append($"__*{al}*__ ,");
+            embed.AddField(Formatter.Bold(Formatter.Italic("Atalhos")), $"{ (string.IsNullOrWhiteSpace(strAliases.ToString()) ? "__*nenhum*__" : strAliases.ToString()) }");
             return this;
         }
 
@@ -107,28 +86,8 @@ namespace WafclastRPG.Comandos.Exibir
 
         public override CommandHelpMessage Build()
         {
-            if (!isCommandHelp)
-            {
-                embed.WithColor(DiscordColor.CornflowerBlue);
-                return new CommandHelpMessage(embed: embed.Build());
-            }
-            return new CommandHelpMessage(embed: MensagemAjuda());
-        }
-
-        public DiscordEmbed MensagemAjuda()
-        {
-            DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
-            embed.WithDescription("Digite `w.ajuda [comando]` para mais informações. Por exemplo: `w.ajuda bot`.");
-
-            embed.AddField("Bot".Titulo(), $"{Formatter.InlineCode("ajuda")} - {Formatter.InlineCode("info")}");
-            embed.AddField("Jogador".Titulo(), $"{Formatter.InlineCode("comecar")} - {Formatter.InlineCode("saquear")} - {Formatter.InlineCode("olhar")} - {Formatter.InlineCode("viajar")} - {Formatter.InlineCode("atacar")} - {Formatter.InlineCode("status")} - {Formatter.InlineCode("inventario")} - {Formatter.InlineCode("comer")} - {Formatter.InlineCode("evoluir-atributo")} - {Formatter.InlineCode("atributos")} - {Formatter.InlineCode("loja")} - {Formatter.InlineCode("evoluir")}");
-            embed.AddField("Ranks".Titulo(), $"{Formatter.InlineCode("rank-moedas")} {Formatter.InlineCode("rank-nivel")}");
-            embed.AddField("Outros".Titulo(), $"{Formatter.InlineCode("admin")}");
-
-            embed.WithThumbnail("https://naomesmo.com.br/wp-content/uploads/2013/01/me-ajuda.gif");
-            embed.WithColor(DiscordColor.Violet);
-            embed.WithTimestamp(DateTime.Now);
-            return embed.Build();
+            embed.WithColor(DiscordColor.CornflowerBlue);
+            return new CommandHelpMessage(embed: embed.Build());
         }
     }
 }

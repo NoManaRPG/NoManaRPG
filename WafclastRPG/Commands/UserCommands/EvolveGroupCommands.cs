@@ -21,8 +21,6 @@ namespace WafclastRPG.Commands.UserCommands
     [Aliases("ev")]
     [Description("Permite evoluir atributos e personagem.")]
     [Usage("evoluir [ atributos | personagem ]")]
-    [Example("evoluir atributos", "Permite usar pontos livres para evoluir um atributo.")]
-    [Example("evoluir personagem", "Permite infundir núcleos para ganhar experiencia.")]
     public class EvolveGroupCommands : BaseCommandModule
     {
         public DataBase database;
@@ -52,14 +50,7 @@ namespace WafclastRPG.Commands.UserCommands
             var player = await database.FindAsync(ctx.User);
             if (player.Character == null)
             {
-                await ctx.ResponderAsync(Strings.NovoJogador);
-                return;
-            }
-
-            var map = await database.FindAsync(player.Character.Localization);
-            if (map.Tipo != MapType.Cidade)
-            {
-                await ctx.ResponderAsync(Strings.SomenteNaCidade);
+              //  await ctx.ResponderAsync(Strings.NovoJogador);
                 return;
             }
 
@@ -189,9 +180,8 @@ namespace WafclastRPG.Commands.UserCommands
                         case WafclastMonsterCore mc:
                             var evoluiu = player.Character.AddExperience(mc.ExperienceGain * quantity);
                             item.Quantity -= quantity;
-                            player.Character.Inventory.Quantity -= item.Quantity;
                             if (evoluiu)
-                                mensagem = $"você infundiu **{quantity}** {mc.Name.Titulo()} e ganhou `{(quantity * mc.ExperienceGain):N2}` de experiencia! Parece que você evoluiu!";
+                                mensagem = $"você infundiu **{quantity}** {mc.Name.Titulo()} e ganhou `{(quantity * mc.ExperienceGain):N2}` de experiencia! Parece que você evoluiu!'";
                             else
                                 mensagem = $"você infundiu **{quantity}** {mc.Name.Titulo()} e ganhou `{(quantity * mc.ExperienceGain):N2}` de experiencia!";
 
@@ -203,7 +193,6 @@ namespace WafclastRPG.Commands.UserCommands
                     if (item.Quantity == 0)
                     {
                         await session.RemoveAsync(item);
-                        player.Character.Inventory.QuantityDifferentItens--;
                     }
                     else
                         await session.ReplaceAsync(item);

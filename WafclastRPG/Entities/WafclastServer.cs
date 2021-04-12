@@ -11,7 +11,7 @@ namespace WafclastRPG.Entities
 
         public WafclastServer(ulong id)
         {
-            this.Id = id;
+            Id = id;
         }
 
         public void SetPrefix(string prefix) => this.Prefix = prefix;

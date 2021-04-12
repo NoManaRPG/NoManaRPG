@@ -39,8 +39,6 @@ namespace WafclastRPG
             this.Client.GuildMemberAdded += (c, e) => GuildMemberAddedEvent.Event(c, e, botInfo);
             this.Client.GuildMemberRemoved += (c, e) => GuildMemberRemovedEvent.Event(c, e, botInfo);
             this.Client.MessageCreated += (c, e) => MessageCreatedEvent.Event(c, e, CommandsNext, database);
-            this.Client.MessageDeleted += MessageDeletedEvent.Event;
-            this.Client.MessageUpdated += MessageUpdatedEvent.Event;
             this.Client.ClientErrored += ClientErroredEvent.Event;
 
             this.Client.UseInteractivity(new InteractivityConfiguration
@@ -61,16 +59,13 @@ namespace WafclastRPG
             this.CommandsNext.RegisterCommands<StatusCommand>();
             this.CommandsNext.RegisterCommands<DatabaseCommands>();
             this.CommandsNext.RegisterCommands<AttackCommand>();
-            this.CommandsNext.RegisterCommands<TravelCommand>();
             this.CommandsNext.RegisterCommands<LookCommand>();
             this.CommandsNext.RegisterCommands<InventoryCommand>();
             this.CommandsNext.RegisterCommands<MoneyRankCommand>();
             this.CommandsNext.RegisterCommands<LevelRankCommand>();
             this.CommandsNext.RegisterCommands<EatCommand>();
-            this.CommandsNext.RegisterCommands<AssignAttributeCommand>();
             this.CommandsNext.RegisterCommands<AttributesCommand>();
             this.CommandsNext.RegisterCommands<ShopCommand>();
-            this.CommandsNext.RegisterCommands<LootCommand>();
             this.CommandsNext.RegisterCommands<EvolveGroupCommands>();
         }
     }

@@ -13,8 +13,6 @@ namespace WafclastRPG.Comandos.Exibir
         [Command("equipamentos")]
         [Aliases("eq")]
         [Description("Permite todos os itens equipados no seu personagem. Cada item está separado por `⌈SLOT⌋`.")]
-        [Example("criar-personagem caçadora", "Faz você escolher o personagem com a classe caçadora.")]
-        [Example("criar-personagem", "Exibe todas as classes.")]
         [Usage("criar-personagem [ classe ]")]
         public async Task ComandoEquipamentosAsync(CommandContext ctx)
         {

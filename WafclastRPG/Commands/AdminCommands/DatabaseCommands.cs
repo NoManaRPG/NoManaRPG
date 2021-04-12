@@ -29,8 +29,6 @@ namespace WafclastRPG.Commands.AdminCommands
         [Command("deletar-user")]
         [Description("Permite deletar o usuario informado.")]
         [Usage("deletar-user [ @menção | id ]")]
-        [Example("deletar-user @talion", "Deleta o usuario mencionado.")]
-        [Example("deletar-user 1239485", "Deleta o usuario informado.")]
         [RequireOwner]
         public async Task DeletarUserAsync(CommandContext ctx, DiscordUser user = null)
         {
@@ -133,7 +131,6 @@ namespace WafclastRPG.Commands.AdminCommands
         [Command("monstro")]
         [Description("Permite editar ou criar um monstro.")]
         [Usage("monstro [ ID ]")]
-        [Example("monstro 3", "Começa a editar o monstro de ID 3")]
         [RequireUserPermissions(Permissions.Administrator)]
         public async Task MonstroEditarAsync(CommandContext ctx, int id = 0)
         {
@@ -463,7 +460,6 @@ namespace WafclastRPG.Commands.AdminCommands
         [Command("monstro-drop")]
         [Description("Permite adicionar uma recompensa ao monstro.")]
         [Usage("monstro-drop [ Monstro ID ] [ Item ID ] [ Posição }")]
-        [Example("monstro-drop 1 1 0", "Adiciona uma nova recompensa para quando alguem eliminar o monstro de ID 1")]
         [RequireUserPermissions(Permissions.Administrator)]
         public async Task MonstroDropAsync(CommandContext ctx, int monsterId = 0, ulong itemId = 0, int pos = 0)
         {
@@ -537,44 +533,37 @@ namespace WafclastRPG.Commands.AdminCommands
 
                     foreach (WafclastPlayer item in list)
                     {
-                        item.Language = "pt-BR";
 
-                        if (item.Character != null)
-                        {
-                            item.Character.AttributePoints = item.Character.Level * 10;
+                        item.Character.Strength = new WafclastStatePoints(20);
+                        item.Character.Intelligence = new WafclastStatePoints(20);
+                        item.Character.Dexterity = new WafclastStatePoints(20);
 
-                            item.Character.Strength = new WafclastStatePoints(20);
-                            item.Character.Intelligence = new WafclastStatePoints(20);
-                            item.Character.Dexterity = new WafclastStatePoints(20);
+                        item.Character.PhysicalDamage = new WafclastStatePoints(8);
+                        item.Character.PhysicalDamage.MultValue += item.Character.Strength.CurrentValue * 0.2M;
+                        item.Character.PhysicalDamage.Restart();
 
-                            item.Character.PhysicalDamage = new WafclastStatePoints(8);
-                            item.Character.PhysicalDamage.MultValue += item.Character.Strength.CurrentValue * 0.2M;
-                            item.Character.PhysicalDamage.Restart();
+                        item.Character.Evasion = new WafclastStatePoints(53);
+                        item.Character.Evasion.MultValue += item.Character.Dexterity.CurrentValue * 0.2M;
+                        item.Character.Evasion.Restart();
 
-                            item.Character.Evasion = new WafclastStatePoints(53);
-                            item.Character.Evasion.MultValue += item.Character.Dexterity.CurrentValue * 0.2M;
-                            item.Character.Evasion.Restart();
+                        item.Character.Accuracy = new WafclastStatePoints(item.Character.Dexterity.CurrentValue * 2);
 
-                            item.Character.Accuracy = new WafclastStatePoints(item.Character.Dexterity.CurrentValue * 2);
-                            item.Character.Accuracy.BaseValue += 2 * item.Character.Level;
+                        item.Character.Armour = new WafclastStatePoints(0);
 
-                            item.Character.Armour = new WafclastStatePoints(0);
+                        item.Character.EnergyShield = new WafclastStatePoints(0);
+                        item.Character.EnergyShield.MultValue += item.Character.Intelligence.CurrentValue * 0.2M;
 
-                            item.Character.EnergyShield = new WafclastStatePoints(0);
-                            item.Character.EnergyShield.MultValue += item.Character.Intelligence.CurrentValue * 0.2M;
+                        item.Character.Life = new WafclastStatePoints(50);
+                        item.Character.Life.BaseValue += item.Character.Strength.CurrentValue * 0.5M;
+                        item.Character.Life.Restart();
 
-                            item.Character.Life = new WafclastStatePoints(50);
-                            item.Character.Life.BaseValue += item.Character.Strength.CurrentValue * 0.5M;
-                            item.Character.Life.BaseValue += 12 * item.Character.Level;
-                            item.Character.Life.Restart();
+                        item.Character.Mana = new WafclastStatePoints(40);
+                        item.Character.Mana.BaseValue += item.Character.Intelligence.CurrentValue * 0.5M;
+                        item.Character.Mana.Restart();
 
-                            item.Character.Mana = new WafclastStatePoints(40);
-                            item.Character.Mana.BaseValue += item.Character.Intelligence.CurrentValue * 0.5M;
-                            item.Character.Mana.Restart();
-
-                            item.Character.LifeRegen = new WafclastStatePoints(0);
-                            item.Character.ManaRegen = new WafclastStatePoints(item.Character.Mana.MaxValue * 0.08M);
-                        }
+                        item.Character.LifeRegen = new WafclastStatePoints(0);
+                        item.Character.ManaRegen = new WafclastStatePoints(item.Character.Mana.MaxValue * 0.08M);
+                        item.Character.AttributePoints = 0;
 
                         await database.CollectionPlayers.ReplaceOneAsync(x => x.Id == item.Id, item);
                     }
@@ -613,7 +602,6 @@ namespace WafclastRPG.Commands.AdminCommands
         [Command("everyone-role")]
         [Description("Permite dar a todos os membros um cargo especifico.")]
         [Usage("everyone-role [ cargo ]")]
-        [Example("everyone-role @Admin", "Dá a todos os membros o cargo de @admin")]
         [RequireOwner]
         public async Task EveryoneRoleAsync(CommandContext ctx, DiscordRole role)
         {
