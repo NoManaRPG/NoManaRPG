@@ -24,19 +24,15 @@ namespace WafclastRPG.Entities
         public int AddExperience(double experience)
         {
             int niveisEv = 0;
-            double expResultante = this.CurrentExperience + experience;
-            if (expResultante >= this.ExperienceForNextLevel)
+            CurrentExperience += experience;
+            if (CurrentExperience >= this.ExperienceForNextLevel)
             {
                 do
                 {
-                    expResultante = expResultante - this.ExperienceForNextLevel;
                     this.Evolve();
                     niveisEv++;
-                } while (expResultante >= this.ExperienceForNextLevel);
-                this.CurrentExperience += expResultante;
-                return niveisEv;
+                } while (CurrentExperience >= this.ExperienceForNextLevel);
             }
-            this.CurrentExperience += experience;
             return niveisEv;
         }
 
