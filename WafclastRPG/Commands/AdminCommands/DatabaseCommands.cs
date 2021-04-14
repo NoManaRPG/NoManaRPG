@@ -146,11 +146,6 @@ namespace WafclastRPG.Commands.AdminCommands
                 return;
             item.Name = name.Value;
 
-            var price = await ctx.WaitForIntAsync("Valor de compra:", database, timeoutoverride);
-            if (price.TimedOut)
-                return;
-            item.PriceBuy = price.Value;
-
             var embed = new DiscordEmbedBuilder();
             embed.WithDescription($"É possível vender o item?");
             embed.WithFooter("Sim ou Não?");
@@ -187,8 +182,27 @@ namespace WafclastRPG.Commands.AdminCommands
                     break;
 
                 case "comida cru":
+                    var idTransformString = await ctx.WaitForStringAsync("ID do item após cozido:", database, timeoutoverride);
+                    if (idTransformString.TimedOut)
+                        return;
 
+                    var cookingLevel = await ctx.WaitForIntAsync("Nível para cozinhar:", database, timeoutoverride);
+                    if (cookingLevel.TimedOut)
+                        return;
 
+                    var chanceCozinhar = await ctx.WaitForDoubleAsync("Chance para cozinhar:", database, timeoutoverride);
+                    if (chanceCozinhar.TimedOut)
+                        return;
+
+                    var comidaCru = new WafclastRawFoodItem(item);
+                    comidaCru.CookedItemId = ObjectId.Parse(idTransformString.Value);
+                    comidaCru.CookingLevel = cookingLevel.Value;
+                    comidaCru.Chance = chanceCozinhar.Value / 100;
+                    await database.CollectionItems.ReplaceOneAsync(x => x.Id == comidaCru.Id, comidaCru, new ReplaceOptions { IsUpsert = true });
+                    var itemCozinhado = await database.CollectionItems.Find(x => x.Id == comidaCru.CookedItemId).FirstOrDefaultAsync();
+                    embed.AddField("Item cozinhado".Titulo(), itemCozinhado.Name, true);
+                    embed.AddField("Nível para cozinhar".Titulo(), comidaCru.CookingLevel.ToString(), true);
+                    embed.AddField("Chance".Titulo(), $"{comidaCru.Chance * 100}%", true);
                     break;
 
                 case "nucleo":
@@ -214,8 +228,6 @@ namespace WafclastRPG.Commands.AdminCommands
             embed.WithDescription(item.Description);
             embed.WithThumbnail(item.ImageURL);
             embed.WithColor(DiscordColor.Blue);
-            embed.AddField("Preço compra".Titulo(), item.PriceBuy.ToString(), true);
-            embed.AddField("Preço venda".Titulo(), (item.PriceBuy / 2).ToString(), true);
             embed.AddField("Pode vender".Titulo(), item.CanSell ? "Sim" : "Não", true);
             embed.AddField("Pode empilhar".Titulo(), item.CanStack ? "Sim" : "Não", true);
             return embed;
@@ -376,7 +388,9 @@ namespace WafclastRPG.Commands.AdminCommands
                         //item.Character.AttributePoints = (item.Character.Level - 1) * 10;
 
                         //item.Character.MineSkill = new WafclastLevel(1);
-                        item.Character.CookingSkill = new WafclastLevel(1);
+
+                        if (item.Character.CookingSkill == null)
+                            item.Character.CookingSkill = new WafclastLevel(1);
 
                         //if (item.Character.Level > 1)
                         //{
