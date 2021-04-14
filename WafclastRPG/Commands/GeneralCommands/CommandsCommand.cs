@@ -18,13 +18,21 @@ namespace WafclastRPG.Commands.GeneralCommands
         {
             var str = new StringBuilder();
             str.AppendLine("[Admin]");
+            str.Append("monstroEC, ");
+            str.Append("monstroEDROP, ");
+            str.Append("itemEC, ");
+            str.Append("deletarU, ");
+
+            str.AppendLine();
             str.AppendLine("[Geral]");
             str.Append("comandos, ");
             str.Append("ajuda, ");
             str.Append("info, ");
+
             str.AppendLine();
             str.AppendLine("[Habilidades]");
             str.Append("minerar, ");
+
             str.AppendLine();
             str.AppendLine("[Usuário]");
             str.Append("explorar, ");
@@ -32,6 +40,8 @@ namespace WafclastRPG.Commands.GeneralCommands
             str.Append("status, ");
             str.Append("inventario, ");
             str.Append("habilidades, ");
+            str.Append("subir, ");
+            str.Append("descer, ");
 
             await ctx.RespondAsync(Formatter.BlockCode(str.ToString(), "css"));
         }
