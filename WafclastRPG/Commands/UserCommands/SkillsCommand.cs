@@ -34,7 +34,10 @@ namespace WafclastRPG.Commands.UserCommands
                     embed.WithColor(DiscordColor.Brown);
 
                     var mine = player.Character.MineSkill;
+                    var cook = player.Character.CookingSkill;
+
                     embed.AddField(":pick: Mineração", $"Nível {mine.Level} ({mine.CurrentExperience:N2} / {mine.ExperienceForNextLevel:N2})");
+                    embed.AddField(":cook: Culinária", $"Nível {cook.Level} ({cook.CurrentExperience:N2} / {cook.ExperienceForNextLevel:N2})");
 
                     return new Response(embed);
                 });
