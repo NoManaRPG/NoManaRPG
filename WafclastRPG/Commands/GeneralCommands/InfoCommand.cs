@@ -16,6 +16,7 @@ namespace WafclastRPG.Commands.GeneralCommands
 
         [Command("info")]
         [Description("Exibe informações sobre o bot, memoria usada, quantia de servidores etc.")]
+        [Cooldown(1, 15, CooldownBucketType.User)]
         public async Task InfoCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();

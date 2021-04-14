@@ -21,7 +21,6 @@ namespace WafclastRPG.Entities
 
         public WafclastStatePoints Life { get; set; }
         public WafclastStatePoints Mana { get; set; }
-        public WafclastStatePoints Stamina { get; set; }
 
         public WafclastStatePoints LifeRegen { get; set; }
         public WafclastStatePoints ManaRegen { get; set; }
@@ -66,8 +65,6 @@ namespace WafclastRPG.Entities
             Mana.BaseValue += Intelligence.CurrentValue * 0.5;
             Mana.Restart();
 
-            Stamina = new WafclastStatePoints(50);
-
             LifeRegen = new WafclastStatePoints(0);
             ManaRegen = new WafclastStatePoints(Mana.MaxValue * 0.08);
             MineSkill = new WafclastLevel(1);
@@ -106,7 +103,6 @@ namespace WafclastRPG.Entities
             {
                 Life.BaseValue += 12;
                 Accuracy.BaseValue += 2;
-                Stamina.BaseValue += 50;
                 if (Level > BlockedLevel)
                     AttributePoints += 10;
             }
@@ -115,7 +111,6 @@ namespace WafclastRPG.Entities
             {
                 Accuracy.Restart();
                 Life.Restart();
-                Stamina.Restart();
                 return true;
             }
             return false;
@@ -134,7 +129,6 @@ namespace WafclastRPG.Entities
                 {
                     Life.BaseValue -= 12;
                     Accuracy.BaseValue -= 2;
-                    Stamina.BaseValue -= 50;
                     RemoveOneLevel();
                 }
                 Life.Restart();

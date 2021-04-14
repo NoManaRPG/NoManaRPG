@@ -25,6 +25,7 @@ namespace WafclastRPG.Commands.UserCommands
         [Description("Veja e use itens do seu inventário")]
         [Usage("inventario")]
         [Aliases("inv", "inventory")]
+        [Cooldown(1, 15, CooldownBucketType.User)]
         public async Task InventoryCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
@@ -70,10 +71,7 @@ namespace WafclastRPG.Commands.UserCommands
                             embed.WithThumbnail(item.ImageURL);
                             embed.WithColor(DiscordColor.Blue);
                             embed.AddField("Quantidade".Titulo(), Formatter.InlineCode(item.Quantity.ToString()), true);
-                            embed.AddField("Pode empilhar".Titulo(), item.CanStack ? "Sim" : "Não", true);
-                            embed.AddField("Pode vender".Titulo(), item.CanSell ? "Sim" : "Não", true);
-                            embed.AddField("Preço de compra".Titulo(), $"{Emojis.Coins} {Formatter.InlineCode(item.PriceBuy.ToString())}", true);
-                            embed.AddField("Preço de venda".Titulo(), $"{Emojis.Coins} {Formatter.InlineCode((item.PriceBuy / 2).ToString())}", true);
+                            embed.AddField("Venda por".Titulo(), $"{Emojis.Coins} {Formatter.InlineCode((item.PriceBuy / 2).ToString())}", true);
                             embed.AddField("Item ID".Titulo(), Formatter.InlineCode(item.Id.ToString()), true);
                             embed.WithFooter(iconUrl: ctx.User.AvatarUrl);
                             embed.WithTimestamp(DateTime.Now);
@@ -152,11 +150,9 @@ namespace WafclastRPG.Commands.UserCommands
             foreach (var item in itens)
             {
                 if (!item.CanStack)
-                    embed.AddField($"{Emojis.GerarNumber(i)}{item.Name}", $"{Formatter.InlineCode("ID:")} {Formatter.InlineCode(item.Id.ToString())}" +
-                        $"\n{Formatter.InlineCode("Tipo:")}");
+                    embed.AddField($"{Emojis.GerarNumber(i)}{item.Name}", $"{Formatter.InlineCode("ID:")} {Formatter.InlineCode(item.Id.ToString())}");
                 else
-                    embed.AddField($"{Emojis.GerarNumber(i)}{item.Name}", $"{Formatter.InlineCode("Quantidade:")} {Formatter.InlineCode(item.Quantity.ToString())}" +
-                        $"\n{Formatter.InlineCode("Tipo:")}");
+                    embed.AddField($"{Emojis.GerarNumber(i)}{item.Name}", $"{Formatter.InlineCode("Quantidade:")} {Formatter.InlineCode(item.Quantity.ToString())}");
                 i++;
             }
 
@@ -168,7 +164,7 @@ namespace WafclastRPG.Commands.UserCommands
 
             timer.Stop();
 
-            embed.WithDescription($"{Emojis.Coins} {player.Character.Coins.ToString()}");
+            embed.WithDescription($"{Emojis.Coins} {player.Character.Coins}");
             embed.WithFooter($"Digite 1 - 5 para escolher ou sair para fechar | Demorou: {timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.", ctx.User.AvatarUrl);
             if (msgEmbed == null)
                 msgEmbed = await ctx.RespondAsync(ctx.User.Mention, embed.Build());

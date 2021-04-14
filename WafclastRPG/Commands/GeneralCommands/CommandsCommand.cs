@@ -13,6 +13,7 @@ namespace WafclastRPG.Commands.GeneralCommands
         [Aliases("commands")]
         [Description("Exibe todos os comandos que o bot reconhece.")]
         [Usage("comandos")]
+        [Cooldown(1, 15, CooldownBucketType.User)]
         public async Task CommandsAsync(CommandContext ctx)
         {
             var str = new StringBuilder();

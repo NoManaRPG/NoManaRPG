@@ -493,8 +493,6 @@ namespace WafclastRPG.Commands.AdminCommands
                         //item.Character.Mana.BaseValue += item.Character.Intelligence.CurrentValue * 0.5;
                         //item.Character.Mana.Restart();
 
-                        //item.Character.Stamina = new WafclastStatePoints(50 * item.Character.Level);
-
                         //item.Character.LifeRegen = new WafclastStatePoints(0);
                         //item.Character.ManaRegen = new WafclastStatePoints(item.Character.Mana.MaxValue * 0.08);
                         //item.Character.AttributePoints = (item.Character.Level - 1) * 10;

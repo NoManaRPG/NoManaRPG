@@ -35,7 +35,7 @@ namespace WafclastRPG.Entities
         #region Static Methods
         public static ulong GetCopper(ulong baseDenomination) => baseDenomination % SilverInCopper;
         public static ulong GetSilver(ulong baseDenomination) => baseDenomination % GoldInCopper / SilverInCopper;
-        public static ulong GetGold(ulong coins) => coins / GoldInCopper;
+        public static ulong GetGold(ulong baseDenomination) => baseDenomination / GoldInCopper;
         public static void MapBuilder()
         {
             BsonClassMap.RegisterClassMap<WafclastCoins>(cm =>

@@ -21,6 +21,7 @@ namespace WafclastRPG.Commands.UserCommands
         [Aliases("s")]
         [Description("Exibe o status do seu personagem.")]
         [Usage("status")]
+        [Cooldown(1, 15, CooldownBucketType.User)]
         public async Task StatusCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
@@ -34,7 +35,7 @@ namespace WafclastRPG.Commands.UserCommands
             var str = new StringBuilder();
 
             str.AppendLine($"{player.Character.CurrentExperience:N2} de experiencia e precisa {(player.Character.ExperienceForNextLevel - player.Character.CurrentExperience):N2} para o nível {player.Character.Level + 1}.");
-            str.AppendLine($"{(player.Character.RegenDate - DateTime.UtcNow).TotalSeconds:N0}s para recuperar vida, mana e estamina.");
+            str.AppendLine($"{(player.Character.RegenDate - DateTime.UtcNow).TotalSeconds:N0}s para recuperar vida e mana.");
             str.AppendLine($"{player.MonsterKill} monstros eliminado.");
             str.AppendLine($"{player.PlayerKill} jogadores eliminado.");
             str.AppendLine($"{player.Deaths} vezes morto.");
@@ -55,7 +56,6 @@ namespace WafclastRPG.Commands.UserCommands
             embed.AddField("Mana".Titulo(), $":blue_circle: {player.Character.Mana.CurrentValue:N2} / {player.Character.Mana.MaxValue:N2}", true);
             if (player.Character.EnergyShield.MaxValue != 0)
                 embed.AddField("Escudo mágico".Titulo(), $"{player.Character.EnergyShield.CurrentValue:N2} / {player.Character.EnergyShield.MaxValue:N2}", true);
-            embed.AddField("Estamina".Titulo(), $":triumph: {player.Character.Stamina.CurrentValue:N2} / {player.Character.Stamina.MaxValue:N2}", true);
 
             embed.AddField("Andar Atual".Titulo(), $":kaaba: {player.Character.CurrentFloor}");
 

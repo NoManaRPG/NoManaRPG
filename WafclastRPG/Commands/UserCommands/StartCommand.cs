@@ -16,6 +16,7 @@ namespace WafclastRPG.Commands.UserCommands
         [Aliases("start")]
         [Description("Permite criar um personagem.")]
         [Usage("comecar")]
+        [Cooldown(1, 15, CooldownBucketType.User)]
         public async Task StartCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();

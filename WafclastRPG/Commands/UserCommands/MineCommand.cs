@@ -19,6 +19,7 @@ namespace WafclastRPG.Commands.UserCommands
         [Aliases("mine")]
         [Description("Permite minerar por recursos preciosos.")]
         [Usage("minerar")]
+        [Cooldown(1, 600, CooldownBucketType.User)]
         public async Task UseCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
@@ -30,9 +31,6 @@ namespace WafclastRPG.Commands.UserCommands
                     var player = await session.FindAsync(ctx.User);
                     if (player == null)
                         return new Response(Messages.NaoEscreveuComecar);
-
-                    if (player.Character.Stamina.CurrentValue < 50)
-                        return new Response("você não tem estamina o suficiente!");
 
                     var rd = new Random();
                     var str = new StringBuilder();
@@ -66,7 +64,6 @@ namespace WafclastRPG.Commands.UserCommands
                     }
 
                     player.Character.MineSkill.AddExperience(5);
-                    player.Character.Stamina.CurrentValue -= 50;
 
                     await session.ReplaceAsync(player);
 

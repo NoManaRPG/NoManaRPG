@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using static DSharpPlus.CommandsNext.CommandsNextExtension;
-using System;
 using Microsoft.Extensions.DependencyInjection;
 using DSharpPlus;
 using System.Linq;
 using WafclastRPG.Attributes;
-using WafclastRPG.Extensions;
 using WafclastRPG.DataBases;
 
 namespace WafclastRPG.Commands.GeneralCommands
@@ -23,6 +21,7 @@ namespace WafclastRPG.Commands.GeneralCommands
         [Aliases("h", "?", "help")]
         [Description("Explica como usar um comando, suas abreviações e exemplos.")]
         [Usage("ajuda [ comando ]")]
+        [Cooldown(1, 15, CooldownBucketType.User)]
         public async Task HelpCommanAsync(CommandContext ctx, params string[] comando)
         {
             await ctx.TriggerTypingAsync();
