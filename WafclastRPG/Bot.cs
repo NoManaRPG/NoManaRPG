@@ -68,6 +68,7 @@ namespace WafclastRPG
             this.CommandsNext.RegisterCommands<CommandsCommand>();
             this.CommandsNext.RegisterCommands<ExploreCommand>();
             this.CommandsNext.RegisterCommands<MineCommand>();
+            this.CommandsNext.RegisterCommands<SkillsCommand>();
         }
     }
 }
