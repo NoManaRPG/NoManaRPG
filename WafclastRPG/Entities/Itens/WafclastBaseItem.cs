@@ -10,7 +10,7 @@ namespace WafclastRPG.Entities.Itens
     typeof(WafclastPickaxeItem), typeof(WafclastRawFoodItem), typeof(WafclastCookedFoodItem))]
     public class WafclastBaseItem
     {
-        [BsonId(IdGenerator = typeof(BsonObjectIdGenerator))]
+        [BsonId]
         public ObjectId Id { get; set; }
         public ulong PlayerId { get; set; }
         public string Name { get; set; }
