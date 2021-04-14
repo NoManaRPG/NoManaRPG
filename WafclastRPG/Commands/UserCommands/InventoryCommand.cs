@@ -61,7 +61,7 @@ namespace WafclastRPG.Commands.UserCommands
 
                         if (int.TryParse(msg.Result.Content, out int id))
                         {
-                            id = Math.Clamp(id - 1, 0, 4);
+                            id = Math.Clamp(id, 0, temporaryInventory.itens.Count - 1);
                             var item = temporaryInventory.itens[id];
 
                             var embed = new DiscordEmbedBuilder();
