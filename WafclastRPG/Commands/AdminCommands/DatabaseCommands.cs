@@ -194,10 +194,15 @@ namespace WafclastRPG.Commands.AdminCommands
                     if (chanceCozinhar.TimedOut)
                         return;
 
+                    var experience = await ctx.WaitForDoubleAsync("Experiencia ganha ao cozinhar:", database, timeoutoverride);
+                    if (experience.TimedOut)
+                        return;
+
                     var comidaCru = new WafclastRawFoodItem(item);
                     comidaCru.CookedItemId = ObjectId.Parse(idTransformString.Value);
                     comidaCru.CookingLevel = cookingLevel.Value;
                     comidaCru.Chance = chanceCozinhar.Value / 100;
+                    comidaCru.ExperienceGain = experience.Value;
                     await database.CollectionItems.ReplaceOneAsync(x => x.Id == comidaCru.Id, comidaCru, new ReplaceOptions { IsUpsert = true });
                     var itemCozinhado = await database.CollectionItems.Find(x => x.Id == comidaCru.CookedItemId).FirstOrDefaultAsync();
                     embed.AddField("Item cozinhado".Titulo(), itemCozinhado.Name, true);
