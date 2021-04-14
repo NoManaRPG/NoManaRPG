@@ -13,6 +13,7 @@ using System.IO;
 using DSharpPlus;
 using System.Text;
 using WafclastRPG.DataBases;
+using WafclastRPG.Commands.AdminCommands;
 
 namespace WafclastRPG.DiscordEvents
 {
@@ -35,7 +36,7 @@ namespace WafclastRPG.DiscordEvents
                                 break;
                             case TimeSpan n when (n.Hours >= 1):
                                 await ctx.RespondAsync($"Aguarde {tempo.Hours} horas e {tempo.Minutes} minutos para usar este comando! {ctx.Member.Mention}.");
-                                break;  
+                                break;
                             case TimeSpan n when (n.Minutes >= 1):
                                 await ctx.RespondAsync($"Aguarde {tempo.Minutes} minutos e {tempo.Seconds} segundos para usar este comando! {ctx.Member.Mention}.");
                                 break;
@@ -56,10 +57,27 @@ namespace WafclastRPG.DiscordEvents
                     e.Context.Client.Logger.LogDebug(new EventId(601, "Comando Invalido"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
                     break;
                 case ServerErrorException se:
-                    e.Context.Client.Logger.LogDebug(new EventId(601, "Comando Invalido"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
+                    e.Context.Client.Logger.LogInformation(new EventId(601, "Comando Invalido"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
                     break;
                 case Newtonsoft.Json.JsonReaderException _:
-                    e.Context.Client.Logger.LogDebug(new EventId(602, "Discord Problem"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas discord está lento.", DateTime.Now);
+                    e.Context.Client.Logger.LogInformation(new EventId(602, "Discord Problem"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas discord está lento.", DateTime.Now);
+                    break;
+                case ArgumentException ae:
+                    if (ae.Message == "Could not find a suitable overload for the command.")
+                    {
+                        await ctx.TriggerTypingAsync();
+                        var cmd = ctx.CommandsNext.FindCommand($"ajuda {e.Command.QualifiedName}", out var args);
+                        if (cmd == null)
+                        {
+                            await ctx.RespondAsync("Comando não encontrado");
+                            return;
+                        }
+
+                        var cfx = ctx.CommandsNext.CreateFakeContext(ctx.User, ctx.Channel, "", ".", cmd, args);
+                        await ctx.CommandsNext.ExecuteCommandAsync(cfx);
+                    }
+                    else
+                        e.Context.Client.Logger.LogDebug(new EventId(601, "Argument Error"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
                     break;
                 default:
                     e.Context.Client.Logger.LogDebug(new EventId(601, "Command Error"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);

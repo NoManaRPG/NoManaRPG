@@ -19,14 +19,13 @@ namespace WafclastRPG.Commands.AdminCommands
         public DataBase database;
         public TimeSpan timeoutoverride = TimeSpan.FromMinutes(2);
 
-        [Command("deletar-user")]
+        [Command("deletar-usuario")]
         [Description("Permite deletar o usuario informado.")]
-        [Usage("deletar-user [ @menção | id ]")]
+        [Usage("deletar-usuario <usuario>")]
         [RequireOwner]
-        public async Task DeletarUserAsync(CommandContext ctx, DiscordUser user = null)
+        public async Task DeletarUserAsync(CommandContext ctx, DiscordUser user)
         {
             await ctx.TriggerTypingAsync();
-            if (user == null) user = ctx.User;
             var result = await database.CollectionPlayers.DeleteOneAsync(x => x.Id == user.Id);
             if (result.DeletedCount >= 1)
                 await ctx.ResponderAsync("usuario deletado!");
@@ -537,8 +536,7 @@ namespace WafclastRPG.Commands.AdminCommands
         public async Task Sudo(CommandContext ctx, DiscordUser member, [RemainingText] string command)
         {
             await ctx.TriggerTypingAsync();
-            var invocation = command.Substring(2);
-            var cmd = ctx.CommandsNext.FindCommand(invocation, out var args);
+            var cmd = ctx.CommandsNext.FindCommand(command, out var args);
             if (cmd == null)
             {
                 await ctx.RespondAsync("Comando não encontrado");
@@ -548,6 +546,5 @@ namespace WafclastRPG.Commands.AdminCommands
             var cfx = ctx.CommandsNext.CreateFakeContext(member, ctx.Channel, "", "w.", cmd, args);
             await ctx.CommandsNext.ExecuteCommandAsync(cfx);
         }
-
     }
 }
