@@ -1,7 +1,9 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 
 namespace WafclastRPG.Entities.Itens
 {
+    [BsonIgnoreExtraElements]
     public class WafclastLevelItem : WafclastBaseItem
     {
         public int Level { get; set; } = 1;

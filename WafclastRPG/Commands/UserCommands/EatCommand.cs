@@ -43,7 +43,7 @@ namespace WafclastRPG.Commands.UserCommands
                     //Usa item
                     switch (item)
                     {
-                        case WafclastFoodItem wf:
+                        case WafclastCookedFoodItem wf:
                             player.Character.Life.Add(wf.LifeGain * quantity);
                             item.Quantity -= quantity;
                             break;

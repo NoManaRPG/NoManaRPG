@@ -9,6 +9,8 @@ namespace WafclastRPG.Entities.Monsters
         public int MinQuantity { get; set; }
         public int MaxQuantity { get; set; }
 
+        public DropChance() { }
+
         public DropChance(ObjectId itemId, double chance, int minQuantity, int maxQuantity)
         {
             Id = itemId;

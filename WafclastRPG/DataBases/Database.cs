@@ -19,6 +19,7 @@ namespace WafclastRPG.DataBases
         public IMongoCollection<WafclastServer> CollectionGuilds { get; }
         public IMongoCollection<WafclastMonster> CollectionMonsters { get; }
         public IMongoCollection<WafclastBaseItem> CollectionItems { get; }
+        public IMongoCollection<WafclastCotacao> CollectionCotacao { get; }
 
         public ConcurrentDictionary<ulong, bool> InteractivityLocker { get; }
 
@@ -39,7 +40,6 @@ namespace WafclastRPG.DataBases
             WafclastCoins.MapBuilder();
             WafclastLevel.MapBuilderLevel();
             WafclastPlayer.MapBuilder();
-            WafclastBaseItem.MapBuilder();
 
             CollectionPlayers = Database.CriarCollection<WafclastPlayer>();
             CollectionGuilds = Database.CriarCollection<WafclastServer>();
@@ -60,7 +60,6 @@ namespace WafclastRPG.DataBases
             MineDrop.Add(new WafclastOreItem(new WafclastBaseItem
             {
                 Name = "Argila",
-                PriceBuy = 4,
                 Description = "Um pouco de argila seca e dura."
             })
             {
@@ -101,5 +100,6 @@ namespace WafclastRPG.DataBases
         }
         public Task DeleteServerAsync(ulong serverId)
             => CollectionGuilds.DeleteOneAsync(x => x.Id == serverId);
+
     }
 }

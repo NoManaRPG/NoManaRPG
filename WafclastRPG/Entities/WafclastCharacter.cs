@@ -33,6 +33,7 @@ namespace WafclastRPG.Entities
         /// Determina a chance de cair mais de 1 minério.
         /// </summary>
         public WafclastLevel MineSkill { get; set; }
+        public WafclastLevel CookingSkill { get; set; }
 
         public DateTime RegenDate { get; set; } = DateTime.UtcNow;
 
@@ -67,7 +68,9 @@ namespace WafclastRPG.Entities
 
             LifeRegen = new WafclastStatePoints(0);
             ManaRegen = new WafclastStatePoints(Mana.MaxValue * 0.08);
+
             MineSkill = new WafclastLevel(1);
+            CookingSkill = new WafclastLevel(1);
         }
 
         public double DodgeChance(double attackerkAccuracy)

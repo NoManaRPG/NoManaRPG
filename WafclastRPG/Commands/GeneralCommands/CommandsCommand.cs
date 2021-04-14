@@ -32,6 +32,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             str.AppendLine();
             str.AppendLine("[Habilidades]");
             str.Append("minerar, ");
+            str.Append("cozinhar, ");
 
             str.AppendLine();
             str.AppendLine("[Usuário]");

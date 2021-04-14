@@ -1,5 +1,8 @@
-﻿namespace WafclastRPG.Entities.Itens
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace WafclastRPG.Entities.Itens
 {
+    [BsonIgnoreExtraElements]
     public class WafclastPickaxeItem : WafclastLevelItem
     {
         /// <summary>

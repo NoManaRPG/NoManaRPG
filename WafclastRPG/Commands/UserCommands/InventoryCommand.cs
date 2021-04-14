@@ -71,14 +71,14 @@ namespace WafclastRPG.Commands.UserCommands
                             embed.WithThumbnail(item.ImageURL);
                             embed.WithColor(DiscordColor.Blue);
                             embed.AddField("Quantidade".Titulo(), Formatter.InlineCode(item.Quantity.ToString()), true);
-                            embed.AddField("Venda por".Titulo(), $"{Emojis.Coins} {Formatter.InlineCode((item.PriceBuy / 2).ToString())}", true);
+                            //   embed.AddField("Venda por".Titulo(), $"{Emojis.Coins} {Formatter.InlineCode((item.Price / 2).ToString())}", true);
                             embed.AddField("Item ID".Titulo(), Formatter.InlineCode(item.Id.ToString()), true);
                             embed.WithFooter(iconUrl: ctx.User.AvatarUrl);
                             embed.WithTimestamp(DateTime.Now);
 
                             switch (item)
                             {
-                                case WafclastFoodItem wf:
+                                case WafclastCookedFoodItem wf:
                                     embed.AddField("Cura".Titulo(), wf.LifeGain.ToString("N2"), true);
                                     break;
                             }

@@ -7,7 +7,7 @@ namespace WafclastRPG.Entities.Monsters
 {
     public class WafclastMonster
     {
-        public ObjectId Id { get; set; }
+        public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
         public string Name { get; set; }
         public int FloorLevel { get; set; } = 1;
 

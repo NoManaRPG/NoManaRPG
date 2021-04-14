@@ -1,7 +1,9 @@
-﻿using System.ComponentModel;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel;
 
 namespace WafclastRPG.Entities.Itens
 {
+    [BsonIgnoreExtraElements]
     public class WafclastOreItem : WafclastBaseItem
     {
         /// <summary>
