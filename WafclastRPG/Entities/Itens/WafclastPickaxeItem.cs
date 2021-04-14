@@ -17,7 +17,11 @@
         /// </summary>
         public int Bonus { get; set; }
 
-        //Durabilidade?
+        /// <summary>
+        /// Força necessária para empunhar a picareta.
+        /// </summary>
+        public double Strength { get; set; }
+
         public WafclastPickaxeItem(WafclastBaseItem baseItem) : base(baseItem) { }
 
         public new bool AddExperience(double exp)
