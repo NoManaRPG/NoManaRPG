@@ -48,7 +48,7 @@ namespace WafclastRPG.Commands.UserCommands
                                 return new Response($"você não tem {quantidade} {item.Name}.");
 
                             var rd = new Random();
-                            var chance = rf.Chance * (player.Character.CookingSkill.Level / 100) + 1;
+                            var chance = rf.Chance * (((double)player.Character.CookingSkill.Level / 100d) + 1);
                             var cooked = 0;
                             var fail = 0;
 
@@ -71,7 +71,7 @@ namespace WafclastRPG.Commands.UserCommands
                             if (cooked >= 1)
                             {
                                 var itemCooked = await session.FindItemAsync(rf.CookedItemId);
-                                await session.InsertAsync(item, cooked, player);
+                                await session.InsertAsync(itemCooked, cooked, player);
                             }
                             if (rf.Quantity == 0)
                                 await session.RemoveAsync(rf);
