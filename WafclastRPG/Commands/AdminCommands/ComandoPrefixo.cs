@@ -1,4 +1,5 @@
-﻿using DSharpPlus;
+﻿using MongoDB.Driver;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System.Threading.Tasks;
@@ -35,7 +36,7 @@ namespace WafclastRPG.Comandos.Acao
 
             var server = new WafclastServer(ctx.Guild.Id);
             server.SetPrefix(prefixo);
-            await banco.ReplaceAsync(server);
+            await banco.CollectionGuilds.ReplaceOneAsync(x => x.Id == ctx.Guild.Id, server);
             await ctx.RespondAsync("Feito!");
         }
     }

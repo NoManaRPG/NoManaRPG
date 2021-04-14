@@ -27,26 +27,9 @@ namespace WafclastRPG.Commands.GeneralCommands
         {
             await ctx.TriggerTypingAsync();
             if (comando.Length == 0)
-                await ctx.ResponderAsync($"Oi! Eu sou Wafclast RPG! Para a lista dos comandos que eu conheço, você pode digitar `w.comandos`, ou {ctx.Client.CurrentUser.Mention} comandos");
+                await ctx.RespondAsync($"Oi! Eu sou Wafclast RPG! Para a lista dos comandos que eu conheço, você pode digitar `w.comandos`, ou {ctx.Client.CurrentUser.Mention} comandos");
             else
                 await new DefaultHelpModule().DefaultHelpAsync(ctx, comando);
-        }
-
-        [Command("admin")]
-        [Description("Exibe os comandos de Administrador.")]
-        public async Task HelpCommandAdminAsync(CommandContext ctx)
-        {
-            await ctx.TriggerTypingAsync();
-            DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
-            embed.WithDescription("Digite `w.ajuda [comando]` para mais informações. Por exemplo: `w.ajuda mapa`.");
-
-            embed.AddField("Mapa".Titulo(), $"{Formatter.InlineCode("mapa-criar")} {Formatter.InlineCode("mapa-editar")}", true);
-            embed.AddField("Monstro".Titulo(), $"{Formatter.InlineCode("monstro-criar")} {Formatter.InlineCode("monstro-editar")}", true);
-            embed.AddField("Item".Titulo(), $"{Formatter.InlineCode("item-criar")} {Formatter.InlineCode("item-editar")} {Formatter.InlineCode("loja-adicionar-item")}", true);
-
-            embed.WithColor(DiscordColor.Violet);
-            embed.WithTimestamp(DateTime.Now);
-            await ctx.RespondAsync(embed.Build());
         }
     }
 

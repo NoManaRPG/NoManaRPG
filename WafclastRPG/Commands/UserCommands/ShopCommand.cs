@@ -1,16 +1,10 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using System;
-using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
-using WafclastRPG.Entities;
-using WafclastRPG.Enums;
-using WafclastRPG.Extensions;
 
-namespace WafclastRPG.Commands.GeneralCommands
+namespace WafclastRPG.Commands.UserCommands
 {
     public class ShopCommand : BaseCommandModule
     {

@@ -70,6 +70,7 @@ namespace WafclastRPG
                 Services = services,
             }, Database);
 
+            Database.MineDropBuilder();
             await bot.ConectarAsync();
             await Task.Delay(-1);
         }

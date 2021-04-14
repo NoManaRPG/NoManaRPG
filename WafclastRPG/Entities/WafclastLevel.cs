@@ -6,11 +6,11 @@ using System;
 
 namespace WafclastRPG.Entities
 {
-    public abstract class WafclastLevel
+    public class WafclastLevel
     {
         public int Level { get; set; } = 1;
-        public decimal CurrentExperience { get; set; }
-        public decimal ExperienceForNextLevel { get; set; }
+        public double CurrentExperience { get; set; }
+        public double ExperienceForNextLevel { get; set; }
         public int BlockedLevel { get; set; }
 
         public WafclastLevel() => this.ExperienceForNextLevel = this.ExperienceTotalLevel(2);
@@ -21,10 +21,10 @@ namespace WafclastRPG.Entities
             this.ExperienceForNextLevel = this.ExperienceTotalLevel(startLevel + 1);
         }
 
-        public int AddExperience(decimal experience)
+        public int AddExperience(double experience)
         {
             int niveisEv = 0;
-            decimal expResultante = this.CurrentExperience + experience;
+            double expResultante = this.CurrentExperience + experience;
             if (expResultante >= this.ExperienceForNextLevel)
             {
                 do
@@ -73,8 +73,8 @@ namespace WafclastRPG.Entities
             {
                 cm.AutoMap();
                 cm.SetIgnoreExtraElements(true);
-                cm.MapMember(c => c.CurrentExperience).SetSerializer(new DecimalSerializer(BsonType.Decimal128, new RepresentationConverter(true, true)));
-                cm.MapMember(c => c.ExperienceForNextLevel).SetSerializer(new DecimalSerializer(BsonType.Decimal128, new RepresentationConverter(true, true)));
+                cm.MapMember(c => c.CurrentExperience).SetSerializer(new DoubleSerializer(BsonType.Double, new RepresentationConverter(true, true)));
+                cm.MapMember(c => c.ExperienceForNextLevel).SetSerializer(new DoubleSerializer(BsonType.Double, new RepresentationConverter(true, true)));
             });
         }
     }

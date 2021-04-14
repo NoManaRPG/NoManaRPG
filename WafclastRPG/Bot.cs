@@ -6,10 +6,8 @@ using DSharpPlus.Interactivity.Extensions;
 using System;
 using System.Threading.Tasks;
 using WafclastRPG.Comandos.Acao;
-using WafclastRPG.Comandos.Exibir;
 using WafclastRPG.Commands.AdminCommands;
 using WafclastRPG.Commands.GeneralCommands;
-using WafclastRPG.Commands.PlayerCommands;
 using WafclastRPG.Commands.RankCommands;
 using WafclastRPG.Commands.UserCommands;
 using WafclastRPG.DataBases;
@@ -67,6 +65,9 @@ namespace WafclastRPG
             this.CommandsNext.RegisterCommands<AttributesCommand>();
             this.CommandsNext.RegisterCommands<ShopCommand>();
             this.CommandsNext.RegisterCommands<EvolveGroupCommands>();
+            this.CommandsNext.RegisterCommands<CommandsCommand>();
+            this.CommandsNext.RegisterCommands<ExploreCommand>();
+            this.CommandsNext.RegisterCommands<MineCommand>();
         }
     }
 }

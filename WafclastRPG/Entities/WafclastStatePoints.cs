@@ -2,11 +2,11 @@
 {
     public class WafclastStatePoints
     {
-        public decimal CurrentValue { get; set; }
-        public decimal MaxValue { get; set; }
+        public double CurrentValue { get; set; }
+        public double MaxValue { get; set; }
 
-        public decimal _baseValue;
-        public decimal BaseValue
+        public double _baseValue;
+        public double BaseValue
         {
             get => _baseValue;
             set
@@ -16,11 +16,11 @@
             }
         }
 
-        private decimal _multValue;
+        private double _multValue;
         /// <summary>
         /// Por padrão é 1.
         /// </summary>
-        public decimal MultValue
+        public double MultValue
         {
             get => _multValue;
             set
@@ -30,7 +30,7 @@
             }
         }
 
-        public WafclastStatePoints(decimal baseValue)
+        public WafclastStatePoints(double baseValue)
         {
             CurrentValue = baseValue;
             BaseValue = baseValue;
@@ -39,14 +39,14 @@
 
         public void Restart() => CurrentValue = MaxValue;
 
-        public void Add(decimal value)
+        public void Add(double value)
         {
             CurrentValue += value;
             if (CurrentValue >= MaxValue)
                 CurrentValue = MaxValue;
         }
 
-        public bool Remove(decimal value)
+        public bool Remove(double value)
         {
             CurrentValue -= value;
             if (CurrentValue <= 0)

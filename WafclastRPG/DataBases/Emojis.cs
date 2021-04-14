@@ -44,19 +44,19 @@
         public const string Direita = "<:direita:828775068942991370>";
         public const string Esquerda = "<:esquerda:828775068921233408>";
 
-        public const string Mapa = ":map:";
+        public const string Mapa = ":tokyo_tower:";
         public const string DiamanteLaranjaPequeno = ":small_orange_diamond:";
         public const string Aviso = ":warning:";
 
-        public static string GerarVidaEmoji(decimal porcentagem)
+        public static string GerarVidaEmoji(double porcentagem)
         {
             switch (porcentagem)
             {
-                case decimal n when (n > 0.75m):
+                case double n when (n > 0.75):
                     return Emojis.CoracaoVerde;
-                case decimal n when (n > 0.50m):
+                case double n when (n > 0.50):
                     return Emojis.CoracaoAmarelo;
-                case decimal n when (n > 0.25m):
+                case double n when (n > 0.25):
                     return Emojis.CoracaoLaranja;
             }
             return Emojis.CoracaoVermelho;

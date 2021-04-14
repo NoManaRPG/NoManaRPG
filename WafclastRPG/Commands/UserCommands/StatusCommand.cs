@@ -8,8 +8,10 @@ using WafclastRPG.DataBases;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.Extensions;
+using MongoDB.Driver;
+using WafclastRPG.Properties;
 
-namespace WafclastRPG.Commands.GeneralCommands
+namespace WafclastRPG.Commands.UserCommands
 {
     public class StatusCommand : BaseCommandModule
     {
@@ -22,17 +24,17 @@ namespace WafclastRPG.Commands.GeneralCommands
         public async Task StatusCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            var player = await banco.FindAsync(ctx.User);
-            if (player.Character == null)
+            var player = await banco.CollectionPlayers.Find(x => x.Id == ctx.User.Id).FirstOrDefaultAsync();
+            if (player == null)
             {
-              //  await ctx.ResponderAsync(Strings.NovoJogador);
+                await ctx.ResponderAsync(Messages.NaoEscreveuComecar);
                 return;
             }
 
             var str = new StringBuilder();
 
             str.AppendLine($"{player.Character.CurrentExperience:N2} de experiencia e precisa {(player.Character.ExperienceForNextLevel - player.Character.CurrentExperience):N2} para o nível {player.Character.Level + 1}.");
-            str.AppendLine($"Recupera {player.Character.LifeRegen.CurrentValue:N2} vida e {player.Character.ManaRegen.CurrentValue:N2} mana em {(player.Character.RegenDate - DateTime.UtcNow).TotalSeconds:N0}s.");
+            str.AppendLine($"{(player.Character.RegenDate - DateTime.UtcNow).TotalSeconds:N0}s para recuperar vida, mana e estamina.");
             str.AppendLine($"{player.MonsterKill} monstros eliminado.");
             str.AppendLine($"{player.PlayerKill} jogadores eliminado.");
             str.AppendLine($"{player.Deaths} vezes morto.");
@@ -50,10 +52,12 @@ namespace WafclastRPG.Commands.GeneralCommands
 
             var lifePor = player.Character.Life.CurrentValue / player.Character.Life.MaxValue;
             embed.AddField("Vida".Titulo(), $"{Emojis.GerarVidaEmoji(lifePor)} {player.Character.Life.CurrentValue:N2} / {player.Character.Life.MaxValue:N2}", true);
-            embed.AddField("Mana".Titulo(), $"{player.Character.Mana.CurrentValue:N2} / {player.Character.Mana.MaxValue:N2}", true);
-            embed.AddField("Escudo mágico".Titulo(), $"{player.Character.EnergyShield.CurrentValue:N2} / {player.Character.EnergyShield.MaxValue:N2}", true);
+            embed.AddField("Mana".Titulo(), $":blue_circle: {player.Character.Mana.CurrentValue:N2} / {player.Character.Mana.MaxValue:N2}", true);
+            if (player.Character.EnergyShield.MaxValue != 0)
+                embed.AddField("Escudo mágico".Titulo(), $"{player.Character.EnergyShield.CurrentValue:N2} / {player.Character.EnergyShield.MaxValue:N2}", true);
+            embed.AddField("Estamina".Titulo(), $":triumph: {player.Character.Stamina.CurrentValue:N2} / {player.Character.Stamina.MaxValue:N2}", true);
 
-            embed.AddField("Localização".Titulo(), $"{Emojis.Mapa} {player.Character.CurrentFloor}");
+            embed.AddField("Andar Atual".Titulo(), $":kaaba: {player.Character.CurrentFloor}");
 
             await ctx.ResponderAsync(embed.Build());
         }

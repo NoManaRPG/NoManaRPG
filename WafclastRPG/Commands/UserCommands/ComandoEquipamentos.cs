@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
 
-namespace WafclastRPG.Comandos.Exibir
+namespace WafclastRPG.Commands.UserCommands
 {
     public class ComandoEquipamentos : BaseCommandModule
     {

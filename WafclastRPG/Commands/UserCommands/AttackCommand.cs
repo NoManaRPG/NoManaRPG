@@ -2,33 +2,25 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System;
-using System.Diagnostics;
-using System.Globalization;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
-using WafclastRPG.Entities.Monsters;
-using WafclastRPG.Enums;
 using WafclastRPG.Extensions;
 using WafclastRPG.Properties;
 
-namespace WafclastRPG.Commands.GeneralCommands
+namespace WafclastRPG.Commands.UserCommands
 {
-    class AttackCommand : BaseCommandModule
+    public class AttackCommand : BaseCommandModule
     {
         public DataBase database;
 
         [Command("atacar")]
         [Aliases("at")]
         [Description("Permite executar um ataque físico em um monstro.")]
-        [Usage("atacar [ ID do Monstro ]")]
-        public async Task AttackCommandAsync(CommandContext ctx, int monsterId = 1)
+        [Usage("atacar")]
+        public async Task AttackCommandAsync(CommandContext ctx)
         {
-            var timer = new Stopwatch();
-            timer.Start();
-
             await ctx.TriggerTypingAsync();
 
             Response response;
@@ -36,41 +28,28 @@ namespace WafclastRPG.Commands.GeneralCommands
                 response = await session.WithTransactionAsync(async (s, ct) =>
                 {
                     var player = await session.FindAsync(ctx.User);
-
-                    Thread.CurrentThread.CurrentUICulture = new CultureInfo(player.Language);
-
-                    if (player.Character == null)
+                    if (player == null)
                         return new Response(Messages.NaoEscreveuComecar);
-                    #region Questions
-                    var map = await session.FindAsync(ctx.Channel);
-                    if (map == null)
-                        return new Response(Messages.CanalNaoEsMapa);
 
+                    if (player.Character.CurrentFloor == 0)
+                        return new Response("você procura na cidade toda, mas não encontra nenhum monstro.. talvez seja melhor descer alguns andares na Torre.");
 
-                    if (map.Tipo == MapType.Cidade)
-                        return new Response(Messages.NaoPodeAtacarNaCidade);
+                    if (player.Character.Monster == null)
+                        return new Response($"este monstro já está morto! Tente procurar por mais!");
 
-                    var target = await session.FindAsync(new WafclastMonsterBase(ctx.Channel.Id, monsterId));
-                    if (target == null)
-                        return new Response("você procurou, mas não encontrou nenhum monstro com este ID!");
-
-                    if (!target.ItsPillaged)
-                        return new Response("o monstro não foi saqueado ainda!");
-
-                    if (target.DateSpawn > DateTime.UtcNow)
-                        return new Response($"este monstro já está morto! Tente atacar outro!");
-                    #endregion
                     //Combat
-                    var random = new Random();
+                    var rd = new Random();
                     var str = new StringBuilder();
                     var embed = new DiscordEmbedBuilder();
+                    var target = player.Character.Monster;
+
                     embed.WithColor(DiscordColor.Red);
                     embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
                     embed.WithTitle($"Relatorio do combate contra {target.Name}.");
 
-                    if (!random.Chance(player.Character.HitChance(target.Evasion.MaxValue)))
+                    if (!rd.Chance(player.Character.HitChance(target.Evasion.MaxValue)))
                     {
-                        var playerDamage = random.Sortear(player.Character.PhysicalDamage.CurrentValue);
+                        var playerDamage = rd.Sortear(player.Character.PhysicalDamage.CurrentValue);
                         playerDamage = target.DamageReduction(playerDamage);
 
                         var isTargetDead = target.ReceberDano(playerDamage);
@@ -80,12 +59,25 @@ namespace WafclastRPG.Commands.GeneralCommands
                         if (isTargetDead)
                         {
                             player.MonsterKill++;
-
-
                             str.AppendLine($"{Emojis.CrossBone} {target.Name.Titulo()} {Emojis.CrossBone}");
+
+                            foreach (var drop in target.DropChances)
+                            {
+                                if (rd.Chance(drop.Chance))
+                                {
+                                    var item = await session.FindItemAsync(drop.Id);
+                                    var quantity = rd.Sortear(drop.MinQuantity, drop.MaxQuantity);
+
+                                    str.AppendLine($"**+ {quantity} {item.Name.Titulo()}.**");
+
+                                    await session.InsertAsync(item, quantity, player);
+                                }
+                            }
+                            player.Character.Monster = null;
 
                             await session.ReplaceAsync(player);
                             await session.ReplaceAsync(target);
+
                             embed.WithDescription(str.ToString());
                             return new Response(embed);
                         }
@@ -97,11 +89,11 @@ namespace WafclastRPG.Commands.GeneralCommands
 
                     var isPlayerDead = false;
 
-                    if (random.Chance(player.Character.DodgeChance(target.Accuracy.MaxValue)))
+                    if (rd.Chance(player.Character.DodgeChance(target.Accuracy.MaxValue)))
                         str.AppendLine($"{player.Mention} desviou do ataque!");
                     else
                     {
-                        var targetDamage = random.Sortear(target.PhysicalDamage.MaxValue);
+                        var targetDamage = rd.Sortear(target.PhysicalDamage.MaxValue);
                         targetDamage = player.Character.DamageReduction(targetDamage);
 
                         str.AppendLine($"{player.Mention} não conseguiu desviar!");
@@ -132,8 +124,6 @@ namespace WafclastRPG.Commands.GeneralCommands
                 return;
             }
 
-            timer.Stop();
-            response.Embed.WithFooter($"{timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.");
             await ctx.RespondAsync(ctx.User.Mention, response.Embed.Build());
         }
     }

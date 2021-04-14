@@ -1,13 +1,14 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using MongoDB.Driver;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
 using WafclastRPG.Extensions;
+using WafclastRPG.Properties;
 
-
-namespace WafclastRPG.Commands.GeneralCommands
+namespace WafclastRPG.Commands.UserCommands
 {
     public class AttributesCommand : BaseCommandModule
     {
@@ -19,10 +20,10 @@ namespace WafclastRPG.Commands.GeneralCommands
         public async Task AttributesCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            var player = await database.FindAsync(ctx.User);
+            var player = await database.CollectionPlayers.Find(x => x.Id == ctx.User.Id).FirstOrDefaultAsync();
             if (player.Character == null)
             {
-               // await ctx.ResponderAsync(Strings.NovoJogador);
+                await ctx.ResponderAsync(Messages.NaoEscreveuComecar);
                 return;
             }
 

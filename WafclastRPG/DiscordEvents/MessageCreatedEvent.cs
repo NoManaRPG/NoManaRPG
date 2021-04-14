@@ -30,6 +30,7 @@ namespace WafclastRPG.DiscordEvents
 
                     player.Character.Mana.Add(player.Character.ManaRegen.MaxValue);
                     player.Character.Coins.Add(0, 0, (ulong)rd.Sortear(1, 2));
+                    player.Character.Stamina.Add(rd.Sortear(1, player.Character.Level));
                     await session.ReplaceAsync(player);
                     return Task.CompletedTask;
                 });

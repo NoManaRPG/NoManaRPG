@@ -3,12 +3,10 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System.Threading.Tasks;
 using WafclastRPG.Extensions;
-using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 using WafclastRPG.DataBases;
 using System.Text;
 using WafclastRPG.Properties;
 using System.Threading;
-using System.Resources;
 using System.Globalization;
 using WafclastRPG.Entities;
 
@@ -45,7 +43,7 @@ namespace WafclastRPG.Commands.AdminCommands
         public async Task TesteAsync(CommandContext ctx)
         {
             var PhysicalDamage = new WafclastStatePoints(8);
-            PhysicalDamage.MultValue = 20 * 0.2M;
+            PhysicalDamage.MultValue = 20 * 0.2;
             PhysicalDamage.MultValue += 100;
         }
     }

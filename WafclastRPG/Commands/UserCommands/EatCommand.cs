@@ -9,7 +9,7 @@ using WafclastRPG.Entities.Itens;
 using WafclastRPG.Extensions;
 using WafclastRPG.Properties;
 
-namespace WafclastRPG.Commands.GeneralCommands
+namespace WafclastRPG.Commands.UserCommands
 {
     public class EatCommand : BaseCommandModule
     {
@@ -43,7 +43,7 @@ namespace WafclastRPG.Commands.GeneralCommands
                     //Usa item
                     switch (item)
                     {
-                        case WafclastFood wf:
+                        case WafclastFoodItem wf:
                             player.Character.Life.Add(wf.LifeGain * quantity);
                             item.Quantity -= quantity;
                             break;

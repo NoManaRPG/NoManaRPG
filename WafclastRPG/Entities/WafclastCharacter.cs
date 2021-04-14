@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson.Serialization;
 using System;
+using WafclastRPG.Entities.Itens;
 using WafclastRPG.Entities.Monsters;
 
 namespace WafclastRPG.Entities
@@ -20,6 +21,7 @@ namespace WafclastRPG.Entities
 
         public WafclastStatePoints Life { get; set; }
         public WafclastStatePoints Mana { get; set; }
+        public WafclastStatePoints Stamina { get; set; }
 
         public WafclastStatePoints LifeRegen { get; set; }
         public WafclastStatePoints ManaRegen { get; set; }
@@ -27,6 +29,11 @@ namespace WafclastRPG.Entities
         public int AttributePoints { get; set; }
         public int CurrentFloor { get; set; }
         public WafclastMonster Monster { get; set; }
+        public WafclastPickaxeItem Pickaxe { get; set; }
+        /// <summary>
+        /// Determina a chance de cair mais de 1 minério.
+        /// </summary>
+        public WafclastLevel MineSkill { get; set; }
 
         public DateTime RegenDate { get; set; } = DateTime.UtcNow;
 
@@ -37,11 +44,11 @@ namespace WafclastRPG.Entities
             Dexterity = new WafclastStatePoints(20);
 
             PhysicalDamage = new WafclastStatePoints(8);
-            PhysicalDamage.MultValue += Strength.CurrentValue * 0.2M;
+            PhysicalDamage.MultValue += Strength.CurrentValue * 0.2;
             PhysicalDamage.Restart();
 
             Evasion = new WafclastStatePoints(53);
-            Evasion.MultValue += Dexterity.CurrentValue * 0.2M;
+            Evasion.MultValue += Dexterity.CurrentValue * 0.2;
             Evasion.Restart();
 
             Accuracy = new WafclastStatePoints(Dexterity.CurrentValue * 2);
@@ -49,39 +56,42 @@ namespace WafclastRPG.Entities
             Armour = new WafclastStatePoints(0);
 
             EnergyShield = new WafclastStatePoints(0);
-            EnergyShield.MultValue += Intelligence.CurrentValue * 0.2M;
+            EnergyShield.MultValue += Intelligence.CurrentValue * 0.2;
 
             Life = new WafclastStatePoints(50);
-            Life.BaseValue += Strength.CurrentValue * 0.5M;
+            Life.BaseValue += Strength.CurrentValue * 0.5;
             Life.Restart();
 
             Mana = new WafclastStatePoints(40);
-            Mana.BaseValue += Intelligence.CurrentValue * 0.5M;
+            Mana.BaseValue += Intelligence.CurrentValue * 0.5;
             Mana.Restart();
 
+            Stamina = new WafclastStatePoints(50);
+
             LifeRegen = new WafclastStatePoints(0);
-            ManaRegen = new WafclastStatePoints(Mana.MaxValue * 0.08M);
+            ManaRegen = new WafclastStatePoints(Mana.MaxValue * 0.08);
+            MineSkill = new WafclastLevel(1);
         }
 
-        public double DodgeChance(decimal attackerkAccuracy)
+        public double DodgeChance(double attackerkAccuracy)
         {
-            var attack = 1.15M * attackerkAccuracy;
-            var def = Evasion.CurrentValue * 0.25M;
+            var attack = 1.15 * attackerkAccuracy;
+            var def = Evasion.CurrentValue * 0.25;
             var div = Math.Pow(Convert.ToDouble(attack / attackerkAccuracy + def), 0.8);
             div = Math.Clamp(div, 0, 95);
             return div / 100;
         }
 
-        public double HitChance(decimal defenderEvasion)
+        public double HitChance(double defenderEvasion)
         {
-            var attack = 1.15M * Accuracy.CurrentValue;
-            var def = defenderEvasion * 0.25M;
+            var attack = 1.15 * Accuracy.CurrentValue;
+            var def = defenderEvasion * 0.25;
             var div = Math.Pow(Convert.ToDouble(attack / Accuracy.CurrentValue + def), 0.8);
             div = Math.Clamp(div, 0.5, 100);
             return div / 100;
         }
 
-        public decimal DamageReduction(decimal damage)
+        public double DamageReduction(double damage)
         {
             var first = Armour.CurrentValue * damage;
             var second = (Armour.CurrentValue + 10) * damage;
@@ -89,13 +99,14 @@ namespace WafclastRPG.Entities
             return damage - damage * dr;
         }
 
-        public new bool AddExperience(decimal exp)
+        public new bool AddExperience(double exp)
         {
             int levelUps = base.AddExperience(exp);
             for (int i = 0; i < levelUps; i++)
             {
                 Life.BaseValue += 12;
                 Accuracy.BaseValue += 2;
+                Stamina.BaseValue += 50;
                 if (Level > BlockedLevel)
                     AttributePoints += 10;
             }
@@ -104,6 +115,7 @@ namespace WafclastRPG.Entities
             {
                 Accuracy.Restart();
                 Life.Restart();
+                Stamina.Restart();
                 return true;
             }
             return false;
@@ -114,13 +126,15 @@ namespace WafclastRPG.Entities
         /// </summary>
         /// <param name="valor"></param>
         /// <returns></returns>
-        public bool ReceiveDamage(decimal valor)
+        public bool ReceiveDamage(double valor)
         {
             if (Life.Remove(valor))
             {
                 if (Level != 1)
                 {
                     Life.BaseValue -= 12;
+                    Accuracy.BaseValue -= 2;
+                    Stamina.BaseValue -= 50;
                     RemoveOneLevel();
                 }
                 Life.Restart();

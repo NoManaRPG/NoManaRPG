@@ -8,7 +8,7 @@ using System;
 using System.Diagnostics;
 using WafclastRPG.Extensions;
 
-namespace WafclastRPG.Comandos.Exibir
+namespace WafclastRPG.Commands.GeneralCommands
 {
     public class InfoCommand : BaseCommandModule
     {

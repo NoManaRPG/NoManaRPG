@@ -6,7 +6,7 @@ using WafclastRPG.DataBases;
 using WafclastRPG.Entities;
 using WafclastRPG.Extensions;
 
-namespace WafclastRPG.Commands.GeneralCommands
+namespace WafclastRPG.Commands.UserCommands
 {
     public class StartCommand : BaseCommandModule
     {
