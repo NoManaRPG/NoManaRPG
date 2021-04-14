@@ -37,9 +37,7 @@ namespace WafclastRPG.Commands.UserCommands
 
                     var monster = await session.FindMonsterAsync(player.Character.CurrentFloor);
 
-                    int floorDifference = player.Character.CurrentFloor - monster.FloorLevel;
-                    if (floorDifference <= 1)
-                        floorDifference = 1;
+                    int floorDifference = (player.Character.CurrentFloor + 1) - monster.FloorLevel;
 
                     monster.PhysicalDamage = new WafclastStatePoints(rd.Sortear(monster.PhysicalDamage.BaseValue, monster.PhysicalDamage.BaseValue * floorDifference));
                     monster.Evasion = new WafclastStatePoints(rd.Sortear(monster.Evasion.BaseValue, monster.Evasion.BaseValue * floorDifference));
