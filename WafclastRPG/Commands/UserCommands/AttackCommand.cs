@@ -19,6 +19,7 @@ namespace WafclastRPG.Commands.UserCommands
         [Aliases("at")]
         [Description("Permite executar um ataque físico em um monstro.")]
         [Usage("atacar")]
+        [Cooldown(1, 15, CooldownBucketType.User)]
         public async Task AttackCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
