@@ -50,7 +50,7 @@ namespace WafclastRPG.Commands.UserCommands
                     foreach (var drop in DataBase.MineDrop)
                     {
                         if (pickaxePower >= drop.Hardness)
-                            if (rd.Chance(drop.DropChance * dropBonus))
+                            if (rd.Chance((drop.DropChance * incrementPorcent) * dropBonus))
                             {
                                 var quantityMax = Convert.ToInt32((player.Character.MineSkill.Level / drop.MinLevel) + 1);
                                 var quantity = rd.Sortear(1, quantityMax);
