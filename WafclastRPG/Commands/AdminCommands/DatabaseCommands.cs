@@ -505,7 +505,6 @@ namespace WafclastRPG.Commands.AdminCommands
                         {
                             item.Character.Accuracy.BaseValue += 2 * (item.Character.Level - 1);
                             item.Character.Life.BaseValue += 12 * (item.Character.Level - 1);
-                            item.Character.Stamina.BaseValue += 50 * (item.Character.Level - 1);
                         }
 
                         await database.CollectionPlayers.ReplaceOneAsync(x => x.Id == item.Id, item);
