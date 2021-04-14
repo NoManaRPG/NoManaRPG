@@ -37,7 +37,7 @@ namespace WafclastRPG.DataBases
          => Database.CollectionItems.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
         public Task<WafclastBaseItem> FindAsync(string itemName, WafclastPlayer player)
                 => Database.CollectionItems.Find(Session, x => x.PlayerId == player.Id && x.Name == itemName,
-                    new FindOptions { Collation = new Collation("pt-BR", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
+                    new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
 
 
         #endregion
@@ -74,7 +74,7 @@ namespace WafclastRPG.DataBases
                 return;
             }
 
-            var itemFound = await Database.CollectionItems.Find(Session, x => x.Name == item.Name).FirstOrDefaultAsync();
+            var itemFound = await FindAsync(item.Name, player);
             if (itemFound == null)
             {
                 item.Quantity = quantity;
