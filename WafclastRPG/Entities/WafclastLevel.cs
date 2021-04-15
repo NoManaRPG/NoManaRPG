@@ -59,7 +59,7 @@ namespace WafclastRPG.Entities
         {
             double v1 = 1.0 / 8.0 * level * (level - 1.0) + 75.0;
             double pow1 = Math.Pow(3, (level - 1.0) / 7.0) - 1;
-            double pow2 = 1 - Math.Pow(2, -1 / 7.0);
+            double pow2 = 1 - Math.Pow(3, -1 / 7.0);
             return (int)Math.Truncate(v1 * (pow1 / pow2));
         }
 
