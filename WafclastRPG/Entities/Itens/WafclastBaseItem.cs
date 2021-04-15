@@ -1,6 +1,5 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson.Serialization.IdGenerators;
 
 namespace WafclastRPG.Entities.Itens
 {
@@ -11,7 +10,7 @@ namespace WafclastRPG.Entities.Itens
     public class WafclastBaseItem
     {
         [BsonId]
-        public ObjectId Id { get; set; }
+        public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
         public ulong PlayerId { get; set; }
         public string Name { get; set; }
         public bool CanSell { get; set; } = true;
