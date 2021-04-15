@@ -18,10 +18,13 @@ namespace WafclastRPG.Commands.GeneralCommands
         {
             var str = new StringBuilder();
             str.AppendLine("[Admin]");
+            str.Append("deletarU, ");
             str.Append("monstroEC, ");
             str.Append("monstroEDROP, ");
+            str.Append("monstroV, ");
+            str.Append("andarV, ");
             str.Append("itemEC, ");
-            str.Append("deletarU, ");
+            str.Append("itensV, ");
 
             str.AppendLine();
             str.AppendLine("[Geral]");

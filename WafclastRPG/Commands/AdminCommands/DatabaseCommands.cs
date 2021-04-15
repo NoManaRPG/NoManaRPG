@@ -13,6 +13,7 @@ using WafclastRPG.DataBases;
 using WafclastRPG.Entities.Itens;
 using WafclastRPG.Entities.Monsters;
 using MongoDB.Bson;
+using System.Text;
 
 namespace WafclastRPG.Commands.AdminCommands
 {
@@ -33,6 +34,98 @@ namespace WafclastRPG.Commands.AdminCommands
                 await ctx.ResponderAsync("usuario deletado!");
             else
                 await ctx.ResponderAsync("não foi possível deletar! Tente novamente");
+        }
+
+        [Command("monstroV")]
+        [Description("Permite ver informações de um monstro.")]
+        [Usage("monstroV <id>")]
+        [RequireOwner]
+        public async Task VerMonstro(CommandContext ctx, string idString)
+        {
+            await ctx.TriggerTypingAsync();
+
+            if (!ObjectId.TryParse(idString, out var id))
+            {
+                await ctx.ResponderAsync("o formato do ID está inválido!");
+                return;
+            }
+
+            var monster = await database.CollectionMonsters.Find(x => x.Id == id).FirstOrDefaultAsync();
+            if (monster == null)
+            {
+                await ctx.ResponderAsync("não encontrei este monstro, você informou o ID correto?");
+                return;
+            }
+
+            var embed = new DiscordEmbedBuilder();
+            embed.WithTitle(monster.Name);
+            embed.WithDescription($"ID `{monster.Id}`" +
+                $"\nAndar {monster.FloorLevel}");
+            embed.AddField("Vida", monster.Life.MaxValue.ToString("N2"), true);
+            embed.AddField("Armadura", monster.Armour.MaxValue.ToString("N2"), true);
+            embed.AddField("Dano físico", monster.PhysicalDamage.MaxValue.ToString("N2"), true);
+            embed.AddField("Evasão", monster.Evasion.MaxValue.ToString("N2"), true);
+            embed.AddField("Precisão", monster.Accuracy.MaxValue.ToString("N2"), true);
+
+            var str = new StringBuilder();
+            foreach (var item in monster.DropChances)
+            {
+                var drop = await database.CollectionItems.Find(x => x.Id == item.Id).FirstOrDefaultAsync();
+                str.AppendLine($"{item.Chance * 100}% de cair {item.MinQuantity} ~ {item.MaxQuantity} {drop.Name}.");
+            }
+
+            embed.AddField("Drops", str.ToString());
+            await ctx.ResponderAsync(embed.Build());
+        }
+
+        [Command("andarV")]
+        [Description("Permite ver os monstros de um andar.")]
+        [Usage("andarV <andar>")]
+        [RequireOwner]
+        public async Task VerAndar(CommandContext ctx, int andar)
+        {
+            await ctx.TriggerTypingAsync();
+
+            var monsters = await database.CollectionMonsters.Find(x => x.FloorLevel == andar).ToListAsync();
+            if (monsters.Count == 0)
+            {
+                await ctx.ResponderAsync("não foi encontrado monstros neste andar.");
+                return;
+            }
+
+            var str = new StringBuilder();
+            var embed = new DiscordEmbedBuilder();
+            embed.WithTitle($"Andar {andar}.");
+
+            foreach (var item in monsters)
+                str.AppendLine($"{item.Name} - `{item.Id}`");
+
+            embed.WithDescription(str.ToString());
+            await ctx.ResponderAsync(embed.Build());
+        }
+
+        [Command("itensV")]
+        [Description("Permite ver todos os itens já criados.")]
+        [Usage("itensV <pagina>")]
+        [RequireOwner]
+        public async Task VerItens(CommandContext ctx, int pagina = 1)
+        {
+            await ctx.TriggerTypingAsync();
+
+            var itens = await database.CollectionItems.Find(x => x.PlayerId == ctx.Client.CurrentUser.Id)
+               .Skip((pagina - 1) * 10)
+               .Limit(10)
+               .ToListAsync();
+
+            var embed = new DiscordEmbedBuilder();
+            var str = new StringBuilder();
+
+            foreach (var item in itens)
+                str.AppendLine($"{item.Name} - `{item.Id}`");
+
+            embed.WithTitle($"Página {pagina}");
+            embed.WithDescription(str.ToString());
+            await ctx.ResponderAsync(embed.Build());
         }
 
         [Command("monstroEC")]
@@ -270,7 +363,6 @@ namespace WafclastRPG.Commands.AdminCommands
             //await ctx.RespondAsync($"Item {item.Name.Titulo()} foi adicionado a loja!");
         }
 
-
         [Command("monstroEDROP")]
         [Description("Permite adicionar uma recompensa ao monstro após ser abatido.")]
         [Usage("monstroEDROP <Monstro ID> <Item ID> [Posição]}")]
@@ -394,8 +486,8 @@ namespace WafclastRPG.Commands.AdminCommands
 
                         //item.Character.MineSkill = new WafclastLevel(1);
 
-                        if (item.Character.CookingSkill == null)
-                            item.Character.CookingSkill = new WafclastLevel(1);
+                        //if (item.Character.CookingSkill == null)
+                        //    item.Character.CookingSkill = new WafclastLevel(1);
 
                         //if (item.Character.Level > 1)
                         //{
