@@ -36,10 +36,7 @@ namespace WafclastRPG.DataBases
 #endif
             #endregion
 
-            WafclastCharacter.MapBuilder();
             WafclastCoins.MapBuilder();
-            WafclastLevel.MapBuilderLevel();
-            WafclastPlayer.MapBuilder();
 
             CollectionPlayers = Database.CriarCollection<WafclastPlayer>();
             CollectionGuilds = Database.CriarCollection<WafclastServer>();

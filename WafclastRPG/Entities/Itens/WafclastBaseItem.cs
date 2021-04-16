@@ -14,7 +14,6 @@ namespace WafclastRPG.Entities.Itens
         public ulong PlayerId { get; set; }
         public string Name { get; set; }
         public bool CanSell { get; set; } = true;
-        public bool CanStack { get; set; } = true;
         public int Quantity { get; set; } = 1;
         public string ImageURL { get; set; } = "";
         public string Description { get; set; } = "Sem descrição";
@@ -27,7 +26,6 @@ namespace WafclastRPG.Entities.Itens
             PlayerId = baseItem.PlayerId;
             Name = baseItem.Name;
             CanSell = baseItem.CanSell;
-            CanStack = baseItem.CanStack;
             Quantity = baseItem.Quantity;
             ImageURL = baseItem.ImageURL;
             Description = baseItem.Description;

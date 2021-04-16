@@ -1,11 +1,9 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Options;
-using MongoDB.Bson.Serialization.Serializers;
+﻿using MongoDB.Bson.Serialization.Attributes;
 using System;
 
 namespace WafclastRPG.Entities
 {
+    [BsonIgnoreExtraElements]
     public class WafclastLevel
     {
         public int Level { get; set; } = 1;
@@ -54,24 +52,12 @@ namespace WafclastRPG.Entities
             this.ExperienceForNextLevel = this.ExperienceTotalLevel(Level + 1);
         }
 
-        // Needs to be 83 for level 2.
-        private int ExperienceTotalLevel(int level)
+        public int ExperienceTotalLevel(int level)
         {
             double v1 = 1.0 / 8.0 * level * (level - 1.0) + 75.0;
             double pow1 = Math.Pow(3, (level - 1.0) / 7.0) - 1;
-            double pow2 = 1 - Math.Pow(3, -1 / 7.0);
+            double pow2 = 1 - Math.Pow(2, -1 / 7.0);
             return (int)Math.Truncate(v1 * (pow1 / pow2));
-        }
-
-        public static void MapBuilderLevel()
-        {
-            BsonClassMap.RegisterClassMap<WafclastLevel>(cm =>
-            {
-                cm.AutoMap();
-                cm.SetIgnoreExtraElements(true);
-                cm.MapMember(c => c.CurrentExperience).SetSerializer(new DoubleSerializer(BsonType.Double, new RepresentationConverter(true, true)));
-                cm.MapMember(c => c.ExperienceForNextLevel).SetSerializer(new DoubleSerializer(BsonType.Double, new RepresentationConverter(true, true)));
-            });
         }
     }
 }

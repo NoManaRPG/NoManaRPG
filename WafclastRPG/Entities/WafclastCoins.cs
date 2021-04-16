@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson.Serialization;
 using System;
+using System.Text;
 
 namespace WafclastRPG.Entities
 {
@@ -25,7 +26,17 @@ namespace WafclastRPG.Entities
 
         public override string ToString()
         {
-            return $"**{GetGold()}** Ouro, **{GetSilver()}** Prata e **{GetCopper()}** Cobre.";
+            var str = new StringBuilder();
+            var ouro = GetGold();
+            if (ouro != 0)
+                str.Append($"{ouro} ouro, ");
+
+            var prata = GetSilver();
+            if (prata != 0)
+                str.Append($"{prata} prata e ");
+
+            str.Append($"{GetCopper()} cobre.");
+            return str.ToString();
         }
 
         public ulong GetCopper() => Coins % SilverInCopper;

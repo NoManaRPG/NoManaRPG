@@ -36,7 +36,7 @@ namespace WafclastRPG
             var logLevel = LogLevel.Debug;
 #else
             var token = ConfigFile.TokenRelease;
-            var logLevel = LogLevel.Information;
+            var logLevel = LogLevel.Debug;
 #endif
             #endregion
 

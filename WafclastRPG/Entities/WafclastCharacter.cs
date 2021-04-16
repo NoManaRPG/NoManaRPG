@@ -1,10 +1,11 @@
-﻿using MongoDB.Bson.Serialization;
+﻿using MongoDB.Bson.Serialization.Attributes;
 using System;
 using WafclastRPG.Entities.Itens;
 using WafclastRPG.Entities.Monsters;
 
 namespace WafclastRPG.Entities
 {
+    [BsonIgnoreExtraElements]
     public class WafclastCharacter : WafclastLevel
     {
         public WafclastCoins Coins { get; private set; } = new WafclastCoins(20);
@@ -29,10 +30,15 @@ namespace WafclastRPG.Entities
         public int CurrentFloor { get; set; }
         public WafclastMonster Monster { get; set; }
         public WafclastPickaxeItem Pickaxe { get; set; }
+
         /// <summary>
         /// Determina a chance de cair mais de 1 minério.
         /// </summary>
         public WafclastLevel MineSkill { get; set; }
+
+        /// <summary>
+        /// Determina a chance de cozinhar e quais pode.
+        /// </summary>
         public WafclastLevel CookingSkill { get; set; }
 
         public DateTime RegenDate { get; set; } = DateTime.UtcNow;
@@ -138,15 +144,6 @@ namespace WafclastRPG.Entities
                 return true;
             }
             return false;
-        }
-
-        public static void MapBuilder()
-        {
-            BsonClassMap.RegisterClassMap<WafclastCharacter>(cm =>
-            {
-                cm.AutoMap();
-                cm.SetIgnoreExtraElements(true);
-            });
         }
     }
 }
