@@ -18,7 +18,7 @@ namespace WafclastRPG.Entities.Itens
         /// <summary>
         /// Aumenta os atributos em % a cada nível extra. Operação feita ao evoluir o item.
         /// </summary>
-        public int Bonus { get; set; }
+        public double LevelUpBonus { get; set; }
 
         /// <summary>
         /// Força necessária para empunhar a picareta.
@@ -32,7 +32,7 @@ namespace WafclastRPG.Entities.Itens
             int levelUps = base.AddExperience(exp);
             for (int i = 0; i < levelUps; i++)
             {
-                var bonus = (Bonus / 100) + 1;
+                var bonus = (LevelUpBonus / 100) + 1;
                 Hardness *= bonus;
                 DropChanceBonus *= bonus;
             }

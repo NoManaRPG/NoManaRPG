@@ -258,20 +258,52 @@ namespace WafclastRPG.Commands.AdminCommands
 
             embed = ItemBuilder(item);
 
-            var type = await ctx.WaitForStringAsync("Informe um tipo: comida cozinhada, comida cru, picareta, nucleo.", database, timeoutoverride);
+            var type = await ctx.WaitForStringAsync("Informe um tipo: comida cozida, comida cru, picareta, nucleo.", database, timeoutoverride);
             if (type.TimedOut)
                 return;
 
             switch (type.Value.ToLower())
             {
-                case "comida cozinhada":
+                case "comida cozida":
                     var lifeGain = await ctx.WaitForIntAsync("Recupera quantos de vida:", database, timeoutoverride);
                     if (lifeGain.TimedOut)
                         return;
                     var comidaCozinhada = new WafclastCookedFoodItem(item);
                     comidaCozinhada.LifeGain = lifeGain.Value;
                     await database.CollectionItems.ReplaceOneAsync(x => x.Id == comidaCozinhada.Id, comidaCozinhada, new ReplaceOptions { IsUpsert = true });
-                    embed.AddField("Recupera de vida".Titulo(), comidaCozinhada.LifeGain.ToString(), true);
+                    embed.AddField("Recupera de vida", comidaCozinhada.LifeGain.ToString(), true);
+                    break;
+
+                case "picareta":
+                    var hardness = await ctx.WaitForDoubleAsync("Dureza da picareta:", database, timeoutoverride);
+                    if (hardness.TimedOut)
+                        return;
+
+                    var chanceBonus = await ctx.WaitForDoubleAsync("Chance extra de drop:", database, timeoutoverride);
+                    if (chanceBonus.TimedOut)
+                        return;
+
+                    var levelUp = await ctx.WaitForDoubleAsync("Level Up Bonus:", database, timeoutoverride);
+                    if (levelUp.TimedOut)
+                        return;
+
+                    var strength = await ctx.WaitForDoubleAsync("Força para equipar:", database, timeoutoverride);
+                    if (strength.TimedOut)
+                        return;
+
+                    var picareta = new WafclastPickaxeItem(item);
+                    picareta.Hardness = hardness.Value;
+                    picareta.DropChanceBonus = chanceBonus.Value;
+                    picareta.LevelUpBonus = levelUp.Value;
+                    picareta.Strength = strength.Value;
+
+                    await database.CollectionItems.ReplaceOneAsync(x => x.Id == picareta.Id, picareta, new ReplaceOptions { IsUpsert = true });
+
+                    embed.AddField("Dureza", picareta.Hardness.ToString("N2"), true);
+                    embed.AddField("Chance bonus", picareta.DropChanceBonus.ToString("N2"), true);
+                    embed.AddField("Melhora em ao evoluir", picareta.LevelUpBonus.ToString("N2"), true);
+                    embed.AddField("Força", picareta.Strength.ToString("N2"), true);
+
                     break;
 
                 case "comida cru":
@@ -298,9 +330,9 @@ namespace WafclastRPG.Commands.AdminCommands
                     comidaCru.ExperienceGain = experience.Value;
                     await database.CollectionItems.ReplaceOneAsync(x => x.Id == comidaCru.Id, comidaCru, new ReplaceOptions { IsUpsert = true });
                     var itemCozinhado = await database.CollectionItems.Find(x => x.Id == comidaCru.CookedItemId).FirstOrDefaultAsync();
-                    embed.AddField("Item cozinhado".Titulo(), itemCozinhado.Name, true);
-                    embed.AddField("Nível para cozinhar".Titulo(), comidaCru.CookingLevel.ToString(), true);
-                    embed.AddField("Chance".Titulo(), $"{comidaCru.Chance * 100}%", true);
+                    embed.AddField("Item cozinhado", itemCozinhado.Name, true);
+                    embed.AddField("Nível para cozinhar", comidaCru.CookingLevel.ToString(), true);
+                    embed.AddField("Chance", $"{comidaCru.Chance * 100}%", true);
                     break;
 
                 case "nucleo":
@@ -322,12 +354,13 @@ namespace WafclastRPG.Commands.AdminCommands
         private DiscordEmbedBuilder ItemBuilder(WafclastBaseItem item)
         {
             var embed = new DiscordEmbedBuilder();
-            embed.WithTitle($"[{item.Id}] {item.Name.Titulo()}");
-            embed.WithDescription(item.Description);
+            embed.WithTitle($"{item.Name.Titulo()}");
+            embed.WithDescription(Formatter.BlockCode(item.Description));
             embed.WithThumbnail(item.ImageURL);
             embed.WithColor(DiscordColor.Blue);
-            embed.AddField("Pode vender".Titulo(), item.CanSell ? "Sim" : "Não", true);
-            embed.AddField("Pode empilhar".Titulo(), item.CanStack ? "Sim" : "Não", true);
+            embed.AddField("ID", $"`{item.Id}`", true);
+            embed.AddField("Pode vender", item.CanSell ? "Sim" : "Não", true);
+            embed.AddField("Pode empilhar", item.CanStack ? "Sim" : "Não", true);
             return embed;
         }
 
