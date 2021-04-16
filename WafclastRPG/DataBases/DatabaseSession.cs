@@ -30,7 +30,8 @@ namespace WafclastRPG.DataBases
         public async Task<WafclastPlayer> FindAsync(DiscordUser user)
         {
             var player = await Database.CollectionPlayers.Find(Session, x => x.Id == user.Id).FirstOrDefaultAsync();
-            player.Session = this;
+            if (player != null)
+                player.Session = this;
             return player;
         }
 
