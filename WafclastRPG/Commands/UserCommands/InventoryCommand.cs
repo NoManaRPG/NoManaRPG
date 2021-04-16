@@ -7,13 +7,9 @@ using WafclastRPG.Extensions;
 using DSharpPlus.Entities;
 using MongoDB.Driver;
 using DSharpPlus;
-using System.Diagnostics;
-using DSharpPlus.Interactivity.Extensions;
 using System;
-using WafclastRPG.Entities;
-using WafclastRPG.Entities.Itens;
-using System.Collections.Generic;
 using WafclastRPG.Properties;
+using System.Text;
 
 namespace WafclastRPG.Commands.UserCommands
 {
@@ -22,11 +18,11 @@ namespace WafclastRPG.Commands.UserCommands
         public DataBase database;
 
         [Command("inventario")]
-        [Description("Veja e use itens do seu inventário")]
-        [Usage("inventario")]
+        [Description("Permite ver os itens do seu inventário")]
+        [Usage("inventario <pagina>")]
         [Aliases("inv", "inventory")]
         [Cooldown(1, 15, CooldownBucketType.User)]
-        public async Task InventoryCommandAsync(CommandContext ctx)
+        public async Task InventoryCommandAsync(CommandContext ctx, int pagina = 1)
         {
             await ctx.TriggerTypingAsync();
 
@@ -38,93 +34,29 @@ namespace WafclastRPG.Commands.UserCommands
                     if (player == null)
                         return new Response(Messages.NaoEscreveuComecar);
 
-                    database.StartExecutingInteractivity(ctx.User.Id);
+                    var embed = new DiscordEmbedBuilder();
+                    var str = new StringBuilder();
+                    str.AppendLine($"{Emojis.Coins} {player.Character.Coins}");
+                    str.AppendLine(Formatter.BlockCode("Quantidade | Item"));
 
-                    var pagina = 1;
                     double maxPag = Convert.ToDouble(await database.CollectionItems.CountDocumentsAsync(session.Session, x => x.PlayerId == ctx.User.Id));
-                    maxPag /= 5;
+                    maxPag /= 10;
 
-                    DiscordMessage msgEmbed = null;
-                    var temporaryInventory = await CreatePlayerInventory(pagina, maxPag, player, msgEmbed, ctx);
-                    msgEmbed = temporaryInventory.message;
+                    var inventory = await database.CollectionItems.Find(x => x.PlayerId == player.Id)
+                       .SortByDescending(x => x.Quantity)
+                       .Skip((pagina - 1) * 10)
+                       .Limit(10)
+                       .ToListAsync();
 
-                    var vity = ctx.Client.GetInteractivity();
-                    bool exitLoop = false;
-                    while (!exitLoop)
-                    {
-                        var msg = await vity.WaitForMessageAsync(x => x.Author.Id == ctx.User.Id && x.ChannelId == ctx.Channel.Id, TimeSpan.FromMinutes(3));
-                        if (msg.TimedOut)
-                        {
-                            await ctx.ResponderAsync("tempo expirado!");
-                            break;
-                        }
 
-                        if (int.TryParse(msg.Result.Content, out int id))
-                        {
-                            id = Math.Clamp(id, 0, temporaryInventory.itens.Count - 1);
-                            var item = temporaryInventory.itens[id];
+                    foreach (var item in inventory)
+                        str.AppendLine($"`{item.Quantity}` x **{item.Name}**");
 
-                            var embed = new DiscordEmbedBuilder();
-                            embed.WithDescription(Formatter.BlockCode(item.Description));
+                    embed.WithDescription(str.ToString());
+                    embed.WithFooter($"Pagina {pagina}/{Math.Ceiling(maxPag):N0}", ctx.User.AvatarUrl);
+                    embed.WithColor(DiscordColor.Brown);
 
-                            embed.WithTitle($"{item.Name.Titulo()}");
-                            embed.WithThumbnail(item.ImageURL);
-                            embed.WithColor(DiscordColor.Blue);
-                            embed.AddField("Quantidade".Titulo(), Formatter.InlineCode(item.Quantity.ToString()), true);
-                            //   embed.AddField("Venda por".Titulo(), $"{Emojis.Coins} {Formatter.InlineCode((item.Price / 2).ToString())}", true);
-                            embed.AddField("Item ID".Titulo(), Formatter.InlineCode(item.Id.ToString()), true);
-                            embed.WithFooter(iconUrl: ctx.User.AvatarUrl);
-                            embed.WithTimestamp(DateTime.Now);
-
-                            switch (item)
-                            {
-                                case WafclastCookedFoodItem wf:
-                                    embed.AddField("Cura".Titulo(), wf.LifeGain.ToString("N2"), true);
-                                    break;
-                            }
-
-                            await ctx.ResponderAsync(embed.Build());
-                            break;
-                        }
-
-                        switch (msg.Result.Content.ToLower())
-                        {
-                            case "proximo":
-                                if (pagina == maxPag)
-                                {
-                                    await msg.Result.DeleteAsync();
-                                    break;
-                                }
-
-                                pagina++;
-                                var temp = await CreatePlayerInventory(pagina, maxPag, player, msgEmbed, ctx);
-                                msgEmbed = temp.message;
-                                await msg.Result.DeleteAsync();
-                                break;
-                            case "voltar":
-                                if (pagina == 1)
-                                {
-                                    await msg.Result.DeleteAsync();
-                                    break;
-                                }
-
-                                pagina--;
-                                var temp2 = await CreatePlayerInventory(pagina, maxPag, player, msgEmbed, ctx);
-                                msgEmbed = temp2.message;
-                                await msg.Result.DeleteAsync();
-                                break;
-                            case "sair":
-                                exitLoop = true;
-                                break;
-                            default:
-                                var asd = msgEmbed;
-                                msgEmbed = await ctx.RespondAsync(ctx.User.Mention, msgEmbed.Embeds[0]);
-                                await msg.Result.DeleteAsync();
-                                break;
-                        }
-                    }
-                    database.StopExecutingInteractivity(ctx.User.Id);
-                    return new Response("");
+                    return new Response(embed);
                 });
 
             if (!string.IsNullOrWhiteSpace(response.Message))
@@ -132,57 +64,8 @@ namespace WafclastRPG.Commands.UserCommands
                 await ctx.ResponderAsync(response.Message);
                 return;
             }
-        }
 
-        public async Task<TemporaryInventory> CreatePlayerInventory(int pagina, double maxPag, WafclastPlayer player, DiscordMessage msgEmbed, CommandContext ctx)
-        {
-            var timer = new Stopwatch();
-            timer.Start();
-
-            var itens = await database.CollectionItems.Find(x => x.PlayerId == player.Id)
-               .SortByDescending(x => x.Quantity)
-               .Skip((pagina - 1) * 5)
-               .Limit(5)
-               .ToListAsync();
-
-            var embed = new DiscordEmbedBuilder();
-            var i = 1;
-            foreach (var item in itens)
-            {
-                if (!item.CanStack)
-                    embed.AddField($"{Emojis.GerarNumber(i)}{item.Name}", $"{Formatter.InlineCode("ID:")} {Formatter.InlineCode(item.Id.ToString())}");
-                else
-                    embed.AddField($"{Emojis.GerarNumber(i)}{item.Name}", $"{Formatter.InlineCode("Quantidade:")} {Formatter.InlineCode(item.Quantity.ToString())}");
-                i++;
-            }
-
-            if (pagina < maxPag)
-                embed.AddField($"{Emojis.Direita} Proxima página", $"Escreva {Formatter.InlineCode("proximo")} para ir a proxima página.");
-
-            if (pagina > 1)
-                embed.AddField($"{Emojis.Esquerda} Página anterior", $"Escreva {Formatter.InlineCode("voltar")} para ir a página anterior.");
-
-            timer.Stop();
-
-            embed.WithDescription($"{Emojis.Coins} {player.Character.Coins}");
-            embed.WithFooter($"Digite 1 - 5 para escolher ou sair para fechar | Demorou: {timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.", ctx.User.AvatarUrl);
-            if (msgEmbed == null)
-                msgEmbed = await ctx.RespondAsync(ctx.User.Mention, embed.Build());
-            else
-                msgEmbed = await msgEmbed.ModifyAsync(ctx.User.Mention, embed.Build());
-            return new TemporaryInventory(msgEmbed, itens);
-        }
-
-        public class TemporaryInventory
-        {
-            public DiscordMessage message;
-            public List<WafclastBaseItem> itens;
-
-            public TemporaryInventory(DiscordMessage message, List<WafclastBaseItem> itens)
-            {
-                this.message = message;
-                this.itens = itens;
-            }
+            await ctx.ResponderAsync(response.Embed.Build());
         }
     }
 }
