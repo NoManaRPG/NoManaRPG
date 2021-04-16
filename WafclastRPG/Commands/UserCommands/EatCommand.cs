@@ -15,7 +15,6 @@ namespace WafclastRPG.Commands.UserCommands
     {
         public DataBase banco;
 
-        //Separar entre USAR, COMER, BEBER, EQUIPAR
         [Command("comer")]
         [Aliases("eat")]
         [Description("Permite comer um item do tipo Comida")]
@@ -30,7 +29,7 @@ namespace WafclastRPG.Commands.UserCommands
                 {
                     //Procura jogador
                     var player = await session.FindAsync(ctx.User);
-                    if (player.Character == null)
+                    if (player == null)
                         return new Response(Messages.NaoEscreveuComecar);
 
                     //Pega item

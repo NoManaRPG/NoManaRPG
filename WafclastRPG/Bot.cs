@@ -72,6 +72,7 @@ namespace WafclastRPG
             this.CommandsNext.RegisterCommands<SkillsCommand>();
             this.CommandsNext.RegisterCommands<MoveUpCommand>();
             this.CommandsNext.RegisterCommands<MoveDownCommand>();
+            this.CommandsNext.RegisterCommands<GiveItemCommand>();
         }
     }
 }

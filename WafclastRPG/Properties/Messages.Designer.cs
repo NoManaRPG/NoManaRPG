@@ -61,20 +61,20 @@ namespace WafclastRPG.Properties {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a ainda não criou um personagem..
+        /// </summary>
+        internal static string AindaNaoCriouPersonagem {
+            get {
+                return ResourceManager.GetString("AindaNaoCriouPersonagem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a este canal de texto não jogável!.
         /// </summary>
         internal static string CanalNaoEsMapa {
             get {
                 return ResourceManager.GetString("CanalNaoEsMapa", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a você precisa estar no mesmo canal de texto da sua localização para usar este comando!.
-        /// </summary>
-        internal static string ComandoEmLocalizacaoDiferente {
-            get {
-                return ResourceManager.GetString("ComandoEmLocalizacaoDiferente", resourceCulture);
             }
         }
         

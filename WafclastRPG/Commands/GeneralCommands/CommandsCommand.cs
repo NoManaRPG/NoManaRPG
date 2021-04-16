@@ -46,6 +46,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             str.Append("habilidades, ");
             str.Append("subir, ");
             str.Append("descer, ");
+            str.Append("dar, ");
 
             await ctx.RespondAsync(Formatter.BlockCode(str.ToString(), "css"));
         }
