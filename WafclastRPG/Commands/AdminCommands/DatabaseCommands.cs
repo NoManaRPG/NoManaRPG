@@ -245,12 +245,6 @@ namespace WafclastRPG.Commands.AdminCommands
             bool canSell = await ctx.WaitForBoolAsync(database, embed.Build());
             item.CanSell = canSell;
 
-            embed = new DiscordEmbedBuilder();
-            embed.WithDescription($"É possível fazer pilhas do mesmo item?");
-            embed.WithFooter("Sim ou Não?");
-            bool canStack = await ctx.WaitForBoolAsync(database, embed.Build());
-            item.CanStack = canStack;
-
             var description = await ctx.WaitForStringAsync("Descrição:", database, timeoutoverride);
             if (name.TimedOut)
                 return;
@@ -360,7 +354,6 @@ namespace WafclastRPG.Commands.AdminCommands
             embed.WithColor(DiscordColor.Blue);
             embed.AddField("ID", $"`{item.Id}`", true);
             embed.AddField("Pode vender", item.CanSell ? "Sim" : "Não", true);
-            embed.AddField("Pode empilhar", item.CanStack ? "Sim" : "Não", true);
             return embed;
         }
 
@@ -527,8 +520,50 @@ namespace WafclastRPG.Commands.AdminCommands
                         //    item.Character.Accuracy.BaseValue += 2 * (item.Character.Level - 1);
                         //    item.Character.Life.BaseValue += 12 * (item.Character.Level - 1);
                         //}
+                        item.Character.ExperienceForNextLevel = item.Character.ExperienceTotalLevel(2);
+                        item.Character.MineSkill.ExperienceForNextLevel = item.Character.MineSkill.ExperienceTotalLevel(2);
+                        item.Character.CookingSkill.ExperienceForNextLevel = item.Character.CookingSkill.ExperienceTotalLevel(2);
+
+                        item.Character.Level = 1;
+                        item.Character.MineSkill.Level = 1;
+                        item.Character.CookingSkill.Level = 1;
+
 
                         await database.CollectionPlayers.ReplaceOneAsync(x => x.Id == item.Id, item);
+                    }
+                }
+
+            await ctx.RespondAsync("Banco foi atualizado!");
+        }
+
+        [Command("atualizar-itens")]
+        [RequireOwner]
+        public async Task AtualizarItensAsync(CommandContext ctx)
+        {
+            FilterDefinition<WafclastBaseItem> filter = FilterDefinition<WafclastBaseItem>.Empty;
+            FindOptions<WafclastBaseItem> options = new FindOptions<WafclastBaseItem>
+            {
+                BatchSize = 8,
+                NoCursorTimeout = false
+            };
+
+            using (IAsyncCursor<WafclastBaseItem> cursor = await database.CollectionItems.FindAsync(filter, options))
+                while (await cursor.MoveNextAsync())
+                {
+                    IEnumerable<WafclastBaseItem> list = cursor.Current;
+
+                    foreach (WafclastBaseItem item in list)
+                    {
+                        switch (item.Name)
+                        {
+                            case "Galinha Crú":
+                                item.Name = "Galinha Cru";
+                                break;
+                            case "Carne de Coelho Crú":
+                                item.Name = "Carne de Coelho Cru";
+                                break;
+                        }
+                        await database.CollectionItems.ReplaceOneAsync(x => x.Id == item.Id, item);
                     }
                 }
 

@@ -59,7 +59,7 @@ namespace WafclastRPG.Commands.UserCommands
                                 str.AppendLine($"**+{quantity} {drop.Name} e +{exp}{Emojis.Exp}**");
 
                                 player.Character.MineSkill.AddExperience(exp);
-                                await session.InsertAsync(drop, quantity, player);
+                                await player.AddItemAsync(drop, quantity);
                             }
                     }
 

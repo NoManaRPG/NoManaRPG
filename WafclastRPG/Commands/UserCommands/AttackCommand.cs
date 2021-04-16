@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,7 +37,7 @@ namespace WafclastRPG.Commands.UserCommands
                         return new Response("você procura na cidade toda, mas não encontra nenhum monstro.. talvez seja melhor subir alguns andares na Torre.");
 
                     if (player.Character.Monster == null)
-                        return new Response($"este monstro já está morto! Tente procurar por mais!");
+                        return new Response($"este monstro já está morto! Tente procurar por outro!");
 
                     //Combat
                     var rd = new Random();
@@ -67,11 +68,16 @@ namespace WafclastRPG.Commands.UserCommands
                                 if (rd.Chance(drop.Chance))
                                 {
                                     var item = await session.FindItemAsync(drop.Id);
+                                    if (item == null)
+                                    {
+                                        ctx.Client.Logger.LogInformation(new EventId(608, "ERROR"), $"{target.Name} está com o drop {drop.Id} errado!", DateTime.Now);
+                                        continue;
+                                    }
                                     var quantity = rd.Sortear(drop.MinQuantity, drop.MaxQuantity);
 
                                     str.AppendLine($"**+ {quantity} {item.Name.Titulo()}.**");
 
-                                    await session.InsertAsync(item, quantity, player);
+                                    await player.AddItemAsync(item, quantity);
                                 }
                             }
                             player.Character.Monster = null;

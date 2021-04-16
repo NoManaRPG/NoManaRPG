@@ -20,7 +20,7 @@ namespace WafclastRPG.Commands.UserCommands
         [Aliases("eat")]
         [Description("Permite comer um item do tipo Comida")]
         [Usage("comer [ quantidade ] [ nome ]")]
-        public async Task UseCommandAsync(CommandContext ctx, int quantity = 1, [RemainingText] string itemName = "")
+        public async Task UseCommandAsync(CommandContext ctx, int quantity = 1, [RemainingText] string nameItem = "")
         {
             await ctx.TriggerTypingAsync();
 
@@ -34,9 +34,9 @@ namespace WafclastRPG.Commands.UserCommands
                         return new Response(Messages.NaoEscreveuComecar);
 
                     //Pega item
-                    var item = await session.FindAsync(itemName, player);
+                    var item = await player.GetItemAsync(nameItem);
                     if (item == null)
-                        return new Response($"não foi encontrado o item chamado {Formatter.Bold(itemName.Titulo())}!");
+                        return new Response($"não foi encontrado o item chamado {Formatter.Bold(nameItem.Titulo())}!");
 
                     quantity = Math.Abs(quantity);
 
@@ -48,7 +48,7 @@ namespace WafclastRPG.Commands.UserCommands
                             item.Quantity -= quantity;
                             break;
                         default:
-                            return new Response($"você não pode comer {itemName.Titulo()}!");
+                            return new Response($"você não pode comer {nameItem.Titulo()}!");
                     }
 
                     if (item.Quantity == 0)
@@ -57,7 +57,7 @@ namespace WafclastRPG.Commands.UserCommands
                         await session.ReplaceAsync(item);
                     await session.ReplaceAsync(player);
 
-                    return new Response($"você comeu {Formatter.Bold($"{quantity} {itemName.Titulo()}")}!");
+                    return new Response($"você comeu {Formatter.Bold($"{quantity} {nameItem.Titulo()}")}!");
                 });
 
             await ctx.ResponderAsync(response.Message);

@@ -18,7 +18,7 @@ namespace WafclastRPG.Commands.UserCommands
         [Description("Permite cozinhar itens do tipo comida.")]
         [Usage("cozinhar <quantidade> <nome>")]
         [Cooldown(1, 15, CooldownBucketType.User)]
-        public async Task UseCommandAsync(CommandContext ctx, int quantidade, [RemainingText] string itemNome)
+        public async Task UseCommandAsync(CommandContext ctx, int quantidade, [RemainingText] string nameItem)
         {
             await ctx.TriggerTypingAsync();
 
@@ -33,7 +33,7 @@ namespace WafclastRPG.Commands.UserCommands
                     if (quantidade <= 0)
                         return new Response("quantidade precisa ser maior que 0.");
 
-                    var item = await session.FindAsync(itemNome, player);
+                    var item = await player.GetItemAsync(nameItem);
                     if (item == null)
                         return new Response("não existe este item no seu inventário.");
 
@@ -49,37 +49,38 @@ namespace WafclastRPG.Commands.UserCommands
 
                             var rd = new Random();
                             var chance = rf.Chance * (((double)player.Character.CookingSkill.Level / 100d) + 1);
-                            var cooked = 0;
-                            var fail = 0;
+                            var quantityCooked = 0;
+                            var quantityFail = 0;
 
                             for (int i = 0; i < quantidade; i++)
                             {
                                 if (rd.Chance(chance))
                                 {
-                                    cooked += 1;
+                                    quantityCooked += 1;
                                     player.Character.CookingSkill.AddExperience(rf.ExperienceGain);
                                 }
                                 else
                                 {
-                                    fail += 1;
+                                    quantityFail += 1;
                                     player.Character.CookingSkill.AddExperience(5);
                                 }
                             }
 
                             rf.Quantity -= quantidade;
 
-                            if (cooked >= 1)
+                            if (quantityCooked >= 1)
                             {
                                 var itemCooked = await session.FindItemAsync(rf.CookedItemId);
-                                await session.InsertAsync(itemCooked, cooked, player);
+                                await player.AddItemAsync(itemCooked, quantityCooked);
                             }
+
                             if (rf.Quantity == 0)
                                 await session.RemoveAsync(rf);
                             else
                                 await session.ReplaceAsync(rf);
                             await session.ReplaceAsync(player);
 
-                            return new Response($"você cozinhou {cooked} {item.Name} e queimou {fail}.");
+                            return new Response($"você cozinhou {quantityCooked} {item.Name} e queimou {quantityFail}.");
 
                         default:
                             return new Response("você não pode cozinhar este item!");

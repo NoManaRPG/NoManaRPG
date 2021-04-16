@@ -18,6 +18,7 @@ namespace WafclastRPG.Commands.UserCommands
         [Aliases("ex")]
         [Description("Permite explorar por monstros no andar atual. Também serve para fugir de um monstro.")]
         [Usage("explorar")]
+        [Cooldown(1, 15, CooldownBucketType.User)]
         public async Task ExploreCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
@@ -35,7 +36,7 @@ namespace WafclastRPG.Commands.UserCommands
 
                     var rd = new Random();
 
-                    var monster = await session.FindMonsterAsync(player.Character.CurrentFloor);
+                    var monster = await player.GetNewMonsterAsync();
 
                     int floorDifference = (player.Character.CurrentFloor + 1) - monster.FloorLevel;
 
@@ -53,7 +54,7 @@ namespace WafclastRPG.Commands.UserCommands
 
                     player.Character.Monster = monster;
 
-                    await session.ReplaceAsync(player);
+                    await player.SaveAsync();
 
                     return new Response($"você encontrou um {monster.Name}.");
                 });
