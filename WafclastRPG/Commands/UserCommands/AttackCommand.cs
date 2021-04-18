@@ -111,6 +111,7 @@ namespace WafclastRPG.Commands.UserCommands
                         if (isPlayerDead)
                         {
                             str.AppendLine($"{player.Mention} morreu!");
+                            player.Character.Coins.Coins = Convert.ToUInt32(player.Character.Coins.Coins * 0.95);
                             player.Deaths++;
                         }
                     }
