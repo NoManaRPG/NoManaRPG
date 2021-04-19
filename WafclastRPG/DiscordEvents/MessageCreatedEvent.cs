@@ -18,7 +18,7 @@ namespace WafclastRPG.DiscordEvents
             using (var session = await database.StartDatabaseSessionAsync())
                 await session.Session.WithTransactionAsync(async (s, ct) =>
                 {
-                    var player = await session.FindAsync(e.Author);
+                    var player = await session.FindPlayerAsync(e.Author);
                     if (player == null)
                         return Task.CompletedTask;
 

@@ -26,11 +26,11 @@ namespace WafclastRPG.Commands.UserCommands
             using (var session = await banco.StartDatabaseSessionAsync())
                 response = await session.WithTransactionAsync(async (s, ct) =>
                 {
-                    var player = await session.FindAsync(ctx.User);
+                    var player = await session.FindPlayerAsync(ctx.User);
                     if (player == null)
                         return new Response(Messages.NaoEscreveuComecar);
 
-                    var target = await session.FindAsync(jogador);
+                    var target = await session.FindPlayerAsync(jogador);
                     if (target == null)
                         return new Response($"{jogador.Mention} {Messages.AindaNaoCriouPersonagem}");
 

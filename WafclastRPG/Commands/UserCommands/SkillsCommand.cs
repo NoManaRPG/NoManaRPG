@@ -26,7 +26,7 @@ namespace WafclastRPG.Commands.UserCommands
             using (var session = await database.StartDatabaseSessionAsync())
                 response = await session.WithTransactionAsync(async (s, ct) =>
                 {
-                    var player = await session.FindAsync(ctx.User);
+                    var player = await session.FindPlayerAsync(ctx.User);
                     if (player == null)
                         return new Response(Messages.NaoEscreveuComecar);
 

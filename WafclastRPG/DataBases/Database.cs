@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WafclastRPG.Entities;
 using WafclastRPG.Entities.Itens;
+using WafclastRPG.Entities.MercadoGeral;
 using WafclastRPG.Entities.Monsters;
 using WafclastRPG.Extensions;
 
@@ -19,7 +20,8 @@ namespace WafclastRPG.DataBases
         public IMongoCollection<WafclastServer> CollectionGuilds { get; }
         public IMongoCollection<WafclastMonster> CollectionMonsters { get; }
         public IMongoCollection<WafclastBaseItem> CollectionItems { get; }
-        public IMongoCollection<WafclastCotacao> CollectionCotacao { get; }
+        public IMongoCollection<Ordem> CollectionOrdens { get; }
+        public IMongoCollection<Acao> CollectionAcoes{ get; }
 
         public ConcurrentDictionary<ulong, bool> InteractivityLocker { get; }
 
@@ -42,6 +44,8 @@ namespace WafclastRPG.DataBases
             CollectionGuilds = Database.CriarCollection<WafclastServer>();
             CollectionMonsters = Database.CriarCollection<WafclastMonster>();
             CollectionItems = Database.CriarCollection<WafclastBaseItem>();
+            CollectionAcoes = Database.CriarCollection<Acao>();
+            CollectionOrdens = Database.CriarCollection<Ordem>();
 
             InteractivityLocker = new ConcurrentDictionary<ulong, bool>();
 
