@@ -62,7 +62,7 @@ namespace WafclastRPG.DataBases
             {
                 Hardness = 0,
                 DropChance = 50d / 100d,
-                MinLevel = 4,
+                MinLevel = 5,
                 Type = WafclastOreItem.OreType.Clay,
                 ExperienceGain = 5
             });
