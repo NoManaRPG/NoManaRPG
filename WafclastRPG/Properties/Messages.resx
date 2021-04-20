@@ -123,9 +123,6 @@
   <data name="CanalNaoEsMapa" xml:space="preserve">
     <value>este canal de texto não jogável!</value>
   </data>
-  <data name="JogadorAlvoEstaEmOutraLocalizacao" xml:space="preserve">
-    <value>parece que vocês não estão no mesmo local.</value>
-  </data>
   <data name="JogadorAlvoNaoCriouPersonagem" xml:space="preserve">
     <value>seu alvo ainda não criou um personagem! Peça-o para digitar 'comecar'!</value>
   </data>
@@ -134,5 +131,8 @@
   </data>
   <data name="NaoPodeAtacarNaCidade" xml:space="preserve">
     <value>você não pode causar problemas dentro dos muros da cidade!</value>
+  </data>
+  <data name="Reminder" xml:space="preserve">
+    <value>o seguinte comando está disponível para uso:</value>
   </data>
 </root>

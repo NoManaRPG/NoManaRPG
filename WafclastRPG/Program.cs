@@ -54,14 +54,14 @@ namespace WafclastRPG
             Database = new DataBase();
             BotInfo = new BotInfo();
             var services = new ServiceCollection()
-                .AddSingleton(this.Database)
-                .AddSingleton(this.ConfigFile)
-                .AddSingleton(this.BotInfo)
+                .AddSingleton(Database)
+                .AddSingleton(ConfigFile)
+                .AddSingleton(BotInfo)
                 .BuildServiceProvider();
 
             bot.ModuleCommand(new CommandsNextConfiguration
             {
-                PrefixResolver = this.ResolvePrefixAsync,
+                PrefixResolver = ResolvePrefixAsync,
                 EnableDms = false,
                 CaseSensitive = false,
                 EnableDefaultHelp = false,
@@ -71,6 +71,7 @@ namespace WafclastRPG
             }, Database);
 
             Database.MineDropBuilder();
+
             await bot.ConectarAsync();
             await Task.Delay(-1);
         }

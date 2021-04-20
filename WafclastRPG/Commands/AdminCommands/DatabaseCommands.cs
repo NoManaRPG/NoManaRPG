@@ -537,37 +537,6 @@ namespace WafclastRPG.Commands.AdminCommands
             await ctx.RespondAsync("Banco foi atualizado!");
         }
 
-        [Command("novaAcao")]
-        [RequireOwner]
-        public async Task NovaAcao(CommandContext ctx, ulong preco, [RemainingText] string nome)
-        {
-            await ctx.TriggerTypingAsync();
-
-            Response response;
-            using (var session = await database.StartDatabaseSessionAsync())
-                response = await session.WithTransactionAsync(async (s, ct) =>
-                {
-                    var acao = await session.FindAcaoAsync(nome);
-                    if (acao != null)
-                        return new Response("essa ação já existe!");
-
-                    acao = new Acao();
-                    acao.Id = nome;
-                    acao.PrecoMedio = preco;
-                    await session.InsertAsync(acao);
-
-                    return new Response("ação criada!");
-                });
-
-            if (!string.IsNullOrWhiteSpace(response.Message))
-            {
-                await ctx.ResponderAsync(response.Message);
-                return;
-            }
-
-            await ctx.ResponderAsync(response.Embed.Build());
-        }
-
         [Command("atualizar-itens")]
         [RequireOwner]
         public async Task AtualizarItensAsync(CommandContext ctx)

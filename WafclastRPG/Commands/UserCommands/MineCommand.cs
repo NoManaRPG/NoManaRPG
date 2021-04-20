@@ -68,12 +68,12 @@ namespace WafclastRPG.Commands.UserCommands
                     await session.ReplaceAsync(player);
 
                     if (str.Length == 0)
-                        return new Response("você não conseguiu nada desta vez.");
+                        return new Response("você não conseguiu nada desta vez.", player.Reminder);
 
                     var embed = new DiscordEmbedBuilder();
                     embed.WithColor(DiscordColor.Green);
                     embed.WithDescription(str.ToString());
-                    return new Response(embed);
+                    return new Response(embed, player.Reminder);
                 });
 
             if (!string.IsNullOrWhiteSpace(response.Message))
@@ -83,6 +83,12 @@ namespace WafclastRPG.Commands.UserCommands
             }
 
             await ctx.ResponderAsync(response.Embed.Build());
+
+            if (response.Reminder)
+            {
+                await Task.Delay(600000);
+                await ctx.ResponderAsync($"{Messages.Reminder} `minerar`");
+            }
         }
     }
 }

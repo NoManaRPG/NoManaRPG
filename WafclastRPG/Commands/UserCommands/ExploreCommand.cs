@@ -32,7 +32,7 @@ namespace WafclastRPG.Commands.UserCommands
                         return new Response(Messages.NaoEscreveuComecar);
 
                     if (player.Character.CurrentFloor == 0)
-                        return new Response("você procura na cidade toda, mas não encontra nenhum monstro.. talvez seja melhor subir alguns andares na Torre.");
+                        return new Response("você procura na cidade toda, mas não encontra nenhum monstro.. talvez seja melhor subir alguns andares na Torre.", player.Reminder);
 
                     var rd = new Random();
 
@@ -56,9 +56,16 @@ namespace WafclastRPG.Commands.UserCommands
 
                     await player.SaveAsync();
 
-                    return new Response($"você encontrou um {monster.Name}.");
+                    return new Response($"você encontrou um {monster.Name}.", player.Reminder);
                 });
+
             await ctx.ResponderAsync(response.Message);
+
+            if (response.Reminder)
+            {
+                await Task.Delay(15000);
+                await ctx.ResponderAsync($"{Messages.Reminder} `explorar`");
+            }
         }
     }
 }

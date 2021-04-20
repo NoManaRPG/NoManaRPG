@@ -79,15 +79,6 @@ namespace WafclastRPG.Properties {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a parece que vocês não estão no mesmo local..
-        /// </summary>
-        internal static string JogadorAlvoEstaEmOutraLocalizacao {
-            get {
-                return ResourceManager.GetString("JogadorAlvoEstaEmOutraLocalizacao", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a seu alvo ainda não criou um personagem! Peça-o para digitar &apos;comecar&apos;!.
         /// </summary>
         internal static string JogadorAlvoNaoCriouPersonagem {
@@ -111,6 +102,15 @@ namespace WafclastRPG.Properties {
         internal static string NaoPodeAtacarNaCidade {
             get {
                 return ResourceManager.GetString("NaoPodeAtacarNaCidade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a o seguinte comando está disponível para uso:.
+        /// </summary>
+        internal static string Reminder {
+            get {
+                return ResourceManager.GetString("Reminder", resourceCulture);
             }
         }
     }

@@ -28,19 +28,19 @@ namespace WafclastRPG
 
         public void ModuleCommand(CommandsNextConfiguration ccfg, DataBase database)
         {
-            this.CommandsNext = Client.UseCommandsNext(ccfg);
-            this.CommandsNext.CommandExecuted += CommandExecutedEvent.Event;
-            this.CommandsNext.CommandErrored += CommandErroredEvent.EventAsync;
-            this.Client.Ready += ReadyEvent.Event;
+            CommandsNext = Client.UseCommandsNext(ccfg);
+            CommandsNext.CommandExecuted += CommandExecutedEvent.Event;
+            CommandsNext.CommandErrored += CommandErroredEvent.EventAsync;
+            Client.Ready += ReadyEvent.Event;
 
             var botInfo = (BotInfo)CommandsNext.Services.GetService(typeof(BotInfo));
-            this.Client.GuildAvailable += (c, e) => GuildAvailableEvent.Event(c, e, botInfo);
-            this.Client.GuildMemberAdded += (c, e) => GuildMemberAddedEvent.Event(c, e, botInfo);
-            this.Client.GuildMemberRemoved += (c, e) => GuildMemberRemovedEvent.Event(c, e, botInfo);
-            this.Client.MessageCreated += (c, e) => MessageCreatedEvent.Event(c, e, CommandsNext, database);
-            this.Client.ClientErrored += ClientErroredEvent.Event;
+            Client.GuildAvailable += (c, e) => GuildAvailableEvent.Event(c, e, botInfo);
+            Client.GuildMemberAdded += (c, e) => GuildMemberAddedEvent.Event(c, e, botInfo);
+            Client.GuildMemberRemoved += (c, e) => GuildMemberRemovedEvent.Event(c, e, botInfo);
+            Client.MessageCreated += (c, e) => MessageCreatedEvent.Event(c, e, CommandsNext, database);
+            Client.ClientErrored += ClientErroredEvent.Event;
 
-            this.Client.UseInteractivity(new InteractivityConfiguration
+            Client.UseInteractivity(new InteractivityConfiguration
             {
                 Timeout = TimeSpan.FromSeconds(30),
                 PollBehaviour = PollBehaviour.KeepEmojis,
@@ -48,34 +48,35 @@ namespace WafclastRPG
                 PaginationDeletion = PaginationDeletion.KeepEmojis,
             });
 
-            this.CommandsNext.SetHelpFormatter<IComandoAjuda>();
-            this.CommandsNext.RegisterCommands<HelpCommand>();
-            this.CommandsNext.RegisterCommands<InfoCommand>();
-            this.CommandsNext.RegisterCommands<ComandoPrefixo>();
-            this.CommandsNext.RegisterCommands<StartCommand>();
-            this.CommandsNext.RegisterCommands<StatusCommand>();
-            this.CommandsNext.RegisterCommands<DatabaseCommands>();
-            this.CommandsNext.RegisterCommands<AttackCommand>();
-            this.CommandsNext.RegisterCommands<InventoryCommand>();
-            this.CommandsNext.RegisterCommands<MoneyRankCommand>();
-            this.CommandsNext.RegisterCommands<LevelRankCommand>();
-            this.CommandsNext.RegisterCommands<EatCommand>();
-            this.CommandsNext.RegisterCommands<AttributesCommand>();
-            this.CommandsNext.RegisterCommands<ShopCommand>();
-            this.CommandsNext.RegisterCommands<EvolveGroupCommands>();
-            this.CommandsNext.RegisterCommands<CommandsCommand>();
-            this.CommandsNext.RegisterCommands<ExploreCommand>();
-            this.CommandsNext.RegisterCommands<MineCommand>();
-            this.CommandsNext.RegisterCommands<CookCommand>();
-            this.CommandsNext.RegisterCommands<SkillsCommand>();
-            this.CommandsNext.RegisterCommands<MoveUpCommand>();
-            this.CommandsNext.RegisterCommands<MoveDownCommand>();
-            this.CommandsNext.RegisterCommands<GiveItemCommand>();
-            this.CommandsNext.RegisterCommands<BuyCommand>();
-            this.CommandsNext.RegisterCommands<CreateSaleCommand>();
-            this.CommandsNext.RegisterCommands<MyOrdersCommand>();
-            this.CommandsNext.RegisterCommands<StopOrderCommand>();
-            this.CommandsNext.RegisterCommands<SeeSellsCommand>();
+            CommandsNext.SetHelpFormatter<IComandoAjuda>();
+            CommandsNext.RegisterCommands<HelpCommand>();
+            CommandsNext.RegisterCommands<InfoCommand>();
+            CommandsNext.RegisterCommands<ComandoPrefixo>();
+            CommandsNext.RegisterCommands<StartCommand>();
+            CommandsNext.RegisterCommands<StatusCommand>();
+            CommandsNext.RegisterCommands<DatabaseCommands>();
+            CommandsNext.RegisterCommands<AttackCommand>();
+            CommandsNext.RegisterCommands<InventoryCommand>();
+            CommandsNext.RegisterCommands<MoneyRankCommand>();
+            CommandsNext.RegisterCommands<LevelRankCommand>();
+            CommandsNext.RegisterCommands<EatCommand>();
+            CommandsNext.RegisterCommands<AttributesCommand>();
+            CommandsNext.RegisterCommands<ShopCommand>();
+            CommandsNext.RegisterCommands<EvolveGroupCommands>();
+            CommandsNext.RegisterCommands<CommandsCommand>();
+            CommandsNext.RegisterCommands<ExploreCommand>();
+            CommandsNext.RegisterCommands<MineCommand>();
+            CommandsNext.RegisterCommands<CookCommand>();
+            CommandsNext.RegisterCommands<SkillsCommand>();
+            CommandsNext.RegisterCommands<MoveUpCommand>();
+            CommandsNext.RegisterCommands<MoveDownCommand>();
+            CommandsNext.RegisterCommands<GiveItemCommand>();
+            CommandsNext.RegisterCommands<BuyCommand>();
+            CommandsNext.RegisterCommands<CreateSaleCommand>();
+            CommandsNext.RegisterCommands<MyOrdersCommand>();
+            CommandsNext.RegisterCommands<StopOrderCommand>();
+            CommandsNext.RegisterCommands<SeeSellsCommand>();
+            CommandsNext.RegisterCommands<ReminderCommand>();
         }
     }
 }

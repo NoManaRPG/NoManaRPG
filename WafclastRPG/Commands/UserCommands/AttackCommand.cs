@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
-using WafclastRPG.Entities.Itens;
 using WafclastRPG.Extensions;
 using WafclastRPG.Properties;
 
@@ -35,10 +34,10 @@ namespace WafclastRPG.Commands.UserCommands
                         return new Response(Messages.NaoEscreveuComecar);
 
                     if (player.Character.CurrentFloor == 0)
-                        return new Response("você procura na cidade toda, mas não encontra nenhum monstro.. talvez seja melhor subir alguns andares na Torre.");
+                        return new Response("você procura na cidade toda, mas não encontra nenhum monstro.. talvez seja melhor subir alguns andares na Torre.", player.Reminder);
 
                     if (player.Character.Monster == null)
-                        return new Response($"este monstro já está morto! Tente procurar por outro!");
+                        return new Response($"este monstro já está morto! Tente procurar por outro!", player.Reminder);
 
                     //Combat
                     var rd = new Random();
@@ -87,7 +86,7 @@ namespace WafclastRPG.Commands.UserCommands
                             await session.ReplaceAsync(target);
 
                             embed.WithDescription(str.ToString());
-                            return new Response(embed);
+                            return new Response(embed, player.Reminder);
                         }
                     }
                     else
@@ -124,7 +123,7 @@ namespace WafclastRPG.Commands.UserCommands
 
                     await session.ReplaceAsync(player);
                     await session.ReplaceAsync(target);
-                    return new Response(embed.WithDescription(str.ToString()));
+                    return new Response(embed.WithDescription(str.ToString()), player.Reminder);
                 });
 
             if (!string.IsNullOrWhiteSpace(response.Message))
@@ -134,6 +133,12 @@ namespace WafclastRPG.Commands.UserCommands
             }
 
             await ctx.RespondAsync(ctx.User.Mention, response.Embed.Build());
+
+            if (response.Reminder)
+            {
+                await Task.Delay(15000);
+                await ctx.ResponderAsync($"{Messages.Reminder} `atacar`");
+            }
         }
     }
 }

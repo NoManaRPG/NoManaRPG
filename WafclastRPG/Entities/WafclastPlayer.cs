@@ -24,6 +24,7 @@ namespace WafclastRPG.Entities
         public ulong Deaths { get; set; }
 
         public string Language { get; set; } = "pt-BR";
+        public bool Reminder { get; set; }
 
         public WafclastPlayer(ulong id)
         {

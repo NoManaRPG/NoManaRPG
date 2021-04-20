@@ -85,10 +85,20 @@ namespace WafclastRPG.DataBases
 
     public class Response
     {
-        public DiscordEmbedBuilder Embed;
-        public ulong? TargetId;
-        public string Message;
-        public Response(DiscordEmbedBuilder embed) => Embed = embed;
-        public Response(string message) => Message = message;
+        public DiscordEmbedBuilder Embed { get; set; }
+        public string Message { get; set; }
+        public bool Reminder { get; set; }
+
+        public Response(DiscordEmbedBuilder embed, bool reminder = false)
+        {
+            Embed = embed;
+            Reminder = reminder;
+        }
+
+        public Response(string message, bool reminder = false)
+        {
+            Message = message;
+            Reminder = reminder;
+        }
     }
 }
