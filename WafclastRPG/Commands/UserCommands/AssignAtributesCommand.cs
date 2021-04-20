@@ -42,6 +42,7 @@ namespace WafclastRPG.Commands.UserCommands
                     switch (atributo)
                     {
                         case "forca":
+                        case "força":
                             player.Character.Strength.BaseValue += quantidade;
                             player.Character.Strength.Restart();
 
