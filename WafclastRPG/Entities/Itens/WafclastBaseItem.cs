@@ -14,7 +14,7 @@ namespace WafclastRPG.Entities.Itens
         public ulong PlayerId { get; set; }
         public string Name { get; set; }
         public bool CanSell { get; set; } = true;
-        public int Quantity { get; set; } = 1;
+        public ulong Quantity { get; set; } = 1;
         public string ImageURL { get; set; } = "";
         public string Description { get; set; } = "Sem descrição";
 

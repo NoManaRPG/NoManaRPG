@@ -38,8 +38,6 @@ namespace WafclastRPG.DataBases
 #endif
             #endregion
 
-            WafclastCoins.MapBuilder();
-
             CollectionPlayers = Database.CriarCollection<WafclastPlayer>();
             CollectionGuilds = Database.CriarCollection<WafclastServer>();
             CollectionMonsters = Database.CriarCollection<WafclastMonster>();

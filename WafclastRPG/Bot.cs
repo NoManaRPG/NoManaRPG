@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WafclastRPG.Comandos.Acao;
 using WafclastRPG.Commands.AdminCommands;
 using WafclastRPG.Commands.GeneralCommands;
+using WafclastRPG.Commands.MercadoGeral;
 using WafclastRPG.Commands.RankCommands;
 using WafclastRPG.Commands.UserCommands;
 using WafclastRPG.DataBases;
@@ -49,7 +50,6 @@ namespace WafclastRPG
 
             this.CommandsNext.SetHelpFormatter<IComandoAjuda>();
             this.CommandsNext.RegisterCommands<HelpCommand>();
-            this.CommandsNext.RegisterCommands<ComandoEquipamentos>();
             this.CommandsNext.RegisterCommands<InfoCommand>();
             this.CommandsNext.RegisterCommands<ComandoPrefixo>();
             this.CommandsNext.RegisterCommands<StartCommand>();
@@ -57,7 +57,6 @@ namespace WafclastRPG
             this.CommandsNext.RegisterCommands<StatusCommand>();
             this.CommandsNext.RegisterCommands<DatabaseCommands>();
             this.CommandsNext.RegisterCommands<AttackCommand>();
-            this.CommandsNext.RegisterCommands<LookCommand>();
             this.CommandsNext.RegisterCommands<InventoryCommand>();
             this.CommandsNext.RegisterCommands<MoneyRankCommand>();
             this.CommandsNext.RegisterCommands<LevelRankCommand>();
@@ -73,6 +72,11 @@ namespace WafclastRPG
             this.CommandsNext.RegisterCommands<MoveUpCommand>();
             this.CommandsNext.RegisterCommands<MoveDownCommand>();
             this.CommandsNext.RegisterCommands<GiveItemCommand>();
+            this.CommandsNext.RegisterCommands<BuyCommand>();
+            this.CommandsNext.RegisterCommands<CreateSaleCommand>();
+            this.CommandsNext.RegisterCommands<MyOrdersCommand>();
+            this.CommandsNext.RegisterCommands<StopOrderCommand>();
+            this.CommandsNext.RegisterCommands<SeeSellsCommand>();
         }
     }
 }

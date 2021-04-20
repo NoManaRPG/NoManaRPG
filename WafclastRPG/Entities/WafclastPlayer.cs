@@ -55,6 +55,14 @@ namespace WafclastRPG.Entities
            => Session.Database.CollectionItems.Find(Session.Session, x => x.PlayerId == Id && x.Name == name,
                  new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
 
+        public async Task SaveItemAsync(WafclastBaseItem item)
+        {
+            if (item.Quantity == 0)
+                await Session.RemoveAsync(item);
+            else
+                await Session.ReplaceAsync(item);
+        }
+
         /// <summary>
         /// Somente usar em uma sessão.
         /// <para>Adiciona um item no inventário do personagem.</para>
@@ -62,7 +70,7 @@ namespace WafclastRPG.Entities
         /// <param name="item">Item a ser adicionado.</param>
         /// <param name="quantity">Quantidade a ser adicionada.</param>
         /// <returns></returns>
-        public async Task AddItemAsync(WafclastBaseItem item, int quantity)
+        public async Task AddItemAsync(WafclastBaseItem item, ulong quantity)
         {
             var foundItem = await GetItemAsync(item.Name);
             if (foundItem == null)

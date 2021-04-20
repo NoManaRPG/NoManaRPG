@@ -52,8 +52,8 @@ namespace WafclastRPG.Commands.UserCommands
                         if (pickaxePower >= drop.Hardness)
                             if (rd.Chance((drop.DropChance * incrementPorcent) * dropBonus))
                             {
-                                var quantityMax = (int)Math.Truncate((player.Character.MineSkill.Level / drop.MinLevel) + 1);
-                                var quantity = rd.Sortear(1, quantityMax);
+                                var quantityMax = (ulong)Math.Truncate((player.Character.MineSkill.Level / drop.MinLevel) + 1);
+                                var quantity = Convert.ToUInt64(rd.Sortear(1, quantityMax));
                                 var exp = (drop.ExperienceGain * quantity);
 
                                 str.AppendLine($"**+{quantity} {drop.Name} e +{exp}{Emojis.Exp}**");

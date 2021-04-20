@@ -18,7 +18,7 @@ namespace WafclastRPG.Commands.UserCommands
         [Description("Permite cozinhar itens do tipo comida.")]
         [Usage("cozinhar <quantidade> <nome>")]
         [Cooldown(1, 15, CooldownBucketType.User)]
-        public async Task UseCommandAsync(CommandContext ctx, int quantidade, [RemainingText] string nameItem)
+        public async Task UseCommandAsync(CommandContext ctx, ulong quantidade, [RemainingText] string nameItem)
         {
             await ctx.TriggerTypingAsync();
 
@@ -55,10 +55,10 @@ namespace WafclastRPG.Commands.UserCommands
                             var levelDifference = (level - nivelComida / 20d) + 1;
                             var chance = rf.Chance * levelDifference;
 
-                            var quantityCooked = 0;
+                            ulong quantityCooked = 0;
                             var quantityFail = 0;
 
-                            for (int i = 0; i < quantidade; i++)
+                            for (ulong i = 0; i < quantidade; i++)
                             {
                                 if (rd.Chance(chance))
                                 {

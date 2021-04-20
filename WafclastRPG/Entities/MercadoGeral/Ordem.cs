@@ -30,12 +30,12 @@ namespace WafclastRPG.Entities.MercadoGeral
         /// <summary>
         /// Quantidade que está negociando.
         /// </summary>
-        public int Quantidade { get; set; }
+        public ulong Quantidade { get; set; }
 
         /// <summary>
         /// Preço por cada unidade.
         /// </summary>
-        public ulong Preço { get; set; }
+        public ulong Preco { get; set; }
 
         /// <summary>
         /// Se ainda está ativa.
@@ -43,9 +43,10 @@ namespace WafclastRPG.Entities.MercadoGeral
         public bool Ativa { get; set; }
 
         /// <summary>
-        /// Quantos ganhou
+        /// Se for do tipo venda, será moedas.
+        /// <para>Se for do tipo compra, será de item.</para>
         /// </summary>
-        public ulong GanhouVenda { get; set; }
+        public ulong Gain { get; set; }
     }
 
     public enum OrdemType

@@ -1,28 +1,25 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using System.Threading.Tasks;
-using WafclastRPG.DataBases;
-using WafclastRPG.Attributes;
-using WafclastRPG.Extensions;
 using DSharpPlus.Entities;
 using MongoDB.Driver;
-using DSharpPlus;
 using System;
+using System.Threading.Tasks;
+using WafclastRPG.Attributes;
+using WafclastRPG.DataBases;
+using WafclastRPG.Entities.MercadoGeral;
+using WafclastRPG.Extensions;
 using WafclastRPG.Properties;
-using System.Text;
 
-namespace WafclastRPG.Commands.UserCommands
+namespace WafclastRPG.Commands.MercadoGeral
 {
-    public class InventoryCommand : BaseCommandModule
+    public class MyOrdersCommand : BaseCommandModule
     {
         public DataBase database;
 
-        [Command("inventario")]
-        [Description("Permite ver os itens do seu inventário")]
-        [Usage("inventario <pagina>")]
-        [Aliases("inv", "inventory")]
-        [Cooldown(1, 15, CooldownBucketType.User)]
-        public async Task InventoryCommandAsync(CommandContext ctx, int pagina = 1)
+        [Command("mglista")]
+        [Description("Permite ver minhas ordens criadas")]
+        [Usage("mglista")]
+        public async Task UseCommandAsync(CommandContext ctx, int pagina = 1)
         {
             await ctx.TriggerTypingAsync();
 
@@ -34,21 +31,19 @@ namespace WafclastRPG.Commands.UserCommands
                     if (player == null)
                         return new Response(Messages.NaoEscreveuComecar);
 
+                    pagina = Math.Abs(pagina);
                     var embed = new DiscordEmbedBuilder();
-                    var str = new StringBuilder();
-                    str.AppendLine($"{Emojis.Coins} {player.Character.Coins}");
-                    str.AppendLine(Formatter.BlockCode("Quantidade | Item"));
-
-                    var inventory = await database.CollectionItems.Find(x => x.PlayerId == player.Id)
-                       .SortByDescending(x => x.Quantity)
+                    var orders = await database.CollectionOrdens.Find(x => x.PlayerId == player.Id)
                        .Skip((pagina - 1) * 10)
                        .Limit(10)
                        .ToListAsync();
 
-                    foreach (var item in inventory)
-                        str.AppendLine($"`{item.Quantity}` x **{item.Name}**");
+                    foreach (var ordem in orders)
+                        if (ordem.Tipo == OrdemType.Venda)
+                            embed.AddField($"`{ordem.Id}` - VENDA", $"`{ordem.Quantidade}` ainda disponível.  {Emojis.Coins} `{ordem.Preco:N0}` cada.");
+                        else
+                            embed.AddField($"`{ordem.Id}` - COMPRA", $"`{ordem.Quantidade}` ainda disponível.  {Emojis.Coins} `{ordem.Preco:N0}` cada.");
 
-                    embed.WithDescription(str.ToString());
                     embed.WithFooter($"Pagina {pagina}", ctx.User.AvatarUrl);
                     embed.WithColor(DiscordColor.Brown);
 

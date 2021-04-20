@@ -29,7 +29,7 @@ namespace WafclastRPG.DiscordEvents
                     player.Character.RegenDate = DateTime.UtcNow + TimeSpan.FromSeconds(rd.Sortear(90, 120));
 
                     player.Character.Mana.Add(player.Character.ManaRegen.MaxValue);
-                    player.Character.Coins.Add(0, 0, (ulong)rd.Sortear(1, 2));
+                    player.Character.Coins.Add((ulong)rd.Sortear(1, 2));
                     await session.ReplaceAsync(player);
                     return Task.CompletedTask;
                 });

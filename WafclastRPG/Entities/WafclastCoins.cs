@@ -14,7 +14,7 @@
 
         public override string ToString()
         {
-            return Coins.ToString();
+            return Coins.ToString("N0");
         }
     }
 }

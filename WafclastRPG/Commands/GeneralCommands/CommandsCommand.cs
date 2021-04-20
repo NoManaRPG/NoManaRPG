@@ -25,6 +25,15 @@ namespace WafclastRPG.Commands.GeneralCommands
             str.Append("andarV, ");
             str.Append("itemEC, ");
             str.Append("itensV, ");
+            str.Append("novaAcao, ");
+
+            str.AppendLine();
+            str.AppendLine("[Mercado Geral]");
+            str.Append("mgcriarvenda, ");
+            str.Append("mgvervendas, ");
+            str.Append("mgcomprar, ");
+            str.Append("mglista, ");
+            str.Append("mgparar, ");
 
             str.AppendLine();
             str.AppendLine("[Geral]");

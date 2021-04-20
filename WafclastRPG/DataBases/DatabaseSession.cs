@@ -3,6 +3,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using WafclastRPG.Entities;
@@ -42,6 +43,9 @@ namespace WafclastRPG.DataBases
         public Task<WafclastBaseItem> FindItemAsync(ObjectId id)
          => Database.CollectionItems.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
 
+        public Task<WafclastBaseItem> FindItemAsync(string item, DiscordUser user)
+         => Database.CollectionItems.Find(Session, x => x.Name == item && x.PlayerId == user.Id).FirstOrDefaultAsync();
+
         /// <summary>
         /// Procura uma ordem pelo o seu ID.
         /// </summary>
@@ -49,6 +53,12 @@ namespace WafclastRPG.DataBases
         /// <returns>Ordem</returns>
         public Task<Ordem> FindOrdemAsync(ObjectId id)
             => Database.CollectionOrdens.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
+
+        public Task<List<Ordem>> FindOrdensDescendingAsync(string nome, OrdemType type)
+            => Database.CollectionOrdens.Find(Session, x => x.ItemNome == nome && x.Ativa == true && x.Tipo == type, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).SortByDescending(x => x.Preco).Limit(10).ToListAsync();
+
+        public Task<List<Ordem>> FindOrdensAscendingAsync(string nome, OrdemType type)
+          => Database.CollectionOrdens.Find(Session, x => x.ItemNome == nome && x.Ativa == true && x.Tipo == type, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).SortBy(x => x.Preco).Limit(10).ToListAsync();
 
         /// <summary>
         /// Procura uma ação pelo o seu Nome.
@@ -66,6 +76,10 @@ namespace WafclastRPG.DataBases
           => Database.CollectionItems.ReplaceOneAsync(Session, x => x.Id == item.Id, item, new ReplaceOptions { IsUpsert = true });
         public Task ReplaceAsync(WafclastMonster monster)
            => Database.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster, new ReplaceOptions { IsUpsert = true });
+        public Task ReplaceAsync(Ordem ordem)
+         => Database.CollectionOrdens.ReplaceOneAsync(x => x.Id == ordem.Id, ordem, new ReplaceOptions { IsUpsert = true });
+        public Task ReplaceAsync(Acao acao)
+       => Database.CollectionAcoes.ReplaceOneAsync(x => x.Id == acao.Id, acao, new ReplaceOptions { IsUpsert = true });
 
 
         public Task InsertAsync(WafclastBaseItem item)
@@ -77,6 +91,8 @@ namespace WafclastRPG.DataBases
 
         public Task RemoveAsync(WafclastBaseItem item)
            => Database.CollectionItems.DeleteOneAsync(Session, x => x.Id == item.Id);
+        public Task RemoveAsync(Ordem ordem)
+            => Database.CollectionOrdens.DeleteOneAsync(Session, x => x.Id == ordem.Id);
 
         public void Dispose() => Session.Dispose();
     }

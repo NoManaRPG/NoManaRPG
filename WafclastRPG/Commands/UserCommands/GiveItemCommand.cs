@@ -18,7 +18,7 @@ namespace WafclastRPG.Commands.UserCommands
         [Aliases("give")]
         [Description("Permite dar itens para outro jogador")]
         [Usage("dar <@jogador> <quantidade> <item>")]
-        public async Task GiveItemCommandAsync(CommandContext ctx, DiscordUser jogador, int quantity, [RemainingText] string nameItem)
+        public async Task GiveItemCommandAsync(CommandContext ctx, DiscordUser jogador, ulong quantity, [RemainingText] string nameItem)
         {
             await ctx.TriggerTypingAsync();
 
@@ -37,8 +37,6 @@ namespace WafclastRPG.Commands.UserCommands
                     var item = await player.GetItemAsync(nameItem);
                     if (item == null)
                         return new Response($"você não tem **{nameItem}**!");
-
-                    quantity = Math.Abs(quantity);
 
                     if (quantity > item.Quantity)
                         return new Response($"você somente tem {item.Quantity}!");

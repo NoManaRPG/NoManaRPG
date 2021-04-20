@@ -74,7 +74,7 @@ namespace WafclastRPG.Commands.UserCommands
                                         ctx.Client.Logger.LogInformation(new EventId(608, "ERROR"), $"{target.Name} está com o drop {drop.Id} errado!", DateTime.Now);
                                         continue;
                                     }
-                                    var quantity = rd.Sortear(drop.MinQuantity, drop.MaxQuantity);
+                                    var quantity = Convert.ToUInt64(rd.Sortear(drop.MinQuantity, drop.MaxQuantity));
 
                                     str.AppendLine($"**+ {quantity} {item.Name.Titulo()}.**");
 

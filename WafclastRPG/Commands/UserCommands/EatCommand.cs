@@ -1,7 +1,6 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using System;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
@@ -19,7 +18,7 @@ namespace WafclastRPG.Commands.UserCommands
         [Aliases("eat")]
         [Description("Permite comer um item do tipo Comida")]
         [Usage("comer [ quantidade ] [ nome ]")]
-        public async Task UseCommandAsync(CommandContext ctx, int quantity = 1, [RemainingText] string nameItem = "")
+        public async Task UseCommandAsync(CommandContext ctx, ulong quantity = 1, [RemainingText] string nameItem = "")
         {
             await ctx.TriggerTypingAsync();
 
@@ -36,8 +35,6 @@ namespace WafclastRPG.Commands.UserCommands
                     var item = await player.GetItemAsync(nameItem);
                     if (item == null)
                         return new Response($"não foi encontrado o item chamado {Formatter.Bold(nameItem.Titulo())}!");
-
-                    quantity = Math.Abs(quantity);
 
                     //Usa item
                     switch (item)
