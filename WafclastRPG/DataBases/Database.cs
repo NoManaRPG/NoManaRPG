@@ -21,7 +21,6 @@ namespace WafclastRPG.DataBases
         public IMongoCollection<WafclastMonster> CollectionMonsters { get; }
         public IMongoCollection<WafclastBaseItem> CollectionItems { get; }
         public IMongoCollection<Ordem> CollectionOrdens { get; }
-        public IMongoCollection<Acao> CollectionAcoes{ get; }
 
         public ConcurrentDictionary<ulong, bool> InteractivityLocker { get; }
 
@@ -42,7 +41,6 @@ namespace WafclastRPG.DataBases
             CollectionGuilds = Database.CriarCollection<WafclastServer>();
             CollectionMonsters = Database.CriarCollection<WafclastMonster>();
             CollectionItems = Database.CriarCollection<WafclastBaseItem>();
-            CollectionAcoes = Database.CriarCollection<Acao>();
             CollectionOrdens = Database.CriarCollection<Ordem>();
 
             InteractivityLocker = new ConcurrentDictionary<ulong, bool>();
@@ -73,15 +71,11 @@ namespace WafclastRPG.DataBases
         public async Task<DatabaseSession> StartDatabaseSessionAsync()
             => new DatabaseSession(await Client.StartSessionAsync(), this);
 
-        #region Interactivity
-
         public bool IsExecutingInteractivity(ulong userId) => InteractivityLocker.TryGetValue(userId, out _);
         public void StopExecutingInteractivity(ulong userId) => InteractivityLocker.TryRemove(userId, out _);
         public void StopExecutingInteractivity(CommandContext ctx) => InteractivityLocker.TryRemove(ctx.User.Id, out _);
         public void StartExecutingInteractivity(ulong userId) => InteractivityLocker.TryAdd(userId, true);
         public void StartExecutingInteractivity(CommandContext ctx) => InteractivityLocker.TryAdd(ctx.User.Id, true);
-
-        #endregion
 
         public async Task<string> GetServerPrefixAsync(ulong serverId, string defaultPrefix)
         {

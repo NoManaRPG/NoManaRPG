@@ -60,14 +60,6 @@ namespace WafclastRPG.DataBases
         public Task<List<Ordem>> FindOrdensAscendingAsync(string nome, OrdemType type)
           => Database.CollectionOrdens.Find(Session, x => x.ItemNome == nome && x.Ativa == true && x.Tipo == type, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).SortBy(x => x.Preco).Limit(10).ToListAsync();
 
-        /// <summary>
-        /// Procura uma ação pelo o seu Nome.
-        /// </summary>
-        /// <param name="nome"></param>
-        /// <returns>Acao</returns>
-        public Task<Acao> FindAcaoAsync(string nome)
-            => Database.CollectionAcoes.Find(x => x.Id == nome, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
-
         public Task ReplaceAsync(WafclastPlayer jogador)
          => Database.CollectionPlayers.ReplaceOneAsync(Session, x => x.Id == jogador.Id, jogador, new ReplaceOptions { IsUpsert = true });
         public Task ReplaceAsync(WafclastServer server)
@@ -78,17 +70,11 @@ namespace WafclastRPG.DataBases
            => Database.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster, new ReplaceOptions { IsUpsert = true });
         public Task ReplaceAsync(Ordem ordem)
          => Database.CollectionOrdens.ReplaceOneAsync(x => x.Id == ordem.Id, ordem, new ReplaceOptions { IsUpsert = true });
-        public Task ReplaceAsync(Acao acao)
-       => Database.CollectionAcoes.ReplaceOneAsync(x => x.Id == acao.Id, acao, new ReplaceOptions { IsUpsert = true });
-
 
         public Task InsertAsync(WafclastBaseItem item)
             => Database.CollectionItems.InsertOneAsync(Session, item);
-        public Task InsertAsync(Acao acao)
-            => Database.CollectionAcoes.InsertOneAsync(Session, acao);
         public Task InsertAsync(Ordem ordem)
             => Database.CollectionOrdens.InsertOneAsync(Session, ordem);
-
         public Task RemoveAsync(WafclastBaseItem item)
            => Database.CollectionItems.DeleteOneAsync(Session, x => x.Id == item.Id);
         public Task RemoveAsync(Ordem ordem)
