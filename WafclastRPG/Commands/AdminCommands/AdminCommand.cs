@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 
-namespace WafclastRPG.Commands.MercadoGeral
+namespace WafclastRPG.Commands.AdminCommands
 {
     class AdminCommand : BaseCommandModule
     {
