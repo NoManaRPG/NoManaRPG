@@ -134,8 +134,8 @@ namespace WafclastRPG.Commands.UserCommands
 
             if (response.Reminder)
             {
-                await Task.Delay(600000);
-                await ctx.ResponderAsync($"{Messages.Reminder} `minerar`");
+                await Task.Delay(15000);
+                await ctx.ResponderAsync($"{Messages.Reminder} `atacar`");
             }
         }
     }
