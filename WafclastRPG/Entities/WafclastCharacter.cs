@@ -26,7 +26,7 @@ namespace WafclastRPG.Entities
         public WafclastStatePoints LifeRegen { get; set; }
         public WafclastStatePoints ManaRegen { get; set; }
 
-        public int AttributePoints { get; set; }
+        public ulong AttributePoints { get; set; }
         public int CurrentFloor { get; set; }
         public WafclastMonster Monster { get; set; }
         public WafclastPickaxeItem Pickaxe { get; set; }

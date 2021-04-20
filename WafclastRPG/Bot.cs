@@ -61,8 +61,7 @@ namespace WafclastRPG
             CommandsNext.RegisterCommands<LevelRankCommand>();
             CommandsNext.RegisterCommands<EatCommand>();
             CommandsNext.RegisterCommands<AttributesCommand>();
-            CommandsNext.RegisterCommands<ShopCommand>();
-            CommandsNext.RegisterCommands<EvolveGroupCommands>();
+            CommandsNext.RegisterCommands<AssignAtributesCommand>();
             CommandsNext.RegisterCommands<CommandsCommand>();
             CommandsNext.RegisterCommands<ExploreCommand>();
             CommandsNext.RegisterCommands<MineCommand>();
