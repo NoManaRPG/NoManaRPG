@@ -77,12 +77,10 @@ namespace WafclastRPG.Commands.UserCommands
                 });
 
             if (!string.IsNullOrWhiteSpace(response.Message))
-            {
                 await ctx.ResponderAsync(response.Message);
-                return;
-            }
 
-            await ctx.ResponderAsync(response.Embed.Build());
+            if (response.Embed != null)
+                await ctx.ResponderAsync(response.Embed?.Build());
 
             if (response.Reminder)
             {

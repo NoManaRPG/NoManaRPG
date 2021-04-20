@@ -127,17 +127,15 @@ namespace WafclastRPG.Commands.UserCommands
                 });
 
             if (!string.IsNullOrWhiteSpace(response.Message))
-            {
                 await ctx.ResponderAsync(response.Message);
-                return;
-            }
 
-            await ctx.RespondAsync(ctx.User.Mention, response.Embed.Build());
+            if (response.Embed != null)
+                await ctx.ResponderAsync(response.Embed?.Build());
 
             if (response.Reminder)
             {
-                await Task.Delay(15000);
-                await ctx.ResponderAsync($"{Messages.Reminder} `atacar`");
+                await Task.Delay(600000);
+                await ctx.ResponderAsync($"{Messages.Reminder} `minerar`");
             }
         }
     }
