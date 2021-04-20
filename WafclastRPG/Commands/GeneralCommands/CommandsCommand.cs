@@ -48,6 +48,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             str.Append("descer, ");
             str.Append("dar, ");
             str.Append("despertador, ");
+            str.Append("atributos, ");
 
             await ctx.RespondAsync(Formatter.BlockCode(str.ToString(), "css"));
         }
