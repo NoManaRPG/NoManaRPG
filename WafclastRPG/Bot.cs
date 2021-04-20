@@ -77,6 +77,8 @@ namespace WafclastRPG
             CommandsNext.RegisterCommands<SeeSellsCommand>();
             CommandsNext.RegisterCommands<ReminderCommand>();
             CommandsNext.RegisterCommands<AdminCommand>();
+            CommandsNext.RegisterCommands<ExamineCommand>();
+            CommandsNext.RegisterCommands<AbsorbCommand>();
         }
     }
 }
