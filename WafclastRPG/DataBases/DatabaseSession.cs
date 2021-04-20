@@ -44,7 +44,7 @@ namespace WafclastRPG.DataBases
          => Database.CollectionItems.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
 
         public Task<WafclastBaseItem> FindItemAsync(string item, DiscordUser user)
-         => Database.CollectionItems.Find(Session, x => x.Name == item && x.PlayerId == user.Id).FirstOrDefaultAsync();
+         => Database.CollectionItems.Find(Session, x => x.Name == item && x.PlayerId == user.Id, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
 
         /// <summary>
         /// Procura uma ordem pelo o seu ID.
