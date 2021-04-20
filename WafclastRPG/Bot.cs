@@ -53,7 +53,6 @@ namespace WafclastRPG
             this.CommandsNext.RegisterCommands<InfoCommand>();
             this.CommandsNext.RegisterCommands<ComandoPrefixo>();
             this.CommandsNext.RegisterCommands<StartCommand>();
-            this.CommandsNext.RegisterCommands<TestCommands>();
             this.CommandsNext.RegisterCommands<StatusCommand>();
             this.CommandsNext.RegisterCommands<DatabaseCommands>();
             this.CommandsNext.RegisterCommands<AttackCommand>();

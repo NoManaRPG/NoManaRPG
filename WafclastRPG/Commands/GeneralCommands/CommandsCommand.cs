@@ -17,16 +17,6 @@ namespace WafclastRPG.Commands.GeneralCommands
         public async Task CommandsAsync(CommandContext ctx)
         {
             var str = new StringBuilder();
-            str.AppendLine("[Admin]");
-            str.Append("deletarU, ");
-            str.Append("monstroEC, ");
-            str.Append("monstroEDROP, ");
-            str.Append("monstroV, ");
-            str.Append("andarV, ");
-            str.Append("itemEC, ");
-            str.Append("itensV, ");
-            str.Append("novaAcao, ");
-
             str.AppendLine();
             str.AppendLine("[Mercado Geral]");
             str.Append("mgcriarvenda, ");
@@ -40,6 +30,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             str.Append("comandos, ");
             str.Append("ajuda, ");
             str.Append("info, ");
+            str.Append("admin, ");
 
             str.AppendLine();
             str.AppendLine("[Habilidades]");
