@@ -12,7 +12,7 @@ namespace WafclastRPG.Commands.MercadoGeral
 {
     class BuyCommand : BaseCommandModule
     {
-        public DataBase banco;
+        public DataBase banco = null;
 
         [Command("mgcomprar")]
         [Description("Permite comprar de uma ordem de venda no mercado geral.")]

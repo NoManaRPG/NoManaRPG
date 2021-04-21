@@ -15,7 +15,7 @@ namespace WafclastRPG
         public BotInfo BotInfo { get; private set; }
         public DataBase Database { get; private set; }
 
-        static void Main(string[] args) => new Program().RodarBotAsync().GetAwaiter().GetResult();
+        static void Main() => new Program().RodarBotAsync().GetAwaiter().GetResult();
 
         public async Task RodarBotAsync()
         {

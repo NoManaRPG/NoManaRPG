@@ -13,7 +13,7 @@ namespace WafclastRPG.Commands.RankCommands
 {
     class LevelRankCommand : BaseCommandModule
     {
-        public DataBase banco;
+        public DataBase banco = null;
 
         [Command("rank-nivel")]
         [Aliases("rn")]

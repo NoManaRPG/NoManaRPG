@@ -13,7 +13,7 @@ namespace WafclastRPG.Commands.MercadoGeral
 {
     class SeeSellsCommand : BaseCommandModule
     {
-        public DataBase banco;
+        public DataBase banco = null;
 
         [Command("mgvervendas")]
         [Description("Permite ver as ordens de venda de um item no mercado geral.")]

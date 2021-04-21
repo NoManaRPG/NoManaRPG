@@ -14,7 +14,7 @@ namespace WafclastRPG.Commands.MercadoGeral
 {
     class CreateSaleCommand : BaseCommandModule
     {
-        public DataBase banco;
+        public DataBase banco = null;
 
         [Command("mgcriarvenda")]
         [Description("Permite criar uma ordem de venda no mercado geral.")]
@@ -42,13 +42,15 @@ namespace WafclastRPG.Commands.MercadoGeral
                     if (item.Quantity < quantidade)
                         return new Response($"você somente tem {item.Quantity} x {item.Name}!");
 
-                    var ordem = new Ordem();
-                    ordem.Tipo = OrdemType.Venda;
-                    ordem.PlayerId = player.Id;
-                    ordem.ItemNome = item.Name;
-                    ordem.Quantidade = quantidade;
-                    ordem.Preco = preco;
-                    ordem.Ativa = true;
+                    var ordem = new Ordem
+                    {
+                        Tipo = OrdemType.Venda,
+                        PlayerId = player.Id,
+                        ItemNome = item.Name,
+                        Quantidade = quantidade,
+                        Preco = preco,
+                        Ativa = true
+                    };
 
                     item.Quantity -= quantidade;
                     await player.SaveItemAsync(item);

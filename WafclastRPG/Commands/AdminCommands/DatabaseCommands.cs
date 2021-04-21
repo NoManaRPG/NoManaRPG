@@ -231,8 +231,10 @@ namespace WafclastRPG.Commands.AdminCommands
             }
             else
             {
-                item = new WafclastBaseItem();
-                item.PlayerId = ctx.Client.CurrentUser.Id;
+                item = new WafclastBaseItem
+                {
+                    PlayerId = ctx.Client.CurrentUser.Id
+                };
             }
 
             var name = await ctx.WaitForStringAsync("Nome:", database, timeoutoverride);
@@ -263,8 +265,10 @@ namespace WafclastRPG.Commands.AdminCommands
                     var lifeGain = await ctx.WaitForIntAsync("Recupera quantos de vida:", database, timeoutoverride);
                     if (lifeGain.TimedOut)
                         return;
-                    var comidaCozinhada = new WafclastCookedFoodItem(item);
-                    comidaCozinhada.LifeGain = lifeGain.Value;
+                    var comidaCozinhada = new WafclastCookedFoodItem(item)
+                    {
+                        LifeGain = lifeGain.Value
+                    };
                     await database.CollectionItems.ReplaceOneAsync(x => x.Id == comidaCozinhada.Id, comidaCozinhada, new ReplaceOptions { IsUpsert = true });
                     embed.AddField("Recupera de vida", comidaCozinhada.LifeGain.ToString(), true);
                     break;
@@ -286,10 +290,12 @@ namespace WafclastRPG.Commands.AdminCommands
                     if (strength.TimedOut)
                         return;
 
-                    var picareta = new WafclastPickaxeItem(item);
-                    picareta.Hardness = hardness.Value;
-                    picareta.DropChanceBonus = chanceBonus.Value;
-                    picareta.Strength = strength.Value;
+                    var picareta = new WafclastPickaxeItem(item)
+                    {
+                        Hardness = hardness.Value,
+                        DropChanceBonus = chanceBonus.Value,
+                        Strength = strength.Value
+                    };
 
                     await database.CollectionItems.ReplaceOneAsync(x => x.Id == picareta.Id, picareta, new ReplaceOptions { IsUpsert = true });
 
@@ -316,11 +322,13 @@ namespace WafclastRPG.Commands.AdminCommands
                     if (experience.TimedOut)
                         return;
 
-                    var comidaCru = new WafclastRawFoodItem(item);
-                    comidaCru.CookedItemId = ObjectId.Parse(idTransformString.Value);
-                    comidaCru.CookingLevel = cookingLevel.Value;
-                    comidaCru.Chance = chanceCozinhar.Value / 100;
-                    comidaCru.ExperienceGain = experience.Value;
+                    var comidaCru = new WafclastRawFoodItem(item)
+                    {
+                        CookedItemId = ObjectId.Parse(idTransformString.Value),
+                        CookingLevel = cookingLevel.Value,
+                        Chance = chanceCozinhar.Value / 100,
+                        ExperienceGain = experience.Value
+                    };
                     await database.CollectionItems.ReplaceOneAsync(x => x.Id == comidaCru.Id, comidaCru, new ReplaceOptions { IsUpsert = true });
                     var itemCozinhado = await database.CollectionItems.Find(x => x.Id == comidaCru.CookedItemId).FirstOrDefaultAsync();
                     embed.AddField("Item cozinhado", itemCozinhado.Name, true);
@@ -332,8 +340,10 @@ namespace WafclastRPG.Commands.AdminCommands
                     var experienceGain = await ctx.WaitForDoubleAsync("Ganha quantos de experiencia:", database, timeoutoverride);
                     if (experienceGain.TimedOut)
                         return;
-                    WafclastMonsterCoreItem core = new WafclastMonsterCoreItem(item);
-                    core.ExperienceGain = Convert.ToDouble(experienceGain.Value);
+                    WafclastMonsterCoreItem core = new WafclastMonsterCoreItem(item)
+                    {
+                        ExperienceGain = Convert.ToDouble(experienceGain.Value)
+                    };
                     await database.CollectionItems.ReplaceOneAsync(x => x.Id == core.Id, core, new ReplaceOptions { IsUpsert = true });
                     embed.AddField("Ganha de experiencia".Titulo(), core.ExperienceGain.ToString());
                     break;
@@ -354,38 +364,6 @@ namespace WafclastRPG.Commands.AdminCommands
             embed.AddField("ID", $"`{item.Id}`", true);
             embed.AddField("Pode vender", item.CanSell ? "Sim" : "Não", true);
             return embed;
-        }
-
-        [Command("loja-adicionar-item")]
-        [Description("Permite adicionar um item na loja.")]
-        [Usage("loja-adicionar-item")]
-        [RequireUserPermissions(Permissions.Administrator)]
-        public async Task LojaAdicionarItemAsync(CommandContext ctx)
-        {
-            //await ctx.TriggerTypingAsync();
-
-            //var map = await database.FindAsync(ctx.Channel);
-            //if (map == null || map.Tipo != MapType.Cidade)
-            //{
-            //    await ctx.ResponderAsync("você precisa usar este comando em uma cidade!");
-            //    return;
-            //}
-
-            //var itemId = await ctx.WaitForUlongAsync("Informe o numero correspondente ao id do item desejado", database, timeoutoverride);
-            //if (itemId.TimedOut)
-            //    return;
-
-            //var item = await database.FindAsync(itemId.Value, ctx.Guild);
-            //if (item == null)
-            //{
-            //    await ctx.ResponderAsync("o item com este id não foi encontrado!");
-            //    return;
-            //}
-
-            //map.ShopItens.Add(item);
-            //await database.CollectionMaps.ReplaceOneAsync(x => x.Id == map.Id, map);
-
-            //await ctx.RespondAsync($"Item {item.Name.Titulo()} foi adicionado a loja!");
         }
 
         [Command("monstroEDROP")]
@@ -422,8 +400,10 @@ namespace WafclastRPG.Commands.AdminCommands
                 await ctx.ResponderAsync("não encontrei este item, você informou o ID correto?");
                 return;
             }
-            var dropChance = new DropChance();
-            dropChance.Id = item.Id;
+            var dropChance = new DropChance
+            {
+                Id = item.Id
+            };
 
             var chance = await ctx.WaitForDoubleAsync("Chance do item cair:", database, timeoutoverride, 0);
             if (chance.TimedOut)

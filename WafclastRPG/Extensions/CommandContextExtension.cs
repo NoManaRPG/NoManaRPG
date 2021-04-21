@@ -55,7 +55,7 @@ namespace WafclastRPG.Extensions
                 {
                     await ctx.ResponderAsync("tempo de resposta expirado!");
                     database.StopExecutingInteractivity(ctx);
-                    return new AnswerResult<T>(true, default(T));
+                    return new AnswerResult<T>(true, default);
                 }
 
                 if (Enum.TryParse(typeof(T), wait.Result.Content, out object result))
@@ -67,7 +67,7 @@ namespace WafclastRPG.Extensions
                 if (wait.Result.Content.ToLower().Trim() == "sair")
                 {
                     database.StopExecutingInteractivity(ctx);
-                    return new AnswerResult<T>(true, default(T));
+                    return new AnswerResult<T>(true, default);
                 }
             }
         }
@@ -201,8 +201,7 @@ namespace WafclastRPG.Extensions
                     wait = await WaitForMessageAsync(ctx, $"{ctx.User.Mention}, você informou uma resposta inválida! Responda com 'Sim' ou 'Não'.", embed, timeoutoverride);
                 else
                     wait = await WaitForMessageAsync(ctx, ctx.User.Mention, embed, timeoutoverride);
-                isWrong = false;
-
+                
                 if (wait.TimedOut)
                 {
                     await ctx.ResponderAsync("tempo de resposta expirado!");

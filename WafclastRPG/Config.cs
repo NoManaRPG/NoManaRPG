@@ -24,14 +24,14 @@ namespace WafclastRPG
                 return null;
             }
 
-            using (var sr = new StreamReader(path))
-                return JsonConvert.DeserializeObject<Config>(sr.ReadToEnd());
+            using var sr = new StreamReader(path);
+            return JsonConvert.DeserializeObject<Config>(sr.ReadToEnd());
         }
 
         public void SaveToJsonFile(string path)
         {
-            using (var sw = new StreamWriter(path))
-                sw.Write(JsonConvert.SerializeObject(this, Formatting.Indented));
+            using var sw = new StreamWriter(path);
+            sw.Write(JsonConvert.SerializeObject(this, Formatting.Indented));
         }
     }
 }
