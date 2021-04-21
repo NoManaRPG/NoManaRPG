@@ -3,7 +3,7 @@
 namespace WafclastRPG.Entities.Itens
 {
     [BsonIgnoreExtraElements]
-    public class WafclastPickaxeItem : WafclastLevelItem
+    public class WafclastPickaxeItem : WafclastBaseItem
     {
         /// <summary>
         /// Determina qual minério consegue minerar. Se a dureza da picareta for inferior ao do mínerio, não conseguirá minerar.
@@ -16,30 +16,10 @@ namespace WafclastRPG.Entities.Itens
         public double DropChanceBonus { get; set; }
 
         /// <summary>
-        /// Aumenta os atributos em % a cada nível extra. Operação feita ao evoluir o item.
-        /// </summary>
-        public double LevelUpBonus { get; set; }
-
-        /// <summary>
         /// Força necessária para empunhar a picareta.
         /// </summary>
         public double Strength { get; set; }
 
         public WafclastPickaxeItem(WafclastBaseItem baseItem) : base(baseItem) { }
-
-        public new bool AddExperience(double exp)
-        {
-            int levelUps = base.AddExperience(exp);
-            for (int i = 0; i < levelUps; i++)
-            {
-                var bonus = (LevelUpBonus / 100) + 1;
-                Hardness *= bonus;
-                DropChanceBonus *= bonus;
-            }
-
-            if (levelUps >= 1)
-                return true;
-            return false;
-        }
     }
 }

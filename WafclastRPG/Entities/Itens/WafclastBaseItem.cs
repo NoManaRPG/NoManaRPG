@@ -5,7 +5,7 @@ namespace WafclastRPG.Entities.Itens
 {
     [BsonIgnoreExtraElements]
     [BsonDiscriminator(RootClass = true)]
-    [BsonKnownTypes(typeof(WafclastLevelItem), typeof(WafclastMonsterCoreItem), typeof(WafclastOreItem),
+    [BsonKnownTypes(typeof(WafclastMonsterCoreItem), typeof(WafclastOreItem),
     typeof(WafclastPickaxeItem), typeof(WafclastRawFoodItem), typeof(WafclastCookedFoodItem))]
     public class WafclastBaseItem
     {

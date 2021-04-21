@@ -54,11 +54,11 @@ namespace WafclastRPG.DataBases
         public Task<Ordem> FindOrdemAsync(ObjectId id)
             => Database.CollectionOrdens.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
 
-        public Task<List<Ordem>> FindOrdensDescendingAsync(string nome, OrdemType type)
-            => Database.CollectionOrdens.Find(Session, x => x.ItemNome == nome && x.Ativa == true && x.Tipo == type, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).SortByDescending(x => x.Preco).Limit(10).ToListAsync();
+        public Task<List<Ordem>> FindOrdensDescendingAsync(string nome, OrdemType type, int limit = 10)
+            => Database.CollectionOrdens.Find(Session, x => x.ItemNome == nome && x.Ativa == true && x.Tipo == type, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).SortByDescending(x => x.Preco).Limit(limit).ToListAsync();
 
-        public Task<List<Ordem>> FindOrdensAscendingAsync(string nome, OrdemType type)
-          => Database.CollectionOrdens.Find(Session, x => x.ItemNome == nome && x.Ativa == true && x.Tipo == type, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).SortBy(x => x.Preco).Limit(10).ToListAsync();
+        public Task<List<Ordem>> FindOrdensAscendingAsync(string nome, OrdemType type, int limit = 10)
+          => Database.CollectionOrdens.Find(Session, x => x.ItemNome == nome && x.Ativa == true && x.Tipo == type, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).SortBy(x => x.Preco).Limit(limit).ToListAsync();
 
         public Task ReplaceAsync(WafclastPlayer jogador)
          => Database.CollectionPlayers.ReplaceOneAsync(Session, x => x.Id == jogador.Id, jogador, new ReplaceOptions { IsUpsert = true });

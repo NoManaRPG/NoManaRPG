@@ -51,6 +51,7 @@ namespace WafclastRPG.Commands.GeneralCommands
             str.Append("atributos, ");
             str.Append("atribuir, ");
             str.Append("absorver, ");
+            str.Append("examinar, ");
 
             await ctx.RespondAsync(Formatter.BlockCode(str.ToString(), "css"));
         }

@@ -289,14 +289,12 @@ namespace WafclastRPG.Commands.AdminCommands
                     var picareta = new WafclastPickaxeItem(item);
                     picareta.Hardness = hardness.Value;
                     picareta.DropChanceBonus = chanceBonus.Value;
-                    picareta.LevelUpBonus = levelUp.Value;
                     picareta.Strength = strength.Value;
 
                     await database.CollectionItems.ReplaceOneAsync(x => x.Id == picareta.Id, picareta, new ReplaceOptions { IsUpsert = true });
 
                     embed.AddField("Dureza", picareta.Hardness.ToString("N2"), true);
                     embed.AddField("Chance bonus", picareta.DropChanceBonus.ToString("N2"), true);
-                    embed.AddField("Melhora em ao evoluir", picareta.LevelUpBonus.ToString("N2"), true);
                     embed.AddField("Força", picareta.Strength.ToString("N2"), true);
 
                     break;
@@ -479,55 +477,42 @@ namespace WafclastRPG.Commands.AdminCommands
                     foreach (WafclastPlayer item in list)
                     {
 
-                        //item.Character.Strength = new WafclastStatePoints(20);
-                        //item.Character.Intelligence = new WafclastStatePoints(20);
-                        //item.Character.Dexterity = new WafclastStatePoints(20);
+                        item.Character.Strength = new WafclastStatePoints(20);
+                        item.Character.Intelligence = new WafclastStatePoints(20);
+                        item.Character.Dexterity = new WafclastStatePoints(20);
 
-                        //item.Character.PhysicalDamage = new WafclastStatePoints(8);
-                        //item.Character.PhysicalDamage.MultValue += item.Character.Strength.CurrentValue * 0.2;
-                        //item.Character.PhysicalDamage.Restart();
+                        item.Character.PhysicalDamage = new WafclastStatePoints(8);
+                        item.Character.PhysicalDamage.MultValue += item.Character.Strength.CurrentValue * 0.2;
+                        item.Character.PhysicalDamage.Restart();
 
-                        //item.Character.Evasion = new WafclastStatePoints(53);
-                        //item.Character.Evasion.MultValue += item.Character.Dexterity.CurrentValue * 0.2;
-                        //item.Character.Evasion.Restart();
+                        item.Character.Evasion = new WafclastStatePoints(53);
+                        item.Character.Evasion.MultValue += item.Character.Dexterity.CurrentValue * 0.2;
+                        item.Character.Evasion.Restart();
 
-                        //item.Character.Accuracy = new WafclastStatePoints(item.Character.Dexterity.CurrentValue * 2);
+                        item.Character.Accuracy = new WafclastStatePoints(item.Character.Dexterity.CurrentValue * 2);
 
-                        //item.Character.Armour = new WafclastStatePoints(0);
+                        item.Character.Armour = new WafclastStatePoints(0);
 
-                        //item.Character.EnergyShield = new WafclastStatePoints(0);
-                        //item.Character.EnergyShield.MultValue += item.Character.Intelligence.CurrentValue * 0.2;
+                        item.Character.EnergyShield = new WafclastStatePoints(0);
+                        item.Character.EnergyShield.MultValue += item.Character.Intelligence.CurrentValue * 0.2;
 
-                        //item.Character.Life = new WafclastStatePoints(50);
-                        //item.Character.Life.BaseValue += item.Character.Strength.CurrentValue * 0.5;
+                        item.Character.Life = new WafclastStatePoints(50);
+                        item.Character.Life.BaseValue += item.Character.Strength.CurrentValue * 0.5;
 
-                        //item.Character.Life.Restart();
+                        item.Character.Life.Restart();
 
-                        //item.Character.Mana = new WafclastStatePoints(40);
-                        //item.Character.Mana.BaseValue += item.Character.Intelligence.CurrentValue * 0.5;
-                        //item.Character.Mana.Restart();
+                        item.Character.Mana = new WafclastStatePoints(40);
+                        item.Character.Mana.BaseValue += item.Character.Intelligence.CurrentValue * 0.5;
+                        item.Character.Mana.Restart();
 
-                        //item.Character.LifeRegen = new WafclastStatePoints(0);
-                        //item.Character.ManaRegen = new WafclastStatePoints(item.Character.Mana.MaxValue * 0.08);
-                        //item.Character.AttributePoints = (item.Character.Level - 1) * 10;
-
-                        //item.Character.MineSkill = new WafclastLevel(1);
-
-                        //if (item.Character.CookingSkill == null)
-                        //    item.Character.CookingSkill = new WafclastLevel(1);
-
-                        //if (item.Character.Level > 1)
-                        //{
-                        //    item.Character.Accuracy.BaseValue += 2 * (item.Character.Level - 1);
-                        //    item.Character.Life.BaseValue += 12 * (item.Character.Level - 1);
-                        //}
-                        item.Character.ExperienceForNextLevel = item.Character.ExperienceTotalLevel(2);
-                        item.Character.MineSkill.ExperienceForNextLevel = item.Character.MineSkill.ExperienceTotalLevel(2);
-                        item.Character.CookingSkill.ExperienceForNextLevel = item.Character.CookingSkill.ExperienceTotalLevel(2);
+                        item.Character.LifeRegen = new WafclastStatePoints(0);
+                        item.Character.ManaRegen = new WafclastStatePoints(item.Character.Mana.MaxValue * 0.08);
 
                         item.Character.Level = 1;
-                        item.Character.MineSkill.Level = 1;
-                        item.Character.CookingSkill.Level = 1;
+                        item.Character.AttributePoints = 0;
+                        item.Character.ExperienceForNextLevel = item.Character.ExperienceTotalLevel(2);
+                    
+
 
 
                         await database.CollectionPlayers.ReplaceOneAsync(x => x.Id == item.Id, item);
