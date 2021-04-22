@@ -6,7 +6,7 @@ namespace WafclastRPG.Entities.Itens
     [BsonIgnoreExtraElements]
     [BsonDiscriminator(RootClass = true)]
     [BsonKnownTypes(typeof(WafclastMonsterCoreItem), typeof(WafclastOreItem),
-    typeof(WafclastPickaxeItem), typeof(WafclastRawFoodItem), typeof(WafclastCookedFoodItem))]
+    typeof(WafclastPickaxeItem), typeof(WafclastCookedFoodItem))]
     public class WafclastBaseItem
     {
         [BsonId]
