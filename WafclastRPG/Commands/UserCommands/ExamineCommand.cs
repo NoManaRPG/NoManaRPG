@@ -45,12 +45,14 @@ namespace WafclastRPG.Commands.UserCommands
                     embed.WithColor(DiscordColor.Aquamarine);
                     embed.WithDescription(Formatter.BlockCode(itemGlobal.Description));
                     embed.WithTimestamp(DateTime.Now);
-                    embed.AddField("ID", $"`{itemGlobal.Id}`", true);
+                    embed.AddField("ID Global", $"`{itemGlobal.Id}`", true);
+                    if (itemPlayer != null)
+                        embed.AddField("ID Inventário", $"`{itemPlayer.Id}`", true);
 
                     if (itemGlobal.CanSell)
                     {
                         embed.AddField("Pode vender", "Sim", true);
-                        var compra = await session.FindOrdensDescendingAsync(itemGlobal.Name, OrdemType.Venda, 1);
+                        var compra = await session.FindOrdensAscendingAsync(itemGlobal.Name, OrdemType.Venda, 1);
                         if (compra.Count == 1)
                             embed.AddField("Preço para compra", compra[0].Preco.ToString("N0"));
                         else
