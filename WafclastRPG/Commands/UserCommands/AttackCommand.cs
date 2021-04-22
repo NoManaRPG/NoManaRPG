@@ -51,7 +51,7 @@ namespace WafclastRPG.Commands.UserCommands
 
                     if (!rd.Chance(player.Character.HitChance(target.Evasion.MaxValue)))
                     {
-                        var playerDamage = rd.Sortear(player.Character.PhysicalDamage.CurrentValue);
+                        var playerDamage = rd.Sortear(player.Character.PhysicalDamage.CurrentValue / 2, player.Character.PhysicalDamage.CurrentValue);
                         playerDamage = target.DamageReduction(playerDamage);
 
                         var isTargetDead = target.ReceberDano(playerDamage);
