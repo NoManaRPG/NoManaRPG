@@ -12,23 +12,36 @@ namespace WafclastRPG.Commands.AdminCommands
         [Command("admin")]
         [Description("Exibe todos os comandos que o bot reconhece de administrador.")]
         [Usage("admin")]
+        [RequireOwner]
         public async Task CommandsAsync(CommandContext ctx)
         {
             var str = new StringBuilder();
             str.AppendLine("[Admin]");
-            str.Append("deletarU, ");
-            str.Append("monstroEC, ");
-            str.Append("monstroEDROP, ");
-            str.Append("monstroV, ");
+
+            str.AppendLine();
+            str.AppendLine("[Torre]");
             str.Append("andarV, ");
+
+            str.AppendLine();
+            str.AppendLine("[Monstros]");
+            str.Append("adddrop, ");
+            str.Append("editdrop, ");
+            str.Append("vermonstro, ");
+            str.Append("monstroEC, ");
+            str.Append("mudarandar, ");
+
+            str.AppendLine();
+            str.AppendLine("[Itens]");
+            str.Append("atualizar-itens, ");
+            str.Append("criarfabricacao, ");
             str.Append("itemEC, ");
             str.Append("itensV, ");
-            str.Append(" ");
-            str.Append("criarfabricacao, ");
-            str.Append("additem, ");
-            str.Append("atualizar-jogadores, ");
-            str.Append("atualizar-itens, ");
 
+            str.AppendLine();
+            str.AppendLine("[Jogadores]");
+            str.Append("atualizar-jogadores, ");
+            str.Append("deletarU, ");
+            str.Append("additem, ");
             await ctx.RespondAsync(Formatter.BlockCode(str.ToString(), "css"));
         }
     }

@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using WafclastRPG.Comandos.Acao;
 using WafclastRPG.Commands.AdminCommands;
+using WafclastRPG.Commands.AdminCommands.Monsters;
 using WafclastRPG.Commands.GeneralCommands;
 using WafclastRPG.Commands.MercadoGeral;
 using WafclastRPG.Commands.RankCommands;
@@ -82,6 +83,10 @@ namespace WafclastRPG
             CommandsNext.RegisterCommands<AbsorbCommand>();
             CommandsNext.RegisterCommands<CreateFabricationCommand>();
             CommandsNext.RegisterCommands<AddItemCommand>();
+            CommandsNext.RegisterCommands<AddDropCommand>();
+            CommandsNext.RegisterCommands<EditDropCommand>();
+            CommandsNext.RegisterCommands<SeeMonsterCommand>();
+            CommandsNext.RegisterCommands<ChangeFloorCommand>();
         }
     }
 }

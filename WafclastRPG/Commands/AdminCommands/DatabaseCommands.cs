@@ -37,48 +37,6 @@ namespace WafclastRPG.Commands.AdminCommands
                 await ctx.ResponderAsync("não foi possível deletar! Tente novamente");
         }
 
-        [Command("monstroV")]
-        [Description("Permite ver informações de um monstro.")]
-        [Usage("monstroV <id>")]
-        [RequireOwner]
-        public async Task VerMonstro(CommandContext ctx, string idString)
-        {
-            await ctx.TriggerTypingAsync();
-
-            if (!ObjectId.TryParse(idString, out var id))
-            {
-                await ctx.ResponderAsync("o formato do ID está inválido!");
-                return;
-            }
-
-            var monster = await database.CollectionMonsters.Find(x => x.Id == id).FirstOrDefaultAsync();
-            if (monster == null)
-            {
-                await ctx.ResponderAsync("não encontrei este monstro, você informou o ID correto?");
-                return;
-            }
-
-            var embed = new DiscordEmbedBuilder();
-            embed.WithTitle(monster.Name);
-            embed.WithDescription($"ID `{monster.Id}`" +
-                $"\nAndar {monster.FloorLevel}");
-            embed.AddField("Vida", monster.Life.MaxValue.ToString("N2"), true);
-            embed.AddField("Armadura", monster.Armour.MaxValue.ToString("N2"), true);
-            embed.AddField("Dano físico", monster.PhysicalDamage.MaxValue.ToString("N2"), true);
-            embed.AddField("Evasão", monster.Evasion.MaxValue.ToString("N2"), true);
-            embed.AddField("Precisão", monster.Accuracy.MaxValue.ToString("N2"), true);
-
-            var str = new StringBuilder();
-            foreach (var item in monster.DropChances)
-            {
-                var drop = await database.CollectionItems.Find(x => x.Id == item.Id).FirstOrDefaultAsync();
-                str.AppendLine($"{item.Chance * 100}% de cair {item.MinQuantity} ~ {item.MaxQuantity} {drop.Name}.");
-            }
-
-            embed.AddField("Drops", str.ToString());
-            await ctx.ResponderAsync(embed.Build());
-        }
-
         [Command("andarV")]
         [Description("Permite ver os monstros de um andar.")]
         [Usage("andarV <andar>")]
@@ -208,7 +166,7 @@ namespace WafclastRPG.Commands.AdminCommands
         [Command("itemEC")]
         [Description("Permite criar um item.")]
         [Usage("itemEC [id]")]
-        [RequireUserPermissions(Permissions.Administrator)]
+        [RequireOwner]
         public async Task ItemCriarAsync(CommandContext ctx, string idString = null)
         {
             await ctx.TriggerTypingAsync();
@@ -334,78 +292,6 @@ namespace WafclastRPG.Commands.AdminCommands
             return embed;
         }
 
-        [Command("monstroEDROP")]
-        [Description("Permite adicionar uma recompensa ao monstro após ser abatido.")]
-        [Usage("monstroEDROP <Monstro ID> <Item ID> [Posição]}")]
-        [RequireUserPermissions(Permissions.Administrator)]
-        public async Task MonstroDropAsync(CommandContext ctx, string monsterIdString, string itemIdString, int? pos = null)
-        {
-            await ctx.TriggerTypingAsync();
-
-            WafclastMonster monster = null;
-
-            if (!ObjectId.TryParse(monsterIdString, out var monsterId))
-            {
-                await ctx.ResponderAsync("o ID do monstro está inválido!");
-                return;
-            }
-            monster = await database.CollectionMonsters.Find(x => x.Id == monsterId).FirstOrDefaultAsync();
-            if (monster == null)
-            {
-                await ctx.ResponderAsync("não encontrei este monstro, você informou o ID correto?");
-                return;
-            }
-
-            if (!ObjectId.TryParse(itemIdString, out var itemId))
-            {
-                await ctx.ResponderAsync("o ID do item está inválido!");
-                return;
-            }
-
-            var item = await database.CollectionItems.Find(x => x.Id == itemId && x.PlayerId == ctx.Client.CurrentUser.Id).FirstOrDefaultAsync();
-            if (item == null)
-            {
-                await ctx.ResponderAsync("não encontrei este item, você informou o ID correto?");
-                return;
-            }
-            var dropChance = new DropChance
-            {
-                Id = item.Id
-            };
-
-            var chance = await ctx.WaitForDoubleAsync("Chance do item cair:", database, timeoutoverride, 0);
-            if (chance.TimedOut)
-                return;
-            dropChance.Chance = chance.Value / 100;
-
-            var minQuantity = await ctx.WaitForIntAsync("Minimo de quantidade que pode cair:", database, timeoutoverride, 1);
-            if (minQuantity.TimedOut)
-                return;
-            dropChance.MinQuantity = minQuantity.Value;
-
-            var maxQuantity = await ctx.WaitForIntAsync("Máximo de quantidade que pode cair:", database, timeoutoverride, minQuantity.Value);
-            if (maxQuantity.TimedOut)
-                return;
-            dropChance.MaxQuantity = maxQuantity.Value;
-
-            if (pos == null)
-                monster.DropChances.Add(dropChance);
-            else if (monster.DropChances.Count > pos)
-                monster.DropChances[(int)pos] = dropChance;
-            else
-                monster.DropChances.Add(dropChance);
-
-            await database.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster);
-
-            var embed = new DiscordEmbedBuilder();
-            embed.AddField("Item".Titulo(), item.Name, true);
-            embed.AddField("Monstro".Titulo(), monster.Name, true);
-            embed.AddField("Chance".Titulo(), (dropChance.Chance * 100).ToString(), true);
-            embed.AddField("Quantia".Titulo(), $"{dropChance.MinQuantity} ~ {dropChance.MaxQuantity}", true);
-
-            await ctx.ResponderAsync($"monstro {Formatter.Bold(monster.Name)} editado! Agora pode cair:", embed.Build());
-        }
-
         [Command("atualizar-jogadores")]
         [RequireOwner]
         public async Task AtualizarAsync(CommandContext ctx)
@@ -488,19 +374,22 @@ namespace WafclastRPG.Commands.AdminCommands
 
                     foreach (WafclastBaseItem item in list)
                     {
+                        WafclastCookedFoodItem cook = null;
                         switch (item.Name)
                         {
-                            case "Carne de Coelho Cozida":
-                                item.Name = "Carne de Coelho Cozido";
-                                break;
-                            case "Galinha Cozida":
-                                item.Name = "Galinha Cozido";
+                            case "Bife Cozido":
+                            case "Carne de Coelho Cozido":
+                            case "Galinha Cozido":
+                                cook = new WafclastCookedFoodItem(item)
+                                {
+                                    LifeGain = 50
+                                };
                                 break;
                         }
-                        await database.CollectionItems.ReplaceOneAsync(x => x.Id == item.Id, item);
+                        if (cook != null)
+                            await database.CollectionItems.ReplaceOneAsync(x => x.Id == item.Id, cook);
                     }
                 }
-
             await ctx.RespondAsync("Banco foi atualizado!");
         }
 
