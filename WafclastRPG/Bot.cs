@@ -10,6 +10,7 @@ using WafclastRPG.Commands.AdminCommands;
 using WafclastRPG.Commands.GeneralCommands;
 using WafclastRPG.Commands.MercadoGeral;
 using WafclastRPG.Commands.RankCommands;
+using WafclastRPG.Commands.Skills;
 using WafclastRPG.Commands.UserCommands;
 using WafclastRPG.DataBases;
 using WafclastRPG.DiscordEvents;
@@ -79,6 +80,8 @@ namespace WafclastRPG
             CommandsNext.RegisterCommands<AdminCommand>();
             CommandsNext.RegisterCommands<ExamineCommand>();
             CommandsNext.RegisterCommands<AbsorbCommand>();
+            CommandsNext.RegisterCommands<CreateFabricationCommand>();
+            CommandsNext.RegisterCommands<AddItemCommand>();
         }
     }
 }

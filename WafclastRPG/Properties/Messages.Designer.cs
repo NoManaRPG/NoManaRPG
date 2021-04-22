@@ -70,11 +70,11 @@ namespace WafclastRPG.Properties {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a este canal de texto não jogável!.
+        ///   Consulta uma cadeia de caracteres localizada semelhante a você cancelou o comando..
         /// </summary>
-        internal static string CanalNaoEsMapa {
+        internal static string ComandoCancelado {
             get {
-                return ResourceManager.GetString("CanalNaoEsMapa", resourceCulture);
+                return ResourceManager.GetString("ComandoCancelado", resourceCulture);
             }
         }
         

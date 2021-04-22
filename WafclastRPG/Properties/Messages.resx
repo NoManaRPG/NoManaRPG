@@ -120,8 +120,8 @@
   <data name="AindaNaoCriouPersonagem" xml:space="preserve">
     <value>ainda não criou um personagem.</value>
   </data>
-  <data name="CanalNaoEsMapa" xml:space="preserve">
-    <value>este canal de texto não jogável!</value>
+  <data name="ComandoCancelado" xml:space="preserve">
+    <value>você cancelou o comando.</value>
   </data>
   <data name="JogadorAlvoNaoCriouPersonagem" xml:space="preserve">
     <value>seu alvo ainda não criou um personagem! Peça-o para digitar 'comecar'!</value>
