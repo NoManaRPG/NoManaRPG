@@ -34,6 +34,7 @@ namespace WafclastRPG.Commands.GeneralCommands
 
             str.AppendLine();
             str.AppendLine("[Habilidades]");
+            str.Append("habilidades, ");
             str.Append("minerar, ");
             str.Append("cozinhar, ");
 
@@ -43,7 +44,6 @@ namespace WafclastRPG.Commands.GeneralCommands
             str.Append("atacar, ");
             str.Append("status, ");
             str.Append("inventario, ");
-            str.Append("habilidades, ");
             str.Append("subir, ");
             str.Append("descer, ");
             str.Append("dar, ");

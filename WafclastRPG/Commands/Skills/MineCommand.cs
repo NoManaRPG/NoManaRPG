@@ -9,7 +9,7 @@ using WafclastRPG.DataBases;
 using WafclastRPG.Extensions;
 using WafclastRPG.Properties;
 
-namespace WafclastRPG.Commands.UserCommands
+namespace WafclastRPG.Commands.Skills
 {
     public class MineCommand : BaseCommandModule
     {
