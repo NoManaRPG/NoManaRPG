@@ -33,9 +33,6 @@ namespace WafclastRPG.Commands.UserCommands
                     if (player == null)
                         return new Response(Messages.NaoEscreveuComecar);
 
-                    if (player.Character.CurrentFloor == 0)
-                        return new Response("você procura na cidade toda, mas não encontra nenhum monstro.. talvez seja melhor subir alguns andares na Torre.", player.Reminder);
-
                     if (player.Character.Monster == null)
                         return new Response($"este monstro já está morto! Tente procurar por outro!", player.Reminder);
 

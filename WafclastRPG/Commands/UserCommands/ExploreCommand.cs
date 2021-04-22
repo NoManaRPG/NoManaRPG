@@ -31,12 +31,8 @@ namespace WafclastRPG.Commands.UserCommands
                     if (player == null)
                         return new Response(Messages.NaoEscreveuComecar);
 
-                    if (player.Character.CurrentFloor == 0)
-                        return new Response("você procura na cidade toda, mas não encontra nenhum monstro.. talvez seja melhor subir alguns andares na Torre.", player.Reminder);
-
-                    var rd = new Random();
-
                     var monster = await player.GetNewMonsterAsync();
+                    var rd = new Random();
 
                     int floorDifference = (player.Character.CurrentFloor + 1) - monster.FloorLevel;
 
