@@ -247,6 +247,7 @@ namespace WafclastRPG.Extensions
                 return new AnswerResult<string>(true, null);
             }
 
+            banco.StopExecutingInteractivity(ctx.User.Id);
             return new AnswerResult<string>(false, wait.Result.Content);
         }
     }
