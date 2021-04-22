@@ -304,38 +304,6 @@ namespace WafclastRPG.Commands.AdminCommands
                     embed.AddField("Força", picareta.Strength.ToString("N2"), true);
 
                     break;
-
-                case "comida cru":
-                    var idTransformString = await ctx.WaitForStringAsync("ID do item após cozido:", database, timeoutoverride);
-                    if (idTransformString.TimedOut)
-                        return;
-
-                    var cookingLevel = await ctx.WaitForIntAsync("Nível para cozinhar:", database, timeoutoverride);
-                    if (cookingLevel.TimedOut)
-                        return;
-
-                    var chanceCozinhar = await ctx.WaitForDoubleAsync("Chance para cozinhar:", database, timeoutoverride);
-                    if (chanceCozinhar.TimedOut)
-                        return;
-
-                    var experience = await ctx.WaitForDoubleAsync("Experiencia ganha ao cozinhar:", database, timeoutoverride);
-                    if (experience.TimedOut)
-                        return;
-
-                    var comidaCru = new WafclastRawFoodItem(item)
-                    {
-                        CookedItemId = ObjectId.Parse(idTransformString.Value),
-                        CookingLevel = cookingLevel.Value,
-                        Chance = chanceCozinhar.Value / 100,
-                        ExperienceGain = experience.Value
-                    };
-                    await database.CollectionItems.ReplaceOneAsync(x => x.Id == comidaCru.Id, comidaCru, new ReplaceOptions { IsUpsert = true });
-                    var itemCozinhado = await database.CollectionItems.Find(x => x.Id == comidaCru.CookedItemId).FirstOrDefaultAsync();
-                    embed.AddField("Item cozinhado", itemCozinhado.Name, true);
-                    embed.AddField("Nível para cozinhar", comidaCru.CookingLevel.ToString(), true);
-                    embed.AddField("Chance", $"{comidaCru.Chance * 100}%", true);
-                    break;
-
                 case "nucleo":
                     var experienceGain = await ctx.WaitForDoubleAsync("Ganha quantos de experiencia:", database, timeoutoverride);
                     if (experienceGain.TimedOut)
@@ -457,41 +425,41 @@ namespace WafclastRPG.Commands.AdminCommands
                     foreach (WafclastPlayer item in list)
                     {
 
-                        item.Character.Strength = new WafclastStatePoints(20);
-                        item.Character.Intelligence = new WafclastStatePoints(20);
-                        item.Character.Dexterity = new WafclastStatePoints(20);
+                        //item.Character.Strength = new WafclastStatePoints(20);
+                        //item.Character.Intelligence = new WafclastStatePoints(20);
+                        //item.Character.Dexterity = new WafclastStatePoints(20);
 
-                        item.Character.PhysicalDamage = new WafclastStatePoints(8);
-                        item.Character.PhysicalDamage.MultValue += item.Character.Strength.CurrentValue * 0.2;
-                        item.Character.PhysicalDamage.Restart();
+                        //item.Character.PhysicalDamage = new WafclastStatePoints(8);
+                        //item.Character.PhysicalDamage.MultValue += item.Character.Strength.CurrentValue * 0.2;
+                        //item.Character.PhysicalDamage.Restart();
 
-                        item.Character.Evasion = new WafclastStatePoints(53);
-                        item.Character.Evasion.MultValue += item.Character.Dexterity.CurrentValue * 0.2;
-                        item.Character.Evasion.Restart();
+                        //item.Character.Evasion = new WafclastStatePoints(53);
+                        //item.Character.Evasion.MultValue += item.Character.Dexterity.CurrentValue * 0.2;
+                        //item.Character.Evasion.Restart();
 
-                        item.Character.Accuracy = new WafclastStatePoints(item.Character.Dexterity.CurrentValue * 2);
+                        //item.Character.Accuracy = new WafclastStatePoints(item.Character.Dexterity.CurrentValue * 2);
 
-                        item.Character.Armour = new WafclastStatePoints(0);
+                        //item.Character.Armour = new WafclastStatePoints(0);
 
-                        item.Character.EnergyShield = new WafclastStatePoints(0);
-                        item.Character.EnergyShield.MultValue += item.Character.Intelligence.CurrentValue * 0.2;
+                        //item.Character.EnergyShield = new WafclastStatePoints(0);
+                        //item.Character.EnergyShield.MultValue += item.Character.Intelligence.CurrentValue * 0.2;
 
-                        item.Character.Life = new WafclastStatePoints(50);
-                        item.Character.Life.BaseValue += item.Character.Strength.CurrentValue * 0.5;
+                        //item.Character.Life = new WafclastStatePoints(50);
+                        //item.Character.Life.BaseValue += item.Character.Strength.CurrentValue * 0.5;
 
-                        item.Character.Life.Restart();
+                        //item.Character.Life.Restart();
 
-                        item.Character.Mana = new WafclastStatePoints(40);
-                        item.Character.Mana.BaseValue += item.Character.Intelligence.CurrentValue * 0.5;
-                        item.Character.Mana.Restart();
+                        //item.Character.Mana = new WafclastStatePoints(40);
+                        //item.Character.Mana.BaseValue += item.Character.Intelligence.CurrentValue * 0.5;
+                        //item.Character.Mana.Restart();
 
-                        item.Character.LifeRegen = new WafclastStatePoints(0);
-                        item.Character.ManaRegen = new WafclastStatePoints(item.Character.Mana.MaxValue * 0.08);
+                        //item.Character.LifeRegen = new WafclastStatePoints(0);
+                        //item.Character.ManaRegen = new WafclastStatePoints(item.Character.Mana.MaxValue * 0.08);
 
-                        item.Character.Level = 1;
-                        item.Character.AttributePoints = 0;
-                        item.Character.ExperienceForNextLevel = item.Character.ExperienceTotalLevel(2);
-                    
+                        //item.Character.Level = 1;
+                        //item.Character.AttributePoints = 0;
+                        //item.Character.ExperienceForNextLevel = item.Character.ExperienceTotalLevel(2);
+
 
 
 
@@ -522,11 +490,11 @@ namespace WafclastRPG.Commands.AdminCommands
                     {
                         switch (item.Name)
                         {
-                            case "Galinha Crú":
-                                item.Name = "Galinha Cru";
+                            case "Carne de Coelho Cozida":
+                                item.Name = "Carne de Coelho Cozido";
                                 break;
-                            case "Carne de Coelho Crú":
-                                item.Name = "Carne de Coelho Cru";
+                            case "Galinha Cozida":
+                                item.Name = "Galinha Cozido";
                                 break;
                         }
                         await database.CollectionItems.ReplaceOneAsync(x => x.Id == item.Id, item);

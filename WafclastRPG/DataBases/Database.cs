@@ -21,6 +21,7 @@ namespace WafclastRPG.DataBases
         public IMongoCollection<WafclastMonster> CollectionMonsters { get; }
         public IMongoCollection<WafclastBaseItem> CollectionItems { get; }
         public IMongoCollection<Ordem> CollectionOrdens { get; }
+        public IMongoCollection<WafclastFabrication> CollectionFabrication { get; }
 
         public ConcurrentDictionary<ulong, bool> InteractivityLocker { get; }
 
@@ -42,6 +43,7 @@ namespace WafclastRPG.DataBases
             CollectionMonsters = Database.CriarCollection<WafclastMonster>();
             CollectionItems = Database.CriarCollection<WafclastBaseItem>();
             CollectionOrdens = Database.CriarCollection<Ordem>();
+            CollectionFabrication = Database.CriarCollection<WafclastFabrication>();
 
             InteractivityLocker = new ConcurrentDictionary<ulong, bool>();
 

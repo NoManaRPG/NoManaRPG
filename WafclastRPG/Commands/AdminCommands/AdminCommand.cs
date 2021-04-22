@@ -23,6 +23,11 @@ namespace WafclastRPG.Commands.AdminCommands
             str.Append("andarV, ");
             str.Append("itemEC, ");
             str.Append("itensV, ");
+            str.Append(" ");
+            str.Append("criarfabricacao, ");
+            str.Append("additem, ");
+            str.Append("atualizar-jogadores, ");
+            str.Append("atualizar-itens, ");
 
             await ctx.RespondAsync(Formatter.BlockCode(str.ToString(), "css"));
         }
