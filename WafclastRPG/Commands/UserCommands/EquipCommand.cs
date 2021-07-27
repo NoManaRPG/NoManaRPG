@@ -38,13 +38,26 @@ namespace WafclastRPG.Commands.UserCommands
                         return new Response("a sua mochila está vazia!");
                     slot = Math.Clamp(slot, 0, 19);
 
-                    var item = cha.Inventory[slot];
-                    if (item is WafclastEquipableItem)
+                    var itemType = cha.Inventory[slot];
+
+                    switch (itemType)
                     {
-                        cha.TryEquipItem(item as WafclastEquipableItem);
+                        case WafclastWeaponItem wwi:
+                            switch (wwi.Slot)
+                            {
+                                case SlotEquipament.MainHand:
+                                    cha.MainHand = wwi;
+                                    await EquipAndSave(player, wwi);
+                                    return new Response($"você equipou: **{itemType.Name}** na mão principal.");
+                                case SlotEquipament.OffHand:
+                                    cha.OffHand = wwi;
+                                    await EquipAndSave(player, wwi);
+                                    return new Response($"você equipou: **{itemType.Name}** na mão secundaria.");
+                            }
+                            break;
                     }
-                    else
-                        return new Response($"por que você iria tentar equipar: **{item.Name}**?");
+
+                    return new Response($"por que você iria tentar equipar: **{itemType.Name}**?");
                 });
 
             if (!string.IsNullOrWhiteSpace(response.Message))
@@ -52,6 +65,13 @@ namespace WafclastRPG.Commands.UserCommands
 
             if (response.Embed != null)
                 await ctx.ResponderAsync(response.Embed?.Build());
+        }
+
+        public async Task EquipAndSave(WafclastPlayer player, WafclastWeaponItem wwi)
+        {
+            player.Character.Inventory.Remove(wwi);
+            player.Character.Accuracy = player.Character.CalculateAccuracy(wwi.Accuracy);
+            await player.SaveAsync();
         }
     }
 }
