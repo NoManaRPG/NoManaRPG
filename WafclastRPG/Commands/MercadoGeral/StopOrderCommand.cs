@@ -19,56 +19,56 @@ namespace WafclastRPG.Commands.MercadoGeral
         [Usage("mgparar <id>")]
         public async Task StopOrderCommandAsync(CommandContext ctx, string objectIdString)
         {
-            await ctx.TriggerTypingAsync();
+            //await ctx.TriggerTypingAsync();
 
-            if (!ObjectId.TryParse(objectIdString, out var id))
-            {
-                await ctx.ResponderAsync("o ID informado é inválido!");
-                return;
-            }
+            //if (!ObjectId.TryParse(objectIdString, out var id))
+            //{
+            //    await ctx.ResponderAsync("o ID informado é inválido!");
+            //    return;
+            //}
 
-            Response response;
-            using (var session = await banco.StartDatabaseSessionAsync())
-                response = await session.WithTransactionAsync(async (s, ct) =>
-                {
-                    var player = await session.FindPlayerAsync(ctx.User);
-                    if (player == null)
-                        return new Response(Messages.NaoEscreveuComecar);
+            //Response response;
+            //using (var session = await banco.StartDatabaseSessionAsync())
+            //    response = await session.WithTransactionAsync(async (s, ct) =>
+            //    {
+            //        var player = await session.FindPlayerAsync(ctx.User);
+            //        if (player == null)
+            //            return new Response(Messages.NaoEscreveuComecar);
 
-                    var ordem = await session.FindOrdemAsync(id);
-                    if (ordem == null || ordem.PlayerId != ctx.User.Id)
-                        return new Response("essa ordem não foi encontrada.");
+            //        var ordem = await session.FindOrdemAsync(id);
+            //        if (ordem == null || ordem.PlayerId != ctx.User.Id)
+            //            return new Response("essa ordem não foi encontrada.");
 
-                    var item = await session.FindItemAsync(ordem.ItemNome, ctx.Client.CurrentUser);
+            //        var item = await session.FindItemAsync(ordem.ItemNome, ctx.Client.CurrentUser);
 
-                    // ganha coins
-                    if (ordem.Tipo == OrdemType.Venda)
-                    {
-                        player.Character.Coins.Coins += ordem.Gain;
-                        if (ordem.Quantidade != 0)
-                            await player.AddItemAsync(item, ordem.Quantidade);
-                    }
-                    else
-                    {
-                        // ganha item
-                        if (ordem.Gain != 0)
-                            await player.AddItemAsync(item, ordem.Gain);
-                        player.Character.Coins.Coins += ordem.Quantidade * ordem.Preco;
-                    }
+            //        // ganha coins
+            //        if (ordem.Tipo == OrdemType.Venda)
+            //        {
+            //            player.Character.Coins.Coins += ordem.Gain;
+            //            if (ordem.Quantidade != 0)
+            //                await player.AddItemAsync(item, ordem.Quantidade);
+            //        }
+            //        else
+            //        {
+            //            // ganha item
+            //            if (ordem.Gain != 0)
+            //                await player.AddItemAsync(item, ordem.Gain);
+            //            player.Character.Coins.Coins += ordem.Quantidade * ordem.Preco;
+            //        }
 
-                    await session.RemoveAsync(ordem);
-                    await player.SaveAsync();
+            //        await session.RemoveAsync(ordem);
+            //        await player.SaveAsync();
 
-                    return new Response("você cancelou a sua ordem.");
-                });
+            //        return new Response("você cancelou a sua ordem.");
+            //    });
 
-            if (!string.IsNullOrWhiteSpace(response.Message))
-            {
-                await ctx.ResponderAsync(response.Message);
-                return;
-            }
+            //if (!string.IsNullOrWhiteSpace(response.Message))
+            //{
+            //    await ctx.ResponderAsync(response.Message);
+            //    return;
+            //}
 
-            await ctx.ResponderAsync(response.Embed.Build());
+            //await ctx.ResponderAsync(response.Embed.Build());
         }
     }
 }

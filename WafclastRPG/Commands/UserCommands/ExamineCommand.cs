@@ -68,16 +68,8 @@ namespace WafclastRPG.Commands.UserCommands
 
                     switch (itemGlobal)
                     {
-                        case WafclastMonsterCoreItem mci:
-                            embed.AddField("Experiencia provida", $"{Emojis.Exp} {mci.ExperienceGain}", true);
-                            break;
                         case WafclastCookedFoodItem cfi:
                             embed.AddField("Vida provida", $"{cfi.LifeGain}", true);
-                            break;
-                        case WafclastPickaxeItem pi:
-                            embed.AddField("Dureza", $"{pi.Hardness}");
-                            embed.AddField("Drop bonus", $"+{pi.DropChanceBonus}%");
-                            embed.AddField("Força requisitada", $"{pi.Strength}");
                             break;
                     }
                     return new Response(embed);

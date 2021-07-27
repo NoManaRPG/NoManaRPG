@@ -24,7 +24,7 @@ namespace WafclastRPG.Extensions
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
      
-        public static string Titulo(this string titulo)
+        public static string Title(this string titulo)
             => "⌈" + titulo + "⌋";
 
         public static string Url(this string texto, string site)

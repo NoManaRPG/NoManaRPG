@@ -1,12 +1,13 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
+using WafclastRPG.Entities.Itens;
 using WafclastRPG.Extensions;
 using WafclastRPG.Properties;
 
@@ -17,10 +18,10 @@ namespace WafclastRPG.Commands.UserCommands
         public DataBase database;
 
         [Command("atacar")]
-        [Aliases("at")]
-        [Description("Permite executar um ataque físico em um monstro.")]
+        [Aliases("at", "attack")]
+        [Description("Permite executar um ataque básico em um monstro.")]
         [Usage("atacar")]
-        [Cooldown(1, 15, CooldownBucketType.User)]
+        [Cooldown(1, 5, CooldownBucketType.User)]
         public async Task AttackCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
@@ -33,74 +34,83 @@ namespace WafclastRPG.Commands.UserCommands
                     if (player == null)
                         return new Response(Messages.NaoEscreveuComecar);
 
-                    if (player.Character.Monster == null)
-                        return new Response($"este monstro já está morto! Tente procurar por outro!", player.Reminder);
+                    var cha = player.Character;
+                    var target = cha.CurrentFightingMonster;
+
+                    if (target == null)
+                        return new Response($"você não tem um alvo para atacar!");
+                    else if (target.LifePoints <= 0)
+                        return new Response($"{target.Name} já está morto!");
+
+                    double weaponDamage = 0;
+                    if (cha.TwoHanded != null)
+                        weaponDamage = cha.CalculateTwoHandedDamage();
+                    else
+                        weaponDamage = cha.CalculateMainHandDamage() + cha.CalculateOffHandDamage();
+
 
                     //Combat
                     var rd = new Random();
                     var str = new StringBuilder();
                     var embed = new DiscordEmbedBuilder();
-                    var target = player.Character.Monster;
+
 
                     embed.WithColor(DiscordColor.Red);
-                    embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
-                    embed.WithTitle($"Relatorio do combate contra {target.Name}.");
+                    embed.WithAuthor($"{ctx.User.Username}", iconUrl: ctx.User.AvatarUrl);
+                    embed.WithTitle($"Relatório do Combate.");
 
-                    if (!rd.Chance(player.Character.HitChance(target.Evasion.MaxValue)))
+                    //Plyer Attack
+                    if (!rd.Chance(cha.CalculateHitChance(target.ArmorTotal)))
                     {
-                        var playerDamage = rd.Sortear(player.Character.PhysicalDamage.CurrentValue / 2, player.Character.PhysicalDamage.CurrentValue);
-                        playerDamage = target.DamageReduction(playerDamage);
+                        var playerDamage = rd.Sortear(1, weaponDamage);
 
-                        var isTargetDead = target.ReceberDano(playerDamage);
-                        str.AppendLine($"{target.Name} não conseguiu desviar!");
+                        var isTargetDead = target.TakeDamage(playerDamage);
                         str.AppendLine($"{target.Name} recebeu {playerDamage:N2} de dano.");
 
                         if (isTargetDead)
                         {
-                            player.MonsterKill++;
-                            str.AppendLine($"{Emojis.CrossBone} {target.Name.Titulo()} {Emojis.CrossBone}");
+                            player.MonsterKills++;
+                            str.AppendLine($"{Emojis.CrossBone} {target.Name.Title()} {Emojis.CrossBone}");
 
-                            foreach (var drop in target.DropChances)
-                            {
-                                if (rd.Chance(drop.Chance))
-                                {
-                                    var item = await session.FindItemAsync(drop.Id);
-                                    if (item == null)
-                                    {
-                                        ctx.Client.Logger.LogInformation(new EventId(608, "ERROR"), $"{target.Name} está com o drop {drop.Id} errado!", DateTime.Now);
-                                        continue;
-                                    }
-                                    var quantity = Convert.ToUInt64(rd.Sortear(drop.MinQuantity, drop.MaxQuantity));
+                            //foreach (var drop in target.Drops)
+                            //{
+                            //    if (rd.Chance(drop.Chance))
+                            //    {
+                            //        var item = await session.FindItemAsync(drop.GlobalItemId, ctx.Client.CurrentUser);
+                            //        if (item == null)
+                            //        {
+                            //            ctx.Client.Logger.LogInformation(new EventId(608, "ERROR"), $"{target.Name} está com o drop {drop.GlobalItemId} errado!", DateTime.Now);
+                            //            continue;
+                            //        }
 
-                                    str.AppendLine($"**+ {quantity} {item.Name.Titulo()}.**");
+                            //        var quantity = Convert.ToUInt64(rd.Sortear(drop.MinQuantity, drop.MaxQuantity));
 
-                                    await player.AddItemAsync(item, quantity);
-                                }
-                            }
-                            player.Character.Monster = null;
+                            //        str.AppendLine($"**+ {quantity} {item.Name.Title()}.**");
 
-                            await session.ReplaceAsync(player);
-                            await session.ReplaceAsync(target);
+                            //        await player.AddItemAsync(item, quantity);
+                            //    }
+                            //}
+                            player.Character.CurrentFightingMonster = null;
+                            await player.SaveAsync();
 
                             embed.WithDescription(str.ToString());
-                            return new Response(embed, player.Reminder);
+                            return new Response(embed);
                         }
                     }
                     else
                         str.AppendLine($"{target.Name} conseguiu desviar!");
 
-                    embed.AddField(target.Name, $"{Emojis.GerarVidaEmoji(target.Life.CurrentValue / target.Life.MaxValue)} {target.Life.CurrentValue:N2} ", true);
+                    embed.AddField(target.Name, $"{target.LifePoints:N2} ", true);
 
+                    //Monster Attack
                     var isPlayerDead = false;
 
-                    if (rd.Chance(player.Character.DodgeChance(target.Accuracy.MaxValue)))
+                    if (rd.Chance(target.CalculateHitChance(cha.Armour)))
                         str.AppendLine($"{player.Mention} desviou do ataque!");
                     else
                     {
-                        var targetDamage = rd.Sortear(target.PhysicalDamage.MaxValue);
-                        targetDamage = player.Character.DamageReduction(targetDamage);
+                        var targetDamage = rd.Sortear(1, target.MaxDamage);
 
-                        str.AppendLine($"{player.Mention} não conseguiu desviar!");
                         str.AppendLine($"{player.Mention} recebeu {targetDamage:N2} de dano.");
 
                         isPlayerDead = player.Character.ReceiveDamage(targetDamage);
@@ -108,19 +118,19 @@ namespace WafclastRPG.Commands.UserCommands
                         if (isPlayerDead)
                         {
                             str.AppendLine($"{player.Mention} morreu!");
-                            player.Character.Coins.Coins = Convert.ToUInt32(player.Character.Coins.Coins * 0.95);
+                            player.Character.Inventory = new List<WafclastBaseItem>();
+                            player.Character.RegionId = 0;
                             player.Deaths++;
+                            embed.AddField(ctx.User.Username, $"{Emojis.GerarVidaEmoji(0 / player.Character.LifePoints.CurrentValue)} 0 ", true);
+                            player.Character.LifePoints.Restart();
                         }
+                        else
+                            embed.AddField(ctx.User.Username, $"{Emojis.GerarVidaEmoji(player.Character.LifePoints.BaseValue / player.Character.LifePoints.CurrentValue)} {player.Character.LifePoints.CurrentValue:N2} ", true);
                     }
 
-                    if (isPlayerDead)
-                        embed.AddField(ctx.User.Username, $"{Emojis.GerarVidaEmoji(0 / player.Character.Life.MaxValue)} 0 ", true);
-                    else
-                        embed.AddField(ctx.User.Username, $"{Emojis.GerarVidaEmoji(player.Character.Life.CurrentValue / player.Character.Life.MaxValue)} {player.Character.Life.CurrentValue:N2} ", true);
+                    await player.SaveAsync();
 
-                    await session.ReplaceAsync(player);
-                    await session.ReplaceAsync(target);
-                    return new Response(embed.WithDescription(str.ToString()), player.Reminder);
+                    return new Response(embed.WithDescription(str.ToString()));
                 });
 
             if (!string.IsNullOrWhiteSpace(response.Message))
@@ -128,12 +138,6 @@ namespace WafclastRPG.Commands.UserCommands
 
             if (response.Embed != null)
                 await ctx.ResponderAsync(response.Embed?.Build());
-
-            if (response.Reminder)
-            {
-                await Task.Delay(15000);
-                await ctx.ResponderAsync($"{Messages.Reminder} `atacar`");
-            }
         }
     }
 }

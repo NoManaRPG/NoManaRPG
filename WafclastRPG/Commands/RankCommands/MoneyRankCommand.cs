@@ -22,30 +22,30 @@ namespace WafclastRPG.Commands.RankCommands
         [Usage("rank-moedas")]
         public async Task MoneyRankCommandAsync(CommandContext ctx)
         {
-            var timer = new Stopwatch();
-            timer.Start();
+            //var timer = new Stopwatch();
+            //timer.Start();
 
-            await ctx.TriggerTypingAsync();
+            //await ctx.TriggerTypingAsync();
 
-            var f = await banco.CollectionPlayers.Find(FilterDefinition<WafclastPlayer>.Empty).Limit(10)
-                .SortByDescending(x => x.Character.Coins.Coins).ToListAsync();
-            var str = new StringBuilder();
+            //var f = await banco.CollectionPlayers.Find(FilterDefinition<WafclastPlayer>.Empty).Limit(10)
+            //    .SortByDescending(x => x.Character.Coins.Coins).ToListAsync();
+            //var str = new StringBuilder();
 
-            int pos = 1;
-            foreach (var item in f)
-            {
-                str.AppendLine($"{pos}. {item.Mention} - {item.Character.Coins}");
-                pos++;
-            }
+            //int pos = 1;
+            //foreach (var item in f)
+            //{
+            //    str.AppendLine($"{pos}. {item.Mention} - {item.Character.Coins}");
+            //    pos++;
+            //}
 
-            var embed = new DiscordEmbedBuilder();
-            embed.WithTitle("Maiores acumuladores.");
-            embed.WithDescription(str.ToString());
-            embed.WithThumbnail("https://cdn.discordapp.com/attachments/826444525953220650/826444620815794186/podio.png");
+            //var embed = new DiscordEmbedBuilder();
+            //embed.WithTitle("Maiores acumuladores.");
+            //embed.WithDescription(str.ToString());
+            //embed.WithThumbnail("https://cdn.discordapp.com/attachments/826444525953220650/826444620815794186/podio.png");
 
-            timer.Stop();
-            embed.WithFooter($"Tempo de resposta: {timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.");
-            await ctx.RespondAsync(embed: embed.Build());
+            //timer.Stop();
+            //embed.WithFooter($"Tempo de resposta: {timer.Elapsed.Seconds}.{timer.ElapsedMilliseconds + ctx.Client.Ping}s.");
+            //await ctx.RespondAsync(embed: embed.Build());
         }
     }
 }

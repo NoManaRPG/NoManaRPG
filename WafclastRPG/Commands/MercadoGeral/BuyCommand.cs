@@ -19,65 +19,65 @@ namespace WafclastRPG.Commands.MercadoGeral
         [Usage("mgcomprar <quantidade> <id>")]
         public async Task UseCommandAsync(CommandContext ctx, ulong quantidade, string objectIdString)
         {
-            await ctx.TriggerTypingAsync();
+            //await ctx.TriggerTypingAsync();
 
-            if (!ObjectId.TryParse(objectIdString, out var id))
-            {
-                await ctx.ResponderAsync("você precisa informar um ID válido.");
-                return;
-            }
+            //if (!ObjectId.TryParse(objectIdString, out var id))
+            //{
+            //    await ctx.ResponderAsync("você precisa informar um ID válido.");
+            //    return;
+            //}
 
-            if (quantidade == 0)
-            {
-                await ctx.ResponderAsync("você precisa informar no minimo 1 de quantidade.");
-                return;
-            }
+            //if (quantidade == 0)
+            //{
+            //    await ctx.ResponderAsync("você precisa informar no minimo 1 de quantidade.");
+            //    return;
+            //}
 
-            Response response;
-            using (var session = await banco.StartDatabaseSessionAsync())
-                response = await session.WithTransactionAsync(async (s, ct) =>
-                {
-                    var player = await session.FindPlayerAsync(ctx.User);
-                    if (player == null)
-                        return new Response(Messages.NaoEscreveuComecar);
+            //Response response;
+            //using (var session = await banco.StartDatabaseSessionAsync())
+            //    response = await session.WithTransactionAsync(async (s, ct) =>
+            //    {
+            //        var player = await session.FindPlayerAsync(ctx.User);
+            //        if (player == null)
+            //            return new Response(Messages.NaoEscreveuComecar);
 
-                    var ordem = await session.FindOrdemAsync(id);
-                    if (ordem == null || ordem.Ativa == false)
-                        return new Response("essa ordem não está mais ativa.");
+            //        var ordem = await session.FindOrdemAsync(id);
+            //        if (ordem == null || ordem.Ativa == false)
+            //            return new Response("essa ordem não está mais ativa.");
 
-                    if (ordem.Tipo == OrdemType.Compra)
-                        return new Response("essa é uma ordem de compra, e não de venda.");
+            //        if (ordem.Tipo == OrdemType.Compra)
+            //            return new Response("essa é uma ordem de compra, e não de venda.");
 
-                    if (quantidade > ordem.Quantidade)
-                        return new Response("você informou uma quantidade não disponível para essa ordem de venda.");
+            //        if (quantidade > ordem.Quantidade)
+            //            return new Response("você informou uma quantidade não disponível para essa ordem de venda.");
 
-                    var preco = ordem.Preco * quantidade;
+            //        var preco = ordem.Preco * quantidade;
 
-                    if (preco > player.Character.Coins.Coins)
-                        return new Response("você não tem moedas o suficiente.");
+            //        if (preco > player.Character.Coins.Coins)
+            //            return new Response("você não tem moedas o suficiente.");
 
-                    ordem.Quantidade -= quantidade;
-                    player.Character.Coins.Coins -= preco;
-                    ordem.Gain += preco;
+            //        ordem.Quantidade -= quantidade;
+            //        player.Character.Coins.Coins -= preco;
+            //        ordem.Gain += preco;
 
-                    if (ordem.Quantidade == 0)
-                        ordem.Ativa = false;
-                    await session.ReplaceAsync(ordem);
+            //        if (ordem.Quantidade == 0)
+            //            ordem.Ativa = false;
+            //        await session.ReplaceAsync(ordem);
 
-                    var item = await session.FindItemAsync(ordem.ItemNome, ctx.Client.CurrentUser);
-                    await player.AddItemAsync(item, quantidade);
-                    await player.SaveAsync();
+            //        var item = await session.FindItemAsync(ordem.ItemNome, ctx.Client.CurrentUser);
+            //        await player.AddItemAsync(item, quantidade);
+            //        await player.SaveAsync();
 
-                    //var acao = await session.FindAcaoAsync(ordem.ItemNome);
-                    //acao.QuantidadeNegociado += quantidade;
-                    //acao.ValoresNegociados += preco;
-                    //await session.ReplaceAsync(acao);
+            //        //var acao = await session.FindAcaoAsync(ordem.ItemNome);
+            //        //acao.QuantidadeNegociado += quantidade;
+            //        //acao.ValoresNegociados += preco;
+            //        //await session.ReplaceAsync(acao);
 
-                    return new Response($"você comprou {quantidade} x {item.Name} de `{ordem.Id}`.");
-                });
+            //        return new Response($"você comprou {quantidade} x {item.Name} de `{ordem.Id}`.");
+            //    });
 
-            await ctx.ResponderAsync(response.Message);
-            return;
+            //await ctx.ResponderAsync(response.Message);
+            //return;
         }
     }
 }

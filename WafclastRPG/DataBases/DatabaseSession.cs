@@ -36,15 +36,16 @@ namespace WafclastRPG.DataBases
         }
 
         /// <summary>
-        /// Procura um item pelo o seu ID.
+        /// Procura um item do Usuário pelo o Id Global do Item.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns>WafclastBaseItem</returns>
-        public Task<WafclastBaseItem> FindItemAsync(ObjectId id)
-         => Database.CollectionItems.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
+        /// <param name="globalItemId">Global Item Id</param>
+        /// <param name="user">Usuário Id</param>
+        /// <returns></returns>
+        public Task<WafclastBaseItem> FindItemAsync(int globalItemId, DiscordUser user)
+         => Database.CollectionItems.Find(Session, x => x.GlobalItemId == globalItemId && x.PlayerId == user.Id).FirstOrDefaultAsync();
 
-        public Task<WafclastBaseItem> FindItemAsync(string item, DiscordUser user)
-         => Database.CollectionItems.Find(Session, x => x.Name == item && x.PlayerId == user.Id, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
+        public Task<WafclastBaseItem> FindItemAsync(string itemName, DiscordUser user)
+         => Database.CollectionItems.Find(Session, x => x.Name == itemName && x.PlayerId == user.Id, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
 
         /// <summary>
         /// Procura uma ordem pelo o seu ID.
@@ -68,8 +69,6 @@ namespace WafclastRPG.DataBases
           => Database.CollectionGuilds.ReplaceOneAsync(Session, x => x.Id == server.Id, server, new ReplaceOptions { IsUpsert = true });
         public Task ReplaceAsync(WafclastBaseItem item)
           => Database.CollectionItems.ReplaceOneAsync(Session, x => x.Id == item.Id, item, new ReplaceOptions { IsUpsert = true });
-        public Task ReplaceAsync(WafclastMonster monster)
-           => Database.CollectionMonsters.ReplaceOneAsync(x => x.Id == monster.Id, monster, new ReplaceOptions { IsUpsert = true });
         public Task ReplaceAsync(Ordem ordem)
          => Database.CollectionOrdens.ReplaceOneAsync(x => x.Id == ordem.Id, ordem, new ReplaceOptions { IsUpsert = true });
         public Task ReplaceAsync(WafclastFabrication fabrication)
@@ -95,18 +94,9 @@ namespace WafclastRPG.DataBases
     {
         public DiscordEmbedBuilder Embed { get; set; }
         public string Message { get; set; }
-        public bool Reminder { get; set; }
 
-        public Response(DiscordEmbedBuilder embed, bool reminder = false)
-        {
-            Embed = embed;
-            Reminder = reminder;
-        }
+        public Response(DiscordEmbedBuilder embed) => Embed = embed;
 
-        public Response(string message, bool reminder = false)
-        {
-            Message = message;
-            Reminder = reminder;
-        }
+        public Response(string message) => Message = message;
     }
 }

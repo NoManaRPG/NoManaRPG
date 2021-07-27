@@ -19,16 +19,8 @@ namespace WafclastRPG.Commands.AdminCommands
             str.AppendLine("[Admin]");
 
             str.AppendLine();
-            str.AppendLine("[Torre]");
-            str.Append("andarV, ");
-
-            str.AppendLine();
             str.AppendLine("[Monstros]");
-            str.Append("adddrop, ");
-            str.Append("editdrop, ");
             str.Append("vermonstro, ");
-            str.Append("monstroEC, ");
-            str.Append("mudarandar, ");
 
             str.AppendLine();
             str.AppendLine("[Itens]");

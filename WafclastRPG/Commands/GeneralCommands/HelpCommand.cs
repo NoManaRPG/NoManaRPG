@@ -26,7 +26,7 @@ namespace WafclastRPG.Commands.GeneralCommands
         {
             await ctx.TriggerTypingAsync();
             if (comando.Length == 0)
-                await ctx.RespondAsync($"Oi! Eu sou Wafclast RPG! Para a lista dos comandos que eu conheço, você pode digitar `w.comandos`, ou {ctx.Client.CurrentUser.Mention} comandos");
+                await ctx.RespondAsync($"Oi! Eu sou o Wafclast RPG! Para a lista dos comandos que eu conheço, você pode digitar `w.comandos`, ou {ctx.Client.CurrentUser.Mention} comandos");
             else
                 await new DefaultHelpModule().DefaultHelpAsync(ctx, comando);
         }

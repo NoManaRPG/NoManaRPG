@@ -34,30 +34,25 @@ namespace WafclastRPG.Commands.UserCommands
 
             var str = new StringBuilder();
 
-            str.AppendLine($"{player.Character.CurrentExperience:N2} de experiencia e precisa {(player.Character.ExperienceForNextLevel - player.Character.CurrentExperience):N2} para o nível {player.Character.Level + 1}.");
-            str.AppendLine($"{(player.Character.RegenDate - DateTime.UtcNow).TotalSeconds:N0}s para recuperar vida e mana.");
-            str.AppendLine($"{player.MonsterKill} monstros eliminado.");
-            str.AppendLine($"{player.PlayerKill} jogadores eliminado.");
-            str.AppendLine($"{player.Deaths} vezes morto.");
+            str.AppendLine($"{player.MonsterKills} monstros eliminado.");
+            str.AppendLine($"{player.PlayerKills} jogadores eliminado.");
+            str.AppendLine($"{player.Deaths} vezes abatido.");
 
             var embed = new DiscordEmbedBuilder();
-            embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}] ", iconUrl: ctx.User.AvatarUrl);
+            embed.WithAuthor($"{ctx.User.Username}", iconUrl: ctx.User.AvatarUrl);
             embed.WithThumbnail(ctx.User.AvatarUrl);
             embed.WithColor(DiscordColor.Blue);
             embed.WithDescription(str.ToString());
 
-            embed.AddField("Ataque Físico".Titulo(), $"{Emojis.EspadasCruzadas} {player.Character.PhysicalDamage.CurrentValue:N2}", true);
-            embed.AddField("Defesa Física".Titulo(), $"{Emojis.Escudo} {player.Character.Armour.CurrentValue:N2}", true);
-            embed.AddField("Precisão".Titulo(), $"{Emojis.Escudo} {player.Character.Accuracy.CurrentValue:N2}", true);
-            embed.AddField("Evasão".Titulo(), $"{Emojis.Escudo} {player.Character.Evasion.CurrentValue:N2}", true);
+            //embed.AddField("Ataque".Title(), $"{Emojis.EspadasCruzadas} {player.Character.MaxDamage:N2}", true);
+            embed.AddField("Defesa".Title(), $"{Emojis.Escudo} {player.Character.Armour:N2}", true);
+            //embed.AddField("Precisão".Title(), $"{Emojis.Escudo} {player.Character.Accuracy.CurrentValue:N2}", true);
+            //embed.AddField("Evasão".Title(), $"{Emojis.Escudo} {player.Character.Evasion.CurrentValue:N2}", true);
 
-            var lifePor = player.Character.Life.CurrentValue / player.Character.Life.MaxValue;
-            embed.AddField("Vida".Titulo(), $"{Emojis.GerarVidaEmoji(lifePor)} {player.Character.Life.CurrentValue:N2} / {player.Character.Life.MaxValue:N2}", true);
-            embed.AddField("Mana".Titulo(), $":blue_circle: {player.Character.Mana.CurrentValue:N2} / {player.Character.Mana.MaxValue:N2}", true);
-            if (player.Character.EnergyShield.MaxValue != 0)
-                embed.AddField("Escudo mágico".Titulo(), $"{player.Character.EnergyShield.CurrentValue:N2} / {player.Character.EnergyShield.MaxValue:N2}", true);
+            var lifePor = player.Character.LifePoints.BaseValue / player.Character.LifePoints.CurrentValue;
+            embed.AddField("Vida".Title(), $"{Emojis.GerarVidaEmoji(lifePor)} {player.Character.LifePoints.BaseValue:N2} / {player.Character.LifePoints.CurrentValue:N2}", true);
 
-            embed.AddField("Andar Atual".Titulo(), $":kaaba: {player.Character.CurrentFloor}");
+            //            embed.AddField("Andar Atual".Title(), $":kaaba: {player.Character.CurrentFloor}");
 
             await ctx.ResponderAsync(embed.Build());
         }

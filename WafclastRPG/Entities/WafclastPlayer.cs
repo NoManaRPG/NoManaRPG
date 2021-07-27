@@ -19,12 +19,11 @@ namespace WafclastRPG.Entities
         public DateTime DateAccountCreation { get; private set; }
         public WafclastCharacter Character { get; private set; }
 
-        public ulong MonsterKill { get; set; }
-        public ulong PlayerKill { get; set; }
+        public ulong MonsterKills { get; set; }
+        public ulong PlayerKills { get; set; }
         public ulong Deaths { get; set; }
 
         public string Language { get; set; } = "pt-BR";
-        public bool Reminder { get; set; }
 
         public WafclastPlayer(ulong id)
         {
@@ -38,13 +37,13 @@ namespace WafclastRPG.Entities
         [BsonIgnore]
         public DatabaseSession Session { get; set; }
 
-        /// <summary>
-        /// Somente usar em uma sessão.
-        /// <para>Retorna um monstro aleatorio baseado no andar do personagem.</para>
-        /// </summary>
-        /// <returns></returns>
-        public Task<WafclastMonster> GetNewMonsterAsync()
-          => Session.Database.CollectionMonsters.AsQueryable().Sample(1).Where(x => x.FloorLevel <= Character.CurrentFloor).FirstOrDefaultAsync();
+        ///// <summary>
+        ///// Somente usar em uma sessão.
+        ///// <para>Retorna um monstro aleatorio baseado no andar do personagem.</para>
+        ///// </summary>
+        ///// <returns></returns>
+        //public Task<WafclastMonster> GetNewMonsterAsync()
+        //  => Session.Database.CollectionMonsters.AsQueryable().Sample(1).Where(x => x.FloorLevel <= Character.CurrentFloor).FirstOrDefaultAsync();
 
         /// <summary>
         /// Somente usar em uma sessão.
@@ -94,5 +93,8 @@ namespace WafclastRPG.Entities
         /// <returns></returns>
         public Task SaveAsync()
             => Session.Database.CollectionPlayers.ReplaceOneAsync(Session.Session, x => x.Id == Id, this, new ReplaceOptions { IsUpsert = true });
+
+        public Task<WafclastRegion> GetRegionAsync()
+            => Session.Database.CollectionRegions.Find(x => x.Id == Character.RegionId).FirstOrDefaultAsync();
     }
 }

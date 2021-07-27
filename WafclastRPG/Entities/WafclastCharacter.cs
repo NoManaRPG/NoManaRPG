@@ -1,149 +1,153 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System;
+using System.Collections.Generic;
+using WafclastRPG.DataBases;
 using WafclastRPG.Entities.Itens;
 using WafclastRPG.Entities.Monsters;
 
 namespace WafclastRPG.Entities
 {
     [BsonIgnoreExtraElements]
-    public class WafclastCharacter : WafclastLevel
+    public class WafclastCharacter
     {
-        public WafclastCoins Coins { get; private set; } = new WafclastCoins(20);
+        public double Armour { get; set; } = 0;
+        public double Accuracy { get; set; }
 
-        public WafclastStatePoints PhysicalDamage { get; set; }
-        public WafclastStatePoints Evasion { get; set; }
-        public WafclastStatePoints Accuracy { get; set; }
-        public WafclastStatePoints Armour { get; set; }
-        public WafclastStatePoints EnergyShield { get; set; }
+        public WafclastStatePoints LifePoints { get; set; }
 
-        public WafclastStatePoints Intelligence { get; set; }
-        public WafclastStatePoints Dexterity { get; set; }
-        public WafclastStatePoints Strength { get; set; }
+        public WafclastMonster CurrentFightingMonster { get; set; }
 
-        public WafclastStatePoints Life { get; set; }
-        public WafclastStatePoints Mana { get; set; }
+        public List<WafclastBaseItem> Inventory { get; set; } = new List<WafclastBaseItem>();
 
-        public WafclastStatePoints LifeRegen { get; set; }
-        public WafclastStatePoints ManaRegen { get; set; }
+        #region Skills
 
-        public ulong AttributePoints { get; set; }
-        public int CurrentFloor { get; set; }
-        public WafclastMonster Monster { get; set; }
-        public WafclastPickaxeItem Pickaxe { get; set; }
+        public WafclastLevel AttackSkill { get; set; } = new WafclastLevel();
+        public WafclastLevel StrengthSkill { get; set; } = new WafclastLevel();
+        public WafclastLevel DefenceSkill { get; set; } = new WafclastLevel();
+        public WafclastLevel ConstitutionSkill { get; set; } = new WafclastLevel(10);
 
-        /// <summary>
-        /// Determina a chance de cair mais de 1 minério.
-        /// </summary>
-        public WafclastLevel MineSkill { get; set; }
+        public WafclastLevel MineSkill { get; set; } = new WafclastLevel();
+        public WafclastLevel CookingSkill { get; set; } = new WafclastLevel();
 
-        /// <summary>
-        /// Determina a chance de cozinhar e quais pode.
-        /// </summary>
-        public WafclastLevel CookingSkill { get; set; }
+        #endregion Skills
 
-        public DateTime RegenDate { get; set; } = DateTime.UtcNow;
+        #region Equipment
+
+        public WafclastWeaponItem MainHand { get; set; }
+        public WafclastWeaponItem OffHand { get; set; }
+        public WafclastWeaponItem TwoHanded { get; set; }
+
+        #endregion
+
+        public int RegionId { get; set; } = 0;
+
 
         public WafclastCharacter()
         {
-            Strength = new WafclastStatePoints(20);
-            Intelligence = new WafclastStatePoints(20);
-            Dexterity = new WafclastStatePoints(20);
-
-            PhysicalDamage = new WafclastStatePoints(8);
-            PhysicalDamage.MultValue += Strength.CurrentValue * 0.2;
-            PhysicalDamage.Restart();
-
-            Evasion = new WafclastStatePoints(53);
-            Evasion.MultValue += Dexterity.CurrentValue * 0.2;
-            Evasion.Restart();
-
-            Accuracy = new WafclastStatePoints(Dexterity.CurrentValue * 2);
-
-            Armour = new WafclastStatePoints(0);
-
-            EnergyShield = new WafclastStatePoints(0);
-            EnergyShield.MultValue += Intelligence.CurrentValue * 0.2;
-
-            Life = new WafclastStatePoints(50);
-            Life.BaseValue += Strength.CurrentValue * 0.5;
-            Life.Restart();
-
-            Mana = new WafclastStatePoints(40);
-            Mana.BaseValue += Intelligence.CurrentValue * 0.5;
-            Mana.Restart();
-
-            LifeRegen = new WafclastStatePoints(0);
-            ManaRegen = new WafclastStatePoints(Mana.MaxValue * 0.08);
-
-            MineSkill = new WafclastLevel(1);
-            CookingSkill = new WafclastLevel(1);
+            LifePoints = new WafclastStatePoints(ConstitutionSkill.Level * 100);
+            Accuracy = CalculateAccuracy(0);
+            AddItem(new DatabaseItems().BronzeDagger());
         }
 
-        public double DodgeChance(double attackerkAccuracy)
-        {
-            var attack = 1.15 * attackerkAccuracy;
-            var def = Evasion.CurrentValue * 0.25;
-            var div = Math.Pow(Convert.ToDouble(attack / attackerkAccuracy + def), 0.8);
-            div = Math.Clamp(div, 0, 95);
-            return div / 100;
-        }
+        public bool ReceiveDamage(double value) => LifePoints.Remove(value);
 
-        public double HitChance(double defenderEvasion)
+        public bool AddItem(WafclastBaseItem baseItem)
         {
-            var attack = 1.15 * Accuracy.CurrentValue;
-            var def = defenderEvasion * 0.25;
-            var div = Math.Pow(Convert.ToDouble(attack / Accuracy.CurrentValue + def), 0.8);
-            div = Math.Clamp(div, 0.5, 100);
-            return div / 100;
-        }
-
-        public double DamageReduction(double damage)
-        {
-            var first = Armour.CurrentValue * damage;
-            var second = (Armour.CurrentValue + 10) * damage;
-            var dr = first / second;
-            return damage - damage * dr;
-        }
-
-        public new bool AddExperience(double exp)
-        {
-            int levelUps = base.AddExperience(exp);
-            for (int i = 0; i < levelUps; i++)
+            if (baseItem.CanStack)
             {
-                Life.BaseValue += 12;
-                Accuracy.BaseValue += 2;
-                if (Level > BlockedLevel)
-                    AttributePoints += 10;
-            }
-
-            if (levelUps >= 1)
-            {
-                Accuracy.Restart();
-                Life.Restart();
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Retorna true caso tenha sido eliminado.
-        /// </summary>
-        /// <param name="valor"></param>
-        /// <returns></returns>
-        public bool ReceiveDamage(double valor)
-        {
-            if (Life.Remove(valor))
-            {
-                if (Level != 1)
+                foreach (var item in Inventory)
                 {
-                    Life.BaseValue -= 12;
-                    Accuracy.BaseValue -= 2;
-                    RemoveOneLevel();
+                    if (item.GlobalItemId == baseItem.GlobalItemId)
+                    {
+                        item.Quantity += baseItem.Quantity;
+                        return true;
+                    }
                 }
-                Life.Restart();
+
+                if (Inventory.Count == 19)
+                    return false;
+
+                Inventory.Add(baseItem);
                 return true;
             }
-            return false;
+
+            if (Inventory.Count == 19)
+                return false;
+
+            Inventory.Add(baseItem);
+            return true;
         }
+
+        public double CalculateMainHandDamage()
+        {
+            double weaponDamage = 0;
+            double weaponSpeed = 1;
+            if (MainHand != null)
+            {
+                weaponDamage = MainHand.Damage;
+                switch (MainHand.Speed)
+                {
+                    case AttackRate.Average:
+                        weaponSpeed = 96 / 149;
+                        break;
+                    case AttackRate.Fast:
+                        weaponSpeed = 192 / 245;
+                        break;
+                }
+            }
+            return (2.5 * StrengthSkill.Level) + (weaponDamage * weaponSpeed);
+        }
+
+        public double CalculateOffHandDamage()
+        {
+            double weaponDamage = 0;
+            double weaponSpeed = 1;
+            if (OffHand != null)
+            {
+                weaponDamage = OffHand.Damage;
+                switch (OffHand.Speed)
+                {
+                    case AttackRate.Average:
+                        weaponSpeed = 96 / 149;
+                        break;
+                    case AttackRate.Fast:
+                        weaponSpeed = 192 / 245;
+                        break;
+                }
+            }
+            return (1.25 * StrengthSkill.Level) + (weaponDamage * weaponSpeed);
+        }
+
+        public double CalculateTwoHandedDamage()
+        {
+            double weaponDamage = 0;
+            double weaponSpeed = 1;
+            if (TwoHanded != null)
+            {
+                weaponDamage = TwoHanded.Damage;
+                switch (TwoHanded.Speed)
+                {
+                    case AttackRate.Average:
+                        weaponSpeed = 96 / 149;
+                        break;
+                    case AttackRate.Fast:
+                        weaponSpeed = 192 / 245;
+                        break;
+                }
+            }
+            return (3.75 * StrengthSkill.Level) + (weaponDamage * weaponSpeed);
+        }
+
+        public double CalculateHitChance(double armor) => Accuracy / armor;
+
+        public double CalculateAccuracy(double weaponAccuracy)
+        {
+            return (0.0008 * Math.Pow(AttackSkill.Level, 3)) + (4 * AttackSkill.Level) + 40 + weaponAccuracy;
+        }
+
+        //public double CalculateArmor()
+        //{
+
+        //}
     }
 }

@@ -16,7 +16,7 @@ namespace WafclastRPG.Commands.UserCommands
         [Aliases("start")]
         [Description("Permite criar um personagem.")]
         [Usage("comecar")]
-        [Cooldown(1, 15, CooldownBucketType.User)]
+        [Cooldown(1, 5, CooldownBucketType.User)]
         public async Task StartCommandAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
@@ -30,7 +30,7 @@ namespace WafclastRPG.Commands.UserCommands
                     {
                         player = new WafclastPlayer(ctx.User.Id);
                         await session.ReplaceAsync(player);
-                        return new Response("personagem criado com sucesso! Obrigado por escolher Wafclast!");
+                        return new Response("personagem criado com sucesso! Para o tutorial, por favor visite o nosso canal do Discord! Utilize o comando `w.info` para mais informações.");
                     }
                     return new Response("você já tem um personagem! Não é possível criar outro.");
                 });

@@ -1,53 +1,45 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.IdGenerators;
+﻿using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
 namespace WafclastRPG.Entities.Monsters
 {
+    [BsonIgnoreExtraElements]
     public class WafclastMonster
     {
-        public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
+        public int Level { get; set; }
         public string Name { get; set; }
-        public int FloorLevel { get; set; } = 1;
+        public double LifePoints { get; set; }
 
-        public WafclastStatePoints PhysicalDamage { get; set; }
-        public WafclastStatePoints Evasion { get; set; }
-        public WafclastStatePoints Accuracy { get; set; }
-        public WafclastStatePoints Armour { get; set; }
-        public WafclastStatePoints Life { get; set; }
+        public double MaxDamage { get; set; }
 
-        public List<DropChance> DropChances { get; set; } = new List<DropChance>();
+        public int ArmorTotal { get; set; }
+        public int AccuracyTotal { get; set; }
+
+        /// <summary>
+        /// Ticks
+        /// </summary>
+        public double AttackRate { get; set; }
+
+        public List<DropChance> Drops { get; set; } = new List<DropChance>();
 
         /// <summary>
         /// Retorna true caso tenha sido abatido.
         /// </summary>
         /// <param name="valor"></param>
         /// <returns></returns>
-        public bool ReceberDano(double valor)
+        public bool TakeDamage(double valor)
         {
-            Life.CurrentValue -= valor;
-            if (Life.CurrentValue <= 0)
+            LifePoints -= valor;
+            if (LifePoints <= 0)
                 return true;
             return false;
         }
 
-        public double DamageReduction(double damage)
+        public double CalculateHitChance(double armor)
         {
-            var first = Armour.CurrentValue * damage;
-            var second = (Armour.CurrentValue + 10) * damage;
-            var dr = first / second;
-            return damage - damage * dr;
-        }
-
-        public static void MapBuilder()
-        {
-            BsonClassMap.RegisterClassMap<WafclastMonster>(cm =>
-            {
-                cm.AutoMap();
-                cm.SetIgnoreExtraElements(true);
-                cm.MapIdMember(c => c.Id).SetIdGenerator(ObjectIdGenerator.Instance);
-            });
+            if (armor == 0)
+                return 0;
+            return AccuracyTotal / armor;
         }
     }
 }

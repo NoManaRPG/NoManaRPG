@@ -30,17 +30,18 @@ namespace WafclastRPG.Commands.GeneralCommands
             str.Append("comandos, ");
             str.Append("ajuda, ");
             str.Append("info, ");
-            str.Append("admin, ");
 
             str.AppendLine();
             str.AppendLine("[Habilidades]");
             str.Append("habilidades, ");
-            str.Append("minerar, ");
-            str.Append("cozinhar, ");
+            //str.Append("minerar, ");
+            //str.Append("cozinhar, ");
 
             str.AppendLine();
             str.AppendLine("[Usuário]");
-            str.Append("explorar, ");
+            str.Append("comecar, ");
+            str.Append("olhar, ");
+            //str.Append("explorar, ");
             str.Append("atacar, ");
             str.Append("status, ");
             str.Append("inventario, ");

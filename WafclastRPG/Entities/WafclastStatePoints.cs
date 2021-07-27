@@ -1,50 +1,20 @@
-﻿namespace WafclastRPG.Entities
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace WafclastRPG.Entities
 {
+    [BsonIgnoreExtraElements]
     public class WafclastStatePoints
     {
+        public double BaseValue { get; set; }
         public double CurrentValue { get; set; }
-        public double MaxValue { get; set; }
-
-        public double _baseValue;
-        public double BaseValue
-        {
-            get => _baseValue;
-            set
-            {
-                _baseValue = value;
-                MaxValue = _baseValue * (_multValue / 100);
-            }
-        }
-
-        private double _multValue;
-        /// <summary>
-        /// Por padrão é 1.
-        /// </summary>
-        public double MultValue
-        {
-            get => _multValue;
-            set
-            {
-                _multValue = value;
-                MaxValue = BaseValue * (_multValue / 100);
-            }
-        }
 
         public WafclastStatePoints(double baseValue)
         {
-            CurrentValue = baseValue;
             BaseValue = baseValue;
-            MultValue = 100;
+            CurrentValue = baseValue;
         }
 
-        public void Restart() => CurrentValue = MaxValue;
-
-        public void Add(double value)
-        {
-            CurrentValue += value;
-            if (CurrentValue >= MaxValue)
-                CurrentValue = MaxValue;
-        }
+        public void Restart() => CurrentValue = BaseValue;
 
         public bool Remove(double value)
         {
@@ -55,6 +25,12 @@
                 return true;
             }
             return false;
+        }
+        public void Add(double value)
+        {
+            CurrentValue += value;
+            if (CurrentValue >= BaseValue)
+                CurrentValue = BaseValue;
         }
     }
 }

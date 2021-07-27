@@ -34,17 +34,17 @@ namespace WafclastRPG.Commands.UserCommands
                     //Pega item
                     var item = await player.GetItemAsync(nameItem);
                     if (item == null)
-                        return new Response($"não foi encontrado o item chamado {Formatter.Bold(nameItem.Titulo())}!");
+                        return new Response($"não foi encontrado o item chamado {Formatter.Bold(nameItem.Title())}!");
 
                     //Usa item
                     switch (item)
                     {
                         case WafclastCookedFoodItem wf:
-                            player.Character.Life.Add(wf.LifeGain * quantity);
+                            player.Character.LifePoints.Add(wf.LifeGain * quantity);
                             item.Quantity -= quantity;
                             break;
                         default:
-                            return new Response($"você não pode comer {nameItem.Titulo()}!");
+                            return new Response($"você não pode comer {nameItem.Title()}!");
                     }
 
                     if (item.Quantity == 0)
@@ -53,7 +53,7 @@ namespace WafclastRPG.Commands.UserCommands
                         await session.ReplaceAsync(item);
                     await session.ReplaceAsync(player);
 
-                    return new Response($"você comeu {Formatter.Bold($"{quantity} {nameItem.Titulo()}")}!");
+                    return new Response($"você comeu {Formatter.Bold($"{quantity} {nameItem.Title()}")}!");
                 });
 
             await ctx.ResponderAsync(response.Message);

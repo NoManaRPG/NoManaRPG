@@ -22,36 +22,36 @@ namespace WafclastRPG.Commands.UserCommands
         {
             await ctx.TriggerTypingAsync();
 
-            Response response;
-            using (var session = await database.StartDatabaseSessionAsync())
-                response = await session.WithTransactionAsync(async (s, ct) =>
-                {
-                    var player = await session.FindPlayerAsync(ctx.User);
-                    if (player == null)
-                        return new Response(Messages.NaoEscreveuComecar);
+            //Response response;
+            //using (var session = await database.StartDatabaseSessionAsync())
+            //    response = await session.WithTransactionAsync(async (s, ct) =>
+            //    {
+            //        var player = await session.FindPlayerAsync(ctx.User);
+            //        if (player == null)
+            //            return new Response(Messages.NaoEscreveuComecar);
 
-                    var item = await player.GetItemAsync(itemName);
-                    if (item == null)
-                        return new Response($"você não tem {itemName} no seu inventário!");
+            //        var item = await player.GetItemAsync(itemName);
+            //        if (item == null)
+            //            return new Response($"você não tem {itemName} no seu inventário!");
 
-                    if (item is WafclastMonsterCoreItem is false)
-                        return new Response($"o item não é um Cristal.");
+            //        if (item is WafclastMonsterCoreItem is false)
+            //            return new Response($"o item não é um Cristal.");
 
-                    if (quantity > item.Quantity)
-                        return new Response($"você somente tem {item.Quantity} x {item.Name}!");
+            //        if (quantity > item.Quantity)
+            //            return new Response($"você somente tem {item.Quantity} x {item.Name}!");
 
-                    var cristal = item as WafclastMonsterCoreItem;
+            //        var cristal = item as WafclastMonsterCoreItem;
 
-                    player.Character.AddExperience(cristal.ExperienceGain * quantity);
-                    item.Quantity -= quantity;
+            //        player.Character.AddExperience(cristal.ExperienceGain * quantity);
+            //        item.Quantity -= quantity;
 
-                    await player.SaveItemAsync(item);
-                    await session.ReplaceAsync(player);
+            //        await player.SaveItemAsync(item);
+            //        await session.ReplaceAsync(player);
 
-                    return new Response($"você absorveu {quantity} x {cristal.Name} e ganhou `{(quantity * cristal.ExperienceGain):N2}` de experiencia!");
-                });
+            //        return new Response($"você absorveu {quantity} x {cristal.Name} e ganhou `{(quantity * cristal.ExperienceGain):N2}` de experiencia!");
+            //    });
 
-            await ctx.ResponderAsync(response.Message);
+            //await ctx.ResponderAsync(response.Message);
         }
     }
 }

@@ -58,7 +58,7 @@ namespace WafclastRPG.Commands.MercadoGeral
 
                     var embed = new DiscordEmbedBuilder();
                     embed.WithColor(DiscordColor.Brown);
-                    embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
+                    embed.WithAuthor($"{ctx.User.Username}", iconUrl: ctx.User.AvatarUrl);
                     embed.WithTitle($"Está vendendo {item.Name}!");
                     embed.WithDescription(Formatter.BlockCode(item.Description));
                     embed.AddField("Preço por cada", $"{Emojis.Coins} {ordem.Preco:N0}", true);

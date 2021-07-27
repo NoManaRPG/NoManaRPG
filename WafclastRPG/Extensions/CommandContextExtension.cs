@@ -108,7 +108,7 @@ namespace WafclastRPG.Extensions
                     database.StopExecutingInteractivity(ctx);
                     return new AnswerResult<int>(true, 0);
                 }
-            }   
+            }
         }
 
         public static async Task<AnswerResult<double>> WaitForDoubleAsync(this CommandContext ctx, string message, DataBase database, TimeSpan? timeoutoverride = null, double? minValue = null, double? maxValue = null)
@@ -200,8 +200,8 @@ namespace WafclastRPG.Extensions
                 if (isWrong)
                     wait = await WaitForMessageAsync(ctx, $"{ctx.User.Mention}, você informou uma resposta inválida! Responda com 'Sim' ou 'Não'.", embed, timeoutoverride);
                 else
-                    wait = await WaitForMessageAsync(ctx, ctx.User.Mention, embed, timeoutoverride);
-                
+                    wait = await WaitForMessageAsync(ctx, "", embed, timeoutoverride);
+
                 if (wait.TimedOut)
                 {
                     await ctx.ResponderAsync("tempo de resposta expirado!");

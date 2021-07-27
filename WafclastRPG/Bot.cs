@@ -7,7 +7,6 @@ using System;
 using System.Threading.Tasks;
 using WafclastRPG.Comandos.Acao;
 using WafclastRPG.Commands.AdminCommands;
-using WafclastRPG.Commands.AdminCommands.Monsters;
 using WafclastRPG.Commands.GeneralCommands;
 using WafclastRPG.Commands.MercadoGeral;
 using WafclastRPG.Commands.RankCommands;
@@ -62,31 +61,21 @@ namespace WafclastRPG
             CommandsNext.RegisterCommands<MoneyRankCommand>();
             CommandsNext.RegisterCommands<LevelRankCommand>();
             CommandsNext.RegisterCommands<EatCommand>();
-            CommandsNext.RegisterCommands<AttributesCommand>();
-            CommandsNext.RegisterCommands<AssignAtributesCommand>();
             CommandsNext.RegisterCommands<CommandsCommand>();
             CommandsNext.RegisterCommands<ExploreCommand>();
             CommandsNext.RegisterCommands<MineCommand>();
             CommandsNext.RegisterCommands<CookCommand>();
             CommandsNext.RegisterCommands<SkillsCommand>();
-            CommandsNext.RegisterCommands<MoveUpCommand>();
-            CommandsNext.RegisterCommands<MoveDownCommand>();
             CommandsNext.RegisterCommands<GiveItemCommand>();
             CommandsNext.RegisterCommands<BuyCommand>();
             CommandsNext.RegisterCommands<CreateSaleCommand>();
             CommandsNext.RegisterCommands<MyOrdersCommand>();
             CommandsNext.RegisterCommands<StopOrderCommand>();
-            CommandsNext.RegisterCommands<SeeSellsCommand>();
-            CommandsNext.RegisterCommands<ReminderCommand>();
             CommandsNext.RegisterCommands<AdminCommand>();
             CommandsNext.RegisterCommands<ExamineCommand>();
             CommandsNext.RegisterCommands<AbsorbCommand>();
-            CommandsNext.RegisterCommands<CreateFabricationCommand>();
-            CommandsNext.RegisterCommands<AddItemCommand>();
-            CommandsNext.RegisterCommands<AddDropCommand>();
-            CommandsNext.RegisterCommands<EditDropCommand>();
-            CommandsNext.RegisterCommands<SeeMonsterCommand>();
-            CommandsNext.RegisterCommands<ChangeFloorCommand>();
+            CommandsNext.RegisterCommands<SeeCommand>();
+            CommandsNext.RegisterCommands<EquipCommand>();
         }
     }
 }
