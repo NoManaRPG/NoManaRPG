@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -42,13 +43,6 @@ namespace WafclastRPG.Commands.UserCommands
                     else if (target.LifePoints <= 0)
                         return new Response($"{target.Name} já está morto!");
 
-                    double weaponDamage = 0;
-                    if (cha.TwoHanded != null)
-                        weaponDamage = cha.CalculateTwoHandedDamage();
-                    else
-                        weaponDamage = cha.CalculateMainHandDamage() + cha.CalculateOffHandDamage();
-
-
                     //Combat
                     var rd = new Random();
                     var str = new StringBuilder();
@@ -62,7 +56,7 @@ namespace WafclastRPG.Commands.UserCommands
                     //Plyer Attack
                     if (!rd.Chance(cha.CalculateHitChance(target.ArmorTotal)))
                     {
-                        var playerDamage = rd.Sortear(1, weaponDamage);
+                        var playerDamage = rd.Sortear(1, cha.Damage);
 
                         var isTargetDead = target.TakeDamage(playerDamage);
                         str.AppendLine($"{target.Name} recebeu {playerDamage:N2} de dano.");
@@ -72,25 +66,21 @@ namespace WafclastRPG.Commands.UserCommands
                             player.MonsterKills++;
                             str.AppendLine($"{Emojis.CrossBone} {target.Name.Title()} {Emojis.CrossBone}");
 
-                            //foreach (var drop in target.Drops)
-                            //{
-                            //    if (rd.Chance(drop.Chance))
-                            //    {
-                            //        var item = await session.FindItemAsync(drop.GlobalItemId, ctx.Client.CurrentUser);
-                            //        if (item == null)
-                            //        {
-                            //            ctx.Client.Logger.LogInformation(new EventId(608, "ERROR"), $"{target.Name} está com o drop {drop.GlobalItemId} errado!", DateTime.Now);
-                            //            continue;
-                            //        }
+                            foreach (var drop in target.Drops)
+                            {
+                                if (rd.Chance(drop.Chance))
+                                {
+                                    var item = await session.FindItemAsync(drop.GlobalItemId, ctx.Client.CurrentUser);
 
-                            //        var quantity = Convert.ToUInt64(rd.Sortear(drop.MinQuantity, drop.MaxQuantity));
+                                    var quantity = Convert.ToUInt64(rd.Sortear(drop.MinQuantity, drop.MaxQuantity));
 
-                            //        str.AppendLine($"**+ {quantity} {item.Name.Title()}.**");
+                                    str.AppendLine($"**+ {quantity} {item.Name.Title()}.**");
+                                    if (cha.Inventory.Count >= 19)
+                                        break;
+                                    cha.Inventory.Add(item);
+                                }
+                            }
 
-                            //        await player.AddItemAsync(item, quantity);
-                            //    }
-                            //}
-                            player.Character.CurrentFightingMonster = null;
                             await player.SaveAsync();
 
                             embed.WithDescription(str.ToString());
@@ -105,7 +95,7 @@ namespace WafclastRPG.Commands.UserCommands
                     //Monster Attack
                     var isPlayerDead = false;
 
-                    if (rd.Chance(target.CalculateHitChance(cha.Armour)))
+                    if (rd.Chance(target.CalculateHitChance(cha.Armor)))
                         str.AppendLine($"{player.Mention} desviou do ataque!");
                     else
                     {

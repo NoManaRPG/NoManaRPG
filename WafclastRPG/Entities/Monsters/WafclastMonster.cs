@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
+using WafclastRPG.Entities.Itens;
 
 namespace WafclastRPG.Entities.Monsters
 {
@@ -35,11 +36,6 @@ namespace WafclastRPG.Entities.Monsters
             return false;
         }
 
-        public double CalculateHitChance(double armor)
-        {
-            if (armor == 0)
-                return 0;
-            return AccuracyTotal / armor;
-        }
+        public double CalculateHitChance(double armor) => AccuracyTotal / armor;
     }
 }

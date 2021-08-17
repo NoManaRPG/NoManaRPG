@@ -10,8 +10,9 @@ namespace WafclastRPG.Entities
     [BsonIgnoreExtraElements]
     public class WafclastCharacter
     {
-        public double Armour { get; set; } = 0;
+        public double Armor { get; set; }
         public double Accuracy { get; set; }
+        public double Damage { get; set; }
 
         public WafclastStatePoints LifePoints { get; set; }
 
@@ -35,7 +36,6 @@ namespace WafclastRPG.Entities
 
         public WafclastWeaponItem MainHand { get; set; }
         public WafclastWeaponItem OffHand { get; set; }
-        public WafclastWeaponItem TwoHanded { get; set; }
 
         #endregion
 
@@ -46,6 +46,8 @@ namespace WafclastRPG.Entities
         {
             LifePoints = new WafclastStatePoints(ConstitutionSkill.Level * 100);
             Accuracy = CalculateAccuracy(0);
+            Damage = CalculateMainHandDamage() + CalculateOffHandDamage();
+            Armor = CalculateArmor();
             AddItem(new DatabaseItems().BronzeDagger());
         }
 
@@ -97,7 +99,6 @@ namespace WafclastRPG.Entities
             }
             return (2.5 * StrengthSkill.Level) + (weaponDamage * weaponSpeed);
         }
-
         public double CalculateOffHandDamage()
         {
             double weaponDamage = 0;
@@ -118,36 +119,73 @@ namespace WafclastRPG.Entities
             return (1.25 * StrengthSkill.Level) + (weaponDamage * weaponSpeed);
         }
 
-        public double CalculateTwoHandedDamage()
-        {
-            double weaponDamage = 0;
-            double weaponSpeed = 1;
-            if (TwoHanded != null)
-            {
-                weaponDamage = TwoHanded.Damage;
-                switch (TwoHanded.Speed)
-                {
-                    case AttackRate.Average:
-                        weaponSpeed = 96 / 149;
-                        break;
-                    case AttackRate.Fast:
-                        weaponSpeed = 192 / 245;
-                        break;
-                }
-            }
-            return (3.75 * StrengthSkill.Level) + (weaponDamage * weaponSpeed);
-        }
-
         public double CalculateHitChance(double armor) => Accuracy / armor;
-
         public double CalculateAccuracy(double weaponAccuracy)
         {
             return (0.0008 * Math.Pow(AttackSkill.Level, 3)) + (4 * AttackSkill.Level) + 40 + weaponAccuracy;
         }
 
+        public double CalculateArmor() => (0.0008 * Math.Pow(DefenceSkill.Level, 3)) + (4 * DefenceSkill.Level) + 40;
+
         //public double CalculateArmor()
         //{
 
         //}
+
+        public bool TryEquipItem(WafclastEquipableItem eqItem)
+        {
+            bool isDesequiped = false;
+            switch (eqItem)
+            {
+                case WafclastWeaponItem wwi:
+                    switch (wwi.Slot)
+                    {
+                        case SlotEquipament.MainHand:
+                            isDesequiped = TryDesequipItem(SlotEquipament.MainHand);
+                            if (isDesequiped)
+                            {
+                                MainHand = wwi;
+                                Accuracy = CalculateAccuracy(wwi.Accuracy);
+                                Damage = CalculateMainHandDamage() + CalculateOffHandDamage();
+                            }
+                            break;
+                        case SlotEquipament.OffHand:
+                            isDesequiped = TryDesequipItem(SlotEquipament.OffHand);
+                            if (isDesequiped)
+                            {
+                                OffHand = wwi;
+                                Damage = CalculateMainHandDamage() + CalculateOffHandDamage();
+                            }
+                            break;
+                    }
+                    break;
+            }
+            return isDesequiped;
+        }
+
+        public bool TryDesequipItem(SlotEquipament slot)
+        {
+            if (Inventory.Count > 19)
+                return false;
+
+            switch (slot)
+            {
+                case SlotEquipament.MainHand:
+                    if (MainHand != null)
+                    {
+                        Inventory.Add(MainHand);
+                        MainHand = null;
+                    }
+                    break;
+                case SlotEquipament.OffHand:
+                    if (OffHand != null)
+                    {
+                        Inventory.Add(OffHand);
+                        OffHand = null;
+                    }
+                    break;
+            }
+            return true;
+        }
     }
 }

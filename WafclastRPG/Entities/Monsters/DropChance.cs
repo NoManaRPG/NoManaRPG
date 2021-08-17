@@ -9,9 +9,9 @@
 
         public DropChance() { }
 
-        public DropChance(int itemId, double chance, int minQuantity, int maxQuantity)
+        public DropChance(int globalItemId, double chance, int minQuantity, int maxQuantity)
         {
-            GlobalItemId = itemId;
+            GlobalItemId = globalItemId;
             Chance = chance;
             MinQuantity = minQuantity;
             MaxQuantity = maxQuantity;

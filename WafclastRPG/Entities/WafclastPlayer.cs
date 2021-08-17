@@ -65,7 +65,7 @@ namespace WafclastRPG.Entities
 
         /// <summary>
         /// Somente usar em uma sessão.
-        /// <para>Adiciona um item no inventário do personagem.</para>
+        /// <para>Adiciona um item no banco do personagem.</para>
         /// </summary>
         /// <param name="item">Item a ser adicionado.</param>
         /// <param name="quantity">Quantidade a ser adicionada.</param>

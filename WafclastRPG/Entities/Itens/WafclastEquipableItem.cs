@@ -20,8 +20,6 @@ namespace WafclastRPG.Entities.Itens
         MainHand,
         [Description("Mão secundária")]
         OffHand,
-        [Description("Duas Mão")]
-        TwoHanded,
         Torso,
         Leg,
         Hands,

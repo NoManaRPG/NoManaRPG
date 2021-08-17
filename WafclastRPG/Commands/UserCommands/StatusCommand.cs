@@ -45,7 +45,7 @@ namespace WafclastRPG.Commands.UserCommands
             embed.WithDescription(str.ToString());
 
             //embed.AddField("Ataque".Title(), $"{Emojis.EspadasCruzadas} {player.Character.MaxDamage:N2}", true);
-            embed.AddField("Defesa".Title(), $"{Emojis.Escudo} {player.Character.Armour:N2}", true);
+            embed.AddField("Defesa".Title(), $"{Emojis.Escudo} {player.Character.Armor:N2}", true);
             //embed.AddField("Precisão".Title(), $"{Emojis.Escudo} {player.Character.Accuracy.CurrentValue:N2}", true);
             //embed.AddField("Evasão".Title(), $"{Emojis.Escudo} {player.Character.Evasion.CurrentValue:N2}", true);
 

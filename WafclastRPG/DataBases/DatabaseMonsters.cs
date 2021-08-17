@@ -9,8 +9,8 @@ namespace WafclastRPG.DataBases
             var monster = new WafclastMonster();
             monster.Name = "Vaca";
             monster.LifePoints = 100;
-            //var drop1 = new WafclastMonstroDrop(new WafclastMonstroDrop.Raridade(1, 1), 1, 1);
-            //monstro.Drops.Add(drop1);
+            var drop1 = new DropChance(0, .9, 1, 2);
+            monster.Drops.Add(drop1);
             return monster;
         }
 
