@@ -8,7 +8,7 @@ using System;
 using System.Diagnostics;
 using WafclastRPG.Extensions;
 
-namespace WafclastRPG.Commands.GeneralCommands
+namespace WafclastRPG.Commands
 {
     public class InfoCommand : BaseCommandModule
     {
@@ -21,7 +21,7 @@ namespace WafclastRPG.Commands.GeneralCommands
         {
             await ctx.TriggerTypingAsync();
             var embed = new DiscordEmbedBuilder();
-            embed.WithAuthor(ctx.Client.CurrentUser.Username + ((BotInfo)ctx.Services.GetService(typeof(BotInfo))).Versão, "https://discord.gg/MAR4NFq", ctx.Client.CurrentUser.AvatarUrl);
+            embed.WithAuthor(ctx.Client.CurrentUser.Username, "https://discord.gg/MAR4NFq", ctx.Client.CurrentUser.AvatarUrl);
             embed.WithThumbnail(ctx.Client.CurrentUser.AvatarUrl);
             embed.WithTitle("RPG para quem usa muito o discord!");
             var criador = ctx.Client.CurrentApplication.Owners.First();

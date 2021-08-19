@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WafclastRPG.Entities;
 using WafclastRPG.Entities.Itens;
-using WafclastRPG.Entities.MercadoGeral;
 using WafclastRPG.Entities.Monsters;
 using WafclastRPG.Extensions;
 
@@ -24,7 +23,6 @@ namespace WafclastRPG.DataBases
         public IMongoCollection<WafclastRegion> CollectionRegions { get; }
 
 
-        public IMongoCollection<Ordem> CollectionOrdens { get; }
         public IMongoCollection<WafclastFabrication> CollectionFabrication { get; }
 
         public ConcurrentDictionary<ulong, bool> InteractivityLocker { get; }
@@ -34,9 +32,9 @@ namespace WafclastRPG.DataBases
             #region Connection string
             Client = new MongoClient("mongodb://localhost?retryWrites=true");
 #if DEBUG
-            Database = Client.GetDatabase("WafclastV2Debug");
+            Database = Client.GetDatabase("WafclastDebug");
 #else
-            Database = Client.GetDatabase("WafclastV2");
+            Database = Client.GetDatabase("Wafclast");
 #endif
             #endregion
 
@@ -47,7 +45,6 @@ namespace WafclastRPG.DataBases
             CollectionRegions = Database.CreateCollection<WafclastRegion>();
 
 
-            CollectionOrdens = Database.CreateCollection<Ordem>();
             CollectionFabrication = Database.CreateCollection<WafclastFabrication>();
 
             InteractivityLocker = new ConcurrentDictionary<ulong, bool>();

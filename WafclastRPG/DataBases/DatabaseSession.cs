@@ -1,15 +1,11 @@
 ﻿using DSharpPlus.Entities;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using WafclastRPG.Entities;
 using WafclastRPG.Entities.Itens;
-using WafclastRPG.Entities.MercadoGeral;
-using WafclastRPG.Entities.Monsters;
 
 namespace WafclastRPG.DataBases
 {
@@ -25,7 +21,6 @@ namespace WafclastRPG.DataBases
         }
 
         public Task<Response> WithTransactionAsync(Func<IClientSessionHandle, CancellationToken, Task<Response>> callbackAsync) => Session.WithTransactionAsync(callbackAsync: callbackAsync);
-
 
         public async Task<WafclastPlayer> FindPlayerAsync(DiscordUser user)
         {
@@ -47,21 +42,8 @@ namespace WafclastRPG.DataBases
         public Task<WafclastBaseItem> FindItemAsync(string itemName, DiscordUser user)
          => Database.CollectionItems.Find(Session, x => x.Name == itemName && x.PlayerId == user.Id, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
 
-        /// <summary>
-        /// Procura uma ordem pelo o seu ID.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>Ordem</returns>
-        public Task<Ordem> FindOrdemAsync(ObjectId id)
-            => Database.CollectionOrdens.Find(Session, x => x.Id == id).FirstOrDefaultAsync();
         public Task<WafclastFabrication> FindFabricationAsync(string name)
             => Database.CollectionFabrication.Find(Session, x => x.Name == name, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
-
-        public Task<List<Ordem>> FindOrdensDescendingAsync(string nome, OrdemType type, int limit = 10)
-                => Database.CollectionOrdens.Find(Session, x => x.ItemNome == nome && x.Ativa == true && x.Tipo == type, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).SortByDescending(x => x.Preco).Limit(limit).ToListAsync();
-
-        public Task<List<Ordem>> FindOrdensAscendingAsync(string nome, OrdemType type, int limit = 10)
-          => Database.CollectionOrdens.Find(Session, x => x.ItemNome == nome && x.Ativa == true && x.Tipo == type, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).SortBy(x => x.Preco).Limit(limit).ToListAsync();
 
         public Task ReplaceAsync(WafclastPlayer jogador)
          => Database.CollectionPlayers.ReplaceOneAsync(Session, x => x.Id == jogador.Id, jogador, new ReplaceOptions { IsUpsert = true });
@@ -69,8 +51,6 @@ namespace WafclastRPG.DataBases
           => Database.CollectionGuilds.ReplaceOneAsync(Session, x => x.Id == server.Id, server, new ReplaceOptions { IsUpsert = true });
         public Task ReplaceAsync(WafclastBaseItem item)
           => Database.CollectionItems.ReplaceOneAsync(Session, x => x.Id == item.Id, item, new ReplaceOptions { IsUpsert = true });
-        public Task ReplaceAsync(Ordem ordem)
-         => Database.CollectionOrdens.ReplaceOneAsync(x => x.Id == ordem.Id, ordem, new ReplaceOptions { IsUpsert = true });
         public Task ReplaceAsync(WafclastFabrication fabrication)
         => Database.CollectionFabrication.ReplaceOneAsync(x => x.Name == fabrication.Name, fabrication, new ReplaceOptions { IsUpsert = true });
 
@@ -78,12 +58,8 @@ namespace WafclastRPG.DataBases
 
         public Task InsertAsync(WafclastBaseItem item)
             => Database.CollectionItems.InsertOneAsync(Session, item);
-        public Task InsertAsync(Ordem ordem)
-            => Database.CollectionOrdens.InsertOneAsync(Session, ordem);
         public Task RemoveAsync(WafclastBaseItem item)
            => Database.CollectionItems.DeleteOneAsync(Session, x => x.Id == item.Id);
-        public Task RemoveAsync(Ordem ordem)
-            => Database.CollectionOrdens.DeleteOneAsync(Session, x => x.Id == ordem.Id);
         public Task RemoveAsync(WafclastFabrication fabrication)
            => Database.CollectionFabrication.DeleteOneAsync(Session, x => x.Name == fabrication.Name);
 
