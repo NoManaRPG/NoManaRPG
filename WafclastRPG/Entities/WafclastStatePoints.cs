@@ -1,36 +1,32 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-
-namespace WafclastRPG.Entities
+﻿namespace WafclastRPG.Entities
 {
-    [BsonIgnoreExtraElements]
     public class WafclastStatePoints
     {
-        public double BaseValue { get; set; }
-        public double CurrentValue { get; set; }
+        public double Max { get; set; }
+        public double Current { get; set; }
+
 
         public WafclastStatePoints(double baseValue)
         {
-            BaseValue = baseValue;
-            CurrentValue = baseValue;
+            Max = baseValue;
+            Current = baseValue;
         }
 
-        public void Restart() => CurrentValue = BaseValue;
+        public void Restart() => Current = Max;
+
+        public void Add(double value)
+        {
+            Current += value;
+            if (Current >= Max)
+                Current = Max;
+        }
 
         public bool Remove(double value)
         {
-            CurrentValue -= value;
-            if (CurrentValue <= 0)
-            {
-                CurrentValue = 0;
+            Current -= value;
+            if (Current <= 0)
                 return true;
-            }
             return false;
-        }
-        public void Add(double value)
-        {
-            CurrentValue += value;
-            if (CurrentValue >= BaseValue)
-                CurrentValue = BaseValue;
         }
     }
 }

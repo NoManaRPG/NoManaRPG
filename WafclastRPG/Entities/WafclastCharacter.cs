@@ -8,184 +8,79 @@ using WafclastRPG.Entities.Monsters;
 namespace WafclastRPG.Entities
 {
     [BsonIgnoreExtraElements]
-    public class WafclastCharacter
+    public abstract class WafclastCharacter : WafclastLevel
     {
-        public double Armor { get; set; }
-        public double Accuracy { get; set; }
-        public double Damage { get; set; }
 
-        public WafclastStatePoints LifePoints { get; set; }
+        #region Attributes
 
-        public WafclastMonster CurrentFightingMonster { get; set; }
-
-        public List<WafclastBaseItem> Inventory { get; set; } = new List<WafclastBaseItem>();
-
-        #region Skills
-
-        public WafclastLevel AttackSkill { get; set; } = new WafclastLevel();
-        public WafclastLevel StrengthSkill { get; set; } = new WafclastLevel();
-        public WafclastLevel DefenceSkill { get; set; } = new WafclastLevel();
-        public WafclastLevel ConstitutionSkill { get; set; } = new WafclastLevel(10);
-
-        public WafclastLevel MineSkill { get; set; } = new WafclastLevel();
-        public WafclastLevel CookingSkill { get; set; } = new WafclastLevel();
-
-        #endregion Skills
-
-        #region Equipment
-
-        public WafclastWeaponItem MainHand { get; set; }
-        public WafclastWeaponItem OffHand { get; set; }
+        /// <summary>
+        /// Força
+        /// </summary>
+        WafclastAttribute Strength { get; set; } = new WafclastAttribute(5);
+        /// <summary>
+        /// Constituição
+        /// </summary>
+        WafclastAttribute Constitution { get; set; } = new WafclastAttribute(5);
+        /// <summary>
+        /// Destreza
+        /// </summary>
+        WafclastAttribute Dexterity { get; set; } = new WafclastAttribute(5);
+        /// <summary>
+        /// Agilidade
+        /// </summary>
+        WafclastAttribute Agility { get; set; } = new WafclastAttribute(5);
+        /// <summary>
+        /// Inteligencia
+        /// </summary>
+        WafclastAttribute Intelligence { get; set; } = new WafclastAttribute(5);
+        /// <summary>
+        /// Força de vontade
+        /// </summary>
+        WafclastAttribute Willpower { get; set; } = new WafclastAttribute(5);
+        /// <summary>
+        /// Percepção
+        /// </summary>
+        WafclastAttribute Perception { get; set; } = new WafclastAttribute(5);
+        /// <summary>
+        /// Carisma
+        /// </summary>
+        WafclastAttribute Charisma { get; set; } = new WafclastAttribute(5);
 
         #endregion
 
-        public int RegionId { get; set; } = 0;
+        public double AttributePoints { get; set; } = 5;
 
+        public WafclastStatePoints LifePoints { get; set; }
+        public WafclastStatePoints ManaPoints { get; set; }
+
+        public double Damage { get; set; }
+        public double EvasionPoints { get; set; }
+        public double DexteryPoints { get; set; }
+
+        /// <summary>
+        /// Name and Level of that skill.
+        /// </summary>
+        public Dictionary<string, int> Skills = new Dictionary<string, int>();
 
         public WafclastCharacter()
         {
-            LifePoints = new WafclastStatePoints(ConstitutionSkill.Level * 100);
-            Accuracy = CalculateAccuracy(0);
-            Damage = CalculateMainHandDamage() + CalculateOffHandDamage();
-            Armor = CalculateArmor();
-            AddItem(new DatabaseItems().BronzeDagger());
+            LifePoints = new WafclastStatePoints(CalculateLifePoints());
+            ManaPoints = new WafclastStatePoints(CalculateManaPoints());
+            EvasionPoints = CalculateEvasionPoints();
+            DexteryPoints = CalculateDexteryPoints();
         }
 
-        public bool ReceiveDamage(double value) => LifePoints.Remove(value);
+        public double CalculateLifePoints() => (Constitution * 8.0) + (Strength / 5.0) + ((Constitution / 5.0) * 3.0);
+        public double CalculateManaPoints() => (Intelligence * 3.0) + (Perception / 3.0) + (Constitution / 3.0);
 
-        public bool AddItem(WafclastBaseItem baseItem)
-        {
-            if (baseItem.CanStack)
-            {
-                foreach (var item in Inventory)
-                {
-                    if (item.GlobalItemId == baseItem.GlobalItemId)
-                    {
-                        item.Quantity += baseItem.Quantity;
-                        return true;
-                    }
-                }
+        public abstract double CalculateDamagePoints();
+        public double CalculatePhysicalDamage() => Strength + ((Strength / 5.0) * 2.0) + (Dexterity / 2.0);
+        public double CalculateMagicalDamage() => Intelligence + ((Intelligence / 5.0) * 2.0) + (Dexterity / 2.0);
 
-                if (Inventory.Count == 19)
-                    return false;
+        public double CalculateEvasionPoints() => (Agility * 2.0) + (Dexterity / 5.0) + (Intelligence / 5.0) + (Perception / 3.0) + (Willpower / 3.0);
+        public double CalculateDexteryPoints() => (Dexterity * 2.0) + (Agility / 5.0) + (Intelligence / 5.0) + (Perception / 3.0) + (Willpower / 3.0);
 
-                Inventory.Add(baseItem);
-                return true;
-            }
+        public abstract void ResetCombatThings();
 
-            if (Inventory.Count == 19)
-                return false;
-
-            Inventory.Add(baseItem);
-            return true;
-        }
-
-        public double CalculateMainHandDamage()
-        {
-            double weaponDamage = 0;
-            double weaponSpeed = 1;
-            if (MainHand != null)
-            {
-                weaponDamage = MainHand.Damage;
-                switch (MainHand.Speed)
-                {
-                    case AttackRate.Average:
-                        weaponSpeed = 96 / 149;
-                        break;
-                    case AttackRate.Fast:
-                        weaponSpeed = 192 / 245;
-                        break;
-                }
-            }
-            return (2.5 * StrengthSkill.Level) + (weaponDamage * weaponSpeed);
-        }
-        public double CalculateOffHandDamage()
-        {
-            double weaponDamage = 0;
-            double weaponSpeed = 1;
-            if (OffHand != null)
-            {
-                weaponDamage = OffHand.Damage;
-                switch (OffHand.Speed)
-                {
-                    case AttackRate.Average:
-                        weaponSpeed = 96 / 149;
-                        break;
-                    case AttackRate.Fast:
-                        weaponSpeed = 192 / 245;
-                        break;
-                }
-            }
-            return (1.25 * StrengthSkill.Level) + (weaponDamage * weaponSpeed);
-        }
-
-        public double CalculateHitChance(double armor) => Accuracy / armor;
-        public double CalculateAccuracy(double weaponAccuracy)
-        {
-            return (0.0008 * Math.Pow(AttackSkill.Level, 3)) + (4 * AttackSkill.Level) + 40 + weaponAccuracy;
-        }
-
-        public double CalculateArmor() => (0.0008 * Math.Pow(DefenceSkill.Level, 3)) + (4 * DefenceSkill.Level) + 40;
-
-        //public double CalculateArmor()
-        //{
-
-        //}
-
-        public bool TryEquipItem(WafclastEquipableItem eqItem)
-        {
-            bool isDesequiped = false;
-            switch (eqItem)
-            {
-                case WafclastWeaponItem wwi:
-                    switch (wwi.Slot)
-                    {
-                        case SlotEquipament.MainHand:
-                            isDesequiped = TryDesequipItem(SlotEquipament.MainHand);
-                            if (isDesequiped)
-                            {
-                                MainHand = wwi;
-                                Accuracy = CalculateAccuracy(wwi.Accuracy);
-                                Damage = CalculateMainHandDamage() + CalculateOffHandDamage();
-                            }
-                            break;
-                        case SlotEquipament.OffHand:
-                            isDesequiped = TryDesequipItem(SlotEquipament.OffHand);
-                            if (isDesequiped)
-                            {
-                                OffHand = wwi;
-                                Damage = CalculateMainHandDamage() + CalculateOffHandDamage();
-                            }
-                            break;
-                    }
-                    break;
-            }
-            return isDesequiped;
-        }
-
-        public bool TryDesequipItem(SlotEquipament slot)
-        {
-            if (Inventory.Count > 19)
-                return false;
-
-            switch (slot)
-            {
-                case SlotEquipament.MainHand:
-                    if (MainHand != null)
-                    {
-                        Inventory.Add(MainHand);
-                        MainHand = null;
-                    }
-                    break;
-                case SlotEquipament.OffHand:
-                    if (OffHand != null)
-                    {
-                        Inventory.Add(OffHand);
-                        OffHand = null;
-                    }
-                    break;
-            }
-            return true;
-        }
     }
 }

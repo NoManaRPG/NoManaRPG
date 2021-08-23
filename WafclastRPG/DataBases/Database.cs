@@ -13,6 +13,9 @@ namespace WafclastRPG.DataBases
 {
     public class DataBase
     {
+
+        public ConcurrentDictionary<ulong, WafclastPlayer> Users { get; set; } = new ConcurrentDictionary<ulong, WafclastPlayer>();
+
         public IMongoClient Client { get; }
         public IMongoDatabase Database { get; }
 

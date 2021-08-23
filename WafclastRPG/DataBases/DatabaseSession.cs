@@ -26,7 +26,7 @@ namespace WafclastRPG.DataBases
         {
             var player = await Database.CollectionPlayers.Find(Session, x => x.Id == user.Id).FirstOrDefaultAsync();
             if (player != null)
-                player.Session = this;
+                player.dataSession = this;
             return player;
         }
 

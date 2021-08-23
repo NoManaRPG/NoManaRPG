@@ -7,6 +7,8 @@ using System;
 using System.Threading.Tasks;
 using WafclastRPG.Commands;
 using WafclastRPG.Commands.AdminCommands;
+using WafclastRPG.Commands.UserCommands;
+using WafclastRPG.Commands.UserCommands.CombatCommands;
 using WafclastRPG.DataBases;
 using WafclastRPG.DiscordEvents;
 
@@ -55,6 +57,8 @@ namespace WafclastRPG
             CommandsNext.RegisterCommands<InfoCommand>();
             CommandsNext.RegisterCommands<DatabaseCommands>();
             CommandsNext.RegisterCommands<AdminCommand>();
+            CommandsNext.RegisterCommands<AttackCommand>();
+            CommandsNext.RegisterCommands<StartCommand>();
         }
     }
 }
