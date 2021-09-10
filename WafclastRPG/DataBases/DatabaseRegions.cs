@@ -5,7 +5,7 @@ using WafclastRPG.Entities;
 namespace WafclastRPG.DataBases {
   public class DatabaseRegions {
     public WafclastRegion Region0() {
-      var reg = new WafclastRegion(0, "Celeiro") {
+      var reg = new WafclastRegion(1, "Celeiro") {
         Description = $"Tem algumas vacas aqui."
       };
 
