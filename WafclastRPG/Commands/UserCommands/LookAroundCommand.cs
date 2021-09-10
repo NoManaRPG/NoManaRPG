@@ -31,7 +31,7 @@ namespace WafclastRPG.Commands.UserCommands {
 
           var region = await session.FindRegionAsync(character.Region.Id);
 
-          region.Monsters = character.Region.Monsters;
+          region.Monster = character.Region.Monster;
           region.MonsterAttackSpeedPoints = character.Region.MonsterAttackSpeedPoints;
           region.PlayerAttackSpeedPoints = character.Region.PlayerAttackSpeedPoints;
           region.TotalAttackSpeedPoints = character.Region.TotalAttackSpeedPoints;

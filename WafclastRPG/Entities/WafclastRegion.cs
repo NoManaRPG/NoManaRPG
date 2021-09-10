@@ -14,6 +14,7 @@ namespace WafclastRPG.Entities {
     Descer = 7,
   }
 
+  [BsonIgnoreExtraElements]
   public class WafclastRegion {
 
     [BsonId]
@@ -21,7 +22,7 @@ namespace WafclastRPG.Entities {
     public string Name { get; set; }
     public string Description { get; set; }
 
-    public WafclastMonster Monsters { get; set; }
+    public WafclastMonster Monster { get; set; }
     public double PlayerAttackSpeedPoints { get; set; }
     public double MonsterAttackSpeedPoints { get; set; }
     public double TotalAttackSpeedPoints { get; set; }

@@ -29,7 +29,7 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
             return new Response(Messages.AindaNaoCriouPersonagem);
 
           var character = player.Character;
-          var monster = player.Character.Region.Monsters;
+          var monster = player.Character.Region.Monster;
 
           if (monster == null)
             return new Response($"você não está visualizando nenhum monstro para atacar!");
@@ -101,7 +101,7 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
 
       while (isPlayerAttacking == false || isMonsterAttacking == false) {
         character.Region.PlayerAttackSpeedPoints += character.AttackSpeed;
-        character.Region.MonsterAttackSpeedPoints += character.Region.Monsters.AttackSpeed;
+        character.Region.MonsterAttackSpeedPoints += character.Region.Monster.AttackSpeed;
 
         if (character.Region.PlayerAttackSpeedPoints / character.Region.TotalAttackSpeedPoints >= 1) {
           character.Region.PlayerAttackSpeedPoints -= character.Region.TotalAttackSpeedPoints;

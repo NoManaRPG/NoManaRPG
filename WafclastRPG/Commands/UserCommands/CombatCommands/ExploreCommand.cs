@@ -18,7 +18,7 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
     [Aliases("ex", "explore")]
     [Description("Permite explorar uma região, podendo encontrar monstros.")]
     [Usage("explorar")]
-    [CooldownAttribute(1, 5, CooldownBucketType.User)]
+    [Cooldown(1, 5, CooldownBucketType.User)]
     public async Task ExploreCommandAsync(CommandContext ctx) {
       await ctx.TriggerTypingAsync();
 
@@ -29,20 +29,17 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
           if (player == null)
             return new Response(Messages.AindaNaoCriouPersonagem);
 
-          //var monster = getnew monster
+          var character = player.Character;
 
-          var monster = new WafclastMonster(1, "Boneco de testes", 5, 5, 5, 5, 5);
+          character.Region = await session.FindRegionAsync(character.Region.Id);
 
 
           await player.SaveAsync();
 
-          return new Response($"você encontrou [{monster.Name}]!");
-
-
+          return new Response($"você encontrou [{character.Region.Monster.Name}]!");
         });
 
       await ctx.ResponderAsync(response.Message);
-
     }
   }
 }

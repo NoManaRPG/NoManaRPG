@@ -10,10 +10,11 @@ namespace WafclastRPG.DataBases {
       };
 
       var monster = new WafclastMonster(1, "Vaca");
+      monster.Damage = Mathematics.CalculatePhysicalDamage(monster.Attributes);
       //var drop1 = new DropChance(0, .9, 1, 2);
       //monster.Drops.Add(drop1);
 
-      reg.Monsters = monster;
+      reg.Monster = monster;
       return reg;
     }
   }
