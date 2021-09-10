@@ -2,20 +2,19 @@
 using System;
 using WafclastRPG.Entities;
 
-namespace WafclastRPG.DataBases
-{
-    public class DatabaseRegions
-    {
-        public WafclastRegion Region0()
-        {
-            var reg = new WafclastRegion(0, "um Milharal")
-            {
-                Description = $"Os {Formatter.MaskedUrl("milho", new Uri("https://i.imgur.com/Ok72efh.jpg"))}s ainda estão verde. Tem um {Formatter.MaskedUrl("espantalho", new Uri("https://i.imgur.com/OlzufGa.jpg"))} olhando para mim"
-            };
-            //reg.Monsters.Add(new DatabaseMonsters().Espantalho1Ab());
-            //reg.Monsters.Add(new DatabaseMonsters().Vaca1Ab());
+namespace WafclastRPG.DataBases {
+  public class DatabaseRegions {
+    public WafclastRegion Region0() {
+      var reg = new WafclastRegion(0, "Celeiro") {
+        Description = $"Tem algumas vacas aqui."
+      };
 
-            return reg;
-        }
+      var monster = new WafclastMonster(1, "Vaca");
+      //var drop1 = new DropChance(0, .9, 1, 2);
+      //monster.Drops.Add(drop1);
+
+      reg.Monsters = monster;
+      return reg;
     }
+  }
 }
