@@ -20,6 +20,7 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
     [Description("Permite executar um ataque em um monstro.")]
     [Usage("atacar")]
     public async Task AttackCommandAsync(CommandContext ctx) {
+      await ctx.TriggerTypingAsync();
       Response response;
       using (var session = await database.StartDatabaseSessionAsync())
         response = await session.WithTransactionAsync(async (s, ct) => {

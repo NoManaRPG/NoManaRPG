@@ -41,7 +41,7 @@ namespace WafclastRPG.DataBases {
     public Task<WafclastFabrication> FindFabricationAsync(string name)
         => Database.CollectionFabrication.Find(Session, x => x.Name == name, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
 
-    public Task<WafclastRegion> FindRegonAsync(int id)
+    public Task<WafclastRegion> FindRegionAsync(int id)
       => Database.CollectionRegions.Find(x => x.Id == id).FirstOrDefaultAsync();
 
     public Task ReplaceAsync(WafclastPlayer jogador)

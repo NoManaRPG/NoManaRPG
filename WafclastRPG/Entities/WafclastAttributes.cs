@@ -30,8 +30,8 @@ namespace WafclastRPG.Entities {
   [BsonIgnoreExtraElements]
   public class WafclastAttribute {
     public double Base { get; set; }
-    public double BonusPositive { get; set; } = 0;
-    public double BonusNegative { get; set; } = 0;
+    public double BonusPositive { get; set; }
+    public double BonusNegative { get; set; }
     public double Current { get { return (Base + BonusPositive) - BonusNegative; } }
 
     public WafclastAttribute(double baseValue) {

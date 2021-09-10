@@ -20,9 +20,8 @@ namespace WafclastRPG.Entities {
     public int Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
+
     public WafclastMonster Monsters { get; set; }
-
-
     public double PlayerAttackSpeedPoints { get; set; }
     public double MonsterAttackSpeedPoints { get; set; }
     public double TotalAttackSpeedPoints { get; set; }
