@@ -8,6 +8,7 @@ namespace WafclastRPG.Entities.Characters {
   public class WafclastMage : WafclastBaseCharacter {
 
     public override string EmojiAttack { get; set; } = Emojis.Dardo;
+    public override WafclastAttributes Attributes { get; set; } = new WafclastAttributes();
 
     public WafclastMage() {
       Skills.Add("Slash", 1);

@@ -12,7 +12,7 @@ namespace WafclastRPG.Entities.Characters {
     /// <summary>
     /// All 6 attributes.
     /// </summary>
-    public WafclastAttributes Attributes { get; set; }
+    public abstract WafclastAttributes Attributes { get; set; }
 
     /// <summary>
     /// Points to Allocate in Attributes after level up
