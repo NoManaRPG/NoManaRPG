@@ -8,9 +8,6 @@ namespace WafclastRPG.Entities {
     public int Level { get; set; }
     public string Name { get; set; }
 
-    /// <summary>
-    /// All 6 attributes.
-    /// </summary>
     public WafclastAttributes Attributes { get; set; }
 
     public WafclastStatePoints LifePoints { get; set; }
