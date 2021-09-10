@@ -92,7 +92,10 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
           return new Response(embed);
         });
 
-      await ctx.ResponderAsync(response.Embed);
+      if (response.Message != null)
+        await ctx.ResponderAsync(response.Message);
+      else
+        await ctx.ResponderAsync(response.Embed);
     }
 
     public static (bool isPlayer, bool isMonster) CalculateNextAttack(WafclastBaseCharacter character) {
