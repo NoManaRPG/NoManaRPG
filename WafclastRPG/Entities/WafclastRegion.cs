@@ -33,6 +33,8 @@ namespace WafclastRPG.Entities {
     public WafclastRegion(int id, string local) {
       Id = id;
       Name = local;
+
+      Exits = new Dictionary<ExitType, int>();
     }
   }
 }
