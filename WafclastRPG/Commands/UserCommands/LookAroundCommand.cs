@@ -48,6 +48,9 @@ namespace WafclastRPG.Commands.UserCommands {
             str.AppendLine($"{item.Key} - {item.Value}");
           }
 
+          if (string.IsNullOrWhiteSpace(str.ToString()))
+            str.AppendLine("Parece que não existe saidas!");
+
           embed.AddField("Saidas", str.ToString());
 
           return new Response(embed);
