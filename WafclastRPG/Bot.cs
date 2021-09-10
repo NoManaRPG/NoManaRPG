@@ -59,6 +59,7 @@ namespace WafclastRPG
             CommandsNext.RegisterCommands<AdminCommand>();
             CommandsNext.RegisterCommands<AttackCommand>();
             CommandsNext.RegisterCommands<StartCommand>();
+            CommandsNext.RegisterCommands<ExploreCommand>();
         }
     }
 }

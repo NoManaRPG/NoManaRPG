@@ -1,13 +1,10 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
 using WafclastRPG.DataBases;
-using WafclastRPG.Entities.Itens;
-using WafclastRPG.Entities.Monsters;
+using WafclastRPG.Entities.Characters;
 
 namespace WafclastRPG.Entities
 {
@@ -17,14 +14,14 @@ namespace WafclastRPG.Entities
         [BsonId]
         public ulong Id { get; private set; }
         public DateTime DateAccountCreation { get; private set; }
-        public WafclastCharacter Character { get; private set; }
+        public WafclastBaseCharacter Character { get; private set; }
 
         public ulong MonsterKills { get; set; }
         public ulong Deaths { get; set; }
 
         public string Language { get; set; } = "pt-BR";
 
-        public WafclastPlayer(ulong id, WafclastCharacter character)
+        public WafclastPlayer(ulong id, WafclastBaseCharacter character)
         {
             this.Id = id;
             this.Character = character;

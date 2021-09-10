@@ -41,4 +41,8 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Entities\Monsters\" />
+  </ItemGroup>
+
 </Project>

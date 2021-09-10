@@ -17,6 +17,7 @@
         public const string CirculoVermelho = ":red_circle:";
 
         public const string Adaga = ":dagger:";
+        public const string Dardo = ":dart:";
         public const string EspadasCruzadas = ":crossed_swords:";
         public const string Escudo = ":shield:";
 

@@ -1,4 +1,6 @@
-﻿namespace WafclastRPG.Entities
+﻿using System;
+
+namespace WafclastRPG.Entities
 {
     public class WafclastStatePoints
     {
@@ -25,6 +27,20 @@
         {
             Current -= value;
             if (Current <= 0)
+                return true;
+            return false;
+        }
+
+        public static bool operator !=(WafclastStatePoints left, double right)
+        {
+            if (left.Current != right)
+                return true;
+            return false;
+        }
+
+        public static bool operator ==(WafclastStatePoints left, double right)
+        {
+            if (left.Current == 0)
                 return true;
             return false;
         }

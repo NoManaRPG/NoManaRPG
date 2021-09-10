@@ -2,20 +2,15 @@
 using MongoDB.Driver;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using WafclastRPG.Entities;
 using WafclastRPG.Entities.Itens;
-using WafclastRPG.Entities.Monsters;
 using WafclastRPG.Extensions;
 
 namespace WafclastRPG.DataBases
 {
     public class DataBase
     {
-
-        public ConcurrentDictionary<ulong, WafclastPlayer> Users { get; set; } = new ConcurrentDictionary<ulong, WafclastPlayer>();
-
         public IMongoClient Client { get; }
         public IMongoDatabase Database { get; }
 

@@ -13,7 +13,7 @@ namespace WafclastRPG.DataBases
                 Description = $"Os {Formatter.MaskedUrl("milho", new Uri("https://i.imgur.com/Ok72efh.jpg"))}s ainda estão verde. Tem um {Formatter.MaskedUrl("espantalho", new Uri("https://i.imgur.com/OlzufGa.jpg"))} olhando para mim"
             };
             //reg.Monsters.Add(new DatabaseMonsters().Espantalho1Ab());
-            reg.Monsters.Add(new DatabaseMonsters().Vaca1Ab());
+            //reg.Monsters.Add(new DatabaseMonsters().Vaca1Ab());
 
             return reg;
         }
