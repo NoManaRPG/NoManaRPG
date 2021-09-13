@@ -8,20 +8,19 @@ using WafclastRPG.Entities.Characters;
 using WafclastRPG.Extensions;
 
 namespace WafclastRPG.Commands.UserCommands {
+  [ModuleLifespan(ModuleLifespan.Transient)]
   public class StartCommand : BaseCommandModule {
-    public DataBase database;
+    public Response Res { private get; set; }
+    public DataBase Data { private get; set; }
 
     [Command("comecar")]
     [Aliases("start")]
     [Description("Permite criar um personagem, após informar uma classe.")]
     [Usage("comecar")]
     public async Task StartCommandAsync(CommandContext ctx, [RemainingText] string character = "") {
-      await ctx.TriggerTypingAsync();
-
-      Response response;
-      using (var session = await database.StartDatabaseSessionAsync())
-        response = await session.WithTransactionAsync(async (s, ct) => {
-          var player = await session.FindPlayerAsync(ctx.User);
+      using (var session = await Data.StartDatabaseSessionAsync())
+        Res = await session.WithTransactionAsync(async (s, ct) => {
+          var player = await session.FindPlayerAsync(ctx, false);
           if (player != null)
             return new Response("você já criou um personagem! Se estiver com dúvidas ou problemas, consulte o nosso Servidor Oficial do Discord.");
 
@@ -43,8 +42,7 @@ namespace WafclastRPG.Commands.UserCommands {
           await session.ReplaceAsync(player);
           return new Response("personagem criado com sucesso! Obrigado por escolher Wafclast! Para continuar, digite `w.olhar`");
         });
-
-      await ctx.ResponderAsync(response.Message);
+      await ctx.ResponderAsync(Res);
     }
   }
 }

@@ -28,7 +28,7 @@ namespace WafclastRPG {
 
     public Task ConectarAsync() => Client.ConnectAsync();
 
-    public void ModuleCommand(CommandsNextConfiguration ccfg, DataBase database) {
+    public void ModuleCommand(CommandsNextConfiguration ccfg) {
       CommandsNext = Client.UseCommandsNext(ccfg);
       CommandsNext.CommandExecuted += CommandExecutedEvent.Event;
       CommandsNext.CommandErrored += CommandErroredEvent.EventAsync;
@@ -38,7 +38,7 @@ namespace WafclastRPG {
       Client.GuildAvailable += (c, e) => GuildAvailableEvent.Event(c, e, botInfo);
       Client.GuildMemberAdded += (c, e) => GuildMemberAddedEvent.Event(c, e, botInfo);
       Client.GuildMemberRemoved += (c, e) => GuildMemberRemovedEvent.Event(c, e, botInfo);
-      Client.MessageCreated += (c, e) => MessageCreatedEvent.Event(c, e, CommandsNext, database);
+      Client.MessageCreated += (c, e) => MessageCreatedEvent.Event(c, e, CommandsNext);
       Client.ClientErrored += ClientErroredEvent.Event;
 
       Client.UseInteractivity(new InteractivityConfiguration {

@@ -12,21 +12,19 @@ using WafclastRPG.Properties;
 using static WafclastRPG.Mathematics;
 
 namespace WafclastRPG.Commands.UserCommands.CombatCommands {
+  [ModuleLifespan(ModuleLifespan.Transient)]
   public class AttackCommand : BaseCommandModule {
-    public DataBase database;
+    public Response Res { private get; set; }
+    public DataBase Data { private get; set; }
 
     [Command("atacar")]
     [Aliases("at", "attack")]
     [Description("Permite executar um ataque em um monstro.")]
     [Usage("atacar")]
     public async Task AttackCommandAsync(CommandContext ctx) {
-      await ctx.TriggerTypingAsync();
-      Response response;
-      using (var session = await database.StartDatabaseSessionAsync())
-        response = await session.WithTransactionAsync(async (s, ct) => {
-          var player = await session.FindPlayerAsync(ctx.User);
-          if (player == null)
-            return new Response(Messages.AindaNaoCriouPersonagem);
+      using (var session = await Data.StartDatabaseSessionAsync())
+        Res = await session.WithTransactionAsync(async (s, ct) => {
+          var player = await session.FindPlayerAsync(ctx);
 
           var character = player.Character;
           var monster = player.Character.Region.Monster;
@@ -56,6 +54,7 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
                 str.AppendLine($"você morreu!");
                 str.AppendLine($"você perdeu 1 nível!");
                 character.RemoveOneLevel();
+                character.LifePoints.Restart();
                 goto EndCombat;
               }
 
@@ -88,14 +87,9 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
           //loot em outro comando!
 
           await player.SaveAsync();
-
           return new Response(embed);
         });
-
-      if (response.Message != null)
-        await ctx.ResponderAsync(response.Message);
-      else
-        await ctx.ResponderAsync(response.Embed);
+        await ctx.ResponderAsync(Res);
     }
 
     public static (bool isPlayer, bool isMonster) CalculateNextAttack(WafclastBaseCharacter character) {

@@ -1,4 +1,5 @@
-﻿using DSharpPlus.Entities;
+﻿using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -6,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WafclastRPG.Entities;
 using WafclastRPG.Entities.Itens;
+using WafclastRPG.Exceptions;
 
 namespace WafclastRPG.DataBases {
   public class DatabaseSession : IDisposable {
@@ -19,11 +21,19 @@ namespace WafclastRPG.DataBases {
 
     public Task<Response> WithTransactionAsync(Func<IClientSessionHandle, CancellationToken, Task<Response>> callbackAsync) => Session.WithTransactionAsync(callbackAsync: callbackAsync);
 
-    public async Task<WafclastPlayer> FindPlayerAsync(DiscordUser user) {
+    public async Task<WafclastPlayer> FindPlayerAsync(DiscordUser user, bool errorPlayerNull = true) {
       var player = await Database.CollectionPlayers.Find(Session, x => x.Id == user.Id).FirstOrDefaultAsync();
-      if (player != null)
+      if (player == null) {
+        if (errorPlayerNull)
+          throw new PlayerNotCreated();
+      } else
         player.dataSession = this;
       return player;
+    }
+
+    public async Task<WafclastPlayer> FindPlayerAsync(CommandContext ctx, bool errorPlayerNull = true) {
+      await ctx.TriggerTypingAsync();
+      return await FindPlayerAsync(ctx.User, errorPlayerNull);
     }
 
     /// <summary>
@@ -72,5 +82,6 @@ namespace WafclastRPG.DataBases {
     public Response(DiscordEmbedBuilder embed) => Embed = embed;
 
     public Response(string message) => Message = message;
+    public Response() { }
   }
 }

@@ -5,27 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
-using WafclastRPG.Entities;
-using WafclastRPG.Entities.Characters;
 using WafclastRPG.Extensions;
-using WafclastRPG.Properties;
 
 namespace WafclastRPG.Commands.UserCommands {
+  [ModuleLifespan(ModuleLifespan.Transient)]
   public class LookAroundCommand : BaseCommandModule {
-    public DataBase database;
+    public Response Res { private get; set; }
+    public DataBase Data { private get; set; }
 
     [Command("olhar")]
     [Aliases("look", "lookaround", "olhar-em-volta")]
     [Description("Permite se localizar olhando o terreno em volta.")]
     [Usage("olhar")]
     public async Task LookAroundCommandAsync(CommandContext ctx) {
-      await ctx.TriggerTypingAsync();
-      Response response;
-      using (var session = await database.StartDatabaseSessionAsync())
-        response = await session.WithTransactionAsync(async (s, ct) => {
-          var player = await session.FindPlayerAsync(ctx.User);
-          if (player == null)
-            return new Response(Messages.AindaNaoCriouPersonagem);
+      using (var session = await Data.StartDatabaseSessionAsync())
+        Res = await session.WithTransactionAsync(async (s, ct) => {
+          var player = await session.FindPlayerAsync(ctx);
 
           var character = player.Character;
 
@@ -56,7 +51,7 @@ namespace WafclastRPG.Commands.UserCommands {
           return new Response(embed);
         });
 
-      await ctx.ResponderAsync(response.Embed);
+      await ctx.ResponderAsync(Res);
     }
   }
 }

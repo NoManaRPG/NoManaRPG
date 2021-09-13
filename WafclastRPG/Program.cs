@@ -10,8 +10,7 @@ using WafclastRPG.DataBases;
 namespace WafclastRPG {
   public class Program {
     public Config ConfigFile { get; private set; }
-    public BotInfo BotInfo { get; private set; }
-    public DataBase Database { get; private set; }
+    public DataBase Database { get; private set; } = new DataBase();
 
     static void Main() => new Program().RodarBotAsync().GetAwaiter().GetResult();
 
@@ -46,12 +45,11 @@ namespace WafclastRPG {
         MinimumLogLevel = logLevel,
       });
 
-      Database = new DataBase();
-      BotInfo = new BotInfo();
       var services = new ServiceCollection()
           .AddSingleton(Database)
           .AddSingleton(ConfigFile)
-          .AddSingleton(BotInfo)
+          .AddSingleton<BotInfo>()
+          .AddTransient<Response>()
           .BuildServiceProvider();
 
       bot.ModuleCommand(new CommandsNextConfiguration {
@@ -62,7 +60,7 @@ namespace WafclastRPG {
         EnableMentionPrefix = true,
         IgnoreExtraArguments = true,
         Services = services,
-      }, Database);
+      });
 
       await bot.ConectarAsync();
       await Task.Delay(-1);
