@@ -56,6 +56,7 @@ namespace WafclastRPG {
       CommandsNext.RegisterCommands<StartCommand>();
       CommandsNext.RegisterCommands<ExploreCommand>();
       CommandsNext.RegisterCommands<LookAroundCommand>();
+      CommandsNext.RegisterCommands<AllocateAttributesCommand>();
     }
   }
 }
