@@ -22,16 +22,7 @@ namespace WafclastRPG.Commands.UserCommands {
         Res = await session.WithTransactionAsync(async (s, ct) => {
           var player = await session.FindPlayerAsync(ctx);
 
-          var character = player.Character;
-
-          var region = await session.FindRegionAsync(character.Region.Id);
-
-          region.Monster = character.Region.Monster;
-          region.MonsterAttackSpeedPoints = character.Region.MonsterAttackSpeedPoints;
-          region.PlayerAttackSpeedPoints = character.Region.PlayerAttackSpeedPoints;
-          region.TotalAttackSpeedPoints = character.Region.TotalAttackSpeedPoints;
-
-          character.Region = region;
+          var region = await session.FindRegionAsync(player.Character.Region.Id);
 
           var embed = new DiscordEmbedBuilder();
           embed.WithColor(DiscordColor.Green);
