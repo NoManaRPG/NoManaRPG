@@ -1,18 +1,15 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using System;
-using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
-using WafclastRPG.Entities;
 using WafclastRPG.Extensions;
-using WafclastRPG.Properties;
 
 namespace WafclastRPG.Commands.UserCommands.CombatCommands {
+  [ModuleLifespan(ModuleLifespan.Transient)]
   public class ExploreCommand : BaseCommandModule {
-    public DataBase database;
+    public Response Res { private get; set; }
+    public DataBase Data { private get; set; }
 
     [Command("explorar")]
     [Aliases("ex", "explore")]
@@ -20,26 +17,18 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
     [Usage("explorar")]
     [Cooldown(1, 5, CooldownBucketType.User)]
     public async Task ExploreCommandAsync(CommandContext ctx) {
-      await ctx.TriggerTypingAsync();
-
-      Response response;
-      using (var session = await database.StartDatabaseSessionAsync())
-        response = await session.WithTransactionAsync(async (s, ct) => {
-          var player = await session.FindPlayerAsync(ctx.User);
-          if (player == null)
-            return new Response(Messages.AindaNaoCriouPersonagem);
+      using (var session = await Data.StartDatabaseSessionAsync())
+        Res = await session.WithTransactionAsync(async (s, ct) => {
+          var player = await session.FindPlayerAsync(ctx);
 
           var character = player.Character;
-
           character.Region = await session.FindRegionAsync(character.Region.Id);
-
 
           await player.SaveAsync();
 
-          return new Response($"você encontrou [{character.Region.Monster.Name}]!");
+          return new Response($"você encontrou **[{character.Region.Monster.Mention}]!**");
         });
-
-      await ctx.ResponderAsync(response.Message);
+      await ctx.ResponderAsync(Res);
     }
   }
 }
