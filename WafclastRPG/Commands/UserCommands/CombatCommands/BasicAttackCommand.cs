@@ -55,6 +55,8 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
               if (character.IsDead) {
                 str.AppendLine($"{player.Mention} {Emojis.CrossBone} morreu! ");
                 str.AppendLine($"{player.Mention} perdeu nível!");
+                player.Deaths++;
+
                 character.RemoveOneLevel();
                 character.LifePoints.Restart();
                 goto EndCombat;
@@ -73,8 +75,11 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
               str.AppendLine($"{monster.Mention} recebeu {damage:N2} {character.EmojiAttack} de dano!");
 
 
-              if (monster.IsDead)
+              if (monster.IsDead) {
                 str.AppendLine($"{monster.Mention} {Emojis.CrossBone} morreu!");
+                player.MonsterKills++;
+                character.AddExperience(monster.Level);
+              }
 
             } else {
               str.AppendLine($"{monster.Mention} desviou!");
