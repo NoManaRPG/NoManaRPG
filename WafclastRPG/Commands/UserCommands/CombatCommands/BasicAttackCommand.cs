@@ -17,8 +17,8 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
     public Response Res { private get; set; }
     public DataBase Data { private get; set; }
 
-    [Command("atacar")]
-    [Aliases("at", "attack")]
+    [Command("ataque-basico")]
+    [Aliases("at", "attack", "ab")]
     [Description("Permite executar um ataque em um monstro.")]
     [Usage("atacar")]
     public async Task BasicAttackCommandAsync(CommandContext ctx) {
