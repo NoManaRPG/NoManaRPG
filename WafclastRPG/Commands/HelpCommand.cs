@@ -23,41 +23,28 @@ namespace WafclastRPG.Commands {
     public async Task CommandsAsync(CommandContext ctx) {
       var str = new StringBuilder();
       str.AppendLine();
-      str.AppendLine("[Mercado Geral]");
-      str.Append("mgcriarvenda, ");
-      str.Append("mgvervendas, ");
-      str.Append("mgcomprar, ");
-      str.Append("mglista, ");
-      str.Append("mgparar, ");
-
-      str.AppendLine();
       str.AppendLine("[Geral]");
       str.Append("comandos, ");
       str.Append("ajuda, ");
       str.Append("info, ");
 
-      str.AppendLine();
-      str.AppendLine("[Habilidades]");
-      str.Append("habilidades, ");
-      //str.Append("minerar, ");
-      //str.Append("cozinhar, ");
+      //str.AppendLine();
+      //str.AppendLine("[Habilidades]");
+      //str.Append("habilidades, ");
+      ////str.Append("minerar, ");
+      ////str.Append("cozinhar, ");
 
       str.AppendLine();
       str.AppendLine("[Usuário]");
       str.Append("comecar, ");
       str.Append("olhar, ");
       //str.Append("explorar, ");
-      str.Append("atacar, ");
+      str.Append("ataque-basico, ");
       str.Append("status, ");
       str.Append("inventario, ");
-      str.Append("subir, ");
-      str.Append("descer, ");
-      str.Append("dar, ");
-      str.Append("despertador, ");
       str.Append("atributos, ");
       str.Append("atribuir, ");
-      str.Append("absorver, ");
-      str.Append("examinar, ");
+      //str.Append("examinar, ");
 
       await ctx.RespondAsync(Formatter.BlockCode(str.ToString(), "css"));
     }
