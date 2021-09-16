@@ -31,6 +31,9 @@ namespace WafclastRPG.Entities {
     public void RemoveOneLevel() {
       CurrentExperience = 0;
 
+      if (Level == 1)
+        return;
+
       if (Level > BlockedLevel + 1)
         BlockedLevel = Level;
 
