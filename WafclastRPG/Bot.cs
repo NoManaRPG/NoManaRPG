@@ -52,7 +52,7 @@ namespace WafclastRPG {
       CommandsNext.RegisterCommands<InfoCommand>();
       CommandsNext.RegisterCommands<DatabaseCommands>();
       CommandsNext.RegisterCommands<AdminCommand>();
-      CommandsNext.RegisterCommands<AttackCommand>();
+      CommandsNext.RegisterCommands<BasicAttackCommand>();
       CommandsNext.RegisterCommands<StartCommand>();
       CommandsNext.RegisterCommands<ExploreCommand>();
       CommandsNext.RegisterCommands<LookAroundCommand>();

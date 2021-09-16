@@ -13,7 +13,7 @@ using static WafclastRPG.Mathematics;
 
 namespace WafclastRPG.Commands.UserCommands.CombatCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
-  public class AttackCommand : BaseCommandModule {
+  public class BasicAttackCommand : BaseCommandModule {
     public Response Res { private get; set; }
     public DataBase Data { private get; set; }
 
@@ -21,7 +21,7 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
     [Aliases("at", "attack")]
     [Description("Permite executar um ataque em um monstro.")]
     [Usage("atacar")]
-    public async Task AttackCommandAsync(CommandContext ctx) {
+    public async Task BasicAttackCommandAsync(CommandContext ctx) {
       using (var session = await Data.StartDatabaseSessionAsync())
         Res = await session.WithTransactionAsync(async (s, ct) => {
           var player = await session.FindPlayerAsync(ctx);
@@ -48,18 +48,21 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
             if (CalculateHitChance(monster.PrecisionPoints, character.EvasionPoints)) {
 
               damage = character.ReceiveDamage(rd.Sortear(monster.Damage));
-              str.AppendLine($"você recebeu {damage} de dano!");
+              str.AppendLine($"{player.Mention} recebeu {damage:N2} de dano!");
+
+              embed.AddField(ctx.User.Username, $"{Emojis.GerarVidaEmoji(character.LifePoints.Current / character.LifePoints.Max)} {character.LifePoints.Current:N2} ", true);
 
               if (character.IsDead) {
-                str.AppendLine($"você morreu!");
-                str.AppendLine($"você perdeu 1 nível!");
+                str.AppendLine($"{player.Mention} {Emojis.CrossBone} morreu! ");
+                str.AppendLine($"{player.Mention} perdeu nível!");
                 character.RemoveOneLevel();
                 character.LifePoints.Restart();
                 goto EndCombat;
               }
 
             } else {
-              str.AppendLine($"{monster.Name} [Nv. {monster.Level}] errou o ataque!");
+              embed.AddField(ctx.User.Username, $"{Emojis.GerarVidaEmoji(character.LifePoints.Current / character.LifePoints.Max)} {character.LifePoints.Current:N2} ", true);
+              str.AppendLine($"{player.Mention} desviou!");
             }
           }
 
@@ -67,13 +70,14 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
             if (CalculateHitChance(character.PrecisionPoints, monster.EvasionPoints)) {
 
               damage = monster.ReceiveDamage(rd.Sortear(character.Damage));
-              str.AppendLine($"você deu {damage} {character.EmojiAttack} de dano!");
+              str.AppendLine($"{monster.Mention} recebeu {damage:N2} {character.EmojiAttack} de dano!");
+
 
               if (monster.IsDead)
-                str.AppendLine($"{Emojis.CrossBone} {monster.Name} {Emojis.CrossBone}");
+                str.AppendLine($"{monster.Mention} {Emojis.CrossBone} morreu!");
 
             } else {
-              str.AppendLine($"você errou o ataque!");
+              str.AppendLine($"{monster.Mention} desviou!");
             }
           }
 
@@ -81,15 +85,17 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
 
           embed.WithColor(DiscordColor.Red);
           embed.WithAuthor($"{ctx.User.Username} [Nv.{character.Level}]", iconUrl: ctx.User.AvatarUrl);
-          embed.WithTitle("Relatorio de Combate");
+          embed.WithTitle("Relatório de Combate");
           embed.WithDescription(str.ToString());
+
+          embed.AddField(monster.Mention, $"{Emojis.GerarVidaEmoji(monster.LifePoints.Current / monster.LifePoints.Max)} {monster.LifePoints.Current:N2} ", true);
 
           //loot em outro comando!
 
           await player.SaveAsync();
           return new Response(embed);
         });
-        await ctx.ResponderAsync(Res);
+      await ctx.ResponderAsync(Res);
     }
 
     public static (bool isPlayer, bool isMonster) CalculateNextAttack(WafclastBaseCharacter character) {
