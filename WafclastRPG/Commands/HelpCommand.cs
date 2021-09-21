@@ -55,7 +55,6 @@ namespace WafclastRPG.Commands {
     [Usage("ajuda [ comando ]")]
     [Cooldown(1, 5, CooldownBucketType.User)]
     public async Task HelpCommanAsync(CommandContext ctx, params string[] comando) {
-      await ctx.TriggerTypingAsync();
       if (comando.Length == 0)
         await ctx.RespondAsync($"Oi! Eu sou o Wafclast RPG! Para a lista dos comandos que eu conheço, você pode digitar `w.comandos`, ou {ctx.Client.CurrentUser.Mention} comandos");
       else
@@ -71,7 +70,6 @@ namespace WafclastRPG.Commands {
       var defaultPrefix = ctx.Services.GetService<Config>().PrefixRelease;
       var banco = ctx.Services.GetService<DataBase>();
       prefix = banco.GetServerPrefix(ctx.Guild.Id, defaultPrefix);
-
       embed = new DiscordEmbedBuilder();
       embed.WithAuthor("Menu de ajuda do Wafclast", null, ctx.Client.CurrentUser.AvatarUrl);
     }

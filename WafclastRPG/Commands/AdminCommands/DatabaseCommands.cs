@@ -94,28 +94,9 @@ namespace WafclastRPG.Commands.AdminCommands {
       await ctx.RespondAsync($"Mapa salvo: {config.MapUrl}");
     }
 
-    [Command("setdesc")]
-    [RequireOwner]
-    public async Task SetDescriptionRoom(CommandContext ctx, [RemainingText] string description) {
-      using (var session = await Data.StartDatabaseSessionAsync())
-        Res = await session.WithTransactionAsync(async (s, ct) => {
-          await ctx.TriggerTypingAsync();
-
-          Room room = null;
-          room = await session.FindRoomAsync(ctx.Channel.Id);
-          if (room == null)
-            return new Response("este lugar não é um quarto.");
-
-          room.Description = description;
-          await session.ReplaceAsync(room);
-
-          return new Response($"você alterou a descrição de: **[{room.Name}]!**");
-        });
-      await ctx.ResponderAsync(Res);
-    }
-
     [Command("aviajar")]
     [Aliases("av", "atravel")]
+    [Hidden]
     [RequireOwner]
     public async Task AdminTravelCommandAsync(CommandContext ctx, [RemainingText] string roomName) {
       using (var session = await Data.StartDatabaseSessionAsync())
@@ -140,44 +121,6 @@ namespace WafclastRPG.Commands.AdminCommands {
           await player.SaveAsync();
 
           return new Response($"você chegou em: **[{room.Name}]!**");
-        });
-      await ctx.ResponderAsync(Res);
-    }
-
-    [Command("create-room")]
-    [RequireOwner]
-    public async Task CreateRoomCommandAsync(CommandContext ctx) {
-      using (var session = await Data.StartDatabaseSessionAsync())
-        Res = await session.WithTransactionAsync(async (s, ct) => {
-
-          var name = await ctx.WaitForStringAsync("Informe o Nome do Quarto.", Data, timeout);
-          var regionName = await ctx.WaitForStringAsync("Informe o Nome da Região.", Data, timeout);
-          var description = await ctx.WaitForStringAsync("Informe uma descrição do quarto.", Data, timeout);
-          var vectorX = await ctx.WaitForDoubleAsync("Informe a posição X da localização.", Data, timeout);
-          var vectorY = await ctx.WaitForDoubleAsync("Informe a posição Y da localização.", Data, timeout);
-
-          var invite = await ctx.Channel.CreateInviteAsync(0, 0, false, false, "New Room Created");
-
-          var room = new Room() {
-            Id = ctx.Channel.Id,
-            Name = name.Value,
-            Region = regionName.Value,
-            Description = description.Value,
-            Invite = invite.ToString(),
-            Location = new Vector() { X = vectorX.Value, Y = vectorY.Value }
-          };
-
-          await session.ReplaceAsync(room);
-
-          var str = new StringBuilder();
-          str.AppendLine("**Quarto criado!**");
-          str.AppendLine($"Id: `{room.Id}`");
-          str.AppendLine($"Nome: {name.Value}");
-          str.AppendLine($"Região: {regionName.Value}");
-          str.AppendLine($"Descrição: {description.Value}");
-          str.AppendLine($"Posição: {vectorX.Value}/{vectorY.Value}");
-
-          return new Response(str.ToString());
         });
       await ctx.ResponderAsync(Res);
     }
