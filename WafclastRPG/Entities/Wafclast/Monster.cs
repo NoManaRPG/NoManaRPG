@@ -1,44 +1,47 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
+using WafclastRPG.Enums;
 using static WafclastRPG.Mathematics;
 
-namespace WafclastRPG.Entities {
+namespace WafclastRPG.Entities.Wafclast {
   [BsonIgnoreExtraElements]
-  public class WafclastMonster {
+  public class Monster {
     public int Level { get; set; }
     public string Name { get; set; }
 
     public string Mention { get { return $"{Name} [Nv. {Level}]"; } }
+    public bool IsDead { get { return LifePoints.Current <= 0; } }
 
     public WafclastAttributes Attributes { get; set; }
-
     public WafclastStatePoints LifePoints { get; set; }
-    public double Damage { get; set; } = 0;
 
+
+    public DamageType DamageType { get; set; }
+    public double Damage { get; set; }
     public double EvasionPoints { get; set; }
     public double PrecisionPoints { get; set; }
-
     public double AttackSpeed { get; set; }
-    public bool IsDead {
-      get {
-        return LifePoints.Current <= 0;
-      }
-    }
 
     public List<DropChance> Drops { get; set; } = new List<DropChance>();
 
-    public WafclastMonster(int level, string name, double strength = 5, double constitution = 5, double dexterity = 5, double agility = 5, double intelligence = 5, double willpower = 5, double perception = 5, double charisma = 5) {
+    public Monster(int level, string name, DamageType damageType, double strength = 5, double constitution = 5, double dexterity = 5, double agility = 5, double intelligence = 5, double willpower = 5, double perception = 5, double charisma = 5) {
       Level = level;
       Name = name;
+      DamageType = damageType;
       Attributes = new WafclastAttributes(strength, constitution, dexterity, intelligence, willpower, perception, charisma);
+    }
 
+    public void CalculateStatistics() {
       LifePoints = new WafclastStatePoints(CalculateLifePoints(Attributes));
       EvasionPoints = CalculateEvasionPoints(Attributes);
       PrecisionPoints = CalculateDexteryPoints(Attributes);
       AttackSpeed = CalculateAttackSpeed(Attributes);
+      if (DamageType == DamageType.Magic) Damage = CalculateMagicalDamage(Attributes);
+      else
+        Damage = CalculatePhysicalDamage(Attributes);
     }
 
-    public double ReceiveDamage(double valor) {
+    public double TakeDamage(double valor) {
       LifePoints.Remove(valor);
       return valor;
     }

@@ -4,13 +4,13 @@ using System.Text;
 using WafclastRPG.DataBases;
 using static WafclastRPG.Mathematics;
 
-namespace WafclastRPG.Entities.Characters {
-  public class WafclastMage : WafclastBaseCharacter {
+namespace WafclastRPG.Entities.Wafclast {
+  public class CharacterMage : BaseCharacter {
 
     public override string EmojiAttack { get; set; } = Emojis.Dardo;
     public override WafclastAttributes Attributes { get; set; } = new WafclastAttributes();
 
-    public WafclastMage() {
+    public CharacterMage() {
       Skills.Add("Slash", 1);
     }
 

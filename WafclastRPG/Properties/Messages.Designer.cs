@@ -70,15 +70,6 @@ namespace WafclastRPG.Properties {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a você cancelou o comando..
-        /// </summary>
-        internal static string ComandoCancelado {
-            get {
-                return ResourceManager.GetString("ComandoCancelado", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a seu alvo ainda não criou um personagem! Peça-o para digitar &apos;comecar&apos;!.
         /// </summary>
         internal static string JogadorAlvoNaoCriouPersonagem {
@@ -111,6 +102,15 @@ namespace WafclastRPG.Properties {
         internal static string Reminder {
             get {
                 return ResourceManager.GetString("Reminder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a você não respondeu a tempo e por isso o comando foi cancelado..
+        /// </summary>
+        internal static string TempoExpirado {
+            get {
+                return ResourceManager.GetString("TempoExpirado", resourceCulture);
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -7,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WafclastRPG.Entities;
 using WafclastRPG.Entities.Itens;
+using WafclastRPG.Entities.Wafclast;
 using WafclastRPG.Exceptions;
 
 namespace WafclastRPG.DataBases {
@@ -21,17 +23,17 @@ namespace WafclastRPG.DataBases {
 
     public Task<Response> WithTransactionAsync(Func<IClientSessionHandle, CancellationToken, Task<Response>> callbackAsync) => Session.WithTransactionAsync(callbackAsync: callbackAsync);
 
-    public async Task<WafclastPlayer> FindPlayerAsync(DiscordUser user, bool errorPlayerNull = true) {
+    public async Task<Player> FindPlayerAsync(DiscordUser user, bool errorPlayerNull = true) {
       var player = await Database.CollectionPlayers.Find(Session, x => x.Id == user.Id).FirstOrDefaultAsync();
       if (player == null) {
         if (errorPlayerNull)
-          throw new PlayerNotCreated();
+          throw new PlayerNotCreatedException();
       } else
         player.dataSession = this;
       return player;
     }
 
-    public async Task<WafclastPlayer> FindPlayerAsync(CommandContext ctx, bool errorPlayerNull = true) {
+    public async Task<Player> FindPlayerAsync(CommandContext ctx, bool errorPlayerNull = true) {
       await ctx.TriggerTypingAsync();
       return await FindPlayerAsync(ctx.User, errorPlayerNull);
     }
@@ -51,10 +53,13 @@ namespace WafclastRPG.DataBases {
     public Task<WafclastFabrication> FindFabricationAsync(string name)
         => Database.CollectionFabrication.Find(Session, x => x.Name == name, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
 
-    public Task<WafclastRegion> FindRegionAsync(int id)
-      => Database.CollectionRegions.Find(x => x.Id == id).FirstOrDefaultAsync();
+    public Task<Room> FindRoomAsync(ulong id)
+      => Database.CollectionRooms.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-    public Task ReplaceAsync(WafclastPlayer jogador)
+    public Task<Room> FindRoomAsync(string name)
+  => Database.CollectionRooms.Find(x => x.Name == name, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
+
+    public Task ReplaceAsync(Player jogador)
          => Database.CollectionPlayers.ReplaceOneAsync(Session, x => x.Id == jogador.Id, jogador, new ReplaceOptions { IsUpsert = true });
     public Task ReplaceAsync(WafclastServer server)
       => Database.CollectionGuilds.ReplaceOneAsync(Session, x => x.Id == server.Id, server, new ReplaceOptions { IsUpsert = true });
@@ -62,8 +67,8 @@ namespace WafclastRPG.DataBases {
       => Database.CollectionItems.ReplaceOneAsync(Session, x => x.Id == item.Id, item, new ReplaceOptions { IsUpsert = true });
     public Task ReplaceAsync(WafclastFabrication fabrication)
     => Database.CollectionFabrication.ReplaceOneAsync(x => x.Name == fabrication.Name, fabrication, new ReplaceOptions { IsUpsert = true });
-
-
+    public Task ReplaceAsync(Room room)
+    => Database.CollectionRooms.ReplaceOneAsync(Session, x => x.Id == room.Id, room, new ReplaceOptions { IsUpsert = true });
 
     public Task InsertAsync(WafclastBaseItem item)
         => Database.CollectionItems.InsertOneAsync(Session, item);

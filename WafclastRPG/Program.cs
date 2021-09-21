@@ -15,7 +15,7 @@ namespace WafclastRPG {
     static void Main() => new Program().RodarBotAsync().GetAwaiter().GetResult();
 
     public async Task RodarBotAsync() {
-      ConfigFile = Config.LoadFromJsonFile("Config.json");
+      ConfigFile = Config.LoadFromJsonFile();
       if (ConfigFile == null) {
         Console.WriteLine("O arquivo config.json não existe!");
         Console.WriteLine("Coloque as informações necessarias no arquivo gerado!");

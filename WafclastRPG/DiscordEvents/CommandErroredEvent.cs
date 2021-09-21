@@ -71,8 +71,11 @@ namespace WafclastRPG.DiscordEvents {
           } else
             e.Context.Client.Logger.LogDebug(new EventId(601, "Argument Error"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
           break;
-        case PlayerNotCreated pne:
+        case PlayerNotCreatedException pne:
           await ctx.ResponderAsync(pne.Message);
+          break;
+        case AnswerTimeoutException ate:
+          await ctx.ResponderAsync(ate.Message);
           break;
         default:
           e.Context.Client.Logger.LogDebug(new EventId(601, "Command Error"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);

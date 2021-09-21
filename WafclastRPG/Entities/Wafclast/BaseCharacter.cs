@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using static WafclastRPG.Mathematics;
 
-namespace WafclastRPG.Entities.Characters {
+namespace WafclastRPG.Entities.Wafclast {
   [BsonIgnoreExtraElements]
   [BsonDiscriminator(RootClass = true)]
-  [BsonKnownTypes(typeof(WafclastMage), typeof(WafclastWarrior))]
-  public abstract class WafclastBaseCharacter : WafclastLevel {
+  [BsonKnownTypes(typeof(CharacterMage), typeof(CharacterWarrior))]
+  public abstract class BaseCharacter : WafclastLevel {
 
     /// <summary>
     /// All 6 attributes.
@@ -37,9 +37,9 @@ namespace WafclastRPG.Entities.Characters {
     /// </summary>
     public Dictionary<string, int> Skills = new Dictionary<string, int>();
 
-    public WafclastRegion Region { get; set; }
+    public Room Room { get; set; }
 
-    public WafclastBaseCharacter() {
+    public BaseCharacter() {
       LifePoints = new WafclastStatePoints(CalculateLifePoints(Attributes));
       ManaPoints = new WafclastStatePoints(CalculateManaPoints(Attributes));
       EvasionPoints = CalculateEvasionPoints(Attributes);

@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using WafclastRPG.Entities;
 using WafclastRPG.Entities.Itens;
+using WafclastRPG.Entities.Wafclast;
 using WafclastRPG.Extensions;
 
 namespace WafclastRPG.DataBases {
@@ -12,10 +13,10 @@ namespace WafclastRPG.DataBases {
     public IMongoClient Client { get; }
     public IMongoDatabase Database { get; }
 
-    public IMongoCollection<WafclastPlayer> CollectionPlayers { get; }
+    public IMongoCollection<Player> CollectionPlayers { get; }
     public IMongoCollection<WafclastServer> CollectionGuilds { get; }
     public IMongoCollection<WafclastBaseItem> CollectionItems { get; }
-    public IMongoCollection<WafclastRegion> CollectionRegions { get; }
+    public IMongoCollection<Room> CollectionRooms { get; }
 
 
     public IMongoCollection<WafclastFabrication> CollectionFabrication { get; }
@@ -32,10 +33,10 @@ namespace WafclastRPG.DataBases {
 #endif
       #endregion
 
-      CollectionPlayers = Database.CreateCollection<WafclastPlayer>();
+      CollectionPlayers = Database.CreateCollection<Player>();
       CollectionGuilds = Database.CreateCollection<WafclastServer>();
       CollectionItems = Database.CreateCollection<WafclastBaseItem>();
-      CollectionRegions = Database.CreateCollection<WafclastRegion>();
+      CollectionRooms = Database.CreateCollection<Room>();
 
 
       CollectionFabrication = Database.CreateCollection<WafclastFabrication>();
@@ -76,17 +77,6 @@ namespace WafclastRPG.DataBases {
     public Task DeleteServerAsync(ulong serverId)
         => CollectionGuilds.DeleteOneAsync(x => x.Id == serverId);
 
-    public Task ReplaceRegionAsync(WafclastRegion region)
-      => CollectionRegions.ReplaceOneAsync(x => x.Id == region.Id, region, new ReplaceOptions { IsUpsert = true });
-
-    public async Task ReplaceRegionsAsync() {
-      object classInstance = Activator.CreateInstance(typeof(DatabaseRegions), null);
-      var regioes = typeof(DatabaseRegions).GetMethods();
-      for (int i = 0; i < regioes.Length - 4; i++) {
-        var reg = (WafclastRegion) regioes[i].Invoke(classInstance, null);
-        await ReplaceRegionAsync(reg);
-      }
-    }
     public async Task ReloadItemsAsync(ulong botId) {
       await CollectionItems.DeleteManyAsync(x => x.PlayerId == botId);
 

@@ -6,6 +6,7 @@ using DSharpPlus.Interactivity.Extensions;
 using System;
 using System.Threading.Tasks;
 using WafclastRPG.DataBases;
+using WafclastRPG.Exceptions;
 
 namespace WafclastRPG.Extensions {
   public struct AnswerResult<T> {
@@ -23,9 +24,9 @@ namespace WafclastRPG.Extensions {
         => ctx.RespondAsync($"{ctx.User.Mention}, {mensagem}");
     public static async Task<DiscordMessage> ResponderAsync(this CommandContext ctx, Response response) {
       if (response.Message != null)
-       return await ctx.ResponderAsync(response.Message);
+        return await ctx.ResponderAsync(response.Message);
       else
-       return await ctx.ResponderAsync(response.Embed);
+        return await ctx.ResponderAsync(response.Embed);
     }
 
     public static Task<DiscordMessage> ResponderAsync(this CommandContext ctx, string mensagem, DiscordEmbed embed)
@@ -33,6 +34,11 @@ namespace WafclastRPG.Extensions {
 
     public static Task<DiscordMessage> ResponderAsync(this CommandContext ctx, DiscordEmbed embed)
         => ctx.RespondAsync(ctx.User.Mention, embed: embed);
+
+    public static T GetService<T>(this CommandContext ctx) where T : class {
+      return (T) ctx.Services.GetService(typeof(T));
+    }
+
 
     public static async Task<InteractivityResult<DiscordMessage>> WaitForMessageAsync(this CommandContext ctx, string message, DiscordEmbed embed, TimeSpan? timeoutoverride = null) {
       var vity = ctx.Client.GetInteractivity();
@@ -210,11 +216,8 @@ namespace WafclastRPG.Extensions {
       embed.WithFooter("Digite 'sair' para fechar.");
 
       var wait = await WaitForMessageAsync(ctx, ctx.User.Mention, embed.Build(), timeoutoverride);
-      if (wait.TimedOut) {
-        await ctx.ResponderAsync("tempo de resposta expirado!");
-        banco.StopExecutingInteractivity(ctx.User.Id);
-        return new AnswerResult<string>(true, null);
-      }
+      if (wait.TimedOut)
+        throw new AnswerTimeoutException();
 
       if (wait.Result.Content.ToLower().Trim() == "sair") {
         banco.StopExecutingInteractivity(ctx.User.Id);

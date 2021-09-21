@@ -22,11 +22,15 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
           var player = await session.FindPlayerAsync(ctx);
 
           var character = player.Character;
-          character.Region = await session.FindRegionAsync(character.Region.Id);
+          character.Room = await session.FindRoomAsync(character.Room.Id);
+
+          if (character.Room.Monster == null) {
+            return new Response("você procura monstros para atacar.. mas parece que não você não encontrará nada aqui.");
+          }
 
           await player.SaveAsync();
 
-          return new Response($"você encontrou **[{character.Region.Monster.Mention}]!**");
+          return new Response($"você encontrou **[{character.Room.Monster.Mention}]!**");
         });
       await ctx.ResponderAsync(Res);
     }

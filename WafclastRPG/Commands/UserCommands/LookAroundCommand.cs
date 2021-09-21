@@ -1,11 +1,16 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
+using WafclastRPG.Entities.Wafclast;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using WafclastRPG.Exceptions;
 using WafclastRPG.Extensions;
+using DSharpPlus.Interactivity.Extensions;
+using System;
 
 namespace WafclastRPG.Commands.UserCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
@@ -14,35 +19,51 @@ namespace WafclastRPG.Commands.UserCommands {
     public DataBase Data { private get; set; }
 
     [Command("olhar")]
-    [Aliases("look", "lookaround", "olhar-em-volta")]
-    [Description("Permite se localizar olhando o terreno em volta.")]
-    [Usage("olhar")]
-    public async Task LookAroundCommandAsync(CommandContext ctx) {
-      using (var session = await Data.StartDatabaseSessionAsync())
-        Res = await session.WithTransactionAsync(async (s, ct) => {
-          var player = await session.FindPlayerAsync(ctx);
+    [Aliases("look", "lookaround")]
+    [Description("Permite olhar ao seu redor e outro local.")]
+    [Usage("olhar [ nome ]")]
+    public async Task LookAroundCommandAsync(CommandContext ctx, [RemainingText] string roomName) {
 
-          var region = await session.FindRegionAsync(player.Character.Region.Id);
+      var player = await Data.CollectionPlayers.Find(x => x.Id == ctx.User.Id).FirstOrDefaultAsync();
+      if (player == null)
+        throw new PlayerNotCreatedException();
 
-          var embed = new DiscordEmbedBuilder();
-          embed.WithColor(DiscordColor.Green);
-          embed.WithTitle($"{region.Name} [{region.Id}]");
-          embed.WithDescription(region.Description);
+      Room room = null;
 
-          var str = new StringBuilder();
-          foreach (var item in region.Exits) {
-            str.AppendLine($"{item.Key} - {item.Value}");
-          }
+      if (string.IsNullOrWhiteSpace(roomName)) {
+        room = await Data.CollectionRooms.Find(x => x.Id == player.Character.Room.Id).FirstOrDefaultAsync();
+        if (room == null) {
+          await ctx.ResponderAsync("parece que aconteceu algum erro na matrix!");
+          return;
+        }
+      } else {
+        room = await Data.CollectionRooms.Find(x => x.Name == roomName, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
+        if (room == null) {
+          await ctx.ResponderAsync("você tenta procurar no mapa o lugar, mas não encontra! Como você tentaria olhar para algo que você não conhece?!");
+          return;
+        }
+      }
 
-          if (string.IsNullOrWhiteSpace(str.ToString()))
-            str.AppendLine("Parece que não existe saidas!");
+      var embed = new DiscordEmbedBuilder();
+      embed.WithColor(DiscordColor.Blue);
+      embed.WithTitle(room.Name);
+      embed.WithDescription(room.Description);
+      var msg = await ctx.RespondAsync(embed.Build());
 
-          embed.AddField("Saidas", str.ToString());
+      if (room != player.Character.Room)
+        if (room.Location.Distance(player.Character.Room.Location) <= 161) {
+          var emoji = DiscordEmoji.FromName(ctx.Client, ":footprints:");
+          await msg.CreateReactionAsync(emoji);
+          var vity = ctx.Client.GetInteractivity();
+          var click = await vity.WaitForReactionAsync(x => x.User.Id == ctx.User.Id && x.Message.Id == msg.Id && x.Emoji == emoji);
+          if (click.TimedOut)
+            return;
 
-          return new Response(embed);
-        });
-
-      await ctx.ResponderAsync(Res);
+          var travel = new TravelCommand();
+          travel.Data = Data;
+          travel.Res = Res;
+          await travel.TravelCommandAsync(ctx, room.Name);
+        }
     }
   }
 }

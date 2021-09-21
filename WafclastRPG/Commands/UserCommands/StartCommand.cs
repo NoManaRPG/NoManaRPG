@@ -1,10 +1,10 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using MongoDB.Bson;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
-using WafclastRPG.Entities;
-using WafclastRPG.Entities.Characters;
+using WafclastRPG.Entities.Wafclast;
 using WafclastRPG.Extensions;
 
 namespace WafclastRPG.Commands.UserCommands {
@@ -12,6 +12,7 @@ namespace WafclastRPG.Commands.UserCommands {
   public class StartCommand : BaseCommandModule {
     public Response Res { private get; set; }
     public DataBase Data { private get; set; }
+    public Config Config { private get; set; }
 
     [Command("comecar")]
     [Aliases("start")]
@@ -27,17 +28,17 @@ namespace WafclastRPG.Commands.UserCommands {
           character = character.ToLower();
           switch (character) {
             case "guerreiro":
-              player = new WafclastPlayer(ctx.User.Id, new WafclastWarrior());
+              player = new Player(ctx.User.Id, new CharacterWarrior());
               break;
             case "feitiçeira":
             case "feiticeira":
-              player = new WafclastPlayer(ctx.User.Id, new WafclastMage());
+              player = new Player(ctx.User.Id, new CharacterMage());
               break;
             default:
               return new Response("você esqueceu de informar a classe do seu personagem! **Guerreiro ou Feiticeira.**");
           }
-
-          player.Character.Region = await session.FindRegionAsync(1);
+          ulong.TryParse(Config.FirstRoom, out ulong result);
+          player.Character.Room = await session.FindRoomAsync(result);
 
           await session.ReplaceAsync(player);
           return new Response("personagem criado com sucesso! Obrigado por escolher Wafclast! Para continuar, digite `w.olhar`");

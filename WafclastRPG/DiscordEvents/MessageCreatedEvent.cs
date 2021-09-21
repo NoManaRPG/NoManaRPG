@@ -8,9 +8,10 @@ using WafclastRPG.DataBases;
 
 namespace WafclastRPG.DiscordEvents {
   public class MessageCreatedEvent {
-    public static async Task Event(DiscordClient c, MessageCreateEventArgs e, CommandsNextExtension commandsNext) {
+    public static Task Event(DiscordClient c, MessageCreateEventArgs e, CommandsNextExtension commandsNext) {
       if (e.Author.IsBot)
-        return;
+        return Task.CompletedTask;
+      return Task.CompletedTask;
 
       //using (var session = await database.StartDatabaseSessionAsync())
       //    await session.Session.WithTransactionAsync(async (s, ct) =>

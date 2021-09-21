@@ -2,8 +2,8 @@
 using WafclastRPG.DataBases;
 using static WafclastRPG.Mathematics;
 
-namespace WafclastRPG.Entities.Characters {
-  public class WafclastWarrior : WafclastBaseCharacter {
+namespace WafclastRPG.Entities.Wafclast {
+  public class CharacterWarrior : BaseCharacter {
     public override string EmojiAttack { get; set; } = Emojis.Adaga;
     public override WafclastAttributes Attributes { get; set; } = new WafclastAttributes();
 

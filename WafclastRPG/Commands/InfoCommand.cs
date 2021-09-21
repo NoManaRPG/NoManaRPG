@@ -24,6 +24,8 @@ namespace WafclastRPG.Commands {
       var criador = ctx.Client.CurrentApplication.Owners.First();
       var str = new StringBuilder();
       str.AppendLine("Servidor Oficial".Url("https://discord.gg/MAR4NFq"));
+      str.AppendLine("Servidor Parceiro".Url("https://discord.gg/7x5YkZY"));
+      str.AppendLine();
       str.AppendLine("Vote no bot".Url("https://top.gg/bot/732598033962762402"));
       str.AppendLine("Proximos updates".Url("https://github.com/WafclastRPG/WafclastRPG/issues"));
       str.AppendLine("Github".Url("https://github.com/WafclastRPG/WafclastRPG"));

@@ -1,6 +1,8 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using System;
 using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
@@ -47,7 +49,8 @@ namespace WafclastRPG.Commands.UserCommands {
           //if (player.Character.EnergyShield.MaxValue != 0)
           //  embed.AddField("Escudo mágico".Titulo(), $"{player.Character.EnergyShield.CurrentValue:N2} / {player.Character.EnergyShield.MaxValue:N2}", true);
 
-          embed.AddField("Local Atual", $":kaaba: {character.Region.Name} {character.Region.Id}");
+
+          embed.AddField("Localização", $"{Emojis.Mapa} {Formatter.MaskedUrl(character.Room.Name, new Uri(character.Room.Invite))}");
 
           return new Response(embed);
         });

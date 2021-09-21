@@ -4,22 +4,21 @@ using System;
 using System.Globalization;
 using System.Threading.Tasks;
 using WafclastRPG.DataBases;
-using WafclastRPG.Entities.Characters;
 
-namespace WafclastRPG.Entities {
+namespace WafclastRPG.Entities.Wafclast {
   [BsonIgnoreExtraElements]
-  public class WafclastPlayer {
+  public class Player {
     [BsonId]
     public ulong Id { get; private set; }
     public DateTime DateAccountCreation { get; private set; }
-    public WafclastBaseCharacter Character { get; private set; }
+    public BaseCharacter Character { get; private set; }
 
     public ulong MonsterKills { get; set; }
     public ulong Deaths { get; set; }
 
     public string Language { get; set; } = "pt-BR";
 
-    public WafclastPlayer(ulong id, WafclastBaseCharacter character) {
+    public Player(ulong id, BaseCharacter character) {
       this.Id = id;
       this.Character = character;
       DateAccountCreation = DateTime.UtcNow;

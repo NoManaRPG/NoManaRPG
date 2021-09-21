@@ -6,9 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.DataBases;
-using WafclastRPG.Entities.Characters;
+using WafclastRPG.Entities.Wafclast;
 using WafclastRPG.Extensions;
-using WafclastRPG.Properties;
 using static WafclastRPG.Mathematics;
 
 namespace WafclastRPG.Commands.UserCommands.CombatCommands {
@@ -27,7 +26,7 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
           var player = await session.FindPlayerAsync(ctx);
 
           var character = player.Character;
-          var monster = player.Character.Region.Monster;
+          var monster = player.Character.Room.Monster;
 
           if (monster == null)
             return new Response($"você não está visualizando nenhum monstro para atacar!");
@@ -42,7 +41,7 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
 
           //Combat
 
-          var attacking = CalculateNextAttack(character);
+          var attacking = RoomAttackOrder.CalculateNextAttack(character);
 
           if (attacking.isMonster) {
             if (CalculateHitChance(monster.PrecisionPoints, character.EvasionPoints)) {
@@ -71,7 +70,7 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
           if (attacking.isPlayer) {
             if (CalculateHitChance(character.PrecisionPoints, monster.EvasionPoints)) {
 
-              damage = monster.ReceiveDamage(rd.Sortear(character.Damage));
+              damage = monster.TakeDamage(rd.Sortear(character.Damage));
               str.AppendLine($"{monster.Mention} recebeu {damage:N2} {character.EmojiAttack} de dano!");
 
 
@@ -101,28 +100,6 @@ namespace WafclastRPG.Commands.UserCommands.CombatCommands {
           return new Response(embed);
         });
       await ctx.ResponderAsync(Res);
-    }
-
-    public static (bool isPlayer, bool isMonster) CalculateNextAttack(WafclastBaseCharacter character) {
-      bool isPlayerAttacking = false;
-      bool isMonsterAttacking = false;
-
-      while (isPlayerAttacking == false || isMonsterAttacking == false) {
-        character.Region.PlayerAttackSpeedPoints += character.AttackSpeed;
-        character.Region.MonsterAttackSpeedPoints += character.Region.Monster.AttackSpeed;
-
-        if (character.Region.PlayerAttackSpeedPoints / character.Region.TotalAttackSpeedPoints >= 1) {
-          character.Region.PlayerAttackSpeedPoints -= character.Region.TotalAttackSpeedPoints;
-          isPlayerAttacking = true;
-        }
-
-        if (character.Region.MonsterAttackSpeedPoints / character.Region.TotalAttackSpeedPoints >= 1) {
-          character.Region.MonsterAttackSpeedPoints -= character.Region.TotalAttackSpeedPoints;
-          isMonsterAttacking = true;
-        }
-      }
-
-      return (isPlayerAttacking, isMonsterAttacking);
     }
   }
 }
