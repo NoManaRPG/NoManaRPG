@@ -53,7 +53,7 @@ namespace WafclastRPG.Commands {
     [Aliases("h", "?", "help")]
     [Description("Explica como usar um comando, suas abreviações e exemplos.")]
     [Usage("ajuda [ comando ]")]
-    [Cooldown(1, 15, CooldownBucketType.User)]
+    [Cooldown(1, 5, CooldownBucketType.User)]
     public async Task HelpCommanAsync(CommandContext ctx, params string[] comando) {
       await ctx.TriggerTypingAsync();
       if (comando.Length == 0)
@@ -63,11 +63,11 @@ namespace WafclastRPG.Commands {
     }
   }
 
-  public class IComandoAjuda : BaseHelpFormatter {
+  public class IHelpCommand : BaseHelpFormatter {
     DiscordEmbedBuilder embed;
     string prefix;
 
-    public IComandoAjuda(CommandContext ctx) : base(ctx) {
+    public IHelpCommand(CommandContext ctx) : base(ctx) {
       var defaultPrefix = ctx.Services.GetService<Config>().PrefixRelease;
       var banco = ctx.Services.GetService<DataBase>();
       prefix = banco.GetServerPrefix(ctx.Guild.Id, defaultPrefix);
@@ -83,7 +83,7 @@ namespace WafclastRPG.Commands {
       var usage = command.CustomAttributes.Where(x => x.GetType() == typeof(UsageAttribute)).FirstOrDefault();
 
       if (usage != null)
-        embed.AddField(Formatter.Bold(Formatter.Italic("Usos")), Formatter.InlineCode($"{prefix}{(usage as UsageAttribute).Command}"), true);
+        embed.AddField(Formatter.Bold(Formatter.Italic("Como usar")), Formatter.InlineCode($"{prefix}{(usage as UsageAttribute).Command}"), true);
 
       StringBuilder strAliases = new StringBuilder();
       foreach (var al in command.Aliases)

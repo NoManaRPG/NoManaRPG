@@ -49,6 +49,7 @@ namespace WafclastRPG {
         PaginationDeletion = PaginationDeletion.KeepEmojis,
       });
 
+      CommandsNext.SetHelpFormatter<IHelpCommand>();
       CommandsNext.RegisterCommands(Assembly.GetExecutingAssembly());
     }
   }
