@@ -6,7 +6,8 @@ namespace WafclastRPG.Entities.Wafclast {
     public double Y { get; set; }
 
     public Vector() { }
-    public Vector(int x, int y) {
+    public Vector(int x, int y) : this((double) x, (double) y) { }
+    public Vector(double x, double y) {
       X = x;
       Y = y;
     }

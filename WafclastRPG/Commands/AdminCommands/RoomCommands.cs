@@ -83,5 +83,26 @@ namespace WafclastRPG.Commands.AdminCommands {
         });
       await ctx.ResponderAsync(Res);
     }
+
+    [Command("setcoordinates")]
+    [Description("Permite adicionar uma coordenada ao quarto atual.")]
+    [Usage("setcoordinates < X > < Y >")]
+    public async Task SetRoomCoordinatesCommandAsync(CommandContext ctx, double x, double y) {
+      using (var session = await Data.StartDatabaseSessionAsync())
+        Res = await session.WithTransactionAsync(async (s, ct) => {
+          await ctx.TriggerTypingAsync();
+
+          Room room = null;
+          room = await session.FindRoomAsync(ctx.Channel.Id);
+          if (room == null)
+            return new Response("este lugar não é um quarto.");
+
+          room.Location = new Vector(x, y);
+          await session.ReplaceAsync(room);
+
+          return new Response($"você alterou as coordenadas de: **[{room.Name}]!**");
+        });
+      await ctx.ResponderAsync(Res);
+    }
   }
 }
