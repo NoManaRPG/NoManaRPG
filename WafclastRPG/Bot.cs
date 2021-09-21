@@ -4,6 +4,7 @@ using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.Interactivity.Extensions;
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using WafclastRPG.Commands;
 using WafclastRPG.Commands.AdminCommands;
@@ -48,18 +49,7 @@ namespace WafclastRPG {
         PaginationDeletion = PaginationDeletion.KeepEmojis,
       });
 
-      CommandsNext.RegisterCommands<HelpCommand>();
-      CommandsNext.RegisterCommands<InfoCommand>();
-      CommandsNext.RegisterCommands<DatabaseCommands>();
-      CommandsNext.RegisterCommands<AdminCommand>();
-      CommandsNext.RegisterCommands<BasicAttackCommand>();
-      CommandsNext.RegisterCommands<StartCommand>();
-      CommandsNext.RegisterCommands<ExploreCommand>();
-      CommandsNext.RegisterCommands<LookAroundCommand>();
-      CommandsNext.RegisterCommands<AllocateAttributesCommand>();
-      CommandsNext.RegisterCommands<StatusCommand>();
-      CommandsNext.RegisterCommands<TravelCommand>();
-      CommandsNext.RegisterCommands<MapCommand>();
+      CommandsNext.RegisterCommands(Assembly.GetExecutingAssembly());
     }
   }
 }
