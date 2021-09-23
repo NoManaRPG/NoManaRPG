@@ -6,6 +6,9 @@ A RPG game for Discord.
 <a href="https://apoia.se/wafclastrpg"><img src="https://img.shields.io/badge/apoia.se-WafClastRPG-yellow.svg"></a>
 <a href="https://discord.gg/MAR4NFq"><img src="https://discordapp.com/api/guilds/732102804654522470/widget.png"></a>
 
+# Rewrite
+This project is currently going under a rewrite. If you want to do any changes or PRing, please do so on the new NewSystem branch. The master branch is basically dead until NewSystem gets merged over.
+
 ## 🤔 How can I add her?
 
 If you want to use WafClastRPG on your server, you can add our public instance by [clicking here](https://discord.com/oauth2/authorize?client_id=732598033962762402&permissions=388160&scope=bot)! We recommend using the public instance, after all, more than 40 guilds already use, trust and love her, so why not try it out?
