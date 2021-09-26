@@ -86,7 +86,7 @@ namespace WafclastRPG {
       var prefix = await MongoDbContext.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixDebug);
       var pfixLocation = msg.GetStringPrefixLength(prefix);
 #else
-            var prefix = await Database.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixRelease);
+            var prefix = await MongoDbContext.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixRelease);
             var pfixLocation = msg.GetStringPrefixLength(prefix);
             if (pfixLocation == -1)
                 pfixLocation = msg.GetStringPrefixLength(ConfigFile.PrefixRelease.ToLower());
