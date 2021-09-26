@@ -4,34 +4,35 @@ using DSharpPlus.Entities;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WafclastRPG.DataBases;
 using WafclastRPG.Entities.Itens;
 using WafclastRPG.Extensions;
 using WafclastRPG.Entities.Wafclast;
 using System;
-using WafclastRPG.Properties;
-using System.Text;
-using WafclastRPG.Enums;
+using WafclastRPG.Context;
 
 namespace WafclastRPG.Commands.AdminCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
   public class DatabaseCommands : BaseCommandModule {
-    public DataBase Data { private get; set; }
-    public Response Res { private get; set; }
-    public TimeSpan timeout = TimeSpan.FromMinutes(2);
+    private Response _res;
+    private readonly MongoDbContext _mongoDbContext;
+    public TimeSpan _timeout = TimeSpan.FromMinutes(2);
+
+    public DatabaseCommands(MongoDbContext mongoDbContext) {
+      _mongoDbContext = mongoDbContext;
+    }
 
     [Command("atualizar-jogadores")]
     [RequireOwner]
     public async Task AtualizarAsync(CommandContext ctx) {
       FilterDefinition<Player> filter = FilterDefinition<Player>.Empty;
       FindOptions<Player> options = new FindOptions<Player> { BatchSize = 8, NoCursorTimeout = false };
-      using (IAsyncCursor<Player> cursor = await Data.CollectionPlayers.FindAsync(filter, options))
+      using (IAsyncCursor<Player> cursor = await _mongoDbContext.Players.FindAsync(filter, options))
         while (await cursor.MoveNextAsync()) {
           IEnumerable<Player> list = cursor.Current;
           foreach (Player item in list) {
 
 
-            await Data.CollectionPlayers.ReplaceOneAsync(x => x.Id == item.Id, item);
+            await _mongoDbContext.Players.ReplaceOneAsync(x => x.Id == item.Id, item);
           }
         }
 
@@ -43,13 +44,13 @@ namespace WafclastRPG.Commands.AdminCommands {
     public async Task AtualizarItensAsync(CommandContext ctx) {
       FilterDefinition<WafclastBaseItem> filter = FilterDefinition<WafclastBaseItem>.Empty;
       FindOptions<WafclastBaseItem> options = new FindOptions<WafclastBaseItem> { BatchSize = 8, NoCursorTimeout = false };
-      using (IAsyncCursor<WafclastBaseItem> cursor = await Data.CollectionItems.FindAsync(filter, options))
+      using (IAsyncCursor<WafclastBaseItem> cursor = await _mongoDbContext.Items.FindAsync(filter, options))
         while (await cursor.MoveNextAsync()) {
           IEnumerable<WafclastBaseItem> list = cursor.Current;
           foreach (WafclastBaseItem item in list) {
 
 
-            await Data.CollectionItems.ReplaceOneAsync(x => x.Id == item.Id, item);
+            await _mongoDbContext.Items.ReplaceOneAsync(x => x.Id == item.Id, item);
           }
         }
       await ctx.RespondAsync("Banco atualizado!");
@@ -94,35 +95,35 @@ namespace WafclastRPG.Commands.AdminCommands {
       await ctx.RespondAsync($"Mapa salvo: {config.MapUrl}");
     }
 
-    [Command("aviajar")]
-    [Aliases("av", "atravel")]
-    [Hidden]
-    [RequireOwner]
-    public async Task AdminTravelCommandAsync(CommandContext ctx, [RemainingText] string roomName) {
-      using (var session = await Data.StartDatabaseSessionAsync())
-        Res = await session.WithTransactionAsync(async (s, ct) => {
-          var player = await session.FindPlayerAsync(ctx);
+    //[Command("aviajar")]
+    //[Aliases("av", "atravel")]
+    //[Hidden]
+    //[RequireOwner]
+    //public async Task AdminTravelCommandAsync(CommandContext ctx, [RemainingText] string roomName) {
+    //  using (var session = await Data.StartDatabaseSessionAsync())
+    //    Res = await session.WithTransactionAsync(async (s, ct) => {
+    //      var player = await session.FindPlayerAsync(ctx);
 
-          var character = player.Character;
-          Room room = null;
+    //      var character = player.Character;
+    //      Room room = null;
 
-          if (string.IsNullOrWhiteSpace(roomName)) {
-            room = await session.FindRoomAsync(ctx.Channel.Id);
-            if (room == null)
-              return new Response("você foi para algum lugar, talvez alguns passos a frente.");
-          } else {
-            room = await session.FindRoomAsync(roomName);
-            if (room == null)
-              return new Response("você tenta procurar no mapa o lugar, mas não encontra! Como você chegaria em um lugar em que você não conhece?!");
-          }
+    //      if (string.IsNullOrWhiteSpace(roomName)) {
+    //        room = await session.FindRoomAsync(ctx.Channel.Id);
+    //        if (room == null)
+    //          return new Response("você foi para algum lugar, talvez alguns passos a frente.");
+    //      } else {
+    //        room = await session.FindRoomAsync(roomName);
+    //        if (room == null)
+    //          return new Response("você tenta procurar no mapa o lugar, mas não encontra! Como você chegaria em um lugar em que você não conhece?!");
+    //      }
 
-          room.Monster = null;
-          character.Room = room;
-          await player.SaveAsync();
+    //      room.Monster = null;
+    //      character.Room = room;
+    //      await player.SaveAsync();
 
-          return new Response($"você chegou em: **[{room.Name}]!**");
-        });
-      await ctx.ResponderAsync(Res);
-    }
+    //      return new Response($"você chegou em: **[{room.Name}]!**");
+    //    });
+    //  await ctx.ResponderAsync(Res);
+    //}
   }
 }

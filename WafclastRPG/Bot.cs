@@ -1,27 +1,15 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
-using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.Interactivity.Extensions;
-using Emzi0767.Utilities;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using WafclastRPG.Commands;
-using WafclastRPG.Commands.AdminCommands;
-using WafclastRPG.Commands.UserCommands;
-using WafclastRPG.Commands.UserCommands.CombatCommands;
-using WafclastRPG.DataBases;
 using WafclastRPG.DiscordEvents;
 
 namespace WafclastRPG {
-  public class BotInfo {
-    public int Membros;
-    public int Guildas;
-    public DateTime TempoAtivo { get; set; } = DateTime.Now;
-  }
-
   public class Bot {
     public DiscordClient Client { get; private set; }
     public CommandsNextExtension CommandsNext { get; private set; }
@@ -31,17 +19,13 @@ namespace WafclastRPG {
 
     public Task ConectarAsync() => Client.ConnectAsync();
 
-    public void ModuleCommand(CommandsNextConfiguration ccfg, AsyncEventHandler<DiscordClient, MessageCreateEventArgs> eventoo) {
+    public void ModuleCommand(CommandsNextConfiguration ccfg) {
       CommandsNext = Client.UseCommandsNext(ccfg);
       CommandsNext.CommandExecuted += CommandExecutedEvent.Event;
       CommandsNext.CommandErrored += CommandErroredEvent.EventAsync;
       Client.Ready += ReadyEvent.Event;
 
-      var botInfo = (BotInfo) CommandsNext.Services.GetService(typeof(BotInfo));
-      Client.GuildAvailable += (c, e) => GuildAvailableEvent.Event(c, e, botInfo);
-      Client.GuildMemberAdded += (c, e) => GuildMemberAddedEvent.Event(c, e, botInfo);
-      Client.GuildMemberRemoved += (c, e) => GuildMemberRemovedEvent.Event(c, e, botInfo);
-      Client.MessageCreated += eventoo;
+      Client.GuildAvailable += (c, e) => GuildAvailableEvent.Event(c, e);
       Client.ClientErrored += ClientErroredEvent.Event;
 
       Client.UseInteractivity(new InteractivityConfiguration {

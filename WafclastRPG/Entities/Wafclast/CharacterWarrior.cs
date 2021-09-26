@@ -1,6 +1,4 @@
-﻿using System;
-using WafclastRPG.DataBases;
-using static WafclastRPG.Mathematics;
+﻿using static WafclastRPG.Mathematics;
 
 namespace WafclastRPG.Entities.Wafclast {
   public class CharacterWarrior : BaseCharacter {

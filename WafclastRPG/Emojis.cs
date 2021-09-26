@@ -1,4 +1,4 @@
-﻿namespace WafclastRPG.DataBases {
+﻿namespace WafclastRPG {
   public static class Emojis {
     public const string CrossBone = ":skull_crossbones:";
     public const string Up = ":up:";

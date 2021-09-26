@@ -5,15 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using DSharpPlus.Entities;
-using WafclastRPG.DataBases;
-using Emzi0767.Utilities;
-using DSharpPlus.EventArgs;
-using WafclastRPG.DiscordEvents;
+using WafclastRPG.Repositories;
+using WafclastRPG.Repositories.Interfaces;
+using WafclastRPG.Context;
+using WafclastRPG.Entities;
 
 namespace WafclastRPG {
   public class Program {
     public Config ConfigFile { get; private set; }
-    public DataBase Database { get; private set; } = new DataBase();
+    public MongoDbContext MongoDbContext { get; private set; } = new MongoDbContext();
+    public IInteractivityRepository Blocked { get; private set; }
 
     static void Main() => new Program().RodarBotAsync().GetAwaiter().GetResult();
 
@@ -48,16 +49,17 @@ namespace WafclastRPG {
         MinimumLogLevel = logLevel,
       });
 
-      AsyncEventHandler<DiscordClient, MessageCreateEventArgs> asyncEvent;
-      MessageCreatedEvent ev = new MessageCreatedEvent(out asyncEvent);
-
       var services = new ServiceCollection()
-          .AddSingleton(Database)
           .AddSingleton(ConfigFile)
-          .AddTransient(x => ev.MessageCreateEvent)
-          .AddSingleton<BotInfo>()
-          .AddTransient<Response>()
+          .AddSingleton(MongoDbContext)
+          .AddSingleton<Interactivity>()
+          .AddTransient<IPlayerRepository, PlayerRepository>()
+          .AddTransient<IItemRepository, ItemRepository>()
+          .AddTransient<IRoomRepository, RoomRepository>()
+          .AddTransient<IInteractivityRepository, InteractivityRepository>()
           .BuildServiceProvider();
+
+      Blocked = services.GetService<IInteractivityRepository>();
 
       bot.ModuleCommand(new CommandsNextConfiguration {
         PrefixResolver = ResolvePrefixAsync,
@@ -67,7 +69,7 @@ namespace WafclastRPG {
         EnableMentionPrefix = true,
         IgnoreExtraArguments = true,
         Services = services,
-      }, asyncEvent);
+      });
 
       await bot.ConectarAsync();
       await Task.Delay(-1);
@@ -78,10 +80,10 @@ namespace WafclastRPG {
       var gld = msg.Channel.Guild;
       if (gld == null)
         return await Task.FromResult(-1);
-      if (Database.IsExecutingInteractivity(msg.Author.Id))
+      if (Blocked.IsBlocked(msg.Author.Id))
         return await Task.FromResult(-1);
 #if DEBUG
-      var prefix = await Database.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixDebug);
+      var prefix = await MongoDbContext.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixDebug);
       var pfixLocation = msg.GetStringPrefixLength(prefix);
 #else
             var prefix = await Database.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixRelease);

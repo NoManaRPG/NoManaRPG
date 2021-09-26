@@ -1,7 +1,6 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
-using DSharpPlus.Entities;
 using DSharpPlus.Exceptions;
 using MongoDB.Driver;
 using System;
@@ -9,12 +8,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using WafclastRPG.Extensions;
-using System.IO;
-using DSharpPlus;
-using System.Text;
-using WafclastRPG.DataBases;
-using WafclastRPG.Commands.AdminCommands;
 using WafclastRPG.Exceptions;
+using Microsoft.Extensions.DependencyInjection;
+using WafclastRPG.Repositories.Interfaces;
 
 namespace WafclastRPG.DiscordEvents {
   public static class CommandErroredEvent {
@@ -81,8 +77,8 @@ namespace WafclastRPG.DiscordEvents {
           e.Context.Client.Logger.LogDebug(new EventId(601, "Command Error"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
           break;
       }
-      var banco = (DataBase) ctx.Services.GetService(typeof(DataBase));
-      banco.StopExecutingInteractivity(ctx.User.Id);
+      var mongoContext = ctx.Services.GetService<IInteractivityRepository>();
+      mongoContext.Unblock(ctx.User.Id);
     }
   }
 }

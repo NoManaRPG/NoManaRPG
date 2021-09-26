@@ -6,23 +6,29 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
-using WafclastRPG.DataBases;
+using WafclastRPG.Entities;
 using WafclastRPG.Extensions;
+using WafclastRPG.Repositories.Interfaces;
 
 namespace WafclastRPG.Commands.UserCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
   public class StatusCommand : BaseCommandModule {
-    public Response Res { private get; set; }
-    public DataBase Data { private get; set; }
+    private Response _res;
+    private readonly IPlayerRepository _playerRepository;
+
+    public StatusCommand(IPlayerRepository playerRepository) {
+      _playerRepository = playerRepository;
+    }
 
     [Command("status")]
     [Description("Permite visualizar dados do seu personagem.")]
     [Usage("status")]
     [Cooldown(1, 5, CooldownBucketType.User)]
     public async Task StatusCommandAsync(CommandContext ctx) {
-      using (var session = await Data.StartDatabaseSessionAsync())
-        Res = await session.WithTransactionAsync(async (s, ct) => {
-          var player = await session.FindPlayerAsync(ctx);
+      using (var sessionHandler = (SessionHandler) await _playerRepository.StartSession())
+        _res = await sessionHandler.WithTransactionAsync(async (s, ct) => {
+          var player = await _playerRepository.FindPlayerAsync(ctx);
+
           var character = player.Character;
 
           var str = new StringBuilder();
@@ -54,7 +60,7 @@ namespace WafclastRPG.Commands.UserCommands {
 
           return new Response(embed);
         });
-      await ctx.ResponderAsync(Res);
+      await ctx.ResponderAsync(_res);
     }
   }
 }

@@ -1,18 +1,13 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using MongoDB.Driver;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using WafclastRPG.DataBases;
-using WafclastRPG.Entities.Itens;
 using WafclastRPG.Extensions;
 using WafclastRPG.Entities.Wafclast;
 using System;
-using WafclastRPG.Properties;
 using System.Text;
-using WafclastRPG.Enums;
 using WafclastRPG.Attributes;
+using WafclastRPG.Entities;
+using WafclastRPG.Repositories.Interfaces;
 
 namespace WafclastRPG.Commands.AdminCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
@@ -21,88 +16,92 @@ namespace WafclastRPG.Commands.AdminCommands {
   [Hidden]
   [RequireOwner]
   public class RoomCommands : BaseCommandModule {
-    public DataBase Data { private get; set; }
-    public Response Res { private get; set; }
+    private Response _res;
+    private readonly IPlayerRepository _playerRepository;
+    private readonly IRoomRepository _roomRepository;
+    private readonly IInteractivityRepository _interactivityRepository;
+
+    public RoomCommands(IPlayerRepository playerRepository, IRoomRepository roomRepository, IInteractivityRepository interactivityRepository) {
+      _playerRepository = playerRepository;
+      _roomRepository = roomRepository;
+      _interactivityRepository = interactivityRepository;
+    }
     public TimeSpan timeout = TimeSpan.FromMinutes(2);
 
     [Command("new")]
     [Description("Permite criar um quarto no canal de texto atual.")]
     public async Task NewRoomCommandAsync(CommandContext ctx) {
-      using (var session = await Data.StartDatabaseSessionAsync())
-        Res = await session.WithTransactionAsync(async (s, ct) => {
 
-          var name = await ctx.WaitForStringAsync("Informe o Nome do Quarto.", Data, timeout);
-          var regionName = await ctx.WaitForStringAsync("Informe o Nome da Região.", Data, timeout);
-          var description = await ctx.WaitForStringAsync("Informe uma descrição do quarto.", Data, timeout);
-          var vectorX = await ctx.WaitForDoubleAsync("Informe a posição X da localização.", Data, timeout);
-          var vectorY = await ctx.WaitForDoubleAsync("Informe a posição Y da localização.", Data, timeout);
 
-          var invite = await ctx.Channel.CreateInviteAsync(0, 0, false, false, "New Room Created");
+      var interac = new Interactivity(_interactivityRepository, ctx);
 
-          var room = new Room() {
-            Id = ctx.Channel.Id,
-            Name = name.Value,
-            Region = regionName.Value,
-            Description = description.Value,
-            Invite = invite.ToString(),
-            Location = new Vector() { X = vectorX.Value, Y = vectorY.Value }
-          };
+      var asdname = await interac.WaitForStringAsync("Informe o Nome do Quarto.");
 
-          await session.ReplaceAsync(room);
+      var name = await interac.WaitForStringAsync("Informe o Nome do Quarto.");
+      var regionName = await interac.WaitForStringAsync("Informe o Nome da Região.");
+      var description = await interac.WaitForStringAsync("Informe uma descrição do quarto.");
+      var vectorX = await interac.WaitForDoubleAsync("Informe a posição X da localização.");
+      var vectorY = await interac.WaitForDoubleAsync("Informe a posição Y da localização.");
 
-          var str = new StringBuilder();
-          str.AppendLine("**Quarto criado!**");
-          str.AppendLine($"Id: `{room.Id}`");
-          str.AppendLine($"Nome: {name.Value}");
-          str.AppendLine($"Região: {regionName.Value}");
-          str.AppendLine($"Descrição: {description.Value}");
-          str.AppendLine($"Posição: {vectorX.Value}/{vectorY.Value}");
+      var invite = await ctx.Channel.CreateInviteAsync(0, 0, false, false, "New Room Created");
 
-          return new Response(str.ToString());
-        });
-      await ctx.ResponderAsync(Res);
+      var room = new Room() {
+        Id = ctx.Channel.Id,
+        Name = name.Value,
+        Region = regionName.Value,
+        Description = description.Value,
+        Invite = invite.ToString(),
+        Location = new Vector() { X = vectorX.Value, Y = vectorY.Value }
+      };
+
+      await _roomRepository.SaveRoomAsync(room);
+
+      var str = new StringBuilder();
+      str.AppendLine("**Quarto criado!**");
+      str.AppendLine($"Id: `{room.Id}`");
+      str.AppendLine($"Nome: {name.Value}");
+      str.AppendLine($"Região: {regionName.Value}");
+      str.AppendLine($"Descrição: {description.Value}");
+      str.AppendLine($"Posição: {vectorX.Value}/{vectorY.Value}");
+
+      await ctx.ResponderAsync(str.ToString());
     }
 
     [Command("setdescription")]
     [Description("Permite adicionar uma descrição ao quarto atual.")]
     [Usage("setdescription < description >")]
     public async Task SetRoomDescriptionCommandAsync(CommandContext ctx, [RemainingText] string description) {
-      using (var session = await Data.StartDatabaseSessionAsync())
-        Res = await session.WithTransactionAsync(async (s, ct) => {
-          await ctx.TriggerTypingAsync();
 
-          Room room = null;
-          room = await session.FindRoomAsync(ctx.Channel.Id);
-          if (room == null)
-            return new Response("este lugar não é um quarto.");
+      await ctx.TriggerTypingAsync();
 
-          room.Description = description;
-          await session.ReplaceAsync(room);
+      Room room = null;
+      room = await _roomRepository.FindRoomOrDefaultAsync(ctx.Channel.Id);
+      if (room == null)
+        await ctx.ResponderAsync("este lugar não é um quarto.");
 
-          return new Response($"você alterou a descrição de: **[{room.Name}]!**");
-        });
-      await ctx.ResponderAsync(Res);
+      room.Description = description;
+      await _roomRepository.SaveRoomAsync(room);
+
+      await ctx.ResponderAsync($"você alterou a descrição de: **[{room.Name}]!**");
     }
 
     [Command("setcoordinates")]
     [Description("Permite adicionar uma coordenada ao quarto atual.")]
     [Usage("setcoordinates < X > < Y >")]
     public async Task SetRoomCoordinatesCommandAsync(CommandContext ctx, double x, double y) {
-      using (var session = await Data.StartDatabaseSessionAsync())
-        Res = await session.WithTransactionAsync(async (s, ct) => {
-          await ctx.TriggerTypingAsync();
 
-          Room room = null;
-          room = await session.FindRoomAsync(ctx.Channel.Id);
-          if (room == null)
-            return new Response("este lugar não é um quarto.");
+      await ctx.TriggerTypingAsync();
 
-          room.Location = new Vector(x, y);
-          await session.ReplaceAsync(room);
+      Room room = null;
+      room = await _roomRepository.FindRoomOrDefaultAsync(ctx.Channel.Id);
+      if (room == null)
+        await ctx.ResponderAsync("este lugar não é um quarto.");
 
-          return new Response($"você alterou as coordenadas de: **[{room.Name}]!**");
-        });
-      await ctx.ResponderAsync(Res);
+      room.Location = new Vector(x, y);
+      await _roomRepository.SaveRoomAsync(room);
+
+
+      await ctx.ResponderAsync($"você alterou as coordenadas de: **[{room.Name}]!**");
     }
   }
 }

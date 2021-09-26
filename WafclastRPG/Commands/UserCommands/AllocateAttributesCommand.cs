@@ -2,22 +2,27 @@
 using DSharpPlus.CommandsNext.Attributes;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
-using WafclastRPG.DataBases;
+using WafclastRPG.Entities;
 using WafclastRPG.Extensions;
+using WafclastRPG.Repositories.Interfaces;
 
 namespace WafclastRPG.Commands.UserCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
   public class AllocateAttributesCommand : BaseCommandModule {
-    public Response Res { private get; set; }
-    public DataBase Data { private get; set; }
+    private Response _res;
+    private readonly IPlayerRepository _playerRepository;
+
+    public AllocateAttributesCommand(IPlayerRepository playerRepository) {
+      _playerRepository = playerRepository;
+    }
 
     [Command("alocar")]
     [Description("Permite alocar pontos de atributos livres.")]
     [Usage("alocar <atributo> [ quantidade ] ")]
     public async Task AllocateAttributesCommandAsync(CommandContext ctx, int quantity = 1, [RemainingText] string attribute = "") {
-      using (var session = await Data.StartDatabaseSessionAsync())
-        Res = await session.WithTransactionAsync(async (s, ct) => {
-          var player = await session.FindPlayerAsync(ctx);
+      using (var sessionHandler = (SessionHandler) await _playerRepository.StartSession())
+        _res = await sessionHandler.WithTransactionAsync(async (s, ct) => {
+          var player = await _playerRepository.FindPlayerAsync(ctx);
 
           if (string.IsNullOrEmpty(attribute))
             return new Response($"você precisa informar um atributo.");
@@ -59,10 +64,10 @@ namespace WafclastRPG.Commands.UserCommands {
               return new Response("este atributo não existe!");
           }
 
-          await player.SaveAsync();
+          await _playerRepository.SavePlayerAsync(player);
           return new Response("pontos atribuidos!");
         });
-      await ctx.ResponderAsync(Res);
+      await ctx.ResponderAsync(_res);
     }
   }
 }

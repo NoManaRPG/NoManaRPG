@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using WafclastRPG.DataBases;
-using static WafclastRPG.Mathematics;
+﻿using static WafclastRPG.Mathematics;
 
 namespace WafclastRPG.Entities.Wafclast {
   public class CharacterMage : BaseCharacter {

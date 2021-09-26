@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using DSharpPlus;
 using System.Linq;
 using WafclastRPG.Attributes;
-using WafclastRPG.DataBases;
+using WafclastRPG.Context;
 
 namespace WafclastRPG.Commands {
   public class HelpCommand : BaseCommandModule {
@@ -68,7 +68,7 @@ namespace WafclastRPG.Commands {
 
     public IHelpCommand(CommandContext ctx) : base(ctx) {
       var defaultPrefix = ctx.Services.GetService<Config>().PrefixRelease;
-      var banco = ctx.Services.GetService<DataBase>();
+      var banco = ctx.Services.GetService<MongoDbContext>();
       prefix = banco.GetServerPrefix(ctx.Guild.Id, defaultPrefix);
       embed = new DiscordEmbedBuilder();
       embed.WithAuthor("Menu de ajuda do Wafclast", null, ctx.Client.CurrentUser.AvatarUrl);
