@@ -11,12 +11,21 @@ using WafclastRPG.Exceptions;
 using WafclastRPG.Extensions;
 using DSharpPlus.Interactivity.Extensions;
 using System;
+using WafclastRPG.DiscordEvents;
+using DSharpPlus.EventArgs;
 
 namespace WafclastRPG.Commands.UserCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
   public class LookAroundCommand : BaseCommandModule {
     public Response Res { private get; set; }
     public DataBase Data { private get; set; }
+    public Pessoa Teste { private get; set; }
+
+    public LookAroundCommand(Response res, DataBase data, Pessoa test) {
+      Res = res;
+      Data = data;
+      Teste = test;
+    }
 
     [Command("olhar")]
     [Aliases("look", "lookaround")]

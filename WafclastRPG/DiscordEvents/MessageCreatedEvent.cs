@@ -1,16 +1,26 @@
 ﻿using DSharpPlus;
-using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
-using System;
 using System.Threading.Tasks;
-using WafclastRPG.Extensions;
-using WafclastRPG.DataBases;
+using Emzi0767.Utilities;
 
 namespace WafclastRPG.DiscordEvents {
+
+  public class Pessoa {
+    public ulong Id { get; set; }
+  }
+
   public class MessageCreatedEvent {
-    public static Task Event(DiscordClient c, MessageCreateEventArgs e, CommandsNextExtension commandsNext) {
+
+    public Pessoa MessageCreateEvent { get; private set; } = new Pessoa();
+
+    public MessageCreatedEvent(out AsyncEventHandler<DiscordClient, MessageCreateEventArgs> asyncEvent) {
+      asyncEvent = Event;
+    }
+
+    public Task Event(DiscordClient c, MessageCreateEventArgs e) {
       if (e.Author.IsBot)
         return Task.CompletedTask;
+      MessageCreateEvent.Id = e.Author.Id;
       return Task.CompletedTask;
 
       //using (var session = await database.StartDatabaseSessionAsync())

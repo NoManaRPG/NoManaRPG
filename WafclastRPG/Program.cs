@@ -6,6 +6,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using DSharpPlus.Entities;
 using WafclastRPG.DataBases;
+using Emzi0767.Utilities;
+using DSharpPlus.EventArgs;
+using WafclastRPG.DiscordEvents;
 
 namespace WafclastRPG {
   public class Program {
@@ -45,9 +48,13 @@ namespace WafclastRPG {
         MinimumLogLevel = logLevel,
       });
 
+      AsyncEventHandler<DiscordClient, MessageCreateEventArgs> asyncEvent;
+      MessageCreatedEvent ev = new MessageCreatedEvent(out asyncEvent);
+
       var services = new ServiceCollection()
           .AddSingleton(Database)
           .AddSingleton(ConfigFile)
+          .AddTransient(x => ev.MessageCreateEvent)
           .AddSingleton<BotInfo>()
           .AddTransient<Response>()
           .BuildServiceProvider();
@@ -60,7 +67,7 @@ namespace WafclastRPG {
         EnableMentionPrefix = true,
         IgnoreExtraArguments = true,
         Services = services,
-      });
+      }, asyncEvent);
 
       await bot.ConectarAsync();
       await Task.Delay(-1);

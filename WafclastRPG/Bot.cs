@@ -1,8 +1,10 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.Interactivity.Extensions;
+using Emzi0767.Utilities;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -29,7 +31,7 @@ namespace WafclastRPG {
 
     public Task ConectarAsync() => Client.ConnectAsync();
 
-    public void ModuleCommand(CommandsNextConfiguration ccfg) {
+    public void ModuleCommand(CommandsNextConfiguration ccfg, AsyncEventHandler<DiscordClient, MessageCreateEventArgs> eventoo) {
       CommandsNext = Client.UseCommandsNext(ccfg);
       CommandsNext.CommandExecuted += CommandExecutedEvent.Event;
       CommandsNext.CommandErrored += CommandErroredEvent.EventAsync;
@@ -39,7 +41,7 @@ namespace WafclastRPG {
       Client.GuildAvailable += (c, e) => GuildAvailableEvent.Event(c, e, botInfo);
       Client.GuildMemberAdded += (c, e) => GuildMemberAddedEvent.Event(c, e, botInfo);
       Client.GuildMemberRemoved += (c, e) => GuildMemberRemovedEvent.Event(c, e, botInfo);
-      Client.MessageCreated += (c, e) => MessageCreatedEvent.Event(c, e, CommandsNext);
+      Client.MessageCreated += eventoo;
       Client.ClientErrored += ClientErroredEvent.Event;
 
       Client.UseInteractivity(new InteractivityConfiguration {

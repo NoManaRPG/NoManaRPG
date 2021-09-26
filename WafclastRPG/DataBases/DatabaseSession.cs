@@ -1,11 +1,13 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
+using DSharpPlus.EventArgs;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using WafclastRPG.DiscordEvents;
 using WafclastRPG.Entities;
 using WafclastRPG.Entities.Itens;
 using WafclastRPG.Entities.Wafclast;
@@ -87,6 +89,8 @@ namespace WafclastRPG.DataBases {
     public Response(DiscordEmbedBuilder embed) => Embed = embed;
 
     public Response(string message) => Message = message;
-    public Response() { }
+    public Response(Pessoa evento) {
+      Message = evento.Id.ToString();
+    }
   }
 }
