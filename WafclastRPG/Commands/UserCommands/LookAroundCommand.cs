@@ -110,7 +110,7 @@ namespace WafclastRPG.Commands.UserCommands {
 
           return new Response($"você chegou em: **[{room.Name}]!**");
         });
-      await ctx.ResponderAsync(_res);
+      await ctx.RespondAsync(_res);
     }
 
     [Command("mapa")]

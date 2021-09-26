@@ -10,7 +10,7 @@ namespace WafclastRPG.Extensions {
   public static class CommandContextExtension {
     public static Task<DiscordMessage> ResponderAsync(this CommandContext ctx, string mensagem)
         => ctx.RespondAsync($"{ctx.User.Mention}, {mensagem}");
-    public static async Task<DiscordMessage> ResponderAsync(this CommandContext ctx, Response response) {
+    public static async Task<DiscordMessage> RespondAsync(this CommandContext ctx, Response response) {
       if (response.Message != null)
         return await ctx.ResponderAsync(response.Message);
       else

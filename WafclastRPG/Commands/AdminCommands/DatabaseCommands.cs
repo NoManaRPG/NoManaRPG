@@ -13,7 +13,6 @@ using WafclastRPG.Context;
 namespace WafclastRPG.Commands.AdminCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
   public class DatabaseCommands : BaseCommandModule {
-    private Response _res;
     private readonly MongoDbContext _mongoDbContext;
     public TimeSpan _timeout = TimeSpan.FromMinutes(2);
 

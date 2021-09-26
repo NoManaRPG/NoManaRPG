@@ -1,5 +1,8 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace WafclastRPG.Entities {
 
@@ -24,6 +27,26 @@ namespace WafclastRPG.Entities {
       Perception = new WafclastAttribute(perception);
       Charisma = new WafclastAttribute(charisma);
     }
+
+    public IEnumerable<(WafclastAttribute Attribute, string Name)> GetAttributes() {
+      foreach (PropertyInfo propertyInfo in GetType().GetProperties()) {
+        yield return ((WafclastAttribute) propertyInfo.GetValue(this, null), TranslateAttribute(propertyInfo.Name));
+      }
+    }
+
+    private string TranslateAttribute(string name)
+#pragma warning disable CS8509 // A expressão switch não manipula todos os valores possíveis de seu tipo de entrada (não é exaustiva).
+      => name switch {
+#pragma warning restore CS8509 // A expressão switch não manipula todos os valores possíveis de seu tipo de entrada (não é exaustiva).
+        "Strength" => "Força",
+        "Constitution" => "Constituição",
+        "Dexterity" => "Destreza",
+        "Agility" => "Agilidade",
+        "Intelligence" => "Inteligencia",
+        "Willpower" => "Força de Vontade",
+        "Perception" => "Percepção",
+        "Charisma" => "Carisma",
+      };
   }
 
 
@@ -38,11 +61,17 @@ namespace WafclastRPG.Entities {
       Base = baseValue;
     }
 
+    public void IncrementBase(double value) => Base += value;
+
     public static double operator *(WafclastAttribute attribute, int value) => attribute.Current * Convert.ToDouble(value);
     public static double operator *(WafclastAttribute attribute, double value) => attribute.Current * value;
     public static double operator +(WafclastAttribute attribute, double value) => attribute.Current + value;
     public static double operator +(double value, WafclastAttribute attribute) => value + attribute.Current;
     public static double operator /(WafclastAttribute attribute, double value) => attribute.Current / value;
     public static double operator /(double value, WafclastAttribute attribute) => attribute.Current / value;
+
+    public override string ToString() {
+      return Current.ToString();
+    }
   }
 }

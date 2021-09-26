@@ -7,21 +7,21 @@ namespace WafclastRPG.Entities.Wafclast {
     public double MonsterAttackSpeedPoints { get; set; }
     public double TotalAttackSpeedPoints { get; set; }
 
-    public static (bool isPlayer, bool isMonster) CalculateNextAttack(BaseCharacter character) {
+    public (bool isPlayer, bool isMonster) CalculateNextAttack(double playerAttackSpeed, double monsterAttackSpeed) {
       bool isPlayerAttacking = false;
       bool isMonsterAttacking = false;
 
       while (isPlayerAttacking == false || isMonsterAttacking == false) {
-        character.Room.AttackOrder.PlayerAttackSpeedPoints += character.AttackSpeed;
-        character.Room.AttackOrder.MonsterAttackSpeedPoints += character.Room.Monster.AttackSpeed;
+        PlayerAttackSpeedPoints += playerAttackSpeed;
+        MonsterAttackSpeedPoints += monsterAttackSpeed;
 
-        if (character.Room.AttackOrder.PlayerAttackSpeedPoints / character.Room.AttackOrder.TotalAttackSpeedPoints >= 1) {
-          character.Room.AttackOrder.PlayerAttackSpeedPoints -= character.Room.AttackOrder.TotalAttackSpeedPoints;
+        if (PlayerAttackSpeedPoints / TotalAttackSpeedPoints >= 1) {
+          PlayerAttackSpeedPoints -= TotalAttackSpeedPoints;
           isPlayerAttacking = true;
         }
 
-        if (character.Room.AttackOrder.MonsterAttackSpeedPoints / character.Room.AttackOrder.TotalAttackSpeedPoints >= 1) {
-          character.Room.AttackOrder.MonsterAttackSpeedPoints -= character.Room.AttackOrder.TotalAttackSpeedPoints;
+        if (MonsterAttackSpeedPoints / TotalAttackSpeedPoints >= 1) {
+          MonsterAttackSpeedPoints -= TotalAttackSpeedPoints;
           isMonsterAttacking = true;
         }
       }

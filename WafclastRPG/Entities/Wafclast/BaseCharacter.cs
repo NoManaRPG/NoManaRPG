@@ -17,7 +17,7 @@ namespace WafclastRPG.Entities.Wafclast {
     /// <summary>
     /// Points to Allocate in Attributes after level up
     /// </summary>
-    public double AttributePoints { get; set; } = 5;
+    public int AttributePoints { get; set; } = 5;
 
     public WafclastStatePoints LifePoints { get; set; }
     public WafclastStatePoints ManaPoints { get; set; }
@@ -50,6 +50,9 @@ namespace WafclastRPG.Entities.Wafclast {
 
     public abstract double CalculateDamagePoints();
     public abstract void ResetCombatThings();
+
+    public (bool isPlayer, bool isMonster) NextAttack() 
+      => Room.AttackOrder.CalculateNextAttack(AttackSpeed, Room.Monster.AttackSpeed);
 
     public double ReceiveDamage(double valor) {
       LifePoints.Remove(valor);

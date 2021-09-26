@@ -38,13 +38,13 @@ namespace WafclastRPG.Commands {
       str.AppendLine("[Usuário]");
       str.Append("comecar, ");
       str.Append("olhar, ");
-      //str.Append("explorar, ");
+      str.Append("explorar, ");
       str.Append("ataque-basico, ");
       str.Append("status, ");
-      str.Append("inventario, ");
+      //str.Append("inventario, ");
+      //str.Append("examinar, ");
       str.Append("atributos, ");
       str.Append("atribuir, ");
-      //str.Append("examinar, ");
 
       await ctx.RespondAsync(Formatter.BlockCode(str.ToString(), "css"));
     }

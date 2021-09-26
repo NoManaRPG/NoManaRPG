@@ -50,7 +50,7 @@ namespace WafclastRPG.Commands.UserCommands {
           await _playerRepository.SavePlayerAsync(player);
           return new Response("personagem criado com sucesso! Obrigado por escolher Wafclast! Para continuar, digite `w.olhar`");
         });
-      await ctx.ResponderAsync(_res);
+      await ctx.RespondAsync(_res);
     }
   }
 }

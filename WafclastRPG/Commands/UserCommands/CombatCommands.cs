@@ -32,81 +32,27 @@ namespace WafclastRPG.Commands.UserCommands {
         _res = await sessionHandler.WithTransactionAsync(async (s, ct) => {
           var player = await _playerRepository.FindPlayerAsync(ctx);
 
-          var character = player.Character;
-          var monster = player.Character.Room.Monster;
-
-          if (monster == null)
-            return new Response($"você não está visualizando nenhum monstro para atacar!");
-
-          if (monster.IsDead)
-            return new Response($"o monstro que você está tentando atacar, já está morto!");
-
-          var rd = new Random();
-          var str = new StringBuilder();
-          var embed = new DiscordEmbedBuilder();
-          double damage;
-
           //Combat
+          var combatResult = player.BasicAttackMonster();
+          await _playerRepository.SavePlayerAsync(player);
 
-          var attacking = RoomAttackOrder.CalculateNextAttack(character);
-
-          if (attacking.isMonster) {
-            if (CalculateHitChance(monster.PrecisionPoints, character.EvasionPoints)) {
-
-              damage = character.ReceiveDamage(rd.Sortear(monster.Damage));
-              str.AppendLine($"{player.Mention} recebeu {damage:N2} de dano!");
-
-              embed.AddField(ctx.User.Username, $"{Emojis.GerarVidaEmoji(character.LifePoints.Current / character.LifePoints.Max)} {character.LifePoints.Current:N2} ", true);
-
-              if (character.IsDead) {
-                str.AppendLine($"{player.Mention} {Emojis.CrossBone} morreu! ");
-                str.AppendLine($"{player.Mention} perdeu nível!");
-                player.Deaths++;
-
-                character.RemoveOneLevel();
-                character.LifePoints.Restart();
-                goto EndCombat;
-              }
-
-            } else {
-              embed.AddField(ctx.User.Username, $"{Emojis.GerarVidaEmoji(character.LifePoints.Current / character.LifePoints.Max)} {character.LifePoints.Current:N2} ", true);
-              str.AppendLine($"{player.Mention} desviou!");
-            }
-          }
-
-          if (attacking.isPlayer) {
-            if (CalculateHitChance(character.PrecisionPoints, monster.EvasionPoints)) {
-
-              damage = monster.TakeDamage(rd.Sortear(character.Damage));
-              str.AppendLine($"{monster.Mention} recebeu {damage:N2} {character.EmojiAttack} de dano!");
-
-
-              if (monster.IsDead) {
-                str.AppendLine($"{monster.Mention} {Emojis.CrossBone} morreu!");
-                player.MonsterKills++;
-                character.AddExperience(monster.Level);
-              }
-
-            } else {
-              str.AppendLine($"{monster.Mention} desviou!");
-            }
-          }
-
-        EndCombat:
+          var embed = new DiscordEmbedBuilder();
+          embed.AddField(ctx.User.Username, $"{Emojis.TesteEmoji(player.Character.LifePoints)} {player.LifePoints}", true);
 
           embed.WithColor(DiscordColor.Red);
-          embed.WithAuthor($"{ctx.User.Username} [Nv.{character.Level}]", iconUrl: ctx.User.AvatarUrl);
+          embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
           embed.WithTitle("Relatório de Combate");
-          embed.WithDescription(str.ToString());
+          embed.WithDescription(combatResult.ToString());
 
-          embed.AddField(monster.Mention, $"{Emojis.GerarVidaEmoji(monster.LifePoints.Current / monster.LifePoints.Max)} {monster.LifePoints.Current:N2} ", true);
+          var monster = player.Character.Room.Monster;
+
+          embed.AddField(monster.Mention, $"{Emojis.GerarVidaEmoji(monster.LifePoints)} {monster.LifePoints.Current:N2} ", true);
 
           //loot em outro comando!
 
-          await _playerRepository.SavePlayerAsync(player);
           return new Response(embed);
         });
-      await ctx.ResponderAsync(_res);
+      await ctx.RespondAsync(_res);
     }
 
     [Command("explorar")]
@@ -130,7 +76,7 @@ namespace WafclastRPG.Commands.UserCommands {
 
           return new Response($"você encontrou **[{character.Room.Monster.Mention}]!**");
         });
-      await ctx.ResponderAsync(_res);
+      await ctx.RespondAsync(_res);
     }
   }
 }

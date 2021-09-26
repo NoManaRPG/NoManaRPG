@@ -16,7 +16,6 @@ namespace WafclastRPG.Commands.AdminCommands {
   [Hidden]
   [RequireOwner]
   public class RoomCommands : BaseCommandModule {
-    private Response _res;
     private readonly IPlayerRepository _playerRepository;
     private readonly IRoomRepository _roomRepository;
     private readonly IInteractivityRepository _interactivityRepository;

@@ -48,7 +48,7 @@ namespace WafclastRPG.Commands.UserCommands {
           embed.AddField("Precisão", $"{Emojis.Escudo} {character.PrecisionPoints:N2}", true);
           embed.AddField("Evasão", $"{Emojis.Escudo} {character.EvasionPoints:N2}", true);
 
-          var lifePor = character.LifePoints.Current / character.LifePoints.Max;
+          var lifePor = character.LifePoints;
           embed.AddField("Vida", $"{Emojis.GerarVidaEmoji(lifePor)} {character.LifePoints.Current:N2} / {character.LifePoints.Max:N2}", true);
 
           //embed.AddField("Mana".Titulo(), $":blue_circle: {player.Character.Mana.CurrentValue:N2} / {player.Character.Mana.MaxValue:N2}", true);
@@ -60,7 +60,7 @@ namespace WafclastRPG.Commands.UserCommands {
 
           return new Response(embed);
         });
-      await ctx.ResponderAsync(_res);
+      await ctx.RespondAsync(_res);
     }
   }
 }

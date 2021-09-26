@@ -1,4 +1,6 @@
-﻿namespace WafclastRPG {
+﻿using WafclastRPG.Entities;
+
+namespace WafclastRPG {
   public static class Emojis {
     public const string CrossBone = ":skull_crossbones:";
     public const string Up = ":up:";
@@ -39,8 +41,8 @@
     public const string DiamanteLaranjaPequeno = ":small_orange_diamond:";
     public const string Aviso = ":warning:";
 
-    public static string GerarVidaEmoji(double porcentagem) {
-      switch (porcentagem) {
+    public static string GerarVidaEmoji(WafclastStatePoints lifeAttribute) {
+      switch (lifeAttribute.Current / lifeAttribute.Max) {
         case double n when (n > 0.75):
           return Emojis.CoracaoVerde;
         case double n when (n > 0.50):
@@ -50,5 +52,13 @@
       }
       return Emojis.CoracaoVermelho;
     }
+
+    public static string TesteEmoji(WafclastStatePoints lifeAttribute) =>
+       (lifeAttribute.Current / lifeAttribute.Max) switch {
+         double n when (n > 0.75) => Emojis.CoracaoVerde,
+         double n when (n > 0.50) => Emojis.CoracaoAmarelo,
+         double n when (n > 0.25) => Emojis.CoracaoLaranja,
+         _ => Emojis.CoracaoVermelho,
+       };
   }
 }
