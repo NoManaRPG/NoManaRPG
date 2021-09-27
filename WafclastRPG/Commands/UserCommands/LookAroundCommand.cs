@@ -12,6 +12,7 @@ using DSharpPlus.Interactivity.Extensions;
 using WafclastRPG.Repositories.Interfaces;
 using WafclastRPG.Context;
 using WafclastRPG.Entities;
+using System.Text;
 
 namespace WafclastRPG.Commands.UserCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
@@ -22,7 +23,7 @@ namespace WafclastRPG.Commands.UserCommands {
     private readonly IRoomRepository _roomRepository;
     private readonly Config _config;
 
-    public LookAroundCommand(IPlayerRepository playerRepository, IRoomRepository roomRepository, Config config,MongoDbContext mongoDbContext) {
+    public LookAroundCommand(IPlayerRepository playerRepository, IRoomRepository roomRepository, Config config, MongoDbContext mongoDbContext) {
       _playerRepository = playerRepository;
       _mongoDbContext = mongoDbContext;
       _roomRepository = roomRepository;
@@ -31,47 +32,46 @@ namespace WafclastRPG.Commands.UserCommands {
 
     [Command("olhar")]
     [Aliases("look", "lookaround")]
-    [Description("Permite olhar ao seu redor e outro local.")]
-    [Usage("olhar [ nome ]")]
-    public async Task LookAroundCommandAsync(CommandContext ctx, [RemainingText] string roomName) {
-
+    [Description("Permite olhar ao seu redor.")]
+    [Usage("olhar")]
+    public async Task LookAroundCommandAsync(CommandContext ctx) {
       var player = await _mongoDbContext.Players.Find(x => x.Id == ctx.User.Id).FirstOrDefaultAsync();
       if (player == null)
         throw new PlayerNotCreatedException();
 
-      Room room = null;
-
-      if (string.IsNullOrWhiteSpace(roomName)) {
-        room = await _mongoDbContext.Rooms.Find(x => x.Id == player.Character.Room.Id).FirstOrDefaultAsync();
-        if (room == null) {
-          await ctx.ResponderAsync("parece que aconteceu algum erro na matrix!");
-          return;
-        }
-      } else {
-        room = await _mongoDbContext.Rooms.Find(x => x.Name == roomName, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
-        if (room == null) {
-          await ctx.ResponderAsync("você tenta procurar no mapa o lugar, mas não encontra! Como você tentaria olhar para algo que você não conhece?!");
-          return;
-        }
+      var room = await _mongoDbContext.Rooms.Find(x => x.Id == player.Character.Room.Id).FirstOrDefaultAsync();
+      if (room == null) {
+        await ctx.ResponderAsync("parece que aconteceu algum erro na matrix!");
+        return;
       }
 
       var embed = new DiscordEmbedBuilder();
       embed.WithColor(DiscordColor.Blue);
       embed.WithTitle(room.Name);
       embed.WithDescription(room.Description);
-      var msg = await ctx.RespondAsync(embed.Build());
 
-      if (room != player.Character.Room)
-        if (room.Location.Distance(player.Character.Room.Location) <= 161) {
-          var emoji = DiscordEmoji.FromName(ctx.Client, ":footprints:");
-          await msg.CreateReactionAsync(emoji);
-          var vity = ctx.Client.GetInteractivity();
-          var click = await vity.WaitForReactionAsync(x => x.User.Id == ctx.User.Id && x.Message.Id == msg.Id && x.Emoji == emoji);
-          if (click.TimedOut)
-            return;
+      var playerLoca = player.Character.Room.Location;
 
-          await TravelCommandAsync(ctx, room.Name);
+      StringBuilder sf = new StringBuilder();
+      var asd = await _mongoDbContext.Rooms.Find(x => x.Location.X >= (playerLoca.X - 160) && x.Location.X <= (playerLoca.X + 160)
+                                                  && x.Location.Y >= (playerLoca.Y - 160) && x.Location.Y <= (playerLoca.Y + 160)).ToListAsync();
+      int showing = 0;
+      foreach (var item in asd) {
+        var distance = playerLoca.Distance(item.Location);
+        if (distance != 0 && distance <= 165) {
+          sf.AppendLine($"{item.Name} - Distancia de {playerLoca.Distance(item.Location):N2} Km.");
+          showing++;
         }
+      }
+      var locations = sf.ToString();
+      if (string.IsNullOrWhiteSpace(locations))
+        embed.AddField("Locais proximos", "Não tem.");
+      else
+        embed.AddField("Locais proximos", sf.ToString());
+
+      embed.WithFooter($"Exibindo {showing} locais próximos de {asd.Count}.");
+
+      await ctx.RespondAsync(embed.Build());
     }
 
 
