@@ -45,7 +45,7 @@ namespace WafclastRPG {
         GatewayCompressionLevel = GatewayCompressionLevel.Stream,
         AutoReconnect = true,
         Token = token,
-        Intents = DiscordIntents.All,
+        Intents = DiscordIntents.AllUnprivileged,
         MinimumLogLevel = logLevel,
       });
 
