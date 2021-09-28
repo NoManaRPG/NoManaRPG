@@ -9,6 +9,7 @@ using WafclastRPG.Extensions;
 using WafclastRPG.Entities.Wafclast;
 using System;
 using WafclastRPG.Context;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace WafclastRPG.Commands.AdminCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
@@ -87,7 +88,7 @@ namespace WafclastRPG.Commands.AdminCommands {
     [RequireOwner]
     public async Task setMap(CommandContext ctx) {
       await ctx.TriggerTypingAsync();
-      var config = ctx.GetService<Config>();
+      var config = ctx.Services.GetRequiredService<Config>();
       var map = ctx.Message.Attachments[0].Url;
       config.MapUrl = map.ToString();
       config.SaveToJsonFile();

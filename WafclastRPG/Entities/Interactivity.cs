@@ -36,7 +36,7 @@ namespace WafclastRPG.Entities {
     private void UnblockUser() => _usersBlocked.UnblockUser(_ctx);
 
     public async Task<InteractivityResult<DiscordMessage>> WaitForMessageAsync(string message, DiscordEmbed embed) {
-      await _ctx.ResponderAsync(message, embed);
+      await CommandContextExtension.RespondAsync(_ctx, message, embed);
       return await _interactivityExtension.WaitForMessageAsync(x => x.Author.Id == _ctx.User.Id && x.ChannelId == _ctx.Channel.Id, timeoutoverride: _timeOut);
     }
 
