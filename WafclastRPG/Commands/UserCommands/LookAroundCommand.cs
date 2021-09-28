@@ -8,25 +8,25 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using WafclastRPG.Exceptions;
 using WafclastRPG.Extensions;
-using DSharpPlus.Interactivity.Extensions;
 using WafclastRPG.Repositories.Interfaces;
 using WafclastRPG.Context;
-using WafclastRPG.Entities;
 using System.Text;
 
 namespace WafclastRPG.Commands.UserCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
   public class LookAroundCommand : BaseCommandModule {
     private Response _res;
-    private readonly IPlayerRepository _playerRepository;
-    private readonly MongoDbContext _mongoDbContext;
-    private readonly IRoomRepository _roomRepository;
     private readonly Config _config;
+    private readonly MongoDbContext _mongoDbContext;
+    private readonly IPlayerRepository _playerRepository;
+    private readonly IRoomRepository _roomRepository;
+    private readonly IMongoSession _session;
 
-    public LookAroundCommand(IPlayerRepository playerRepository, IRoomRepository roomRepository, Config config, MongoDbContext mongoDbContext) {
+    public LookAroundCommand(IPlayerRepository playerRepository, IRoomRepository roomRepository, Config config, MongoDbContext mongoDbContext, IMongoSession session) {
       _playerRepository = playerRepository;
       _mongoDbContext = mongoDbContext;
       _roomRepository = roomRepository;
+      _session = session;
       _config = config;
     }
 
@@ -81,8 +81,8 @@ namespace WafclastRPG.Commands.UserCommands {
     [Usage("viajar [ nome ]")]
     [Cooldown(1, 5, CooldownBucketType.User)]
     public async Task TravelCommandAsync(CommandContext ctx, [RemainingText] string roomName) {
-      using (var sessionHandler = (SessionHandler) await _playerRepository.StartSession())
-        _res = await sessionHandler.WithTransactionAsync(async (s, ct) => {
+      using (var session = await _session.StartSession())
+        _res = await session.WithTransactionAsync(async (s, ct) => {
           var player = await _playerRepository.FindPlayerAsync(ctx);
 
           var character = player.Character;

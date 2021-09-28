@@ -3,7 +3,6 @@ using DSharpPlus.Entities;
 using MongoDB.Driver;
 using System.Threading.Tasks;
 using WafclastRPG.Context;
-using WafclastRPG.Entities;
 using WafclastRPG.Entities.Wafclast;
 using WafclastRPG.Exceptions;
 using WafclastRPG.Repositories.Interfaces;
@@ -11,10 +10,11 @@ using WafclastRPG.Repositories.Interfaces;
 namespace WafclastRPG.Repositories {
   public class PlayerRepository : IPlayerRepository {
     private readonly MongoDbContext _context;
-    private IClientSessionHandle _session;
+    private readonly IMongoSession _session;
 
-    public PlayerRepository(MongoDbContext context) {
+    public PlayerRepository(MongoDbContext context, IMongoSession session) {
       _context = context;
+      _session = session;
     }
 
     public async Task<Player> FindPlayerAsync(DiscordUser user) {
@@ -36,18 +36,26 @@ namespace WafclastRPG.Repositories {
       return player;
     }
 
-    public async Task<Player> FindPlayerOrDefaultAsync(DiscordUser user)
-                  => await _context.Players.Find(_session, x => x.Id == user.Id).FirstOrDefaultAsync();
-    public async Task<Player> FindPlayerOrDefaultAsync(CommandContext ctx)
-       => await _context.Players.Find(_session, x => x.Id == ctx.User.Id).FirstOrDefaultAsync();
-    public async Task<Player> FindPlayerOrDefaultAsync(ulong id)
-       => await _context.Players.Find(_session, x => x.Id == id).FirstOrDefaultAsync();
+    public async Task<Player> FindPlayerOrDefaultAsync(DiscordUser user) {
+      if (_session.Session != null)
+        return await _context.Players.Find(_session.Session, x => x.Id == user.Id).FirstOrDefaultAsync();
+      return await _context.Players.Find(x => x.Id == user.Id).FirstOrDefaultAsync();
+    }
+    public async Task<Player> FindPlayerOrDefaultAsync(CommandContext ctx) {
+      if (_session.Session != null)
+        return await _context.Players.Find(_session.Session, x => x.Id == ctx.User.Id).FirstOrDefaultAsync();
+      return await _context.Players.Find(x => x.Id == ctx.User.Id).FirstOrDefaultAsync();
+    }
+    public async Task<Player> FindPlayerOrDefaultAsync(ulong id) {
+      if (_session.Session != null)
+        return await _context.Players.Find(_session.Session, x => x.Id == id).FirstOrDefaultAsync();
+      return await _context.Players.Find(x => x.Id == id).FirstOrDefaultAsync();
+    }
 
-    public Task SavePlayerAsync(Player jogador)
-      => _context.Players.ReplaceOneAsync(_session, x => x.Id == jogador.Id, jogador, new ReplaceOptions { IsUpsert = true });
-    public async Task<object> StartSession() {
-      _session = await _context.Client.StartSessionAsync();
-      return new SessionHandler(_session);
+    public Task SavePlayerAsync(Player jogador) {
+      if (_session.Session != null)
+        return _context.Players.ReplaceOneAsync(_session.Session, x => x.Id == jogador.Id, jogador, new ReplaceOptions { IsUpsert = true });
+      return _context.Players.ReplaceOneAsync(x => x.Id == jogador.Id, jogador, new ReplaceOptions { IsUpsert = true });
     }
   }
 }

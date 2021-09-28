@@ -8,13 +8,12 @@ using DSharpPlus.Entities;
 using WafclastRPG.Repositories;
 using WafclastRPG.Repositories.Interfaces;
 using WafclastRPG.Context;
-using WafclastRPG.Entities;
 
 namespace WafclastRPG {
   public class Program {
     public Config ConfigFile { get; private set; }
     public MongoDbContext MongoDbContext { get; private set; } = new MongoDbContext();
-    public IInteractivityRepository Blocked { get; private set; }
+    public UsersBlocked UsersTemporaryBlocked { get; private set; } = new UsersBlocked();
 
     static void Main() => new Program().RodarBotAsync().GetAwaiter().GetResult();
 
@@ -52,14 +51,12 @@ namespace WafclastRPG {
       var services = new ServiceCollection()
           .AddSingleton(ConfigFile)
           .AddSingleton(MongoDbContext)
-          .AddSingleton<Interactivity>()
-          .AddTransient<IPlayerRepository, PlayerRepository>()
-          .AddTransient<IItemRepository, ItemRepository>()
-          .AddTransient<IRoomRepository, RoomRepository>()
-          .AddTransient<IInteractivityRepository, InteractivityRepository>()
+          .AddSingleton(UsersTemporaryBlocked)
+          .AddScoped<IMongoSession, MongoSession>()
+          .AddScoped<IPlayerRepository, PlayerRepository>()
+          .AddScoped<IItemRepository, ItemRepository>()
+          .AddScoped<IRoomRepository, RoomRepository>()
           .BuildServiceProvider();
-
-      Blocked = services.GetService<IInteractivityRepository>();
 
       bot.ModuleCommand(new CommandsNextConfiguration {
         PrefixResolver = ResolvePrefixAsync,
@@ -80,7 +77,7 @@ namespace WafclastRPG {
       var gld = msg.Channel.Guild;
       if (gld == null)
         return await Task.FromResult(-1);
-      if (Blocked.IsBlocked(msg.Author.Id))
+      if (UsersTemporaryBlocked.IsUserBlocked(msg.Author.Id))
         return await Task.FromResult(-1);
 #if DEBUG
       var prefix = await MongoDbContext.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixDebug);

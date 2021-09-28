@@ -6,7 +6,6 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
-using WafclastRPG.Entities;
 using WafclastRPG.Extensions;
 using WafclastRPG.Repositories.Interfaces;
 
@@ -15,9 +14,11 @@ namespace WafclastRPG.Commands.UserCommands {
   public class StatusCommand : BaseCommandModule {
     private Response _res;
     private readonly IPlayerRepository _playerRepository;
+    private readonly IMongoSession _session;
 
-    public StatusCommand(IPlayerRepository playerRepository) {
+    public StatusCommand(IPlayerRepository playerRepository, IMongoSession session) {
       _playerRepository = playerRepository;
+      _session = session;
     }
 
     [Command("status")]
@@ -25,8 +26,8 @@ namespace WafclastRPG.Commands.UserCommands {
     [Usage("status")]
     [Cooldown(1, 5, CooldownBucketType.User)]
     public async Task StatusCommandAsync(CommandContext ctx) {
-      using (var sessionHandler = (SessionHandler) await _playerRepository.StartSession())
-        _res = await sessionHandler.WithTransactionAsync(async (s, ct) => {
+      using (var session = await _session.StartSession())
+        _res = await session.WithTransactionAsync(async (s, ct) => {
           var player = await _playerRepository.FindPlayerAsync(ctx);
 
           var character = player.Character;

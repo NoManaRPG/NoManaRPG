@@ -2,7 +2,6 @@
 using DSharpPlus.CommandsNext.Attributes;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
-using WafclastRPG.Entities;
 using WafclastRPG.Entities.Wafclast;
 using WafclastRPG.Extensions;
 using WafclastRPG.Repositories.Interfaces;
@@ -11,23 +10,26 @@ namespace WafclastRPG.Commands.UserCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
   public class StartCommand : BaseCommandModule {
     private Response _res;
+    private readonly Config _config;
     private readonly IPlayerRepository _playerRepository;
     private readonly IRoomRepository _roomRepository;
-    private readonly Config _config;
+    private readonly IMongoSession _session;
 
-    public StartCommand(IPlayerRepository playerRepository, IRoomRepository roomRepository, Config config) {
+    public StartCommand(IPlayerRepository playerRepository, IRoomRepository roomRepository, Config config,IMongoSession session) {
       _playerRepository = playerRepository;
       _roomRepository = roomRepository;
+      _session = session;
       _config = config;
     }
+
 
     [Command("comecar")]
     [Aliases("start")]
     [Description("Permite criar um personagem, após informar uma classe.")]
     [Usage("comecar")]
     public async Task StartCommandAsync(CommandContext ctx, [RemainingText] string character = "") {
-      using (var sessionHandler = (SessionHandler) await _playerRepository.StartSession())
-        _res = await sessionHandler.WithTransactionAsync(async (s, ct) => {
+      using (var session = await _session.StartSession())
+        _res = await session.WithTransactionAsync(async (s, ct) => {
           var player = await _playerRepository.FindPlayerOrDefaultAsync(ctx);
           if (player != null)
             return new Response("você já criou um personagem! Se estiver com dúvidas ou problemas, consulte o nosso Servidor Oficial do Discord.");

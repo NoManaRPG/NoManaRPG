@@ -1,15 +1,11 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using System;
-using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
 using WafclastRPG.Entities;
-using WafclastRPG.Entities.Wafclast;
 using WafclastRPG.Extensions;
 using WafclastRPG.Repositories.Interfaces;
-using static WafclastRPG.Mathematics;
 
 namespace WafclastRPG.Commands.UserCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
@@ -17,23 +13,27 @@ namespace WafclastRPG.Commands.UserCommands {
     private Response _res;
     private readonly IPlayerRepository _playerRepository;
     private readonly IRoomRepository _roomRepository;
+    private readonly IMongoSession _session;
 
-    public CombatCommands(IPlayerRepository playerRepository, IRoomRepository roomRepository) {
+    public CombatCommands(IPlayerRepository playerRepository, IRoomRepository roomRepository, IMongoSession session) {
       _playerRepository = playerRepository;
       _roomRepository = roomRepository;
+      _session = session;
     }
 
-    [Command("ataque-basico")]
-    [Aliases("at", "attack", "ab")]
-    [Description("Permite executar um ataque em um monstro.")]
-    [Usage("atacar")]
-    public async Task BasicAttackCommandAsync(CommandContext ctx) {
-      using (var sessionHandler = (SessionHandler) await _playerRepository.StartSession())
-        _res = await sessionHandler.WithTransactionAsync(async (s, ct) => {
+    [Command("explorarSession")]
+    [Description("Permite explorar uma região, podendo encontrar monstros.")]
+    [Usage("explorar")]
+    public async Task BasicAtasdtackCommandAsync(CommandContext ctx) {
+      using (var session = await _session.StartSession())
+        _res = await session.WithTransactionAsync(async (s, ct) => {
           var player = await _playerRepository.FindPlayerAsync(ctx);
 
           //Combat
           var combatResult = player.BasicAttackMonster();
+          if (combatResult == "você não está visualizando nenhum monstro para atacar!")
+            return new Response(combatResult);
+
           await _playerRepository.SavePlayerAsync(player);
 
           var embed = new DiscordEmbedBuilder();
@@ -55,13 +55,47 @@ namespace WafclastRPG.Commands.UserCommands {
       await ctx.RespondAsync(_res);
     }
 
+
+
+
+
     [Command("explorar")]
     [Aliases("ex", "explore")]
     [Description("Permite explorar uma região, podendo encontrar monstros.")]
     [Usage("explorar")]
-    [Cooldown(1, 5, CooldownBucketType.User)]
+    public async Task BasicAttackCommandAsync(CommandContext ctx) {
+      using (var sessionHandler = await _session.StartSession())
+        _res = await sessionHandler.WithTransactionAsync(async (s, ct) => {
+          var player = await _playerRepository.FindPlayerAsync(ctx);
+
+          //Combat
+          var combatResult = player.BasicAttackMonster();
+          if (combatResult == "você não está visualizando nenhum monstro para atacar!")
+            return new Response(combatResult);
+
+          await _playerRepository.SavePlayerAsync(player);
+
+          var embed = new DiscordEmbedBuilder();
+          embed.AddField(ctx.User.Username, $"{Emojis.TesteEmoji(player.Character.LifePoints)} {player.LifePoints}", true);
+
+          embed.WithColor(DiscordColor.Red);
+          embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
+          embed.WithTitle("Relatório de Combate");
+          embed.WithDescription(combatResult.ToString());
+
+          var monster = player.Character.Room.Monster;
+
+          embed.AddField(monster.Mention, $"{Emojis.GerarVidaEmoji(monster.LifePoints)} {monster.LifePoints.Current:N2} ", true);
+
+          //loot em outro comando!
+
+          return new Response(embed);
+        });
+      await ctx.RespondAsync(_res);
+    }
+
     public async Task ExploreCommandAsync(CommandContext ctx) {
-      using (var sessionHandler = (SessionHandler) await _playerRepository.StartSession())
+      using (var sessionHandler = await _session.StartSession())
         _res = await sessionHandler.WithTransactionAsync(async (s, ct) => {
           var player = await _playerRepository.FindPlayerAsync(ctx);
 

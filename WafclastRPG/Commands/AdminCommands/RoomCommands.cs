@@ -8,6 +8,7 @@ using System.Text;
 using WafclastRPG.Attributes;
 using WafclastRPG.Entities;
 using WafclastRPG.Repositories.Interfaces;
+using WafclastRPG.Context;
 
 namespace WafclastRPG.Commands.AdminCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
@@ -16,15 +17,19 @@ namespace WafclastRPG.Commands.AdminCommands {
   [Hidden]
   [RequireOwner]
   public class RoomCommands : BaseCommandModule {
+    private Response _res;
     private readonly IPlayerRepository _playerRepository;
     private readonly IRoomRepository _roomRepository;
-    private readonly IInteractivityRepository _interactivityRepository;
+    private readonly IMongoSession _session;
+    private readonly UsersBlocked _usersBlocked;
 
-    public RoomCommands(IPlayerRepository playerRepository, IRoomRepository roomRepository, IInteractivityRepository interactivityRepository) {
+    public RoomCommands(IPlayerRepository playerRepository, IRoomRepository roomRepository, IMongoSession session, UsersBlocked usersBlocked) {
       _playerRepository = playerRepository;
       _roomRepository = roomRepository;
-      _interactivityRepository = interactivityRepository;
+      _session = session;
+      _usersBlocked = usersBlocked;
     }
+
     public TimeSpan timeout = TimeSpan.FromMinutes(2);
 
     [Command("new")]
@@ -32,7 +37,7 @@ namespace WafclastRPG.Commands.AdminCommands {
     public async Task NewRoomCommandAsync(CommandContext ctx) {
 
 
-      var interac = new Interactivity(_interactivityRepository, ctx);
+      var interac = new Interactivity(_usersBlocked, ctx);
 
       var asdname = await interac.WaitForStringAsync("Informe o Nome do Quarto.");
 

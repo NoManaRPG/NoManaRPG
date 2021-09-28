@@ -11,6 +11,7 @@ using WafclastRPG.Extensions;
 using WafclastRPG.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using WafclastRPG.Repositories.Interfaces;
+using WafclastRPG.Context;
 
 namespace WafclastRPG.DiscordEvents {
   public static class CommandErroredEvent {
@@ -77,8 +78,8 @@ namespace WafclastRPG.DiscordEvents {
           e.Context.Client.Logger.LogDebug(new EventId(601, "Command Error"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
           break;
       }
-      var mongoContext = ctx.Services.GetService<IInteractivityRepository>();
-      mongoContext.Unblock(ctx.User.Id);
+      var usersBlocked = ctx.Services.GetService<UsersBlocked>();
+      usersBlocked.UnblockUser(ctx);
     }
   }
 }

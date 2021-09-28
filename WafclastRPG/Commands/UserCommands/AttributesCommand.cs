@@ -14,17 +14,21 @@ namespace WafclastRPG.Commands.UserCommands {
   public class AttributesCommand : BaseCommandModule {
     private Response _res;
     private readonly IPlayerRepository _playerRepository;
+    private readonly IRoomRepository _roomRepository;
+    private readonly IMongoSession _session;
 
-    public AttributesCommand(IPlayerRepository playerRepository) {
+    public AttributesCommand(IPlayerRepository playerRepository, IRoomRepository roomRepository, IMongoSession session) {
       _playerRepository = playerRepository;
+      _roomRepository = roomRepository;
+      _session = session;
     }
 
     [Command("atribuir")]
     [Description("Permite atribuir pontos de atributos nos atributos.")]
     [Usage("atribuir < quantidade > < atributo > ")]
     public async Task AllocateAttributesCommandAsync(CommandContext ctx, int quantity = 1, [RemainingText] string attribute = "") {
-      using (var sessionHandler = (SessionHandler) await _playerRepository.StartSession())
-        _res = await sessionHandler.WithTransactionAsync(async (s, ct) => {
+      using (var session = await _session.StartSession())
+        _res = await session.WithTransactionAsync(async (s, ct) => {
           var player = await _playerRepository.FindPlayerAsync(ctx);
 
           if (string.IsNullOrEmpty(attribute))
@@ -65,8 +69,8 @@ namespace WafclastRPG.Commands.UserCommands {
     [Description("Exibe todos os atributos e a quantia alocada de pontos.")]
     [Usage("atributos")]
     public async Task AttributesComandAsync(CommandContext ctx) {
-      using (var sessionHandler = (SessionHandler) await _playerRepository.StartSession())
-        _res = await sessionHandler.WithTransactionAsync(async (s, ct) => {
+      using (var session = await _session.StartSession())
+        _res = await session.WithTransactionAsync(async (s, ct) => {
           var player = await _playerRepository.FindPlayerAsync(ctx);
 
           var embed = new DiscordEmbedBuilder();

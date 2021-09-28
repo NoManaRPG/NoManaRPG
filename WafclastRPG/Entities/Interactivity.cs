@@ -4,10 +4,9 @@ using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 using System;
 using System.Threading.Tasks;
-using WafclastRPG.Commands;
+using WafclastRPG.Context;
 using WafclastRPG.Exceptions;
 using WafclastRPG.Extensions;
-using WafclastRPG.Repositories.Interfaces;
 
 namespace WafclastRPG.Entities {
   public struct AnswerResult<T> {
@@ -21,32 +20,28 @@ namespace WafclastRPG.Entities {
   }
 
   public class Interactivity {
-    private readonly IInteractivityRepository _interac;
-    private CommandContext _ctx;
-    private InteractivityExtension _interactivityExtension;
-    private TimeSpan _timeOutOverride;
+    private readonly UsersBlocked _usersBlocked;
+    private readonly CommandContext _ctx;
+    private readonly InteractivityExtension _interactivityExtension;
+    private readonly TimeSpan? _timeOut;
 
-    public Interactivity(IInteractivityRepository blockerRepository, CommandContext commandContext) {
-      _interac = blockerRepository;
+    public Interactivity(UsersBlocked usersBlocked, CommandContext commandContext, TimeSpan? timeOutOverride = null) {
+      _usersBlocked = usersBlocked;
       _ctx = commandContext;
       _interactivityExtension = _ctx.Client.GetInteractivity();
+      _timeOut = timeOutOverride;
     }
 
-    public Interactivity(IInteractivityRepository blockerRepository, CommandContext commandContext, TimeSpan timeOutOverride) {
-      _interac = blockerRepository;
-      _ctx = commandContext;
-      _interactivityExtension = _ctx.Client.GetInteractivity();
-      _timeOutOverride = timeOutOverride;
-    }
+    private void BlockUser() => _usersBlocked.BlockUser(_ctx);
+    private void UnblockUser() => _usersBlocked.UnblockUser(_ctx);
 
     public async Task<InteractivityResult<DiscordMessage>> WaitForMessageAsync(string message, DiscordEmbed embed) {
-
       await _ctx.ResponderAsync(message, embed);
-      return await _interactivityExtension.WaitForMessageAsync(x => x.Author.Id == _ctx.User.Id && x.ChannelId == _ctx.Channel.Id, timeoutoverride: _timeOutOverride);
+      return await _interactivityExtension.WaitForMessageAsync(x => x.Author.Id == _ctx.User.Id && x.ChannelId == _ctx.Channel.Id, timeoutoverride: _timeOut);
     }
 
     public async Task<AnswerResult<T>> WaitForEnumAsync<T>(string message) where T : Enum {
-      _interac.Block(_ctx);
+      BlockUser();
 
       while (true) {
         var embed = new DiscordEmbedBuilder();
@@ -57,24 +52,24 @@ namespace WafclastRPG.Entities {
 
         if (wait.TimedOut) {
           await _ctx.ResponderAsync("tempo de resposta expirado!");
-          _interac.Unblock(_ctx);
+          UnblockUser();
           return new AnswerResult<T>(true, default);
         }
 
         if (Enum.TryParse(typeof(T), wait.Result.Content, out object result)) {
-          _interac.Unblock(_ctx);
+          UnblockUser();
           return new AnswerResult<T>(false, (T) result);
         }
 
         if (wait.Result.Content.ToLower().Trim() == "sair") {
-          _interac.Unblock(_ctx);
+          UnblockUser();
           return new AnswerResult<T>(true, default);
         }
       }
     }
 
     public async Task<AnswerResult<int>> WaitForIntAsync(string message, int? minValue = null, int? maxValue = null) {
-      _interac.Block(_ctx);
+      BlockUser();
 
       while (true) {
         var embed = new DiscordEmbedBuilder();
@@ -85,7 +80,7 @@ namespace WafclastRPG.Entities {
 
         if (wait.TimedOut) {
           await _ctx.ResponderAsync("tempo de resposta expirado!");
-          _interac.Unblock(_ctx);
+          UnblockUser();
           return new AnswerResult<int>(true, 0);
         }
 
@@ -96,19 +91,19 @@ namespace WafclastRPG.Entities {
           if (maxValue != null)
             if (result > maxValue)
               continue;
-          _interac.Unblock(_ctx);
+          UnblockUser();
           return new AnswerResult<int>(false, result);
         }
 
         if (wait.Result.Content.ToLower().Trim() == "sair") {
-          _interac.Unblock(_ctx);
+          UnblockUser();
           return new AnswerResult<int>(true, 0);
         }
       }
     }
 
     public async Task<AnswerResult<double>> WaitForDoubleAsync(string message, double? minValue = null, double? maxValue = null) {
-      _interac.Block(_ctx);
+      BlockUser();
 
       while (true) {
         var embed = new DiscordEmbedBuilder();
@@ -119,7 +114,7 @@ namespace WafclastRPG.Entities {
 
         if (wait.TimedOut) {
           await _ctx.ResponderAsync("tempo de resposta expirado!");
-          _interac.Unblock(_ctx);
+          UnblockUser();
           return new AnswerResult<double>(true, 0);
         }
 
@@ -130,19 +125,19 @@ namespace WafclastRPG.Entities {
           if (maxValue != null)
             if (result > maxValue)
               continue;
-          _interac.Unblock(_ctx);
+          UnblockUser();
           return new AnswerResult<double>(false, result);
         }
 
         if (wait.Result.Content.ToLower().Trim() == "sair") {
-          _interac.Unblock(_ctx);
+          UnblockUser();
           return new AnswerResult<double>(true, 0);
         }
       }
     }
 
     public async Task<AnswerResult<ulong>> WaitForUlongAsync(string message, ulong? minValue = null, ulong? maxValue = null) {
-      _interac.Block(_ctx);
+      BlockUser();
 
       while (true) {
         var embed = new DiscordEmbedBuilder();
@@ -153,7 +148,7 @@ namespace WafclastRPG.Entities {
 
         if (wait.TimedOut) {
           await _ctx.ResponderAsync("tempo de resposta expirado!");
-          _interac.Unblock(_ctx);
+          UnblockUser();
           return new AnswerResult<ulong>(true, 0);
         }
 
@@ -164,41 +159,41 @@ namespace WafclastRPG.Entities {
           if (maxValue != null)
             if (result > maxValue)
               continue;
-          _interac.Unblock(_ctx);
+          UnblockUser();
           return new AnswerResult<ulong>(false, result);
         }
 
         if (wait.Result.Content.ToLower().Trim() == "sair") {
-          _interac.Unblock(_ctx);
+          UnblockUser();
           return new AnswerResult<ulong>(true, 0);
         }
       }
     }
 
-    public async Task<bool> WaitForBoolAsync(DiscordEmbed embed ) {
+    public async Task<bool> WaitForBoolAsync(DiscordEmbed embed) {
       bool isWrong = false;
-      _interac.Block(_ctx.User.Id);
+      BlockUser();
 
       while (true) {
         InteractivityResult<DiscordMessage> wait;
         if (isWrong)
           wait = await WaitForMessageAsync($"{_ctx.User.Mention}, você informou uma resposta inválida! Responda com 'Sim' ou 'Não'.", embed);
         else
-          wait = await WaitForMessageAsync( "", embed);
+          wait = await WaitForMessageAsync("", embed);
 
         if (wait.TimedOut) {
           await _ctx.ResponderAsync("tempo de resposta expirado!");
-          _interac.Unblock(_ctx.User.Id);
+          UnblockUser();
           return false;
         }
 
         switch (wait.Result.Content.ToLower().Trim()) {
           case "sim":
-            _interac.Unblock(_ctx.User.Id);
+            UnblockUser();
             return true;
           case "nao":
           case "não":
-            _interac.Unblock(_ctx.User.Id);
+            UnblockUser();
             return false;
           default:
             isWrong = true;
@@ -208,7 +203,7 @@ namespace WafclastRPG.Entities {
     }
 
     public async Task<AnswerResult<string>> WaitForStringAsync(string message) {
-      _interac.Block(_ctx.User.Id);
+      BlockUser();
 
       var embed = new DiscordEmbedBuilder();
       embed.WithDescription(message);
@@ -219,11 +214,11 @@ namespace WafclastRPG.Entities {
         throw new AnswerTimeoutException();
 
       if (wait.Result.Content.ToLower().Trim() == "sair") {
-        _interac.Unblock(_ctx.User.Id);
+        UnblockUser();
         return new AnswerResult<string>(true, null);
       }
 
-      _interac.Unblock(_ctx.User.Id);
+      UnblockUser();
       return new AnswerResult<string>(false, wait.Result.Content);
     }
   }

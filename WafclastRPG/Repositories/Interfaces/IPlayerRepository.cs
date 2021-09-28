@@ -13,6 +13,5 @@ namespace WafclastRPG.Repositories.Interfaces {
     Task<Player> FindPlayerOrDefaultAsync(CommandContext ctx);
     Task<Player> FindPlayerOrDefaultAsync(ulong id);
     Task SavePlayerAsync(Player jogador);
-    Task<object> StartSession();
   }
 }

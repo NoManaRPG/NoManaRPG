@@ -1,7 +1,4 @@
-﻿using DSharpPlus.CommandsNext;
-using MongoDB.Driver;
-using System;
-using System.Collections.Concurrent;
+﻿using MongoDB.Driver;
 using System.Threading.Tasks;
 using WafclastRPG.Entities;
 using WafclastRPG.Entities.Itens;
