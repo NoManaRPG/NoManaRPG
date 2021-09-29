@@ -10,14 +10,24 @@ using WafclastRPG.Entities.Wafclast;
 using System;
 using WafclastRPG.Context;
 using Microsoft.Extensions.DependencyInjection;
+using WafclastRPG.Repositories.Interfaces;
 
 namespace WafclastRPG.Commands.AdminCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
   public class DatabaseCommands : BaseCommandModule {
+    private readonly IPlayerRepository _playerRepository;
+    private readonly IRoomRepository _roomRepository;
+    private readonly IMongoSession _session;
+    private readonly UsersBlocked _usersBlocked;
     private readonly MongoDbContext _mongoDbContext;
-    public TimeSpan _timeout = TimeSpan.FromMinutes(2);
+    private readonly TimeSpan _timeout = TimeSpan.FromMinutes(2);
+    private Response _res;
 
-    public DatabaseCommands(MongoDbContext mongoDbContext) {
+    public DatabaseCommands(IPlayerRepository playerRepository, IRoomRepository roomRepository, IMongoSession session, MongoDbContext mongoDbContext, UsersBlocked usersBlocked) {
+      _playerRepository = playerRepository;
+      _roomRepository = roomRepository;
+      _session = session;
+      _usersBlocked = usersBlocked;
       _mongoDbContext = mongoDbContext;
     }
 
