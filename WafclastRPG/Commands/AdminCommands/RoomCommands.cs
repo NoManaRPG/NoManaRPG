@@ -17,16 +17,14 @@ namespace WafclastRPG.Commands.AdminCommands {
   [Hidden]
   [RequireOwner]
   public class RoomCommands : BaseCommandModule {
-    private Response _res;
     private readonly IPlayerRepository _playerRepository;
     private readonly IRoomRepository _roomRepository;
-    private readonly IMongoSession _session;
     private readonly UsersBlocked _usersBlocked;
+    private readonly TimeSpan _timeout = TimeSpan.FromMinutes(2);
 
-    public RoomCommands(IPlayerRepository playerRepository, IRoomRepository roomRepository, IMongoSession session, UsersBlocked usersBlocked) {
+    public RoomCommands(IPlayerRepository playerRepository, IRoomRepository roomRepository, UsersBlocked usersBlocked) {
       _playerRepository = playerRepository;
       _roomRepository = roomRepository;
-      _session = session;
       _usersBlocked = usersBlocked;
     }
 
@@ -35,7 +33,6 @@ namespace WafclastRPG.Commands.AdminCommands {
     [Command("new")]
     [Description("Permite criar um quarto no canal de texto atual.")]
     public async Task NewRoomCommandAsync(CommandContext ctx) {
-
 
       var interac = new Interactivity(_usersBlocked, ctx);
 
@@ -51,11 +48,11 @@ namespace WafclastRPG.Commands.AdminCommands {
 
       var room = new Room() {
         Id = ctx.Channel.Id,
-        Name = name.Value,
-        Region = regionName.Value,
-        Description = description.Value,
+        Name = name.Result,
+        Region = regionName.Result,
+        Description = description.Result,
         Invite = invite.ToString(),
-        Location = new Vector() { X = vectorX.Value, Y = vectorY.Value }
+        Location = new Vector() { X = vectorX.Result, Y = vectorY.Result }
       };
 
       await _roomRepository.SaveRoomAsync(room);
@@ -63,10 +60,34 @@ namespace WafclastRPG.Commands.AdminCommands {
       var str = new StringBuilder();
       str.AppendLine("**Quarto criado!**");
       str.AppendLine($"Id: `{room.Id}`");
-      str.AppendLine($"Nome: {name.Value}");
-      str.AppendLine($"Região: {regionName.Value}");
-      str.AppendLine($"Descrição: {description.Value}");
-      str.AppendLine($"Posição: {vectorX.Value}/{vectorY.Value}");
+      str.AppendLine($"Nome: {name.Result}");
+      str.AppendLine($"Região: {regionName.Result}");
+      str.AppendLine($"Descrição: {description.Result}");
+      str.AppendLine($"Posição: {vectorX.Result}/{vectorY.Result}");
+
+      await ctx.ResponderAsync(str.ToString());
+    }
+
+    [Command("novo-monstro")]
+    [Description("Permite criar um monstro no canal de texto atual.")]
+    public async Task NewMonsterCommandAsync(CommandContext ctx, ulong channel, [RemainingText] string name) {
+
+      var room = await _roomRepository.FindRoomOrDefaultAsync(channel);
+      if (room == null) {
+        await ctx.ResponderAsync("este lugar não é um quarto.");
+        return;
+      }
+
+      var monster = new Monster(1, name, Enums.DamageType.Physic, 5, 5, 30, 30);
+      monster.CalculateStatistics();
+      room.Monster = monster;
+      await _roomRepository.SaveRoomAsync(room);
+
+
+      var str = new StringBuilder();
+      str.AppendLine("**Monstro criado!**");
+      str.AppendLine($"Quarto: `{room.Mention}`");
+      str.AppendLine($"Monstro: `{monster.Name}`");
 
       await ctx.ResponderAsync(str.ToString());
     }
