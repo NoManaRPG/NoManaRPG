@@ -13,7 +13,7 @@ namespace WafclastRPG.Repositories {
       _context = context;
     }
 
-    public Task<Room> FindRoomOrDefaultAsync(Player player) => FindRoomOrDefaultAsync(player.Id);
+    public Task<Room> FindRoomOrDefaultAsync(Player player) => FindRoomOrDefaultAsync(player.Character.Room.Id);
     public Task<Room> FindRoomOrDefaultAsync(ulong id) => _context.Rooms.Find(x => x.Id == id).FirstOrDefaultAsync();
     public Task<Room> FindRoomOrDefaultAsync(string name) => _context.Rooms.Find(x => x.Name == name, _options).FirstOrDefaultAsync();
 
