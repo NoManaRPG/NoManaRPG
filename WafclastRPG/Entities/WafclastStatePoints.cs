@@ -18,7 +18,6 @@ namespace WafclastRPG.Entities {
       if (Current >= Max)
         Current = Max;
     }
-
     public bool Remove(double value) {
       Current -= value;
       if (Current <= 0)
@@ -26,16 +25,13 @@ namespace WafclastRPG.Entities {
       return false;
     }
 
-    public static bool operator !=(WafclastStatePoints left, double right) {
-      if (left.Current != right)
-        return true;
-      return false;
-    }
-
+    #region Operators
+    public static bool operator !=(WafclastStatePoints left, double right) => !(left == right);
     public static bool operator ==(WafclastStatePoints left, double right) {
-      if (left.Current == 0)
+      if (left.Current == right)
         return true;
       return false;
     }
+    #endregion
   }
 }
