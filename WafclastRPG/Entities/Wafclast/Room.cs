@@ -1,5 +1,4 @@
-﻿using DSharpPlus.CommandsNext;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
 using System;
 
 namespace WafclastRPG.Entities.Wafclast {
@@ -16,6 +15,7 @@ namespace WafclastRPG.Entities.Wafclast {
     public Monster Monster { get; set; }
     public RoomAttackOrder AttackOrder { get; set; }
 
+    public string Mention { get => $"<#{Id}>"; }
     #region Operator
     public bool Equals(Room other) {
       if (ReferenceEquals(null, other))
@@ -37,5 +37,6 @@ namespace WafclastRPG.Entities.Wafclast {
     public static bool operator ==(Room left, Room right) => Equals(left, right);
     public static bool operator !=(Room left, Room right) => !Equals(left, right);
     #endregion
+
   }
 }

@@ -1,8 +1,11 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using System;
+using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
+using WafclastRPG.Context;
 using WafclastRPG.Entities;
 using WafclastRPG.Extensions;
 using WafclastRPG.Repositories.Interfaces;
@@ -14,17 +17,115 @@ namespace WafclastRPG.Commands.UserCommands {
     private readonly IPlayerRepository _playerRepository;
     private readonly IRoomRepository _roomRepository;
     private readonly IMongoSession _session;
+    private readonly UsersBlocked _usersBlocked;
 
-    public CombatCommands(IPlayerRepository playerRepository, IRoomRepository roomRepository, IMongoSession session) {
+    public CombatCommands(IPlayerRepository playerRepository, IRoomRepository roomRepository, IMongoSession session, UsersBlocked usersBlocked) {
       _playerRepository = playerRepository;
       _roomRepository = roomRepository;
       _session = session;
+      _usersBlocked = usersBlocked;
     }
 
-    [Command("explorarSession")]
+    [Command("explorar")]
+    [Aliases("ex", "explore")]
     [Description("Permite explorar uma região, podendo encontrar monstros.")]
     [Usage("explorar")]
-    public async Task BasicAtasdtackCommandAsync(CommandContext ctx) {
+    public async Task ExploreCommandAsync(CommandContext ctx) {
+      _usersBlocked.BlockUser(ctx);
+      Interactivity intera = new Interactivity(_usersBlocked, ctx);
+      var player = await _playerRepository.FindPlayerAsync(ctx);
+      var room = await _roomRepository.FindRoomOrDefaultAsync(player);
+      var monster = room.Monster;
+      if (monster == null)
+        throw new Exception("para que essa area não tem nada de interessante para explorar.");
+
+
+
+      var str = new StringBuilder();
+
+      str.AppendLine($"Você encontrou **[{room.Monster.Mention}]!**");
+      str.AppendLine("O que deseja fazer?");
+      str.AppendLine("Ataque 1: Atacar com as mãos");
+      str.AppendLine("Ataque 2: Magia Congelante");
+      str.AppendLine("Ataque 3: Magia de Administrador");
+      str.AppendLine("Defender");
+      str.AppendLine("Fugir");
+      var emb = new DiscordEmbedBuilder();
+      emb.WithDescription(str.ToString());
+      emb.WithColor(DiscordColor.Azure);
+      await ctx.RespondAsync(emb);
+
+      var character = player.Character;
+      int turn = 1;
+      bool cont = true;
+      Random rd = new Random();
+      while (cont) {
+        var monsterDamage = rd.Next(1, 10);
+
+       var message = await intera.WaitForMessageAsync();
+        if (message.TimedOut) {
+          await ctx.RespondAsync("O monstro fugiu!");
+          return;
+        }
+
+        int? choose = message.Result switch {
+          "ataque 1" => 1,
+          "1" => 1,
+          "ataque 2" => 2,
+          "2" => 2,
+          "ataque 3" => 3,
+          "3" => 3,
+          "fugir" => 4,
+          _ => 0,
+        };
+
+        if (choose == 4) {
+          await ctx.RespondAsync("Você fugiu da batalha igual um patinho feio 🦆🦆🦆!");
+          return;
+        }
+
+        var playerDamage = 0;
+
+        _ = choose switch {
+          1 => playerDamage = rd.Next(1, 10),
+          2 => playerDamage = rd.Next(20, 30),
+          3 => playerDamage = 100000,
+        };
+
+        var embed = new DiscordEmbedBuilder();
+
+        embed.WithColor(DiscordColor.Red);
+        embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
+        embed.WithTitle("Relatório de Combate");
+        if ((player.Character.LifePoints.Current -= monsterDamage) <= 0)
+          cont = false;
+        if ((monster.LifePoints.Current -= playerDamage) <= 0)
+          cont = false;
+
+        var strf = new StringBuilder();
+        strf.AppendLine($"Monster causou {monsterDamage} de dano!");
+        strf.AppendLine($"Jogador causou {playerDamage} de dano!");
+        embed.WithDescription(strf.ToString());
+        embed.AddField(ctx.User.Username, $"{Emojis.TesteEmoji(player.Character.LifePoints)} {player.LifePoints}", true);
+        embed.AddField(monster.Mention, $"{Emojis.GerarVidaEmoji(monster.LifePoints)} {monster.LifePoints.Current:N2} ", true);
+
+        if (cont) {
+          str = new StringBuilder();
+          str.AppendLine("Ataque 1: Atacar com as mãos");
+          str.AppendLine("Ataque 2: Magia Congelante");
+          str.AppendLine("Ataque 3: Magia de Administrador");
+          str.AppendLine("Defender");
+          str.AppendLine("Fugir");
+
+          embed.AddField("O que deseja fazer?", str.ToString());
+        }
+        await ctx.RespondAsync(embed);
+      }
+
+      _usersBlocked.UnblockUser(ctx);
+      return;
+
+
       using (var session = await _session.StartSession())
         _res = await session.WithTransactionAsync(async (s, ct) => {
           var player = await _playerRepository.FindPlayerAsync(ctx);
@@ -59,10 +160,7 @@ namespace WafclastRPG.Commands.UserCommands {
 
 
 
-    [Command("explorar")]
-    [Aliases("ex", "explore")]
-    [Description("Permite explorar uma região, podendo encontrar monstros.")]
-    [Usage("explorar")]
+
     public async Task BasicAttackCommandAsync(CommandContext ctx) {
       using (var sessionHandler = await _session.StartSession())
         _res = await sessionHandler.WithTransactionAsync(async (s, ct) => {
@@ -94,23 +192,23 @@ namespace WafclastRPG.Commands.UserCommands {
       await ctx.RespondAsync(_res);
     }
 
-    public async Task ExploreCommandAsync(CommandContext ctx) {
-      using (var sessionHandler = await _session.StartSession())
-        _res = await sessionHandler.WithTransactionAsync(async (s, ct) => {
-          var player = await _playerRepository.FindPlayerAsync(ctx);
+    //public async Task ExploreCommandAsync(CommandContext ctx) {
+    //  using (var sessionHandler = await _session.StartSession())
+    //    _res = await sessionHandler.WithTransactionAsync(async (s, ct) => {
+    //      var player = await _playerRepository.FindPlayerAsync(ctx);
 
-          var character = player.Character;
-          character.Room = await _roomRepository.FindRoomOrDefaultAsync(character.Room.Id);
+    //      var character = player.Character;
+    //      character.Room = await _roomRepository.FindRoomOrDefaultAsync(character.Room.Id);
 
-          if (character.Room.Monster == null) {
-            return new Response("você procura monstros para atacar.. mas parece que não você não encontrará nada aqui.");
-          }
+    //      if (character.Room.Monster == null) {
+    //        return new Response("você procura monstros para atacar.. mas parece que não você não encontrará nada aqui.");
+    //      }
 
-          await _playerRepository.SavePlayerAsync(player);
+    //      await _playerRepository.SavePlayerAsync(player);
 
-          return new Response($"você encontrou **[{character.Room.Monster.Mention}]!**");
-        });
-      await ctx.RespondAsync(_res);
-    }
+    //      return new Response($"você encontrou **[{character.Room.Monster.Mention}]!**");
+    //    });
+    //  await ctx.RespondAsync(_res);
+    //}
   }
 }

@@ -1,12 +1,12 @@
 ﻿using static WafclastRPG.Mathematics;
 
 namespace WafclastRPG.Entities.Wafclast {
-  public class CharacterMage : BaseCharacter {
+  public class MageCharacter : BaseCharacter {
 
     public override string EmojiAttack { get; set; } = Emojis.Dardo;
     public override WafclastAttributes Attributes { get; set; } = new WafclastAttributes();
 
-    public CharacterMage() {
+    public MageCharacter() {
       Skills.Add("Slash", 1);
     }
 

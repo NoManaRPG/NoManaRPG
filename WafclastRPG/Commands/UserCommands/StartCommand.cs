@@ -41,7 +41,7 @@ namespace WafclastRPG.Commands.UserCommands {
               break;
             case "feitiçeira":
             case "feiticeira":
-              player = new Player(ctx.User.Id, new CharacterMage());
+              player = new Player(ctx.User.Id, new MageCharacter());
               break;
             default:
               return new Response("você esqueceu de informar a classe do seu personagem! **Guerreiro ou Feiticeira.**");

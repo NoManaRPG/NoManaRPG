@@ -68,7 +68,7 @@ namespace WafclastRPG.Entities.Wafclast {
           if (monster.IsDead) {
             str.AppendLine($"{monster.Mention} {Emojis.CrossBone} morreu!");
             MonsterKills++;
-            Character.AddExperience(monster.Level);
+            Character.AddExperience(monster.Level * monster.Level);
           }
         } else {
           str.AppendLine($"{monster.Mention} desviou!");

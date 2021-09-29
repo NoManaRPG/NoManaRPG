@@ -6,7 +6,7 @@ using static WafclastRPG.Mathematics;
 namespace WafclastRPG.Entities.Wafclast {
   [BsonIgnoreExtraElements]
   [BsonDiscriminator(RootClass = true)]
-  [BsonKnownTypes(typeof(CharacterMage), typeof(CharacterWarrior))]
+  [BsonKnownTypes(typeof(MageCharacter), typeof(CharacterWarrior))]
   public abstract class BaseCharacter : WafclastLevel {
 
     /// <summary>

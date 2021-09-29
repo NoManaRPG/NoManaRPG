@@ -10,12 +10,12 @@ using WafclastRPG.Extensions;
 
 namespace WafclastRPG.Entities {
   public struct AnswerResult<T> {
-    public bool TimedOut;
-    public T Value;
+    public bool TimedOut { get; }
+    public T Result { get; }
 
     public AnswerResult(bool timedOut, T result) {
       TimedOut = timedOut;
-      Value = result;
+      Result = result;
     }
   }
 
@@ -24,12 +24,14 @@ namespace WafclastRPG.Entities {
     private readonly CommandContext _ctx;
     private readonly InteractivityExtension _interactivityExtension;
     private readonly TimeSpan? _timeOut;
+    private readonly Func<DiscordMessage, bool> _waitMessage;
 
     public Interactivity(UsersBlocked usersBlocked, CommandContext commandContext, TimeSpan? timeOutOverride = null) {
       _usersBlocked = usersBlocked;
       _ctx = commandContext;
       _interactivityExtension = _ctx.Client.GetInteractivity();
       _timeOut = timeOutOverride;
+      _waitMessage = new Func<DiscordMessage, bool>(x => x.Author.Id == _ctx.User.Id && x.ChannelId == _ctx.Channel.Id);
     }
 
     private void BlockUser() => _usersBlocked.BlockUser(_ctx);
@@ -38,6 +40,17 @@ namespace WafclastRPG.Entities {
     public async Task<InteractivityResult<DiscordMessage>> WaitForMessageAsync(string message, DiscordEmbed embed) {
       await CommandContextExtension.RespondAsync(_ctx, message, embed);
       return await _interactivityExtension.WaitForMessageAsync(x => x.Author.Id == _ctx.User.Id && x.ChannelId == _ctx.Channel.Id, timeoutoverride: _timeOut);
+    }
+
+    public async Task<AnswerResult<string>> WaitForMessageAsync(string message) {
+      await _ctx.RespondAsync(message);
+      var msg = await _interactivityExtension.WaitForMessageAsync(_waitMessage, timeoutoverride: _timeOut);
+      return new AnswerResult<string>(msg.TimedOut, msg.Result.Content);
+    }
+
+    public async Task<AnswerResult<string>> WaitForMessageAsync() {
+      var msg = await _interactivityExtension.WaitForMessageAsync(_waitMessage, timeoutoverride: _timeOut);
+      return new AnswerResult<string>(msg.TimedOut, msg.Result.Content);
     }
 
     public async Task<AnswerResult<T>> WaitForEnumAsync<T>(string message) where T : Enum {
