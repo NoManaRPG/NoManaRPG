@@ -1,5 +1,5 @@
 ﻿using System;
-using WafclastRPG.Properties;
+using WafclastRPG.Game.Properties;
 
 namespace WafclastRPG.Exceptions {
   public class AnswerTimeoutException : Exception {

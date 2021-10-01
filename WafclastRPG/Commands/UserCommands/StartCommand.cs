@@ -2,7 +2,7 @@
 using DSharpPlus.CommandsNext.Attributes;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
-using WafclastRPG.Commands.CommandResponse;
+using WafclastRPG.Database.Response;
 using WafclastRPG.Extensions;
 using WafclastRPG.Game.Entities.Wafclast;
 using WafclastRPG.Repositories;

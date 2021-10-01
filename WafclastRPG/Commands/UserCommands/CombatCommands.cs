@@ -5,8 +5,8 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
-using WafclastRPG.Commands.CommandResponse;
-using WafclastRPG.Context;
+using WafclastRPG.Database;
+using WafclastRPG.Database.Response;
 using WafclastRPG.Extensions;
 using WafclastRPG.Repositories;
 

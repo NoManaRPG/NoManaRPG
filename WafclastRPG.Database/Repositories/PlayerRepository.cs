@@ -2,12 +2,11 @@
 using DSharpPlus.Entities;
 using MongoDB.Driver;
 using System.Threading.Tasks;
-using WafclastRPG.Database;
 using WafclastRPG.Database.Exceptions;
 using WafclastRPG.Game.Entities.Wafclast;
 
 
-namespace WafclastRPG.Repositories {
+namespace WafclastRPG.Database.Repositories {
   public class PlayerRepository : IPlayerRepository {
     private readonly MongoDbContext _context;
     private readonly IMongoSession _session;

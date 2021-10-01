@@ -1,4 +1,4 @@
-﻿namespace WafclastRPG.Commands.CommandResponse {
+﻿namespace WafclastRPG.Database.Response {
   public class StringResponse : IResponse {
     public string Response { get; }
 

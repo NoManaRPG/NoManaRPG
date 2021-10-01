@@ -4,7 +4,7 @@ using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 using System;
 using System.Threading.Tasks;
-using WafclastRPG.Context;
+using WafclastRPG.Database;
 using WafclastRPG.Exceptions;
 using WafclastRPG.Extensions;
 

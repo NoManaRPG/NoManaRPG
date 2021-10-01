@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using WafclastRPG.Context;
+using WafclastRPG.Database;
 using WafclastRPG.Repositories;
 
 namespace WafclastRPG {

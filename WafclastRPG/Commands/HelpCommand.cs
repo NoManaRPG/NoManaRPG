@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
-using WafclastRPG.Context;
+using WafclastRPG.Database;
 using static DSharpPlus.CommandsNext.CommandsNextExtension;
 
 namespace WafclastRPG.Commands {

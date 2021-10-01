@@ -1,7 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using System.Threading.Tasks;
-using WafclastRPG.Commands.CommandResponse;
+using WafclastRPG.Database.Response;
 
 namespace WafclastRPG.Extensions {
   public static class CommandContextExtension {

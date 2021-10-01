@@ -1,6 +1,6 @@
 ﻿using DSharpPlus.Entities;
 
-namespace WafclastRPG.Commands.CommandResponse {
+namespace WafclastRPG.Database.Response {
   public class EmbedResponse : IResponse {
     public DiscordEmbedBuilder Response { get; }
 

@@ -4,7 +4,7 @@ using DSharpPlus.Entities;
 using System;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
-using WafclastRPG.Commands.CommandResponse;
+using WafclastRPG.Database.Response;
 using WafclastRPG.Extensions;
 using WafclastRPG.Game.Entities;
 using WafclastRPG.Game.Entities.Wafclast;

@@ -1,11 +1,10 @@
 ﻿using DSharpPlus.Entities;
 using MongoDB.Driver;
 using System.Threading.Tasks;
-using WafclastRPG.Database;
 using WafclastRPG.Game.Entities.Itens;
 
 
-namespace WafclastRPG.Repositories {
+namespace WafclastRPG.Database.Repositories {
   public class ItemRepository : IItemRepository {
     private readonly MongoDbContext _context;
     private readonly IMongoSession _session;

@@ -1,7 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using System.Collections.Concurrent;
 
-namespace WafclastRPG.Context {
+namespace WafclastRPG.Database {
   public class UsersBlocked {
     private readonly ConcurrentDictionary<ulong, bool> _usersBlocked;
 

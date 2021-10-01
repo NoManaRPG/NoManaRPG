@@ -1,12 +1,11 @@
 ﻿using MongoDB.Driver;
 using System.Threading.Tasks;
-using WafclastRPG.Extensions;
+using WafclastRPG.Database.Extensions;
 using WafclastRPG.Game.Entities;
 using WafclastRPG.Game.Entities.Itens;
 using WafclastRPG.Game.Entities.Wafclast;
 
-
-namespace WafclastRPG.Context {
+namespace WafclastRPG.Database {
   public class MongoDbContext {
 
     public IMongoClient Client { get; }

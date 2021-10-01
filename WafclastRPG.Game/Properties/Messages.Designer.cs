@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WafclastRPG.Properties {
+namespace WafclastRPG.Game.Properties {
     using System;
     
     
@@ -22,7 +22,7 @@ namespace WafclastRPG.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Messages {
+    public class Messages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,10 +36,10 @@ namespace WafclastRPG.Properties {
         ///   Retorna a instância de ResourceManager armazenada em cache usada por essa classe.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WafclastRPG.Properties.Messages", typeof(Messages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WafclastRPG.Game.Properties.Messages", typeof(Messages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace WafclastRPG.Properties {
         ///   pesquisas de recursos que usam essa classe de recurso de tipo de alta segurança.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace WafclastRPG.Properties {
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a ainda não criou um personagem..
         /// </summary>
-        internal static string AindaNaoCriouPersonagem {
+        public static string AindaNaoCriouPersonagem {
             get {
                 return ResourceManager.GetString("AindaNaoCriouPersonagem", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace WafclastRPG.Properties {
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a seu alvo ainda não criou um personagem! Peça-o para digitar &apos;comecar&apos;!.
         /// </summary>
-        internal static string JogadorAlvoNaoCriouPersonagem {
+        public static string JogadorAlvoNaoCriouPersonagem {
             get {
                 return ResourceManager.GetString("JogadorAlvoNaoCriouPersonagem", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace WafclastRPG.Properties {
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a você ainda não criou um personagem! Digite `comecar` para criar um!.
         /// </summary>
-        internal static string NaoEscreveuComecar {
+        public static string NaoEscreveuComecar {
             get {
                 return ResourceManager.GetString("NaoEscreveuComecar", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace WafclastRPG.Properties {
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a você não pode causar problemas dentro dos muros da cidade!.
         /// </summary>
-        internal static string NaoPodeAtacarNaCidade {
+        public static string NaoPodeAtacarNaCidade {
             get {
                 return ResourceManager.GetString("NaoPodeAtacarNaCidade", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace WafclastRPG.Properties {
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a o seguinte comando está disponível para uso:.
         /// </summary>
-        internal static string Reminder {
+        public static string Reminder {
             get {
                 return ResourceManager.GetString("Reminder", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace WafclastRPG.Properties {
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a você não respondeu a tempo e por isso o comando foi cancelado..
         /// </summary>
-        internal static string TempoExpirado {
+        public static string TempoExpirado {
             get {
                 return ResourceManager.GetString("TempoExpirado", resourceCulture);
             }

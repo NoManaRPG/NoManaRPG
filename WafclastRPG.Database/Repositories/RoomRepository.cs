@@ -1,9 +1,8 @@
 ﻿using MongoDB.Driver;
 using System.Threading.Tasks;
-using WafclastRPG.Database;
 using WafclastRPG.Game.Entities.Wafclast;
 
-namespace WafclastRPG.Repositories {
+namespace WafclastRPG.Database.Repositories {
   public class RoomRepository : IRoomRepository {
     private readonly MongoDbContext _context;
     private readonly FindOptions _options = new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) };

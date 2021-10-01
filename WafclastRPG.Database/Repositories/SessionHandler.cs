@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WafclastRPG.Database.Response;
 
-namespace WafclastRPG.Entities {
+namespace WafclastRPG.Database.DatabasestRPG.Entities {
   public class SessionHandler : IDisposable {
     public IClientSessionHandle Session { get => _session; }
     private IClientSessionHandle _session;

@@ -1,8 +1,7 @@
 ﻿using System;
-using WafclastRPG.Properties;
+using WafclastRPG.Game.Properties;
 
-
-namespace WafclastRPG.Exceptions {
+namespace WafclastRPG.Database.Exceptions {
   public class PlayerNotCreatedException : Exception {
     public new string Message = Messages.AindaNaoCriouPersonagem;
   }

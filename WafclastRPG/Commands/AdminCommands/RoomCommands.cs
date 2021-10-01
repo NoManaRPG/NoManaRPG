@@ -4,7 +4,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
-using WafclastRPG.Context;
+using WafclastRPG.Database;
 using WafclastRPG.Extensions;
 using WafclastRPG.Game.Entities.Wafclast;
 using WafclastRPG.Game.Enums;
