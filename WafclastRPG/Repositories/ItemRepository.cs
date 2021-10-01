@@ -2,7 +2,8 @@
 using MongoDB.Driver;
 using System.Threading.Tasks;
 using WafclastRPG.Context;
-using WafclastRPG.Entities.Itens;
+using WafclastRPG.Game.Entities.Itens;
+
 
 namespace WafclastRPG.Repositories {
   public class ItemRepository : IItemRepository {

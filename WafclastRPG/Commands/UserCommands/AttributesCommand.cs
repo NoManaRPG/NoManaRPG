@@ -4,15 +4,16 @@ using DSharpPlus.Entities;
 using System;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
-using WafclastRPG.Entities;
-using WafclastRPG.Entities.Wafclast;
+using WafclastRPG.Commands.CommandResponse;
 using WafclastRPG.Extensions;
+using WafclastRPG.Game.Entities;
+using WafclastRPG.Game.Entities.Wafclast;
 using WafclastRPG.Repositories;
 
 namespace WafclastRPG.Commands.UserCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
   public class AttributesCommand : BaseCommandModule {
-    private Response _res;
+    private IResponse _res;
     private readonly IPlayerRepository _playerRepository;
     private readonly IRoomRepository _roomRepository;
     private readonly IMongoSession _session;
@@ -32,7 +33,7 @@ namespace WafclastRPG.Commands.UserCommands {
           var player = await _playerRepository.FindPlayerAsync(ctx);
 
           if (string.IsNullOrEmpty(attribute))
-            return new Response($"você precisa informar um atributo.");
+            return new StringResponse($"você precisa informar um atributo.");
 
           var character = player.Character;
 
@@ -42,12 +43,12 @@ namespace WafclastRPG.Commands.UserCommands {
 
           var atribut = AttributeChoose(attribute, character);
           if (atribut == null)
-            return new Response("este atributo não existe!");
+            return new StringResponse("este atributo não existe!");
 
           atribut.Base += quantity;
 
           await _playerRepository.SavePlayerAsync(player);
-          return new Response("pontos atribuidos!");
+          return new StringResponse("pontos atribuidos!");
         });
       await ctx.RespondAsync(_res);
     }
@@ -76,7 +77,7 @@ namespace WafclastRPG.Commands.UserCommands {
           var embed = new DiscordEmbedBuilder();
           foreach (var item in player.Character.Attributes.GetAttributes())
             embed.AddField(item.Name, item.Attribute.Current.ToString(), true);
-          return new Response(embed);
+          return new EmbedResponse(embed);
         });
       await ctx.RespondAsync(_res);
     }

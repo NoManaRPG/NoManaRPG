@@ -1,15 +1,15 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WafclastRPG.Entities.Itens;
-using WafclastRPG.Extensions;
-using WafclastRPG.Entities.Wafclast;
-using System;
+using WafclastRPG.Commands.CommandResponse;
 using WafclastRPG.Context;
-using Microsoft.Extensions.DependencyInjection;
+using WafclastRPG.Game.Entities.Itens;
+using WafclastRPG.Game.Entities.Wafclast;
 using WafclastRPG.Repositories;
 
 namespace WafclastRPG.Commands.AdminCommands {
@@ -21,7 +21,7 @@ namespace WafclastRPG.Commands.AdminCommands {
     private readonly UsersBlocked _usersBlocked;
     private readonly MongoDbContext _mongoDbContext;
     private readonly TimeSpan _timeout = TimeSpan.FromMinutes(2);
-    private Response _res;
+    private IResponse _res;
 
     public DatabaseCommands(IPlayerRepository playerRepository, IRoomRepository roomRepository, IMongoSession session, MongoDbContext mongoDbContext, UsersBlocked usersBlocked) {
       _playerRepository = playerRepository;

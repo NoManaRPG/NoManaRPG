@@ -1,7 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using System.Threading.Tasks;
-using WafclastRPG.Entities.Wafclast;
+using WafclastRPG.Game.Entities.Wafclast;
 
 namespace WafclastRPG.Repositories {
   public interface IPlayerRepository {

@@ -1,21 +1,21 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using MongoDB.Driver;
+using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
-using WafclastRPG.Entities.Wafclast;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
+using WafclastRPG.Commands.CommandResponse;
+using WafclastRPG.Context;
 using WafclastRPG.Exceptions;
 using WafclastRPG.Extensions;
+using WafclastRPG.Game.Entities.Wafclast;
 using WafclastRPG.Repositories;
-using WafclastRPG.Context;
-using System.Text;
 
 namespace WafclastRPG.Commands.UserCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
   public class LookAroundCommand : BaseCommandModule {
-    private Response _res;
+    private IResponse _res;
     private readonly Config _config;
     private readonly MongoDbContext _mongoDbContext;
     private readonly IPlayerRepository _playerRepository;
@@ -41,7 +41,7 @@ namespace WafclastRPG.Commands.UserCommands {
 
       var room = await _mongoDbContext.Rooms.Find(x => x.Id == player.Character.Room.Id).FirstOrDefaultAsync();
       if (room == null) {
-        await ctx.ResponderAsync("parece que aconteceu algum erro na matrix!");
+        await CommandContextExtension.RespondAsync(ctx, "parece que aconteceu algum erro na matrix!");
         return;
       }
 
@@ -92,23 +92,23 @@ namespace WafclastRPG.Commands.UserCommands {
           if (string.IsNullOrWhiteSpace(roomName)) {
             room = await _roomRepository.FindRoomOrDefaultAsync(ctx.Channel.Id);
             if (room == null)
-              return new Response("você foi para algum lugar, talvez alguns passos a frente.");
+              return new StringResponse("você foi para algum lugar, talvez alguns passos a frente.");
           } else {
             room = await _roomRepository.FindRoomOrDefaultAsync(roomName);
             if (room == null)
-              return new Response("você tenta procurar no mapa o lugar, mas não encontra! Como você chegaria em um lugar em que você não conhece?!");
+              return new StringResponse("você tenta procurar no mapa o lugar, mas não encontra! Como você chegaria em um lugar em que você não conhece?!");
           }
 
           if (room.Location.Distance(character.Room.Location) > 161)
-            return new Response("parece ser um caminho muito longe! Melhor tentar algo mais próximo.");
+            return new StringResponse("parece ser um caminho muito longe! Melhor tentar algo mais próximo.");
           if (room == player.Character.Room)
-            return new Response("como é bom estar no lugar que você sempre quis...");
+            return new StringResponse("como é bom estar no lugar que você sempre quis...");
 
           room.Monster = null;
           character.Room = room;
           await _playerRepository.SavePlayerAsync(player);
 
-          return new Response($"você chegou em: **[{room.Name}]!**");
+          return new StringResponse($"você chegou em: **[{room.Name}]!**");
         });
       await ctx.RespondAsync(_res);
     }

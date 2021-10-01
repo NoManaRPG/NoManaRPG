@@ -5,15 +5,15 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
+using WafclastRPG.Commands.CommandResponse;
 using WafclastRPG.Context;
-using WafclastRPG.Entities;
 using WafclastRPG.Extensions;
 using WafclastRPG.Repositories;
 
 namespace WafclastRPG.Commands.UserCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
   public class CombatCommands : BaseCommandModule {
-    private Response _res;
+    private IResponse _res;
     private readonly IPlayerRepository _playerRepository;
     private readonly IRoomRepository _roomRepository;
     private readonly IMongoSession _session;
@@ -62,7 +62,7 @@ namespace WafclastRPG.Commands.UserCommands {
       while (cont) {
         var monsterDamage = rd.Next(1, 10);
 
-       var message = await intera.WaitForMessageAsync();
+        var message = await intera.WaitForMessageAsync();
         if (message.TimedOut) {
           await ctx.RespondAsync("O monstro fugiu!");
           return;
@@ -127,13 +127,13 @@ namespace WafclastRPG.Commands.UserCommands {
 
 
       using (var session = await _session.StartSession())
-        _res = await session.WithTransactionAsync(async (s, ct) => {
+        _res = await session.WithTransactionAsync<IResponse>(async (s, ct) => {
           var player = await _playerRepository.FindPlayerAsync(ctx);
 
           //Combat
           var combatResult = player.BasicAttackMonster();
           if (combatResult == "você não está visualizando nenhum monstro para atacar!")
-            return new Response(combatResult);
+            return new StringResponse(combatResult);
 
           await _playerRepository.SavePlayerAsync(player);
 
@@ -151,7 +151,7 @@ namespace WafclastRPG.Commands.UserCommands {
 
           //loot em outro comando!
 
-          return new Response(embed);
+          return new EmbedResponse(embed);
         });
       await ctx.RespondAsync(_res);
     }
@@ -163,13 +163,13 @@ namespace WafclastRPG.Commands.UserCommands {
 
     public async Task BasicAttackCommandAsync(CommandContext ctx) {
       using (var sessionHandler = await _session.StartSession())
-        _res = await sessionHandler.WithTransactionAsync(async (s, ct) => {
+        _res = await sessionHandler.WithTransactionAsync<IResponse>(async (s, ct) => {
           var player = await _playerRepository.FindPlayerAsync(ctx);
 
           //Combat
           var combatResult = player.BasicAttackMonster();
           if (combatResult == "você não está visualizando nenhum monstro para atacar!")
-            return new Response(combatResult);
+            return new StringResponse(combatResult);
 
           await _playerRepository.SavePlayerAsync(player);
 
@@ -187,7 +187,7 @@ namespace WafclastRPG.Commands.UserCommands {
 
           //loot em outro comando!
 
-          return new Response(embed);
+          return new EmbedResponse(embed);
         });
       await ctx.RespondAsync(_res);
     }

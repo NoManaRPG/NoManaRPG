@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
 using System.Threading.Tasks;
 using WafclastRPG.Context;
-using WafclastRPG.Entities.Wafclast;
+using WafclastRPG.Game.Entities.Wafclast;
 
 namespace WafclastRPG.Repositories {
   public class RoomRepository : IRoomRepository {

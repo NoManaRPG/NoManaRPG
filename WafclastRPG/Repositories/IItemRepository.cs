@@ -1,6 +1,6 @@
 ﻿using DSharpPlus.Entities;
 using System.Threading.Tasks;
-using WafclastRPG.Entities.Itens;
+using WafclastRPG.Game.Entities.Itens;
 
 namespace WafclastRPG.Repositories {
   public interface IItemRepository {

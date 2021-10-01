@@ -1,12 +1,12 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
-using DSharpPlus.Entities;
-using WafclastRPG.Repositories;
 using WafclastRPG.Context;
+using WafclastRPG.Repositories;
 
 namespace WafclastRPG {
   public class Program {

@@ -1,9 +1,9 @@
 ﻿using MongoDB.Driver;
 using System.Threading.Tasks;
-using WafclastRPG.Entities;
-using WafclastRPG.Entities.Itens;
-using WafclastRPG.Entities.Wafclast;
 using WafclastRPG.Extensions;
+using WafclastRPG.Game.Entities;
+using WafclastRPG.Game.Entities.Itens;
+using WafclastRPG.Game.Entities.Wafclast;
 
 
 namespace WafclastRPG.Context {

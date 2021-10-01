@@ -2,16 +2,15 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Exceptions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using WafclastRPG.Extensions;
-using WafclastRPG.Exceptions;
-using Microsoft.Extensions.DependencyInjection;
-using WafclastRPG.Repositories;
 using WafclastRPG.Context;
+using WafclastRPG.Exceptions;
+using WafclastRPG.Extensions;
 
 namespace WafclastRPG.DiscordEvents {
   public static class CommandErroredEvent {
@@ -69,10 +68,10 @@ namespace WafclastRPG.DiscordEvents {
             e.Context.Client.Logger.LogDebug(new EventId(601, "Argument Error"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
           break;
         case PlayerNotCreatedException pne:
-          await ctx.ResponderAsync(pne.Message);
+          await CommandContextExtension.RespondAsync(ctx, pne.Message);
           break;
         case AnswerTimeoutException ate:
-          await ctx.ResponderAsync(ate.Message);
+          await CommandContextExtension.RespondAsync(ctx, ate.Message);
           break;
         default:
           e.Context.Client.Logger.LogDebug(new EventId(601, "Command Error"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);

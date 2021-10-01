@@ -6,13 +6,14 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using WafclastRPG.Attributes;
+using WafclastRPG.Commands.CommandResponse;
 using WafclastRPG.Extensions;
 using WafclastRPG.Repositories;
 
 namespace WafclastRPG.Commands.UserCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]
   public class StatusCommand : BaseCommandModule {
-    private Response _res;
+    private IResponse _res;
     private readonly IPlayerRepository _playerRepository;
     private readonly IMongoSession _session;
 
@@ -59,7 +60,7 @@ namespace WafclastRPG.Commands.UserCommands {
 
           embed.AddField("Localização", $"{Emojis.Mapa} {Formatter.MaskedUrl(character.Room.Name, new Uri(character.Room.Invite))}");
 
-          return new Response(embed);
+          return new EmbedResponse(embed);
         });
       await ctx.RespondAsync(_res);
     }
