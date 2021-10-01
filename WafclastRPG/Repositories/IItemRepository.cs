@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using WafclastRPG.Entities.Itens;
 
-namespace WafclastRPG.Repositories.Interfaces {
+namespace WafclastRPG.Repositories {
   public interface IItemRepository {
     Task<WafclastBaseItem> FindItemOrDefaultAsync(int globalItemId, DiscordUser user);
     Task<WafclastBaseItem> FindItemOrDefaultAsync(string itemName, DiscordUser user);

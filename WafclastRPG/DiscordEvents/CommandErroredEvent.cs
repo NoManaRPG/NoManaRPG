@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using WafclastRPG.Extensions;
 using WafclastRPG.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
-using WafclastRPG.Repositories.Interfaces;
+using WafclastRPG.Repositories;
 using WafclastRPG.Context;
 
 namespace WafclastRPG.DiscordEvents {

@@ -3,7 +3,7 @@ using DSharpPlus.Entities;
 using System.Threading.Tasks;
 using WafclastRPG.Entities.Wafclast;
 
-namespace WafclastRPG.Repositories.Interfaces {
+namespace WafclastRPG.Repositories {
   public interface IPlayerRepository {
     Task<Player> FindPlayerAsync(DiscordUser user);
     Task<Player> FindPlayerAsync(CommandContext ctx);

@@ -7,7 +7,7 @@ using System;
 using System.Text;
 using WafclastRPG.Attributes;
 using WafclastRPG.Entities;
-using WafclastRPG.Repositories.Interfaces;
+using WafclastRPG.Repositories;
 using WafclastRPG.Context;
 
 namespace WafclastRPG.Commands.AdminCommands {

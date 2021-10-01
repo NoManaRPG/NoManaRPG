@@ -8,7 +8,7 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using WafclastRPG.Exceptions;
 using WafclastRPG.Extensions;
-using WafclastRPG.Repositories.Interfaces;
+using WafclastRPG.Repositories;
 using WafclastRPG.Context;
 using System.Text;
 

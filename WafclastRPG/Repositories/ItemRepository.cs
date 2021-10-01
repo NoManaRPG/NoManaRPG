@@ -3,7 +3,6 @@ using MongoDB.Driver;
 using System.Threading.Tasks;
 using WafclastRPG.Context;
 using WafclastRPG.Entities.Itens;
-using WafclastRPG.Repositories.Interfaces;
 
 namespace WafclastRPG.Repositories {
   public class ItemRepository : IItemRepository {

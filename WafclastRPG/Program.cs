@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using DSharpPlus.Entities;
 using WafclastRPG.Repositories;
-using WafclastRPG.Repositories.Interfaces;
 using WafclastRPG.Context;
 
 namespace WafclastRPG {

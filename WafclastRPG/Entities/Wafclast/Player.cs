@@ -27,6 +27,13 @@ namespace WafclastRPG.Entities.Wafclast {
 
     public string Mention { get => $"<@{Id.ToString(CultureInfo.InvariantCulture)}>"; }
 
+    static (string key, int value) Split(string text) {
+      var split = text.Split(":");
+      var key = split[0];
+      var value = int.Parse(split[1]);
+      return (key, value);
+    }
+
     public string BasicAttackMonster() {
       var monster = Character.Room.Monster;
 
@@ -41,6 +48,7 @@ namespace WafclastRPG.Entities.Wafclast {
       double damage;
 
       //Combat
+      var asd = Split("asd");
 
       var attacking = Character.NextAttack();
 

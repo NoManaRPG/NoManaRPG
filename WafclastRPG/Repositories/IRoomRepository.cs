@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using WafclastRPG.Entities.Wafclast;
 
-namespace WafclastRPG.Repositories.Interfaces {
+namespace WafclastRPG.Repositories {
   public interface IRoomRepository {
     Task<Room> FindRoomOrDefaultAsync(Player player);
     Task<Room> FindRoomOrDefaultAsync(ulong id);

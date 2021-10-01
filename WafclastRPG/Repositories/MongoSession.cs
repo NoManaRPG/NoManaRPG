@@ -1,7 +1,6 @@
 ﻿using MongoDB.Driver;
 using System.Threading.Tasks;
 using WafclastRPG.Context;
-using WafclastRPG.Repositories.Interfaces;
 
 namespace WafclastRPG.Repositories {
   public class MongoSession : IMongoSession {

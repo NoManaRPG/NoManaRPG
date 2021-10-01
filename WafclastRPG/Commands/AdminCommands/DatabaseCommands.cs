@@ -10,7 +10,7 @@ using WafclastRPG.Entities.Wafclast;
 using System;
 using WafclastRPG.Context;
 using Microsoft.Extensions.DependencyInjection;
-using WafclastRPG.Repositories.Interfaces;
+using WafclastRPG.Repositories;
 
 namespace WafclastRPG.Commands.AdminCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]

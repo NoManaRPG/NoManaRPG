@@ -7,15 +7,20 @@ namespace WafclastRPG.Entities.Wafclast {
     public override WafclastAttributes Attributes { get; set; } = new WafclastAttributes();
 
     public MageCharacter() {
-      Skills.Add("Slash", 1);
-    }
-
-    public override double CalculateDamagePoints() {
-      return CalculateMagicalDamage(Attributes);
-    }
-
-    public override void ResetCombatThings() {
-
     }
   }
+
+  public string test() {
+      return   "sad";
+  }
+
+
+  public override double Calcul  ate  DamagePoints() {
+    return CalculateMagicalDamage(Attributes);
+  }
+
+  public override void ResetCombatThings() {
+
+  }
+}
 }

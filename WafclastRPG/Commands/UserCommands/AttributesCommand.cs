@@ -7,7 +7,7 @@ using WafclastRPG.Attributes;
 using WafclastRPG.Entities;
 using WafclastRPG.Entities.Wafclast;
 using WafclastRPG.Extensions;
-using WafclastRPG.Repositories.Interfaces;
+using WafclastRPG.Repositories;
 
 namespace WafclastRPG.Commands.UserCommands {
   [ModuleLifespan(ModuleLifespan.Transient)]

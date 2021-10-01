@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using WafclastRPG.Context;
 using WafclastRPG.Entities.Wafclast;
-using WafclastRPG.Repositories.Interfaces;
 
 namespace WafclastRPG.Repositories {
   public class RoomRepository : IRoomRepository {
