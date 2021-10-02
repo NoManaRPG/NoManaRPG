@@ -5,9 +5,32 @@ VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WafclastRPG", "WafclastRPG\WafclastRPG.csproj", "{6D35FE2A-BEDB-4810-9D79-5CD7DE63ED4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WafclastRPG.Game", "WafclastRPG.Game\WafclastRPG.Game.csproj", "{AF172E09-A09F-4693-9980-262FAF789C6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WafclastRPG.Game", "WafclastRPG.Game\WafclastRPG.Game.csproj", "{AF172E09-A09F-4693-9980-262FAF789C6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WafclastRPG.Database", "WafclastRPG.Database\WafclastRPG.Database.csproj", "{79E7F212-9E68-4D64-ABEB-A13FED04479B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WafclastRPG.Database", "WafclastRPG.Database\WafclastRPG.Database.csproj", "{79E7F212-9E68-4D64-ABEB-A13FED04479B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{573AEAA5-1C18-4B9B-9815-3BDA64E7935F}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{29715E35-BEBA-4797-8695-D0384881F4CD}"
+	ProjectSection(SolutionItems) = preProject
+		.github\FUNDING.yml = .github\FUNDING.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build Items", "Build Items", "{5691051A-24FB-4DC3-B488-D83917A2B52A}"
+	ProjectSection(SolutionItems) = preProject
+		GerarExe.bat = GerarExe.bat
+		Makefile = Makefile
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{BE4CA0BD-54A3-4995-8E6E-3E649591948E}"
+	ProjectSection(SolutionItems) = preProject
+		Nuget.config = Nuget.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +53,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{29715E35-BEBA-4797-8695-D0384881F4CD} = {573AEAA5-1C18-4B9B-9815-3BDA64E7935F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6F57C18A-5D26-4D05-97D4-E38FD60FACED}

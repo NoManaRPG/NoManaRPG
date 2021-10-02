@@ -1,22 +1,27 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿// This file is part of the WafclastRPG project.
 
-namespace WafclastRPG.Game.Entities.Itens {
-  public enum AttackRate {
-    Fastest,
-    Fast,
-    Average,
-    Slow,
-    Slowest,
-    Random,
-  }
+using MongoDB.Bson.Serialization.Attributes;
 
-  [BsonIgnoreExtraElements]
-  public class WafclastWeaponItem : WafclastEquipableItem {
-    public double Damage { get; set; }
-    public double Accuracy { get; set; }
-    public AttackRate Speed { get; set; }
+namespace WafclastRPG.Game.Entities.Itens
+{
+    public enum AttackRate
+    {
+        Fastest,
+        Fast,
+        Average,
+        Slow,
+        Slowest,
+        Random,
+    }
 
-    public WafclastWeaponItem() { }
-    public WafclastWeaponItem(WafclastBaseItem baseItem) : base(baseItem) { }
-  }
+    [BsonIgnoreExtraElements]
+    public class WafclastWeaponItem : WafclastEquipableItem
+    {
+        public double Damage { get; set; }
+        public double Accuracy { get; set; }
+        public AttackRate Speed { get; set; }
+
+        public WafclastWeaponItem() { }
+        public WafclastWeaponItem(WafclastBaseItem baseItem) : base(baseItem) { }
+    }
 }

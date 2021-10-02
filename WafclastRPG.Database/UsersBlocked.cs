@@ -1,18 +1,23 @@
-﻿using DSharpPlus.CommandsNext;
+﻿// This file is part of the WafclastRPG project.
+
 using System.Collections.Concurrent;
+using DSharpPlus.CommandsNext;
 
-namespace WafclastRPG.Database {
-  public class UsersBlocked {
-    private readonly ConcurrentDictionary<ulong, bool> _usersBlocked;
+namespace WafclastRPG.Database
+{
+    public class UsersBlocked
+    {
+        private readonly ConcurrentDictionary<ulong, bool> _usersBlocked;
 
-    public UsersBlocked() {
-      _usersBlocked = new ConcurrentDictionary<ulong, bool>();
+        public UsersBlocked()
+        {
+            this._usersBlocked = new ConcurrentDictionary<ulong, bool>();
+        }
+
+        public bool IsUserBlocked(ulong userId) => this._usersBlocked.TryGetValue(userId, out _);
+        public void UnblockUser(ulong userId) => this._usersBlocked.TryRemove(userId, out _);
+        public void UnblockUser(CommandContext ctx) => this._usersBlocked.TryRemove(ctx.User.Id, out _);
+        public void BlockUser(ulong userId) => this._usersBlocked.TryAdd(userId, true);
+        public void BlockUser(CommandContext ctx) => this._usersBlocked.TryAdd(ctx.User.Id, true);
     }
-
-    public bool IsUserBlocked(ulong userId) => _usersBlocked.TryGetValue(userId, out _);
-    public void UnblockUser(ulong userId) => _usersBlocked.TryRemove(userId, out _);
-    public void UnblockUser(CommandContext ctx) => _usersBlocked.TryRemove(ctx.User.Id, out _);
-    public void BlockUser(ulong userId) => _usersBlocked.TryAdd(userId, true);
-    public void BlockUser(CommandContext ctx) => _usersBlocked.TryAdd(ctx.User.Id, true);
-  }
 }

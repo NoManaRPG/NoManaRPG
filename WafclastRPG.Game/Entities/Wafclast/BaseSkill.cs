@@ -1,14 +1,19 @@
-﻿namespace WafclastRPG.Game.Entities.Wafclast {
+﻿// This file is part of the WafclastRPG project.
 
-  public enum ActionType {
-    Stun,
-    Damage,
-  }
+namespace WafclastRPG.Game.Entities.Wafclast
+{
 
-  public class BaseSkill {
-    //Mana, SP etc
-    public double ResourceCost { get; set; }
+    public enum ActionType
+    {
+        Stun,
+        Damage,
+    }
+
+    public class BaseSkill
+    {
+        //Mana, SP etc
+        public double ResourceCost { get; set; }
 
 
-  }
+    }
 }

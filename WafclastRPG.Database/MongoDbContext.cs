@@ -1,62 +1,69 @@
-﻿using MongoDB.Driver;
+﻿// This file is part of the WafclastRPG project.
+
 using System.Threading.Tasks;
+using MongoDB.Driver;
 using WafclastRPG.Database.Extensions;
 using WafclastRPG.Game.Entities;
 using WafclastRPG.Game.Entities.Itens;
 using WafclastRPG.Game.Entities.Wafclast;
 
-namespace WafclastRPG.Database {
-  public class MongoDbContext {
+namespace WafclastRPG.Database
+{
+    public class MongoDbContext
+    {
 
-    public IMongoClient Client { get; }
-    public IMongoDatabase Database { get; }
+        public IMongoClient Client { get; }
+        public IMongoDatabase Database { get; }
 
-    public IMongoCollection<Player> Players { get; }
-    public IMongoCollection<Room> Rooms { get; }
-    public IMongoCollection<WafclastBaseItem> Items { get; }
+        public IMongoCollection<Player> Players { get; }
+        public IMongoCollection<Room> Rooms { get; }
+        public IMongoCollection<WafclastBaseItem> Items { get; }
 
-    public IMongoCollection<WafclastServer> Servers { get; }
-    public IMongoCollection<WafclastFabrication> Fabrications { get; }
+        public IMongoCollection<WafclastServer> Servers { get; }
+        public IMongoCollection<WafclastFabrication> Fabrications { get; }
 
-    public MongoDbContext() {
-      #region Connection string
-      Client = new MongoClient("mongodb://localhost?retryWrites=true");
+        public MongoDbContext()
+        {
+            #region Connection string
+            this.Client = new MongoClient("mongodb://localhost?retryWrites=true");
 #if DEBUG
-      Database = Client.GetDatabase("WafclastDebug");
+            this.Database = this.Client.GetDatabase("WafclastDebug");
 #else
             Database = Client.GetDatabase("Wafclast");
 #endif
-      #endregion
+            #endregion
 
-      Players = Database.CreateCollection<Player>();
-      Servers = Database.CreateCollection<WafclastServer>();
-      Items = Database.CreateCollection<WafclastBaseItem>();
-      Rooms = Database.CreateCollection<Room>();
+            this.Players = this.Database.CreateCollection<Player>();
+            this.Servers = this.Database.CreateCollection<WafclastServer>();
+            this.Items = this.Database.CreateCollection<WafclastBaseItem>();
+            this.Rooms = this.Database.CreateCollection<Room>();
 
 
-      Fabrications = Database.CreateCollection<WafclastFabrication>();
+            this.Fabrications = this.Database.CreateCollection<WafclastFabrication>();
 
-      #region Usar no futuro
-      //var notificationLogBuilder = Builders<RPGJogador>.IndexKeys;
-      //var indexModel = new CreateIndexModel<RPGJogador>(notificationLogBuilder.Ascending(x => x.NivelAtual));
-      //ColecaoJogador.Indexes.CreateOne(indexModel);
-      #endregion
+            #region Usar no futuro
+            //var notificationLogBuilder = Builders<RPGJogador>.IndexKeys;
+            //var indexModel = new CreateIndexModel<RPGJogador>(notificationLogBuilder.Ascending(x => x.NivelAtual));
+            //ColecaoJogador.Indexes.CreateOne(indexModel);
+            #endregion
+        }
+
+
+        public async Task<string> GetServerPrefixAsync(ulong serverId, string defaultPrefix)
+        {
+            var svl = await this.Servers.Find(x => x.Id == serverId).FirstOrDefaultAsync();
+            if (svl == null)
+                return defaultPrefix;
+            return svl.Prefix;
+        }
+        public string GetServerPrefix(ulong serverId, string defaultPrefix)
+        {
+            var svl = this.Servers.Find(x => x.Id == serverId).FirstOrDefault();
+            if (svl == null)
+                return defaultPrefix;
+            return svl.Prefix;
+        }
+        public Task DeleteServerAsync(ulong serverId)
+            => this.Servers.DeleteOneAsync(x => x.Id == serverId);
     }
-
-
-    public async Task<string> GetServerPrefixAsync(ulong serverId, string defaultPrefix) {
-      var svl = await Servers.Find(x => x.Id == serverId).FirstOrDefaultAsync();
-      if (svl == null)
-        return defaultPrefix;
-      return svl.Prefix;
-    }
-    public string GetServerPrefix(ulong serverId, string defaultPrefix) {
-      var svl = Servers.Find(x => x.Id == serverId).FirstOrDefault();
-      if (svl == null)
-        return defaultPrefix;
-      return svl.Prefix;
-    }
-    public Task DeleteServerAsync(ulong serverId)
-        => Servers.DeleteOneAsync(x => x.Id == serverId);
-  }
 }

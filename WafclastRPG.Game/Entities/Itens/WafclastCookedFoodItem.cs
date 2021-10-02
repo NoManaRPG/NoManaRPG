@@ -1,13 +1,17 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿// This file is part of the WafclastRPG project.
 
-namespace WafclastRPG.Game.Entities.Itens {
-  [BsonIgnoreExtraElements]
-  public class WafclastCookedFoodItem : WafclastBaseItem {
-    /// <summary>
-    /// Quantos ganha de vida ao comer o item.
-    /// </summary>
-    public double LifeGain { get; set; }
+using MongoDB.Bson.Serialization.Attributes;
 
-    public WafclastCookedFoodItem(WafclastBaseItem baseItem) : base(baseItem) { }
-  }
+namespace WafclastRPG.Game.Entities.Itens
+{
+    [BsonIgnoreExtraElements]
+    public class WafclastCookedFoodItem : WafclastBaseItem
+    {
+        /// <summary>
+        /// Quantos ganha de vida ao comer o item.
+        /// </summary>
+        public double LifeGain { get; set; }
+
+        public WafclastCookedFoodItem(WafclastBaseItem baseItem) : base(baseItem) { }
+    }
 }

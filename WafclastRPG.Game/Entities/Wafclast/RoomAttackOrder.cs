@@ -1,32 +1,40 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿// This file is part of the WafclastRPG project.
 
-namespace WafclastRPG.Game.Entities.Wafclast {
-  [BsonIgnoreExtraElements]
-  public class RoomAttackOrder {
-    public double PlayerAttackSpeedPoints { get; set; }
-    public double MonsterAttackSpeedPoints { get; set; }
-    public double TotalAttackSpeedPoints { get; set; }
+using MongoDB.Bson.Serialization.Attributes;
 
-    public (bool isPlayer, bool isMonster) CalculateNextAttack(double playerAttackSpeed, double monsterAttackSpeed) {
-      bool isPlayerAttacking = false;
-      bool isMonsterAttacking = false;
+namespace WafclastRPG.Game.Entities.Wafclast
+{
+    [BsonIgnoreExtraElements]
+    public class RoomAttackOrder
+    {
+        public double PlayerAttackSpeedPoints { get; set; }
+        public double MonsterAttackSpeedPoints { get; set; }
+        public double TotalAttackSpeedPoints { get; set; }
 
-      while (isPlayerAttacking == false || isMonsterAttacking == false) {
-        PlayerAttackSpeedPoints += playerAttackSpeed;
-        MonsterAttackSpeedPoints += monsterAttackSpeed;
+        public (bool isPlayer, bool isMonster) CalculateNextAttack(double playerAttackSpeed, double monsterAttackSpeed)
+        {
+            bool isPlayerAttacking = false;
+            bool isMonsterAttacking = false;
 
-        if (PlayerAttackSpeedPoints / TotalAttackSpeedPoints >= 1) {
-          PlayerAttackSpeedPoints -= TotalAttackSpeedPoints;
-          isPlayerAttacking = true;
+            while (isPlayerAttacking == false || isMonsterAttacking == false)
+            {
+                this.PlayerAttackSpeedPoints += playerAttackSpeed;
+                this.MonsterAttackSpeedPoints += monsterAttackSpeed;
+
+                if (this.PlayerAttackSpeedPoints / this.TotalAttackSpeedPoints >= 1)
+                {
+                    this.PlayerAttackSpeedPoints -= this.TotalAttackSpeedPoints;
+                    isPlayerAttacking = true;
+                }
+
+                if (this.MonsterAttackSpeedPoints / this.TotalAttackSpeedPoints >= 1)
+                {
+                    this.MonsterAttackSpeedPoints -= this.TotalAttackSpeedPoints;
+                    isMonsterAttacking = true;
+                }
+            }
+
+            return (isPlayerAttacking, isMonsterAttacking);
         }
-
-        if (MonsterAttackSpeedPoints / TotalAttackSpeedPoints >= 1) {
-          MonsterAttackSpeedPoints -= TotalAttackSpeedPoints;
-          isMonsterAttacking = true;
-        }
-      }
-
-      return (isPlayerAttacking, isMonsterAttacking);
     }
-  }
 }

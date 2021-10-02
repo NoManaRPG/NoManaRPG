@@ -1,42 +1,50 @@
-﻿using DSharpPlus;
+// This file is part of the WafclastRPG project.
+
+using System;
+using System.Reflection;
+using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.Interactivity.Extensions;
-using System;
-using System.Reflection;
-using System.Threading.Tasks;
 using WafclastRPG.Commands;
 using WafclastRPG.DiscordEvents;
 
-namespace WafclastRPG {
-  public class Bot {
-    public DiscordClient Client { get; private set; }
-    public CommandsNextExtension CommandsNext { get; private set; }
+namespace WafclastRPG
+{
+    public class Bot
+    {
+        public DiscordClient Client { get; private set; }
+        public CommandsNextExtension CommandsNext { get; private set; }
 
-    public Bot(DiscordConfiguration discordConfiguration)
-        => Client = new DiscordClient(discordConfiguration);
+        public Bot(DiscordConfiguration discordConfiguration)
+        {
+            this.Client = new DiscordClient(discordConfiguration);
+        }
 
-    public Task ConectarAsync() => Client.ConnectAsync();
+        public Task ConectarAsync() => this.Client.ConnectAsync();
 
-    public void ModuleCommand(CommandsNextConfiguration ccfg) {
-      CommandsNext = Client.UseCommandsNext(ccfg);
-      CommandsNext.CommandExecuted += CommandExecutedEvent.Event;
-      CommandsNext.CommandErrored += CommandErroredEvent.EventAsync;
-      Client.Ready += ReadyEvent.Event;
+        public void ModuleCommand(CommandsNextConfiguration ccfg)
+        {
+            this.CommandsNext = this.Client.UseCommandsNext(ccfg);
+            this.CommandsNext.CommandExecuted += CommandExecutedEvent.Event;
+            this.CommandsNext.CommandErrored += CommandErroredEvent.EventAsync;
+            this.Client.Ready += ReadyEvent.Event;
 
-      Client.GuildAvailable += (c, e) => GuildAvailableEvent.Event(c, e);
-      Client.ClientErrored += ClientErroredEvent.Event;
+            this.Client.GuildAvailable += (c, e) => GuildAvailableEvent.Event(c, e);
+            this.Client.ClientErrored += ClientErroredEvent.Event;
 
-      Client.UseInteractivity(new InteractivityConfiguration {
-        Timeout = TimeSpan.FromSeconds(30),
-        PollBehaviour = PollBehaviour.KeepEmojis,
-        PaginationBehaviour = PaginationBehaviour.Ignore,
-        PaginationDeletion = PaginationDeletion.KeepEmojis,
-      });
+            this.Client.UseInteractivity(new InteractivityConfiguration
+            {
+                Timeout = TimeSpan.FromSeconds(30),
+                PollBehaviour = PollBehaviour.KeepEmojis,
+                PaginationBehaviour = PaginationBehaviour.Ignore,
+                PaginationDeletion = PaginationDeletion.KeepEmojis,
+            });
 
-      CommandsNext.SetHelpFormatter<IHelpCommand>();
-      CommandsNext.RegisterCommands(Assembly.GetExecutingAssembly());
+            this.CommandsNext.SetHelpFormatter<IHelpCommand>();
+            this.CommandsNext.RegisterCommands(Assembly.GetExecutingAssembly());
+        }
     }
-  }
 }

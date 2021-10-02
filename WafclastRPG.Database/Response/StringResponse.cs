@@ -1,9 +1,14 @@
-﻿namespace WafclastRPG.Database.Response {
-  public class StringResponse : IResponse {
-    public string Response { get; }
+﻿// This file is part of the WafclastRPG project.
 
-    public StringResponse(string response) {
-      Response = response;
+namespace WafclastRPG.Database.Response
+{
+    public class StringResponse : IResponse
+    {
+        public string Response { get; }
+
+        public StringResponse(string response)
+        {
+            this.Response = response;
+        }
     }
-  }
 }

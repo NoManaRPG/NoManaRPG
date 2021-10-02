@@ -1,11 +1,16 @@
-﻿using DSharpPlus.Entities;
+﻿// This file is part of the WafclastRPG project.
 
-namespace WafclastRPG.Database.Response {
-  public class EmbedResponse : IResponse {
-    public DiscordEmbedBuilder Response { get; }
+using DSharpPlus.Entities;
 
-    public EmbedResponse(DiscordEmbedBuilder response) {
-      Response = response;
+namespace WafclastRPG.Database.Response
+{
+    public class EmbedResponse : IResponse
+    {
+        public DiscordEmbedBuilder Response { get; }
+
+        public EmbedResponse(DiscordEmbedBuilder response)
+        {
+            this.Response = response;
+        }
     }
-  }
 }
