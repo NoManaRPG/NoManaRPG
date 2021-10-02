@@ -1,4 +1,4 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System;
 using System.Globalization;
@@ -17,25 +17,14 @@ namespace WafclastRPG.Game.Entities.Wafclast
         public DateTime DateAccountCreation { get; private set; }
         public BaseCharacter Character { get; private set; }
 
+        public string Mention => $"<@{this.Id.ToString(CultureInfo.InvariantCulture)}>";
         public string Language { get; set; } = "pt-BR";
-
-        public string LifePoints { get => this.Character.LifePoints.Current.ToString("N2"); }
 
         public Player(ulong id, BaseCharacter Character)
         {
             this.Id = id;
             this.Character = Character;
             this.DateAccountCreation = DateTime.UtcNow;
-        }
-
-        public string Mention { get => $"<@{this.Id.ToString(CultureInfo.InvariantCulture)}>"; }
-
-        static (string key, int value) Split(string text)
-        {
-            var split = text.Split(":");
-            var key = split[0];
-            var value = int.Parse(split[1]);
-            return (key, value);
         }
 
         public string BasicAttackMonster()
@@ -53,7 +42,6 @@ namespace WafclastRPG.Game.Entities.Wafclast
             double damage;
 
             //Combat
-            var asd = Split("asd");
 
             var attacking = this.Character.NextAttack();
 

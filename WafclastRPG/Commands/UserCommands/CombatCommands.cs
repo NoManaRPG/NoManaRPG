@@ -117,7 +117,7 @@ namespace WafclastRPG.Commands.UserCommands
                 strf.AppendLine($"Monster causou {monsterDamage} de dano!");
                 strf.AppendLine($"Jogador causou {playerDamage} de dano!");
                 embed.WithDescription(strf.ToString());
-                embed.AddField(ctx.User.Username, $"{Emojis.TesteEmoji(player.Character.LifePoints)} {player.LifePoints}", true);
+                embed.AddField(ctx.User.Username, $"{Emojis.TesteEmoji(player.Character.LifePoints)} {character.LifePoints}", true);
                 embed.AddField(monster.Mention, $"{Emojis.GerarVidaEmoji(monster.LifePoints)} {monster.LifePoints.Current:N2} ", true);
 
                 if (cont)
@@ -151,7 +151,7 @@ namespace WafclastRPG.Commands.UserCommands
                     await this._playerRepository.SavePlayerAsync(player);
 
                     var embed = new DiscordEmbedBuilder();
-                    embed.AddField(ctx.User.Username, $"{Emojis.TesteEmoji(player.Character.LifePoints)} {player.LifePoints}", true);
+                    embed.AddField(ctx.User.Username, $"{Emojis.TesteEmoji(player.Character.LifePoints)} {character.LifePoints}", true);
 
                     embed.WithColor(DiscordColor.Red);
                     embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
@@ -189,7 +189,7 @@ namespace WafclastRPG.Commands.UserCommands
                     await this._playerRepository.SavePlayerAsync(player);
 
                     var embed = new DiscordEmbedBuilder();
-                    embed.AddField(ctx.User.Username, $"{Emojis.TesteEmoji(player.Character.LifePoints)} {player.LifePoints}", true);
+                    //embed.AddField(ctx.User.Username, $"{Emojis.TesteEmoji(player.Character.LifePoints)} {character.LifePoints}", true);
 
                     embed.WithColor(DiscordColor.Red);
                     embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
