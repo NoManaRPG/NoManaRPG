@@ -1,4 +1,4 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System;
 using System.Threading.Tasks;
@@ -6,11 +6,11 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using WafclastRPG.Attributes;
+using WafclastRPG.Database.Repositories;
 using WafclastRPG.Database.Response;
 using WafclastRPG.Extensions;
 using WafclastRPG.Game.Characters;
 using WafclastRPG.Game.Entities;
-using WafclastRPG.Repositories;
 
 namespace WafclastRPG.Commands.UserCommands
 {
@@ -34,8 +34,8 @@ namespace WafclastRPG.Commands.UserCommands
         [Usage("atribuir < quantidade > < atributo > ")]
         public async Task AllocateAttributesCommandAsync(CommandContext ctx, int quantity = 1, [RemainingText] string attribute = "")
         {
-            using (var session = await this._session.StartSession())
-                this._res = await session.WithTransactionAsync(async (s, ct) =>
+            using (await this._session.StartSessionAsync())
+                this._res = await this._session.WithTransactionAsync(async (s, ct) =>
                 {
                     var player = await this._playerRepository.FindPlayerAsync(ctx);
 
@@ -79,8 +79,8 @@ namespace WafclastRPG.Commands.UserCommands
         [Usage("atributos")]
         public async Task AttributesComandAsync(CommandContext ctx)
         {
-            using (var session = await this._session.StartSession())
-                this._res = await session.WithTransactionAsync(async (s, ct) =>
+            using (await this._session.StartSessionAsync())
+                this._res = await this._session.WithTransactionAsync(async (s, ct) =>
                 {
                     var player = await this._playerRepository.FindPlayerAsync(ctx);
 

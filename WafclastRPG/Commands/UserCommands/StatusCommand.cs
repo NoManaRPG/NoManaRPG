@@ -1,4 +1,4 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System;
 using System.Text;
@@ -8,9 +8,9 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using WafclastRPG.Attributes;
+using WafclastRPG.Database.Repositories;
 using WafclastRPG.Database.Response;
 using WafclastRPG.Extensions;
-using WafclastRPG.Repositories;
 
 namespace WafclastRPG.Commands.UserCommands
 {
@@ -33,8 +33,8 @@ namespace WafclastRPG.Commands.UserCommands
         [Cooldown(1, 5, CooldownBucketType.User)]
         public async Task StatusCommandAsync(CommandContext ctx)
         {
-            using (var session = await this._session.StartSession())
-                this._res = await session.WithTransactionAsync(async (s, ct) =>
+            using (await this._session.StartSessionAsync())
+                this._res = await this._session.WithTransactionAsync(async (s, ct) =>
                 {
                     var player = await this._playerRepository.FindPlayerAsync(ctx);
 

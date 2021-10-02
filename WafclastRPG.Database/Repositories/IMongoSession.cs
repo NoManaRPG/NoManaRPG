@@ -1,13 +1,17 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using WafclastRPG.Database.Response;
 
 namespace WafclastRPG.Database.Repositories
 {
-    public interface IMongoSession
+    public interface IMongoSession : IDisposable
     {
         IClientSessionHandle Session { get; }
-        Task<IClientSessionHandle> StartSession();
+        Task<IMongoSession> StartSessionAsync();
+        Task<IResponse> WithTransactionAsync(Func<IClientSessionHandle, CancellationToken, Task<IResponse>> callbackAsync);
     }
 }

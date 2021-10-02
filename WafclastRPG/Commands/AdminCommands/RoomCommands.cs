@@ -1,4 +1,4 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System;
 using System.Text;
@@ -7,10 +7,10 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using WafclastRPG.Attributes;
 using WafclastRPG.Database;
+using WafclastRPG.Database.Repositories;
 using WafclastRPG.Extensions;
 using WafclastRPG.Game.Entities.Wafclast;
 using WafclastRPG.Game.Enums;
-using WafclastRPG.Repositories;
 
 namespace WafclastRPG.Commands.AdminCommands
 {

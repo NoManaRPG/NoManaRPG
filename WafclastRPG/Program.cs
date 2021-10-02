@@ -1,4 +1,4 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System;
 using System.Threading.Tasks;
@@ -8,7 +8,7 @@ using DSharpPlus.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WafclastRPG.Database;
-using WafclastRPG.Repositories;
+using WafclastRPG.Database.Repositories;
 
 namespace WafclastRPG
 {

@@ -1,4 +1,4 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System;
 using System.Collections.Generic;
@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using WafclastRPG.Database;
+using WafclastRPG.Database.Repositories;
 using WafclastRPG.Database.Response;
 using WafclastRPG.Game.Entities.Itens;
 using WafclastRPG.Game.Entities.Wafclast;
-using WafclastRPG.Repositories;
 
 namespace WafclastRPG.Commands.AdminCommands
 {
@@ -79,7 +78,7 @@ namespace WafclastRPG.Commands.AdminCommands
 
         [Command("sudo")]
         [RequireOwner]
-        public async Task Sudo(CommandContext ctx, DiscordUser member, [RemainingText] string command)
+        public async Task SudoAsync(CommandContext ctx, DiscordUser member, [RemainingText] string command)
         {
             await ctx.TriggerTypingAsync();
             var cmd = ctx.CommandsNext.FindCommand(command, out var args);
@@ -95,7 +94,7 @@ namespace WafclastRPG.Commands.AdminCommands
 
         [Command("distance")]
         [RequireOwner]
-        public async Task dist(CommandContext ctx, string sx1, string sy1, string sx2, string sy2)
+        public async Task DistAsync(CommandContext ctx, string sx1, string sy1, string sx2, string sy2)
         {
             await ctx.TriggerTypingAsync();
 
@@ -106,18 +105,6 @@ namespace WafclastRPG.Commands.AdminCommands
 
             Vector v = new Vector(x1, y1);
             await ctx.RespondAsync(v.Distance(new Vector(x2, y2)).ToString("N2"));
-        }
-
-        [Command("setmapa")]
-        [RequireOwner]
-        public async Task setMap(CommandContext ctx)
-        {
-            await ctx.TriggerTypingAsync();
-            var config = ctx.Services.GetRequiredService<Config>();
-            var map = ctx.Message.Attachments[0].Url;
-            config.MapUrl = map.ToString();
-            config.SaveToJsonFile();
-            await ctx.RespondAsync($"Mapa salvo: {config.MapUrl}");
         }
 
         //[Command("aviajar")]

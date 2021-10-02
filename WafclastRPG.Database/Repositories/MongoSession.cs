@@ -1,7 +1,10 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using WafclastRPG.Database.Response;
 
 namespace WafclastRPG.Database.Repositories
 {
@@ -15,10 +18,14 @@ namespace WafclastRPG.Database.Repositories
             this._context = context;
         }
 
-        public async Task<IClientSessionHandle> StartSession()
+        public async Task<IMongoSession> StartSessionAsync()
         {
             this.Session = await this._context.Client.StartSessionAsync();
-            return this.Session;
+            return this;
         }
+
+        public Task<IResponse> WithTransactionAsync(Func<IClientSessionHandle, CancellationToken, Task<IResponse>> callbackAsync)
+                 => this.Session.WithTransactionAsync(callbackAsync: callbackAsync);
+        public void Dispose() => this.Session.Dispose();
     }
 }

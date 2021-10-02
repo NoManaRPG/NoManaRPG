@@ -1,4 +1,4 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
@@ -19,7 +19,7 @@ namespace WafclastRPG.Extensions
           {
               StringResponse res => RespondAsync(ctx, res.Response),
               EmbedResponse res => RespondAsync(ctx, res.Response),
-              _ => throw new System.Exception("Não encontrado!"),
+              _ => throw new System.Exception("Resposta não definida!"),
           };
     }
 }
