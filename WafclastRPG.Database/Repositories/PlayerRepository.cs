@@ -13,7 +13,7 @@ namespace WafclastRPG.Database.Repositories
     {
         private readonly MongoDbContext _context;
         private readonly IMongoSession _session;
-        private readonly ReplaceOptions _options = new ReplaceOptions { IsUpsert = true };
+        private readonly ReplaceOptions _options = new() { IsUpsert = true };
 
         public PlayerRepository(MongoDbContext context, IMongoSession session)
         {

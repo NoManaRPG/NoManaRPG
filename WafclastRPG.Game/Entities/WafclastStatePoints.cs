@@ -1,4 +1,4 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 namespace WafclastRPG.Game.Entities
 {
@@ -29,15 +29,5 @@ namespace WafclastRPG.Game.Entities
                 return true;
             return false;
         }
-
-        #region Operators
-        public static bool operator !=(WafclastStatePoints left, double right) => !(left == right);
-        public static bool operator ==(WafclastStatePoints left, double right)
-        {
-            if (left.Current == right)
-                return true;
-            return false;
-        }
-        #endregion
     }
 }

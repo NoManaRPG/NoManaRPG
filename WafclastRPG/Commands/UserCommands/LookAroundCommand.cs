@@ -57,10 +57,10 @@ namespace WafclastRPG.Commands.UserCommands
 
             var playerLoca = player.Character.Room.Location;
 
-            StringBuilder sf = new StringBuilder();
-            var asd = await this._mongoDbContext.Rooms.Find(x => x.Location.X >= (playerLoca.X - 160) && x.Location.X <= (playerLoca.X + 160)
-                                                  && x.Location.Y >= (playerLoca.Y - 160) && x.Location.Y <= (playerLoca.Y + 160)).ToListAsync();
-            int showing = 0;
+            var sf = new StringBuilder();
+            var asd = await this._mongoDbContext.Rooms.Find(x => x.Location.X >= playerLoca.X - 160 && x.Location.X <= playerLoca.X + 160
+                                                  && x.Location.Y >= playerLoca.Y - 160 && x.Location.Y <= playerLoca.Y + 160).ToListAsync();
+            var showing = 0;
             foreach (var item in asd)
             {
                 var distance = playerLoca.Distance(item.Location);

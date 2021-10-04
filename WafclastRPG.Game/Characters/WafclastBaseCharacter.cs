@@ -10,7 +10,8 @@ namespace WafclastRPG.Game.Characters
 {
     [BsonIgnoreExtraElements]
     [BsonDiscriminator(RootClass = true)]
-    [BsonKnownTypes(typeof(WafclastCharacterMage), typeof(WafclastCharacterWarrior))]
+    [BsonKnownTypes(typeof(WafclastCharacterMage),
+                    typeof(WafclastCharacterWarrior))]
     public abstract class WafclastBaseCharacter : WafclastLevel
     {
 
@@ -43,7 +44,7 @@ namespace WafclastRPG.Game.Characters
         /// <summary>
         /// Name and Level of that skill.
         /// </summary>
-        public Dictionary<string, int> Skills = new Dictionary<string, int>();
+        public Dictionary<string, int> Skills = new();
 
         public WafclastRoom Room { get; set; }
 

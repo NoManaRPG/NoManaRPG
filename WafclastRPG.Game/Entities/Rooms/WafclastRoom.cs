@@ -19,6 +19,6 @@ namespace WafclastRPG.Game.Entities.Rooms
         public WafclastMonster Monster { get; set; }
         public WafclastRoomAttackOrder AttackOrder { get; set; }
 
-        public string Mention { get => $"<#{this.Id}>"; }
+        public string Mention => $"<#{this.Id}>";
     }
 }
