@@ -7,7 +7,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using WafclastRPG.Attributes;
 using WafclastRPG.Database;
-using WafclastRPG.Database.Repositories;
+using WafclastRPG.Database.Interfaces;
 using WafclastRPG.Extensions;
 using WafclastRPG.Game.Entities.Monsters;
 using WafclastRPG.Game.Entities.Rooms;

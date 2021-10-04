@@ -3,7 +3,7 @@
 using System.Threading.Tasks;
 using WafclastRPG.Game.Entities;
 
-namespace WafclastRPG.Database.Repositories
+namespace WafclastRPG.Database.Interfaces
 {
     public interface IPlayerRepository
     {

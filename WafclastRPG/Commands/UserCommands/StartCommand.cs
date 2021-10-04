@@ -1,15 +1,15 @@
 // This file is part of the WafclastRPG project.
 
+using System.Configuration;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using WafclastRPG.Attributes;
-using WafclastRPG.Database.Repositories;
+using WafclastRPG.Database.Interfaces;
 using WafclastRPG.Database.Response;
 using WafclastRPG.Extensions;
 using WafclastRPG.Game.Characters;
 using WafclastRPG.Game.Entities;
-using System.Configuration;
 using WafclastRPG.Game.Entities.Rooms;
 
 namespace WafclastRPG.Commands.UserCommands

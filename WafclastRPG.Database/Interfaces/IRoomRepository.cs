@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using WafclastRPG.Game.Entities;
 using WafclastRPG.Game.Entities.Rooms;
 
-namespace WafclastRPG.Database.Repositories
+namespace WafclastRPG.Database.Interfaces
 {
     public interface IRoomRepository
     {

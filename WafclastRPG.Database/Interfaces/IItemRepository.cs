@@ -1,10 +1,9 @@
 // This file is part of the WafclastRPG project.
 
 using System.Threading.Tasks;
-using DSharpPlus.Entities;
 using WafclastRPG.Game.Entities.Itens;
 
-namespace WafclastRPG.Database.Repositories
+namespace WafclastRPG.Database.Interfaces
 {
     public interface IItemRepository
     {

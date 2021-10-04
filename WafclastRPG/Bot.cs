@@ -10,7 +10,6 @@ using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.Interactivity.Extensions;
 using WafclastRPG.Commands;
 using WafclastRPG.DiscordEvents;
-using System.Configuration;
 
 namespace WafclastRPG
 {

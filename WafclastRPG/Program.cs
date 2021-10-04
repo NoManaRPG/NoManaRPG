@@ -1,5 +1,6 @@
 // This file is part of the WafclastRPG project.
 
+using System.Configuration;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
@@ -7,8 +8,8 @@ using DSharpPlus.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WafclastRPG.Database;
+using WafclastRPG.Database.Interfaces;
 using WafclastRPG.Database.Repositories;
-using System.Configuration;
 
 namespace WafclastRPG
 {

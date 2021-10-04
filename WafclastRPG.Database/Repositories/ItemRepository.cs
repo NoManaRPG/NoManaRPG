@@ -2,6 +2,7 @@
 
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using WafclastRPG.Database.Interfaces;
 using WafclastRPG.Game.Entities.Itens;
 
 

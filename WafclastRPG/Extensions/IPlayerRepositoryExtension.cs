@@ -3,7 +3,7 @@
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
-using WafclastRPG.Database.Repositories;
+using WafclastRPG.Database.Interfaces;
 using WafclastRPG.Game.Entities;
 
 namespace WafclastRPG.Extensions

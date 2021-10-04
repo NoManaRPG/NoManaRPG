@@ -3,6 +3,7 @@
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using WafclastRPG.Database.Exceptions;
+using WafclastRPG.Database.Interfaces;
 using WafclastRPG.Game.Entities;
 
 namespace WafclastRPG.Database.Repositories

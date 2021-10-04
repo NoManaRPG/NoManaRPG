@@ -4,6 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using WafclastRPG.Database.Interfaces;
 using WafclastRPG.Database.Response;
 
 namespace WafclastRPG.Database.Repositories

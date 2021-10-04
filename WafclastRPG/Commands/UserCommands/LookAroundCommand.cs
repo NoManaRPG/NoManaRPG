@@ -9,7 +9,7 @@ using MongoDB.Driver;
 using WafclastRPG.Attributes;
 using WafclastRPG.Database;
 using WafclastRPG.Database.Exceptions;
-using WafclastRPG.Database.Repositories;
+using WafclastRPG.Database.Interfaces;
 using WafclastRPG.Database.Response;
 using WafclastRPG.Extensions;
 using WafclastRPG.Game.Entities.Rooms;

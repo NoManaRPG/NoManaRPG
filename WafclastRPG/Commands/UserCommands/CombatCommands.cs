@@ -8,7 +8,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using WafclastRPG.Attributes;
 using WafclastRPG.Database;
-using WafclastRPG.Database.Repositories;
+using WafclastRPG.Database.Interfaces;
 using WafclastRPG.Database.Response;
 using WafclastRPG.Extensions;
 

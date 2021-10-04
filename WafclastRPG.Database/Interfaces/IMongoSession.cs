@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using WafclastRPG.Database.Response;
 
-namespace WafclastRPG.Database.Repositories
+namespace WafclastRPG.Database.Interfaces
 {
     public interface IMongoSession : IDisposable
     {
