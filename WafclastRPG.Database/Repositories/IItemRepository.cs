@@ -1,4 +1,4 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System.Threading.Tasks;
 using DSharpPlus.Entities;
@@ -8,8 +8,8 @@ namespace WafclastRPG.Database.Repositories
 {
     public interface IItemRepository
     {
-        Task<WafclastBaseItem> FindItemOrDefaultAsync(int globalItemId, DiscordUser user);
-        Task<WafclastBaseItem> FindItemOrDefaultAsync(string itemName, DiscordUser user);
+        Task<WafclastBaseItem> FindItemOrDefaultAsync(int globalItemId, ulong playerId);
+        Task<WafclastBaseItem> FindItemOrDefaultAsync(string itemName, ulong playerId);
         Task SaveItemAsync(WafclastBaseItem item);
         Task RemoveItemAsync(WafclastBaseItem item);
     }

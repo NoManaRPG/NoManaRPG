@@ -1,7 +1,6 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System.Threading.Tasks;
-using DSharpPlus.Entities;
 using MongoDB.Driver;
 using WafclastRPG.Game.Entities.Itens;
 
@@ -19,17 +18,17 @@ namespace WafclastRPG.Database.Repositories
             this._session = session;
         }
 
-        public Task<WafclastBaseItem> FindItemOrDefaultAsync(int globalItemId, DiscordUser user)
+        public Task<WafclastBaseItem> FindItemOrDefaultAsync(int globalItemId, ulong playerId)
         {
             if (this._session.Session != null)
-                return this._context.Items.Find(this._session.Session, x => x.GlobalItemId == globalItemId && x.PlayerId == user.Id).FirstOrDefaultAsync();
-            return this._context.Items.Find(x => x.GlobalItemId == globalItemId && x.PlayerId == user.Id).FirstOrDefaultAsync();
+                return this._context.Items.Find(this._session.Session, x => x.GlobalItemId == globalItemId && x.PlayerId == playerId).FirstOrDefaultAsync();
+            return this._context.Items.Find(x => x.GlobalItemId == globalItemId && x.PlayerId == playerId).FirstOrDefaultAsync();
         }
-        public Task<WafclastBaseItem> FindItemOrDefaultAsync(string itemName, DiscordUser user)
+        public Task<WafclastBaseItem> FindItemOrDefaultAsync(string itemName, ulong playerId)
         {
             if (this._session.Session != null)
-                return this._context.Items.Find(this._session.Session, x => x.Name == itemName && x.PlayerId == user.Id, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
-            return this._context.Items.Find(x => x.Name == itemName && x.PlayerId == user.Id, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
+                return this._context.Items.Find(this._session.Session, x => x.Name == itemName && x.PlayerId == playerId, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
+            return this._context.Items.Find(x => x.Name == itemName && x.PlayerId == playerId, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
         }
         public Task SaveItemAsync(WafclastBaseItem item)
         {
