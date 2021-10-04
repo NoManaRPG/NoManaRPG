@@ -116,7 +116,6 @@ namespace WafclastRPG.Commands.UserCommands
                     if (room == player.Character.Room)
                         return new StringResponse("como é bom estar no lugar que você sempre quis...");
 
-                    room.Monster = null;
                     character.Room = room;
                     await this._playerRepository.SavePlayerAsync(player);
 

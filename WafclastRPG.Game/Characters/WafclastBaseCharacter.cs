@@ -46,7 +46,7 @@ namespace WafclastRPG.Game.Characters
         /// </summary>
         public Dictionary<string, int> Skills = new();
 
-        public WafclastRoom Room { get; set; }
+        public WafclastBaseRoom Room { get; set; }
 
         public WafclastBaseCharacter()
         {
@@ -60,9 +60,6 @@ namespace WafclastRPG.Game.Characters
 
         public abstract double CalculateDamagePoints();
         public abstract void ResetCombatThings();
-
-        public (bool isPlayer, bool isMonster) NextAttack()
-          => this.Room.AttackOrder.CalculateNextAttack(this.AttackSpeed, this.Room.Monster.AttackSpeed);
 
         public double ReceiveDamage(double valor)
         {

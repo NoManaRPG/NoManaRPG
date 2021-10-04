@@ -138,35 +138,35 @@ namespace WafclastRPG.Commands.UserCommands
             return;
 
 
-            using (await this._session.StartSessionAsync())
-                this._res = await this._session.WithTransactionAsync(async (s, ct) =>
-                {
-                    var player = await this._playerRepository.FindPlayerAsync(ctx);
+            //using (await this._session.StartSessionAsync())
+            //    this._res = await this._session.WithTransactionAsync(async (s, ct) =>
+            //    {
+            //        var player = await this._playerRepository.FindPlayerAsync(ctx);
 
-                    //Combat
-                    var combatResult = player.BasicAttackMonster();
-                    if (combatResult == "você não está visualizando nenhum monstro para atacar!")
-                        return new StringResponse(combatResult);
+            //        //Combat
+            //        var combatResult = player.BasicAttackMonster();
+            //        if (combatResult == "você não está visualizando nenhum monstro para atacar!")
+            //            return new StringResponse(combatResult);
 
-                    await this._playerRepository.SavePlayerAsync(player);
+            //        await this._playerRepository.SavePlayerAsync(player);
 
-                    var embed = new DiscordEmbedBuilder();
-                    embed.AddField(ctx.User.Username, $"{Emojis.TesteEmoji(player.Character.LifePoints)} {character.LifePoints}", true);
+            //        var embed = new DiscordEmbedBuilder();
+            //        embed.AddField(ctx.User.Username, $"{Emojis.TesteEmoji(player.Character.LifePoints)} {character.LifePoints}", true);
 
-                    embed.WithColor(DiscordColor.Red);
-                    embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
-                    embed.WithTitle("Relatório de Combate");
-                    embed.WithDescription(combatResult.ToString());
+            //        embed.WithColor(DiscordColor.Red);
+            //        embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
+            //        embed.WithTitle("Relatório de Combate");
+            //        embed.WithDescription(combatResult.ToString());
 
-                    var monster = player.Character.Room.Monster;
+            //        var monster = player.Character.Room.Monster;
 
-                    embed.AddField(monster.Mention, $"{Emojis.GerarVidaEmoji(monster.LifePoints)} {monster.LifePoints.Current:N2} ", true);
+            //        embed.AddField(monster.Mention, $"{Emojis.GerarVidaEmoji(monster.LifePoints)} {monster.LifePoints.Current:N2} ", true);
 
-                    //loot em outro comando!
+            //        //loot em outro comando!
 
-                    return new EmbedResponse(embed);
-                });
-            await ctx.RespondAsync(this._res);
+            //        return new EmbedResponse(embed);
+            //    });
+            //await ctx.RespondAsync(this._res);
         }
 
 
@@ -176,35 +176,35 @@ namespace WafclastRPG.Commands.UserCommands
 
         public async Task BasicAttackCommandAsync(CommandContext ctx)
         {
-            using (await this._session.StartSessionAsync())
-                this._res = await this._session.WithTransactionAsync(async (s, ct) =>
-                {
-                    var player = await this._playerRepository.FindPlayerAsync(ctx);
+            //using (await this._session.StartSessionAsync())
+            //    this._res = await this._session.WithTransactionAsync(async (s, ct) =>
+            //    {
+            //        var player = await this._playerRepository.FindPlayerAsync(ctx);
 
-                    //Combat
-                    var combatResult = player.BasicAttackMonster();
-                    if (combatResult == "você não está visualizando nenhum monstro para atacar!")
-                        return new StringResponse(combatResult);
+            //        //Combat
+            //        var combatResult = player.BasicAttackMonster();
+            //        if (combatResult == "você não está visualizando nenhum monstro para atacar!")
+            //            return new StringResponse(combatResult);
 
-                    await this._playerRepository.SavePlayerAsync(player);
+            //        await this._playerRepository.SavePlayerAsync(player);
 
-                    var embed = new DiscordEmbedBuilder();
-                    //embed.AddField(ctx.User.Username, $"{Emojis.TesteEmoji(player.Character.LifePoints)} {character.LifePoints}", true);
+            //        var embed = new DiscordEmbedBuilder();
+            //        //embed.AddField(ctx.User.Username, $"{Emojis.TesteEmoji(player.Character.LifePoints)} {character.LifePoints}", true);
 
-                    embed.WithColor(DiscordColor.Red);
-                    embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
-                    embed.WithTitle("Relatório de Combate");
-                    embed.WithDescription(combatResult.ToString());
+            //        embed.WithColor(DiscordColor.Red);
+            //        embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
+            //        embed.WithTitle("Relatório de Combate");
+            //        embed.WithDescription(combatResult.ToString());
 
-                    var monster = player.Character.Room.Monster;
+            //        var monster = player.Character.Room.Monster;
 
-                    embed.AddField(monster.Mention, $"{Emojis.GerarVidaEmoji(monster.LifePoints)} {monster.LifePoints.Current:N2} ", true);
+            //        embed.AddField(monster.Mention, $"{Emojis.GerarVidaEmoji(monster.LifePoints)} {monster.LifePoints.Current:N2} ", true);
 
-                    //loot em outro comando!
+            //        //loot em outro comando!
 
-                    return new EmbedResponse(embed);
-                });
-            await ctx.RespondAsync(this._res);
+            //        return new EmbedResponse(embed);
+            //    });
+            //await ctx.RespondAsync(this._res);
         }
 
         //public async Task ExploreCommandAsync(CommandContext ctx) {
