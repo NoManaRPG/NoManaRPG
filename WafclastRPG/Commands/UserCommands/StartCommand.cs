@@ -10,6 +10,7 @@ using WafclastRPG.Extensions;
 using WafclastRPG.Game.Characters;
 using WafclastRPG.Game.Entities;
 using System.Configuration;
+using WafclastRPG.Game.Entities.Rooms;
 
 namespace WafclastRPG.Commands.UserCommands
 {
@@ -56,7 +57,7 @@ namespace WafclastRPG.Commands.UserCommands
                             return new StringResponse("você esqueceu de informar a classe do seu personagem! **Guerreiro ou Feiticeira.**");
                     }
                     var firstRoom = ulong.Parse(ConfigurationManager.AppSettings.Get("FirstRoomUlong"));
-                    player.Character.Room = await this._roomRepository.FindRoomOrDefaultAsync(firstRoom);
+                    player.Character.Room = new WafclastBaseRoom(await this._roomRepository.FindRoomOrDefaultAsync(firstRoom));
 
                     await this._playerRepository.SavePlayerAsync(player);
                     return new StringResponse("personagem criado com sucesso! Obrigado por escolher Wafclast! Para continuar, digite `w.olhar`");

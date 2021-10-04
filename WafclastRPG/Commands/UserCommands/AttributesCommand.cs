@@ -48,7 +48,7 @@ namespace WafclastRPG.Commands.UserCommands
                     character.AttributePoints -= quantity;
                     attribute = attribute.ToLower().RemoverAcentos();
 
-                    var atribut = this.AttributeChoose(attribute, character);
+                    var atribut = AttributeChoose(attribute, character);
                     if (atribut == null)
                         return new StringResponse("este atributo não existe!");
 
@@ -60,7 +60,7 @@ namespace WafclastRPG.Commands.UserCommands
             await ctx.RespondAsync(this._res);
         }
 
-        public WafclastAttribute AttributeChoose(string mensagem, WafclastBaseCharacter character) =>
+        public static WafclastAttribute AttributeChoose(string mensagem, WafclastBaseCharacter character) =>
           mensagem switch
           {
               "forca" => character.Attributes.Strength,

@@ -1,4 +1,4 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System;
 using System.Collections.Generic;
@@ -35,25 +35,22 @@ namespace WafclastRPG.Game.Entities
         public IEnumerable<(WafclastAttribute Attribute, string Name)> GetAttributes()
         {
             foreach (PropertyInfo propertyInfo in this.GetType().GetProperties())
-            {
-                yield return ((WafclastAttribute)propertyInfo.GetValue(this, null), this.TranslateAttribute(propertyInfo.Name));
-            }
+                yield return ((WafclastAttribute)propertyInfo.GetValue(this, null), TranslateAttribute(propertyInfo.Name));
         }
 
-        private string TranslateAttribute(string name)
-#pragma warning disable CS8509 // A expressão switch não manipula todos os valores possíveis de seu tipo de entrada (não é exaustiva).
-      => name switch
-      {
-#pragma warning restore CS8509 // A expressão switch não manipula todos os valores possíveis de seu tipo de entrada (não é exaustiva).
-          "Strength" => "Força",
-          "Constitution" => "Constituição",
-          "Dexterity" => "Destreza",
-          "Agility" => "Agilidade",
-          "Intelligence" => "Inteligencia",
-          "Willpower" => "Força de Vontade",
-          "Perception" => "Percepção",
-          "Charisma" => "Carisma",
-      };
+        private static string TranslateAttribute(string name)
+            => name switch
+            {
+                "Strength" => "Força",
+                "Constitution" => "Constituição",
+                "Dexterity" => "Destreza",
+                "Agility" => "Agilidade",
+                "Intelligence" => "Inteligencia",
+                "Willpower" => "Força de Vontade",
+                "Perception" => "Percepção",
+                "Charisma" => "Carisma",
+                _ => null,
+            };
     }
 
 
@@ -63,7 +60,7 @@ namespace WafclastRPG.Game.Entities
         public double Base { get; set; }
         public double BonusPositive { get; set; }
         public double BonusNegative { get; set; }
-        public double Current { get { return (this.Base + this.BonusPositive) - this.BonusNegative; } }
+        public double Current => this.Base + this.BonusPositive - this.BonusNegative;
 
         public WafclastAttribute(double baseValue)
         {
@@ -79,9 +76,6 @@ namespace WafclastRPG.Game.Entities
         public static double operator /(WafclastAttribute attribute, double value) => attribute.Current / value;
         public static double operator /(double value, WafclastAttribute attribute) => attribute.Current / value;
 
-        public override string ToString()
-        {
-            return this.Current.ToString();
-        }
+        public override string ToString() => this.Current.ToString();
     }
 }

@@ -1,10 +1,12 @@
 // This file is part of the WafclastRPG project.
 
+using MongoDB.Bson.Serialization.Attributes;
 using WafclastRPG.Game.Entities;
 using static WafclastRPG.Mathematics;
 
 namespace WafclastRPG.Game.Characters
 {
+    [BsonIgnoreExtraElements]
     public class WafclastCharacterMage : WafclastBaseCharacter
     {
 

@@ -1,4 +1,4 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System;
 using MongoDB.Bson.Serialization.Attributes;
@@ -13,7 +13,10 @@ namespace WafclastRPG.Game.Entities
         public double ExperienceForNextLevel { get; set; }
         public int BlockedLevel { get; set; }
 
-        public WafclastLevel() => this.ExperienceForNextLevel = this.ExperienceTotalLevel(2);
+        public WafclastLevel()
+        {
+            this.ExperienceForNextLevel = this.ExperienceTotalLevel(2);
+        }
 
         public WafclastLevel(int startLevel)
         {
