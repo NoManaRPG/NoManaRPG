@@ -26,6 +26,10 @@ namespace WafclastRPG.Database.Repositories
 
         public Task<IResponse> WithTransactionAsync(Func<IClientSessionHandle, CancellationToken, Task<IResponse>> callbackAsync)
                  => this.Session.WithTransactionAsync(callbackAsync: callbackAsync);
-        public void Dispose() => this.Session.Dispose();
+        public void Dispose()
+        {
+            if (this.Session != null)
+                this.Session.Dispose();
+        }
     }
 }

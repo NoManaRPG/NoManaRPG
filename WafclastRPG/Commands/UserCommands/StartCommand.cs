@@ -8,7 +8,8 @@ using WafclastRPG.Database.Repositories;
 using WafclastRPG.Database.Response;
 using WafclastRPG.Extensions;
 using WafclastRPG.Game.Characters;
-using WafclastRPG.Game.Entities.Wafclast;
+using WafclastRPG.Game.Entities;
+using System.Configuration;
 
 namespace WafclastRPG.Commands.UserCommands
 {
@@ -16,17 +17,15 @@ namespace WafclastRPG.Commands.UserCommands
     public class StartCommand : BaseCommandModule
     {
         private IResponse _res;
-        private readonly Config _config;
         private readonly IPlayerRepository _playerRepository;
         private readonly IRoomRepository _roomRepository;
         private readonly IMongoSession _session;
 
-        public StartCommand(IPlayerRepository playerRepository, IRoomRepository roomRepository, Config config, IMongoSession session)
+        public StartCommand(IPlayerRepository playerRepository, IRoomRepository roomRepository, IMongoSession session)
         {
             this._playerRepository = playerRepository;
             this._roomRepository = roomRepository;
             this._session = session;
-            this._config = config;
         }
 
 
@@ -47,17 +46,17 @@ namespace WafclastRPG.Commands.UserCommands
                     switch (character)
                     {
                         case "guerreiro":
-                            player = new Player(ctx.User.Id, new CharacterWarrior());
+                            player = new WafclastPlayer(ctx.User.Id, new WafclastCharacterWarrior());
                             break;
                         case "feitiçeira":
                         case "feiticeira":
-                            player = new Player(ctx.User.Id, new MageCharacter());
+                            player = new WafclastPlayer(ctx.User.Id, new WafclastCharacterMage());
                             break;
                         default:
                             return new StringResponse("você esqueceu de informar a classe do seu personagem! **Guerreiro ou Feiticeira.**");
                     }
-                    ulong.TryParse(this._config.FirstRoom, out ulong result);
-                    player.Character.Room = await this._roomRepository.FindRoomOrDefaultAsync(result);
+                    var firstRoom = ulong.Parse(ConfigurationManager.AppSettings.Get("FirstRoomUlong"));
+                    player.Character.Room = await this._roomRepository.FindRoomOrDefaultAsync(firstRoom);
 
                     await this._playerRepository.SavePlayerAsync(player);
                     return new StringResponse("personagem criado com sucesso! Obrigado por escolher Wafclast! Para continuar, digite `w.olhar`");

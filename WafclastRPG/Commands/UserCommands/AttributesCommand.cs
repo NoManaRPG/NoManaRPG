@@ -60,7 +60,7 @@ namespace WafclastRPG.Commands.UserCommands
             await ctx.RespondAsync(this._res);
         }
 
-        public WafclastAttribute AttributeChoose(string mensagem, BaseCharacter character) =>
+        public WafclastAttribute AttributeChoose(string mensagem, WafclastBaseCharacter character) =>
           mensagem switch
           {
               "forca" => character.Attributes.Strength,

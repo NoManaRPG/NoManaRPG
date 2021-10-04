@@ -1,11 +1,11 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace WafclastRPG.Game.Entities.Wafclast
+namespace WafclastRPG.Game.Entities.Rooms
 {
     [BsonIgnoreExtraElements]
-    public class RoomAttackOrder
+    public class WafclastRoomAttackOrder
     {
         public double PlayerAttackSpeedPoints { get; set; }
         public double MonsterAttackSpeedPoints { get; set; }

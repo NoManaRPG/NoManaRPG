@@ -1,15 +1,16 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System.Threading.Tasks;
-using WafclastRPG.Game.Entities.Wafclast;
+using WafclastRPG.Game.Entities;
+using WafclastRPG.Game.Entities.Rooms;
 
 namespace WafclastRPG.Database.Repositories
 {
     public interface IRoomRepository
     {
-        Task<Room> FindRoomOrDefaultAsync(Player player);
-        Task<Room> FindRoomOrDefaultAsync(ulong id);
-        Task<Room> FindRoomOrDefaultAsync(string name);
-        Task SaveRoomAsync(Room item);
+        Task<WafclastRoom> FindRoomOrDefaultAsync(WafclastPlayer player);
+        Task<WafclastRoom> FindRoomOrDefaultAsync(ulong id);
+        Task<WafclastRoom> FindRoomOrDefaultAsync(string name);
+        Task SaveRoomAsync(WafclastRoom item);
     }
 }

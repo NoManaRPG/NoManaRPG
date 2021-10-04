@@ -1,4 +1,4 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -71,32 +71,30 @@ namespace WafclastRPG.Commands
 
     public class IHelpCommand : BaseHelpFormatter
     {
-        DiscordEmbedBuilder embed;
-        string prefix;
+        DiscordEmbedBuilder _embed;
 
         public IHelpCommand(CommandContext ctx) : base(ctx)
         {
-            var defaultPrefix = ctx.Services.GetService<Config>().PrefixRelease;
+
             var banco = ctx.Services.GetService<MongoDbContext>();
-            this.prefix = banco.GetServerPrefix(ctx.Guild.Id, defaultPrefix);
-            this.embed = new DiscordEmbedBuilder();
-            this.embed.WithAuthor("Menu de ajuda do Wafclast", null, ctx.Client.CurrentUser.AvatarUrl);
+            this._embed = new DiscordEmbedBuilder();
+            this._embed.WithAuthor("Menu de ajuda do Wafclast", null, ctx.Client.CurrentUser.AvatarUrl);
         }
 
         public override BaseHelpFormatter WithCommand(Command command)
         {
-            this.embed.WithTitle(Formatter.Bold($"{this.prefix}{command.Name}"));
-            this.embed.WithDescription($"```{command.Description}```");
+            this._embed.WithTitle(Formatter.Bold($"{command.Name}"));
+            this._embed.WithDescription($"```{command.Description}```");
 
             var usage = command.CustomAttributes.Where(x => x.GetType() == typeof(UsageAttribute)).FirstOrDefault();
 
             if (usage != null)
-                this.embed.AddField(Formatter.Bold(Formatter.Italic("Como usar")), Formatter.InlineCode($"{this.prefix}{(usage as UsageAttribute).Command}"), true);
+                this._embed.AddField(Formatter.Bold(Formatter.Italic("Como usar")), Formatter.InlineCode($"{(usage as UsageAttribute).Command}"), true);
 
             StringBuilder strAliases = new StringBuilder();
             foreach (var al in command.Aliases)
                 strAliases.Append($"__*{al}*__ ,");
-            this.embed.AddField(Formatter.Bold(Formatter.Italic("Atalhos")), $"{ (string.IsNullOrWhiteSpace(strAliases.ToString()) ? "__*nenhum*__" : strAliases.ToString()) }");
+            this._embed.AddField(Formatter.Bold(Formatter.Italic("Atalhos")), $"{ (string.IsNullOrWhiteSpace(strAliases.ToString()) ? "__*nenhum*__" : strAliases.ToString()) }");
             return this;
         }
 
@@ -104,8 +102,8 @@ namespace WafclastRPG.Commands
 
         public override CommandHelpMessage Build()
         {
-            this.embed.WithColor(DiscordColor.CornflowerBlue);
-            return new CommandHelpMessage(embed: this.embed.Build());
+            this._embed.WithColor(DiscordColor.CornflowerBlue);
+            return new CommandHelpMessage(embed: this._embed.Build());
         }
     }
 }

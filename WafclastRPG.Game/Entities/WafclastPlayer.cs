@@ -7,20 +7,20 @@ using MongoDB.Bson.Serialization.Attributes;
 using WafclastRPG.Game.Characters;
 using WafclastRPG.Game.Extensions;
 
-namespace WafclastRPG.Game.Entities.Wafclast
+namespace WafclastRPG.Game.Entities
 {
     [BsonIgnoreExtraElements]
-    public class Player
+    public class WafclastPlayer
     {
         [BsonId]
         public ulong Id { get; private set; }
         public DateTime DateAccountCreation { get; private set; }
-        public BaseCharacter Character { get; private set; }
+        public WafclastBaseCharacter Character { get; private set; }
 
         public string Mention => $"<@{this.Id.ToString(CultureInfo.InvariantCulture)}>";
         public string Language { get; set; } = "pt-BR";
 
-        public Player(ulong id, BaseCharacter Character)
+        public WafclastPlayer(ulong id, WafclastBaseCharacter Character)
         {
             this.Id = id;
             this.Character = Character;
@@ -34,7 +34,7 @@ namespace WafclastRPG.Game.Entities.Wafclast
             if (monster == null)
                 return "você não está visualizando nenhum monstro para atacar!";
 
-            if (monster.IsDead)
+            if (monster.LifePoints.Current <= 0)
                 return "o monstro que você está tentando atacar, já está morto!";
 
             var rd = new Random();
@@ -73,7 +73,7 @@ namespace WafclastRPG.Game.Entities.Wafclast
                     damage = monster.TakeDamage(rd.Sortear(this.Character.Damage));
                     str.AppendLine($"{monster.Mention} recebeu {damage:N2} {this.Character.EmojiAttack} de dano!");
 
-                    if (monster.IsDead)
+                    if (monster.LifePoints.Current <= 0)
                     {
                         str.AppendLine($"{monster.Mention} {Emojis.CrossBone} morreu!");
                         this.Character.MonsterKills++;

@@ -1,20 +1,19 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
 using WafclastRPG.Game.Enums;
 using static WafclastRPG.Mathematics;
 
-namespace WafclastRPG.Game.Entities.Wafclast
+namespace WafclastRPG.Game.Entities.Monsters
 {
     [BsonIgnoreExtraElements]
-    public class Monster
+    public class WafclastMonster
     {
         public int Level { get; set; }
         public string Name { get; set; }
 
-        public string Mention { get { return $"{this.Name} [Nv. {this.Level}]"; } }
-        public bool IsDead { get { return this.LifePoints.Current <= 0; } }
+        public string Mention => $"{this.Name} [Nv. {this.Level}]";
 
         public WafclastAttributes Attributes { get; set; }
         public WafclastStatePoints LifePoints { get; set; }
@@ -28,7 +27,7 @@ namespace WafclastRPG.Game.Entities.Wafclast
 
         public List<DropChance> Drops { get; set; } = new List<DropChance>();
 
-        public Monster(int level, string name, DamageType damageType, double strength = 5, double constitution = 5, double dexterity = 5, double agility = 5, double intelligence = 5, double willpower = 5, double perception = 5, double charisma = 5)
+        public WafclastMonster(int level, string name, DamageType damageType, double strength = 5, double constitution = 5, double dexterity = 5, double agility = 5, double intelligence = 5, double willpower = 5, double perception = 5, double charisma = 5)
         {
             this.Level = level;
             this.Name = name;

@@ -1,11 +1,11 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using WafclastRPG.Database.Extensions;
 using WafclastRPG.Game.Entities;
 using WafclastRPG.Game.Entities.Itens;
-using WafclastRPG.Game.Entities.Wafclast;
+using WafclastRPG.Game.Entities.Rooms;
 
 namespace WafclastRPG.Database
 {
@@ -15,31 +15,29 @@ namespace WafclastRPG.Database
         public IMongoClient Client { get; }
         public IMongoDatabase Database { get; }
 
-        public IMongoCollection<Player> Players { get; }
-        public IMongoCollection<Room> Rooms { get; }
+        public IMongoCollection<WafclastPlayer> Players { get; }
+        public IMongoCollection<WafclastRoom> Rooms { get; }
         public IMongoCollection<WafclastBaseItem> Items { get; }
 
         public IMongoCollection<WafclastServer> Servers { get; }
         public IMongoCollection<WafclastFabrication> Fabrications { get; }
 
-        public MongoDbContext()
+        public MongoDbContext(string connection)
         {
-            #region Connection string
-            this.Client = new MongoClient("mongodb://localhost?retryWrites=true");
-#if DEBUG
-            this.Database = this.Client.GetDatabase("WafclastDebug");
-#else
-            Database = Client.GetDatabase("Wafclast");
-#endif
-            #endregion
 
-            this.Players = this.Database.CreateCollection<Player>();
-            this.Servers = this.Database.CreateCollection<WafclastServer>();
-            this.Items = this.Database.CreateCollection<WafclastBaseItem>();
-            this.Rooms = this.Database.CreateCollection<Room>();
+            var mongoUrl = new MongoUrl(connection);
+            var dbName = mongoUrl.DatabaseName;
+
+            this.Client = new MongoClient(mongoUrl);
+            this.Database = this.Client.GetDatabase(dbName);
+
+            this.Players = this.Database.CreateCollection<WafclastPlayer>("WafclastPlayers");
+            this.Servers = this.Database.CreateCollection<WafclastServer>("WafclastServers");
+            this.Items = this.Database.CreateCollection<WafclastBaseItem>("WafclastItems");
+            this.Rooms = this.Database.CreateCollection<WafclastRoom>("WafclastRooms");
 
 
-            this.Fabrications = this.Database.CreateCollection<WafclastFabrication>();
+            this.Fabrications = this.Database.CreateCollection<WafclastFabrication>("WafclastRecipes");
 
             #region Usar no futuro
             //var notificationLogBuilder = Builders<RPGJogador>.IndexKeys;

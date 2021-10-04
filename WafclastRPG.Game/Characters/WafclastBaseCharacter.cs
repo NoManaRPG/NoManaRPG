@@ -1,17 +1,17 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
 using WafclastRPG.Game.Entities;
-using WafclastRPG.Game.Entities.Wafclast;
+using WafclastRPG.Game.Entities.Rooms;
 using static WafclastRPG.Mathematics;
 
 namespace WafclastRPG.Game.Characters
 {
     [BsonIgnoreExtraElements]
     [BsonDiscriminator(RootClass = true)]
-    [BsonKnownTypes(typeof(MageCharacter), typeof(CharacterWarrior))]
-    public abstract class BaseCharacter : WafclastLevel
+    [BsonKnownTypes(typeof(WafclastCharacterMage), typeof(WafclastCharacterWarrior))]
+    public abstract class WafclastBaseCharacter : WafclastLevel
     {
 
         /// <summary>
@@ -45,9 +45,9 @@ namespace WafclastRPG.Game.Characters
         /// </summary>
         public Dictionary<string, int> Skills = new Dictionary<string, int>();
 
-        public Room Room { get; set; }
+        public WafclastRoom Room { get; set; }
 
-        public BaseCharacter()
+        public WafclastBaseCharacter()
         {
             this.LifePoints = new WafclastStatePoints(CalculateLifePoints(this.Attributes));
             this.ManaPoints = new WafclastStatePoints(CalculateManaPoints(this.Attributes));
@@ -69,13 +69,7 @@ namespace WafclastRPG.Game.Characters
             return valor;
         }
 
-        public bool IsDead
-        {
-            get
-            {
-                return this.LifePoints.Current <= 0;
-            }
-        }
+        public bool IsDead => this.LifePoints.Current <= 0;
 
     }
 }

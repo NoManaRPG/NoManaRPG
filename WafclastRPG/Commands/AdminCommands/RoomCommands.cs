@@ -9,7 +9,8 @@ using WafclastRPG.Attributes;
 using WafclastRPG.Database;
 using WafclastRPG.Database.Repositories;
 using WafclastRPG.Extensions;
-using WafclastRPG.Game.Entities.Wafclast;
+using WafclastRPG.Game.Entities.Monsters;
+using WafclastRPG.Game.Entities.Rooms;
 using WafclastRPG.Game.Enums;
 
 namespace WafclastRPG.Commands.AdminCommands
@@ -52,14 +53,14 @@ namespace WafclastRPG.Commands.AdminCommands
 
             var invite = await ctx.Channel.CreateInviteAsync(0, 0, false, false, "New Room Created");
 
-            var room = new Room()
+            var room = new WafclastRoom()
             {
                 Id = ctx.Channel.Id,
                 Name = name.Result,
                 Region = regionName.Result,
                 Description = description.Result,
                 Invite = invite.ToString(),
-                Location = new Vector() { X = vectorX.Result, Y = vectorY.Result }
+                Location = new WafclastVector() { X = vectorX.Result, Y = vectorY.Result }
             };
 
             await this._roomRepository.SaveRoomAsync(room);
@@ -87,7 +88,7 @@ namespace WafclastRPG.Commands.AdminCommands
                 return;
             }
 
-            var monster = new Monster(1, name, DamageType.Physic, 5, 5, 30, 30);
+            var monster = new WafclastMonster(1, name, DamageType.Physic, 5, 5, 30, 30);
             monster.CalculateStatistics();
             room.Monster = monster;
             await this._roomRepository.SaveRoomAsync(room);
@@ -109,7 +110,7 @@ namespace WafclastRPG.Commands.AdminCommands
 
             await ctx.TriggerTypingAsync();
 
-            Room room = null;
+            WafclastRoom room = null;
             room = await this._roomRepository.FindRoomOrDefaultAsync(ctx.Channel.Id);
             if (room == null)
                 await CommandContextExtension.RespondAsync(ctx, "este lugar não é um quarto.");
@@ -128,12 +129,12 @@ namespace WafclastRPG.Commands.AdminCommands
 
             await ctx.TriggerTypingAsync();
 
-            Room room = null;
+            WafclastRoom room = null;
             room = await this._roomRepository.FindRoomOrDefaultAsync(ctx.Channel.Id);
             if (room == null)
                 await CommandContextExtension.RespondAsync(ctx, "este lugar não é um quarto.");
 
-            room.Location = new Vector(x, y);
+            room.Location = new WafclastVector(x, y);
             await this._roomRepository.SaveRoomAsync(room);
 
 

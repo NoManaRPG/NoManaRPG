@@ -10,8 +10,9 @@ using MongoDB.Driver;
 using WafclastRPG.Database;
 using WafclastRPG.Database.Repositories;
 using WafclastRPG.Database.Response;
+using WafclastRPG.Game.Entities;
 using WafclastRPG.Game.Entities.Itens;
-using WafclastRPG.Game.Entities.Wafclast;
+using WafclastRPG.Game.Entities.Rooms;
 
 namespace WafclastRPG.Commands.AdminCommands
 {
@@ -39,13 +40,13 @@ namespace WafclastRPG.Commands.AdminCommands
         [RequireOwner]
         public async Task AtualizarAsync(CommandContext ctx)
         {
-            FilterDefinition<Player> filter = FilterDefinition<Player>.Empty;
-            FindOptions<Player> options = new FindOptions<Player> { BatchSize = 8, NoCursorTimeout = false };
-            using (IAsyncCursor<Player> cursor = await this._mongoDbContext.Players.FindAsync(filter, options))
+            FilterDefinition<WafclastPlayer> filter = FilterDefinition<WafclastPlayer>.Empty;
+            FindOptions<WafclastPlayer> options = new FindOptions<WafclastPlayer> { BatchSize = 8, NoCursorTimeout = false };
+            using (IAsyncCursor<WafclastPlayer> cursor = await this._mongoDbContext.Players.FindAsync(filter, options))
                 while (await cursor.MoveNextAsync())
                 {
-                    IEnumerable<Player> list = cursor.Current;
-                    foreach (Player item in list)
+                    IEnumerable<WafclastPlayer> list = cursor.Current;
+                    foreach (WafclastPlayer item in list)
                     {
 
 
@@ -103,8 +104,8 @@ namespace WafclastRPG.Commands.AdminCommands
             int.TryParse(sx2, out int x2);
             int.TryParse(sy2, out int y2);
 
-            Vector v = new Vector(x1, y1);
-            await ctx.RespondAsync(v.Distance(new Vector(x2, y2)).ToString("N2"));
+            WafclastVector v = new WafclastVector(x1, y1);
+            await ctx.RespondAsync(v.Distance(new WafclastVector(x2, y2)).ToString("N2"));
         }
 
         //[Command("aviajar")]

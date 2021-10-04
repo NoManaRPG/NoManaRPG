@@ -1,4 +1,4 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -7,11 +7,11 @@ namespace WafclastRPG.Database.Extensions
 {
     public static class IMongoDatabaseExtension
     {
-        public static IMongoCollection<T> CreateCollection<T>(this IMongoDatabase database, CreateCollectionOptions createCollectionOptions = null)
+        public static IMongoCollection<T> CreateCollection<T>(this IMongoDatabase database, string name, CreateCollectionOptions createCollectionOptions = null)
         {
-            var filtro = new ListCollectionNamesOptions { Filter = Builders<BsonDocument>.Filter.Eq("name", typeof(T).Name) };
-            if (!database.ListCollectionNames(filtro).Any()) database.CreateCollection(typeof(T).Name, createCollectionOptions);
-            return database.GetCollection<T>(typeof(T).Name);
+            var filtro = new ListCollectionNamesOptions { Filter = Builders<BsonDocument>.Filter.Eq("name", name) };
+            if (!database.ListCollectionNames(filtro).Any()) database.CreateCollection(name, createCollectionOptions);
+            return database.GetCollection<T>(name);
         }
     }
 }

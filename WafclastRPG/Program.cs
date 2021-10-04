@@ -1,6 +1,5 @@
 // This file is part of the WafclastRPG project.
 
-using System;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
@@ -9,60 +8,40 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WafclastRPG.Database;
 using WafclastRPG.Database.Repositories;
+using System.Configuration;
 
 namespace WafclastRPG
 {
     public class Program
     {
-        public Config ConfigFile { get; private set; }
-        public MongoDbContext MongoDbContext { get; private set; } = new MongoDbContext();
-        public UsersBlocked UsersTemporaryBlocked { get; private set; } = new UsersBlocked();
+        public MongoDbContext MongoDbContext { get; private set; }
+        public UsersBlocked UsersTemporaryBlocked { get; private set; }
 
         static void Main() => new Program().RodarBotAsync().GetAwaiter().GetResult();
 
         public async Task RodarBotAsync()
         {
-            this.ConfigFile = Config.LoadFromJsonFile();
-            if (this.ConfigFile == null)
-            {
-                Console.WriteLine("O arquivo config.json não existe!");
-                Console.WriteLine("Coloque as informações necessarias no arquivo gerado!");
-                Console.WriteLine("Aperte qualquer botão para sair...");
-                Console.ReadKey();
-                Environment.Exit(0);
-            }
-
-            #region Configs
-#if DEBUG
-            var token = this.ConfigFile.TokenDebug;
-            this.ConfigFile.PrefixRelease = this.ConfigFile.PrefixDebug;
-            var logLevel = LogLevel.Debug;
-#else
-            var token = ConfigFile.TokenRelease;
-            var logLevel = LogLevel.Debug;
-#endif
-            #endregion
-
-            Bot bot = new Bot(new DiscordConfiguration
+            var bot = new Bot(new DiscordConfiguration
             {
                 TokenType = TokenType.Bot,
                 ReconnectIndefinitely = true,
                 GatewayCompressionLevel = GatewayCompressionLevel.Stream,
                 AutoReconnect = true,
-                Token = token,
+                Token = ConfigurationManager.AppSettings.Get("Token"),
                 Intents = DiscordIntents.AllUnprivileged,
-                MinimumLogLevel = logLevel,
+                MinimumLogLevel = LogLevel.Debug,
             });
 
+            this.MongoDbContext = new MongoDbContext(ConfigurationManager.ConnectionStrings["MongoConnection"].ConnectionString);
+            this.UsersTemporaryBlocked = new UsersBlocked();
             var services = new ServiceCollection()
-          .AddSingleton(this.ConfigFile)
-          .AddSingleton(this.MongoDbContext)
-          .AddSingleton(this.UsersTemporaryBlocked)
-          .AddScoped<IMongoSession, MongoSession>()
-          .AddScoped<IPlayerRepository, PlayerRepository>()
-          .AddScoped<IItemRepository, ItemRepository>()
-          .AddScoped<IRoomRepository, RoomRepository>()
-          .BuildServiceProvider();
+                .AddSingleton(this.MongoDbContext)
+                .AddSingleton(this.UsersTemporaryBlocked)
+                .AddScoped<IMongoSession, MongoSession>()
+                .AddScoped<IPlayerRepository, PlayerRepository>()
+                .AddScoped<IItemRepository, ItemRepository>()
+                .AddScoped<IRoomRepository, RoomRepository>()
+                .BuildServiceProvider();
 
             bot.ModuleCommand(new CommandsNextConfiguration
             {
@@ -87,17 +66,9 @@ namespace WafclastRPG
                 return await Task.FromResult(-1);
             if (this.UsersTemporaryBlocked.IsUserBlocked(msg.Author.Id))
                 return await Task.FromResult(-1);
-#if DEBUG
-            var prefix = await this.MongoDbContext.GetServerPrefixAsync(gld.Id, this.ConfigFile.PrefixDebug);
+
+            var prefix = await this.MongoDbContext.GetServerPrefixAsync(gld.Id, ConfigurationManager.AppSettings.Get("Prefix"));
             var pfixLocation = msg.GetStringPrefixLength(prefix);
-#else
-            var prefix = await MongoDbContext.GetServerPrefixAsync(gld.Id, ConfigFile.PrefixRelease);
-            var pfixLocation = msg.GetStringPrefixLength(prefix);
-            if (pfixLocation == -1)
-                pfixLocation = msg.GetStringPrefixLength(ConfigFile.PrefixRelease.ToLower());
-            if (pfixLocation == -1)
-                pfixLocation = msg.GetStringPrefixLength(ConfigFile.PrefixRelease.ToUpper());
-#endif
             return await Task.FromResult(pfixLocation);
         }
     }

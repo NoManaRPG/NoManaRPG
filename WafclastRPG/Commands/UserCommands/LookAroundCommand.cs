@@ -12,7 +12,7 @@ using WafclastRPG.Database.Exceptions;
 using WafclastRPG.Database.Repositories;
 using WafclastRPG.Database.Response;
 using WafclastRPG.Extensions;
-using WafclastRPG.Game.Entities.Wafclast;
+using WafclastRPG.Game.Entities.Rooms;
 
 namespace WafclastRPG.Commands.UserCommands
 {
@@ -20,19 +20,17 @@ namespace WafclastRPG.Commands.UserCommands
     public class LookAroundCommand : BaseCommandModule
     {
         private IResponse _res;
-        private readonly Config _config;
         private readonly MongoDbContext _mongoDbContext;
         private readonly IPlayerRepository _playerRepository;
         private readonly IRoomRepository _roomRepository;
         private readonly IMongoSession _session;
 
-        public LookAroundCommand(IPlayerRepository playerRepository, IRoomRepository roomRepository, Config config, MongoDbContext mongoDbContext, IMongoSession session)
+        public LookAroundCommand(IPlayerRepository playerRepository, IRoomRepository roomRepository, MongoDbContext mongoDbContext, IMongoSession session)
         {
             this._playerRepository = playerRepository;
             this._mongoDbContext = mongoDbContext;
             this._roomRepository = roomRepository;
             this._session = session;
-            this._config = config;
         }
 
         [Command("olhar")]
@@ -98,7 +96,7 @@ namespace WafclastRPG.Commands.UserCommands
 
                     var character = player.Character;
 
-                    Room room = null;
+                    WafclastRoom room = null;
 
                     if (string.IsNullOrWhiteSpace(roomName))
                     {
@@ -125,17 +123,6 @@ namespace WafclastRPG.Commands.UserCommands
                     return new StringResponse($"você chegou em: **[{room.Name}]!**");
                 });
             await ctx.RespondAsync(this._res);
-        }
-
-        [Command("mapa")]
-        [Aliases("map")]
-        [Description("Permite ver o mapa para todas os locais disponíveis.")]
-        [Cooldown(1, 5, CooldownBucketType.User)]
-        [Usage("mapa")]
-        public async Task MapCommandAsync(CommandContext ctx)
-        {
-            await ctx.TriggerTypingAsync();
-            await ctx.RespondAsync(this._config.MapUrl);
         }
     }
 }

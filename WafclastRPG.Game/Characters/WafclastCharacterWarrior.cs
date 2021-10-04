@@ -5,18 +5,14 @@ using static WafclastRPG.Mathematics;
 
 namespace WafclastRPG.Game.Characters
 {
-    public class MageCharacter : BaseCharacter
+    public class WafclastCharacterWarrior : WafclastBaseCharacter
     {
-
-        public override string EmojiAttack { get; set; } = Emojis.Dardo;
+        public override string EmojiAttack { get; set; } = Emojis.Adaga;
         public override WafclastAttributes Attributes { get; set; } = new WafclastAttributes();
 
-        public MageCharacter()
-        {
-        }
         public override double CalculateDamagePoints()
         {
-            return CalculateMagicalDamage(this.Attributes);
+            return CalculatePhysicalDamage(this.Attributes);
         }
 
         public override void ResetCombatThings()

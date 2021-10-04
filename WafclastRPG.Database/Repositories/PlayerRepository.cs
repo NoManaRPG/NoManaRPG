@@ -1,12 +1,11 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using MongoDB.Driver;
 using WafclastRPG.Database.Exceptions;
-using WafclastRPG.Game.Entities.Wafclast;
-
+using WafclastRPG.Game.Entities;
 
 namespace WafclastRPG.Database.Repositories
 {
@@ -22,7 +21,7 @@ namespace WafclastRPG.Database.Repositories
             this._session = session;
         }
 
-        public async Task<Player> FindPlayerAsync(CommandContext ctx)
+        public async Task<WafclastPlayer> FindPlayerAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
             var player = await this.FindPlayerOrDefaultAsync(ctx);
@@ -30,25 +29,25 @@ namespace WafclastRPG.Database.Repositories
                 throw new PlayerNotCreatedException();
             return player;
         }
-        public async Task<Player> FindPlayerAsync(ulong id)
+        public async Task<WafclastPlayer> FindPlayerAsync(ulong id)
         {
             var player = await this.FindPlayerOrDefaultAsync(id);
             if (player == null)
                 throw new PlayerNotCreatedException();
             return player;
         }
-        public Task<Player> FindPlayerAsync(DiscordUser user) => this.FindPlayerAsync(user.Id);
+        public Task<WafclastPlayer> FindPlayerAsync(DiscordUser user) => this.FindPlayerAsync(user.Id);
 
-        public async Task<Player> FindPlayerOrDefaultAsync(ulong id)
+        public async Task<WafclastPlayer> FindPlayerOrDefaultAsync(ulong id)
         {
             if (this._session.Session != null)
                 return await this._context.Players.Find(this._session.Session, x => x.Id == id).FirstOrDefaultAsync();
             return await this._context.Players.Find(x => x.Id == id).FirstOrDefaultAsync();
         }
-        public Task<Player> FindPlayerOrDefaultAsync(DiscordUser user) => this.FindPlayerOrDefaultAsync(user.Id);
-        public Task<Player> FindPlayerOrDefaultAsync(CommandContext ctx) => this.FindPlayerOrDefaultAsync(ctx.User.Id);
+        public Task<WafclastPlayer> FindPlayerOrDefaultAsync(DiscordUser user) => this.FindPlayerOrDefaultAsync(user.Id);
+        public Task<WafclastPlayer> FindPlayerOrDefaultAsync(CommandContext ctx) => this.FindPlayerOrDefaultAsync(ctx.User.Id);
 
-        public Task SavePlayerAsync(Player player)
+        public Task SavePlayerAsync(WafclastPlayer player)
         {
 
             if (this._session.Session != null)
