@@ -10,7 +10,9 @@ namespace WafclastRPG.Database.Interfaces
 {
     public interface IMongoSession : IDisposable
     {
+        [Obsolete("Session is obsolete, please use Get() instead.")]
         IClientSessionHandle Session { get; }
+        IClientSessionHandle Get();
         Task<IMongoSession> StartSessionAsync();
         Task<IResponse> WithTransactionAsync(Func<IClientSessionHandle, CancellationToken, Task<IResponse>> callbackAsync);
     }

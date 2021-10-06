@@ -1,4 +1,4 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System;
 using WafclastRPG.Game.Entities;
@@ -15,7 +15,7 @@ namespace WafclastRPG
         public static double CalculateMagicalDamage(WafclastAttributes attributes) => attributes.Intelligence + ((attributes.Intelligence / 5.0) * 2.0) + (attributes.Dexterity / 2.0);
 
         public static double CalculateEvasionPoints(WafclastAttributes attributes) => (attributes.Agility * 2.0) + (attributes.Dexterity / 5.0) + (attributes.Intelligence / 5.0) + (attributes.Perception / 3.0) + (attributes.Willpower / 3.0);
-        public static double CalculateDexteryPoints(WafclastAttributes attributes) => (attributes.Dexterity * 2.0) + (attributes.Agility / 5.0) + (attributes.Intelligence / 5.0) + (attributes.Perception / 3.0) + (attributes.Willpower / 3.0);
+        public static double CalculatePrecisionPoints(WafclastAttributes attributes) => (attributes.Dexterity * 2.0) + (attributes.Agility / 5.0) + (attributes.Intelligence / 5.0) + (attributes.Perception / 3.0) + (attributes.Willpower / 3.0);
 
         public static double CalculateAttackSpeed(WafclastAttributes attributes) => (attributes.Dexterity / 4);
 

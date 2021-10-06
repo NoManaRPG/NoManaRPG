@@ -6,6 +6,7 @@ using WafclastRPG.Database.Extensions;
 using WafclastRPG.Game.Entities;
 using WafclastRPG.Game.Entities.Itens;
 using WafclastRPG.Game.Entities.Rooms;
+using WafclastRPG.Game.Entities.Skills;
 
 namespace WafclastRPG.Database
 {
@@ -18,6 +19,7 @@ namespace WafclastRPG.Database
         public IMongoCollection<WafclastPlayer> Players { get; }
         public IMongoCollection<WafclastRoom> Rooms { get; }
         public IMongoCollection<WafclastBaseItem> Items { get; }
+        public IMongoCollection<WafclastPlayerSkill> Skills { get; }
 
         public IMongoCollection<WafclastServer> Servers { get; }
         public IMongoCollection<WafclastFabrication> Fabrications { get; }
@@ -35,6 +37,7 @@ namespace WafclastRPG.Database
             this.Servers = this.Database.CreateCollection<WafclastServer>("WafclastServers");
             this.Items = this.Database.CreateCollection<WafclastBaseItem>("WafclastItems");
             this.Rooms = this.Database.CreateCollection<WafclastRoom>("WafclastRooms");
+            this.Skills = this.Database.CreateCollection<WafclastPlayerSkill>("WafclastPlayerSkills");
 
 
             this.Fabrications = this.Database.CreateCollection<WafclastFabrication>("WafclastRecipes");

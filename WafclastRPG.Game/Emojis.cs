@@ -1,5 +1,6 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
+using System;
 using WafclastRPG.Game.Entities;
 
 namespace WafclastRPG
@@ -45,6 +46,7 @@ namespace WafclastRPG
         public const string DiamanteLaranjaPequeno = ":small_orange_diamond:";
         public const string Aviso = ":warning:";
 
+        [Obsolete]
         public static string GerarVidaEmoji(WafclastStatePoints lifeAttribute)
         {
             switch (lifeAttribute.Current / lifeAttribute.Max)
@@ -59,8 +61,8 @@ namespace WafclastRPG
             return Emojis.CoracaoVermelho;
         }
 
-        public static string TesteEmoji(WafclastStatePoints lifeAttribute) =>
-           (lifeAttribute.Current / lifeAttribute.Max) switch
+        public static string DinamicHeartEmoji(WafclastStatePoints attribute) =>
+           (attribute.Current / attribute.Max) switch
            {
                double n when (n > 0.75) => Emojis.CoracaoVerde,
                double n when (n > 0.50) => Emojis.CoracaoAmarelo,

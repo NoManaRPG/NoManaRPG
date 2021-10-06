@@ -31,5 +31,7 @@ namespace WafclastRPG.Database.Repositories
             if (this.Session != null)
                 this.Session.Dispose();
         }
+
+        public IClientSessionHandle Get() => this.Session;
     }
 }

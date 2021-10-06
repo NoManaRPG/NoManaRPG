@@ -1,8 +1,8 @@
 // This file is part of the WafclastRPG project.
 
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using MongoDB.Bson.Serialization.Attributes;
-using WafclastRPG.Game.Enums;
+using WafclastRPG.Game.Entities.Skills;
 using static WafclastRPG.Mathematics;
 
 namespace WafclastRPG.Game.Entities.Monsters
@@ -18,39 +18,30 @@ namespace WafclastRPG.Game.Entities.Monsters
         public WafclastAttributes Attributes { get; set; }
         public WafclastStatePoints LifePoints { get; set; }
 
-
-        public DamageType DamageType { get; set; }
-        public double Damage { get; set; }
         public double EvasionPoints { get; set; }
         public double PrecisionPoints { get; set; }
         public double AttackSpeed { get; set; }
 
-        public List<DropChance> Drops { get; set; } = new List<DropChance>();
+        public Collection<DropChance> Drops { get; set; } = new Collection<DropChance>();
+        public Collection<WafclastBaseSkill> Skills { get; set; } = new Collection<WafclastBaseSkill>();
 
-        public WafclastMonster(int level, string name, DamageType damageType, double strength = 5, double constitution = 5, double dexterity = 5, double agility = 5, double intelligence = 5, double willpower = 5, double perception = 5, double charisma = 5)
+        public WafclastMonster(int level, string name, double strength = 5, double constitution = 5, double dexterity = 5, double agility = 5, double intelligence = 5, double willpower = 5, double perception = 5, double charisma = 5)
         {
             this.Level = level;
             this.Name = name;
-            this.DamageType = damageType;
             this.Attributes = new WafclastAttributes(strength, constitution, dexterity, intelligence, willpower, perception, charisma);
+            this.CalculateStatistics();
         }
 
         public void CalculateStatistics()
         {
             this.LifePoints = new WafclastStatePoints(CalculateLifePoints(this.Attributes));
             this.EvasionPoints = CalculateEvasionPoints(this.Attributes);
-            this.PrecisionPoints = CalculateDexteryPoints(this.Attributes);
+            this.PrecisionPoints = CalculatePrecisionPoints(this.Attributes);
             this.AttackSpeed = CalculateAttackSpeed(this.Attributes);
-            if (this.DamageType == DamageType.Magic) this.Damage = CalculateMagicalDamage(this.Attributes);
-            else
-                this.Damage = CalculatePhysicalDamage(this.Attributes);
         }
 
-        public double TakeDamage(double valor)
-        {
-            this.LifePoints.Remove(valor);
-            return valor;
-        }
+        public bool TakeDamage(double valor) => this.LifePoints.Remove(valor);
     }
 
     public class DropChance

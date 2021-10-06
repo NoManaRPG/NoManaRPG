@@ -1,4 +1,4 @@
-﻿// This file is part of the WafclastRPG project.
+// This file is part of the WafclastRPG project.
 
 using System.Collections.Concurrent;
 using DSharpPlus.CommandsNext;

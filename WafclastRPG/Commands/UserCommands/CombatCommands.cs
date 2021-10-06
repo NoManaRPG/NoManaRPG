@@ -1,6 +1,7 @@
 // This file is part of the WafclastRPG project.
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
@@ -11,6 +12,10 @@ using WafclastRPG.Database;
 using WafclastRPG.Database.Interfaces;
 using WafclastRPG.Database.Response;
 using WafclastRPG.Extensions;
+using WafclastRPG.Game.Entities;
+using WafclastRPG.Game.Entities.Monsters;
+using WafclastRPG.Game.Entities.Skills;
+using WafclastRPG.Game.Entities.Skills.Effects;
 
 namespace WafclastRPG.Commands.UserCommands
 {
@@ -38,30 +43,57 @@ namespace WafclastRPG.Commands.UserCommands
         public async Task ExploreCommandAsync(CommandContext ctx)
         {
             this._usersBlocked.BlockUser(ctx);
-            Interactivity intera = new Interactivity(this._usersBlocked, ctx);
             var player = await this._playerRepository.FindPlayerAsync(ctx);
-            var room = await this._roomRepository.FindRoomOrDefaultAsync(player);
-            var monster = room.Monster;
-            if (monster == null)
-                throw new Exception("para que essa area não tem nada de interessante para explorar.");
 
+            //var room = await this._roomRepository.FindRoomOrDefaultAsync(player);
+            //if(room.Monster == null)
+            //{
+            //    await ctx.RespondAsync("Parece que aqui não tem monstros!");
+            //    return;
+            //}
 
-
-            var str = new StringBuilder();
-
-            str.AppendLine($"Você encontrou **[{room.Monster.Mention}]!**");
-            str.AppendLine("O que deseja fazer?");
-            str.AppendLine("Ataque 1: Atacar com as mãos");
-            str.AppendLine("Ataque 2: Magia Congelante");
-            str.AppendLine("Ataque 3: Magia de Administrador");
-            str.AppendLine("Defender");
-            str.AppendLine("Fugir");
-            var emb = new DiscordEmbedBuilder();
-            emb.WithDescription(str.ToString());
-            emb.WithColor(DiscordColor.Azure);
-            await ctx.RespondAsync(emb);
-
+            var intera = new Interactivity(this._usersBlocked, ctx, new TimeSpan(0,2,0));
             var character = player.Character;
+
+            // Auto Gerado!
+            var monster = new WafclastMonster(1,"Boneco de teste",7,7,7,7,7,7,7,7);
+            var basicSkill = new WafclastPlayerSkill("Ataque cortante", ctx.User.Id);
+            var damageEffect = new  WafclastSkillDamageEffect(50);
+            basicSkill.Effects.Add(damageEffect);
+            // Auto Gerado!
+
+            var combat = new WafclastCombat(player,monster);
+            var strSkills = new StringBuilder();
+            var strDescription = new StringBuilder();
+
+            strSkills.AppendLine("Ataque cortante");
+            strSkills.AppendLine("Usar ..");
+            strDescription.AppendLine("Você encontrou um monstro!");
+
+            await this.RespostaBasicAsync(ctx, player, monster, strSkills, strDescription);
+
+            bool continueCombat = true;
+            while (continueCombat)
+            {
+                //Input
+
+                await intera.WaitForMessageAsync();
+
+                // Player skill
+                var playerUseSkill = combat.PlayerUseSkill(basicSkill);
+                continueCombat = playerUseSkill.ContinueCombat;
+                if (continueCombat == false)
+                    goto EndCombat;
+
+                // Monster skill
+
+                EndCombat:
+                await this.RespostaBasicAsync(ctx, player, monster, strSkills, playerUseSkill.CombatDescription, continueCombat);
+            }
+            this._usersBlocked.UnblockUser(ctx);
+            return;
+
+
             int turn = 1;
             bool cont = true;
             Random rd = new Random();
@@ -117,19 +149,19 @@ namespace WafclastRPG.Commands.UserCommands
                 strf.AppendLine($"Monster causou {monsterDamage} de dano!");
                 strf.AppendLine($"Jogador causou {playerDamage} de dano!");
                 embed.WithDescription(strf.ToString());
-                embed.AddField(ctx.User.Username, $"{Emojis.TesteEmoji(player.Character.LifePoints)} {character.LifePoints}", true);
+                embed.AddField(ctx.User.Username, $"{Emojis.DinamicHeartEmoji(player.Character.LifePoints)} {character.LifePoints}", true);
                 embed.AddField(monster.Mention, $"{Emojis.GerarVidaEmoji(monster.LifePoints)} {monster.LifePoints.Current:N2} ", true);
 
                 if (cont)
                 {
-                    str = new StringBuilder();
-                    str.AppendLine("Ataque 1: Atacar com as mãos");
-                    str.AppendLine("Ataque 2: Magia Congelante");
-                    str.AppendLine("Ataque 3: Magia de Administrador");
-                    str.AppendLine("Defender");
-                    str.AppendLine("Fugir");
+                    //str = new StringBuilder();
+                    //str.AppendLine("Ataque 1: Atacar com as mãos");
+                    //str.AppendLine("Ataque 2: Magia Congelante");
+                    //str.AppendLine("Ataque 3: Magia de Administrador");
+                    //str.AppendLine("Defender");
+                    //str.AppendLine("Fugir");
 
-                    embed.AddField("O que deseja fazer?", str.ToString());
+                    //embed.AddField("O que deseja fazer?", str.ToString());
                 }
                 await ctx.RespondAsync(embed);
             }
@@ -170,7 +202,23 @@ namespace WafclastRPG.Commands.UserCommands
         }
 
 
-
+        public async Task RespostaBasicAsync(CommandContext ctx, WafclastPlayer player, WafclastMonster monster, StringBuilder strSkills, StringBuilder strDescription, bool showOptions = true)
+        {
+            var emb = new DiscordEmbedBuilder();
+            emb.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
+            emb.WithDescription(strDescription.ToString());
+            emb.AddField(ctx.User.Username, player.Character.Life, true);
+            var mana = player.Character.Energia;
+            emb.AddField(mana.Nome, mana.Info, true);
+            emb.AddField(monster.Mention, $"{Emojis.DinamicHeartEmoji(monster.LifePoints)} {monster.LifePoints.Current:N2} ");
+            if (showOptions)
+            {
+                emb.AddField("[Ataques/Ações disponíveis]", strSkills.ToString());
+                emb.WithFooter("Você tem 2 minutos para responder.");
+            }
+            emb.WithColor(DiscordColor.Red);
+            await ctx.RespondAsync(emb);
+        }
 
 
 

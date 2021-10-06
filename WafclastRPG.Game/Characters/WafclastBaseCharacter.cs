@@ -1,10 +1,8 @@
 // This file is part of the WafclastRPG project.
 
-using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
 using WafclastRPG.Game.Entities;
 using WafclastRPG.Game.Entities.Rooms;
-using WafclastRPG.Game.Entities.Skills;
 using static WafclastRPG.Mathematics;
 
 namespace WafclastRPG.Game.Characters
@@ -19,7 +17,7 @@ namespace WafclastRPG.Game.Characters
         /// <summary>
         /// All 6 attributes.
         /// </summary>
-        public abstract WafclastAttributes Attributes { get; set; }
+        public WafclastAttributes Attributes { get; set; } = new WafclastAttributes();
 
         /// <summary>
         /// Points to Allocate in Attributes after level up
@@ -50,11 +48,9 @@ namespace WafclastRPG.Game.Characters
         public double AttackSpeed { get; set; }
         #endregion
 
-
         public WafclastStatePoints LifePoints { get; set; }
 
         public abstract string EmojiAttack { get; set; }
-
 
         public WafclastBaseRoom Room { get; set; }
 
@@ -62,21 +58,15 @@ namespace WafclastRPG.Game.Characters
         {
             this.LifePoints = new WafclastStatePoints(CalculateLifePoints(this.Attributes));
             this.EvasionPoints = CalculateEvasionPoints(this.Attributes);
-            this.PrecisionPoints = CalculateDexteryPoints(this.Attributes);
+            this.PrecisionPoints = CalculatePrecisionPoints(this.Attributes);
             this.Damage = this.CalculateDamagePoints();
             this.AttackSpeed = CalculateAttackSpeed(this.Attributes);
         }
 
         public abstract double CalculateDamagePoints();
-        public abstract void ResetCombatThings();
 
-        public double ReceiveDamage(double valor)
-        {
-            this.LifePoints.Remove(valor);
-            return valor;
-        }
-
-        public bool IsDead => this.LifePoints.Current <= 0;
-
+        public bool ReceiveDamage(double valor) => this.LifePoints.Remove(valor);
+        public string Life => $"{Emojis.DinamicHeartEmoji(this.LifePoints)} {this.LifePoints.Current:N2}";
+        public abstract (string Nome, string Info) Energia { get; }
     }
 }
