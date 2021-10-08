@@ -129,6 +129,9 @@
   <data name="NaoPodeAtacarNaCidade" xml:space="preserve">
     <value>você não pode causar problemas dentro dos muros da cidade!</value>
   </data>
+  <data name="PontosDeVida" xml:space="preserve">
+    <value>Pontos de Vida</value>
+  </data>
   <data name="Reminder" xml:space="preserve">
     <value>o seguinte comando está disponível para uso:</value>
   </data>

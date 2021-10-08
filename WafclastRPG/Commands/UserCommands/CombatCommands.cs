@@ -42,133 +42,58 @@ namespace WafclastRPG.Commands.UserCommands
         [Usage("explorar")]
         public async Task ExploreCommandAsync(CommandContext ctx)
         {
-            this._usersBlocked.BlockUser(ctx);
-            var player = await this._playerRepository.FindPlayerAsync(ctx);
-
-            //var room = await this._roomRepository.FindRoomOrDefaultAsync(player);
-            //if(room.Monster == null)
-            //{
-            //    await ctx.RespondAsync("Parece que aqui não tem monstros!");
-            //    return;
-            //}
-
-            var intera = new Interactivity(this._usersBlocked, ctx, new TimeSpan(0,2,0));
-            var character = player.Character;
-
-            // Auto Gerado!
-            var monster = new WafclastMonster(1,"Boneco de teste",7,7,7,7,7,7,7,7);
-            var basicSkill = new WafclastPlayerSkill("Ataque cortante", ctx.User.Id);
-            var damageEffect = new  WafclastSkillDamageEffect(50);
-            basicSkill.Effects.Add(damageEffect);
-            // Auto Gerado!
-
-            var combat = new WafclastCombat(player,monster);
-            var strSkills = new StringBuilder();
-            var strDescription = new StringBuilder();
-
-            strSkills.AppendLine("Ataque cortante");
-            strSkills.AppendLine("Usar ..");
-            strDescription.AppendLine("Você encontrou um monstro!");
-
-            await this.RespostaBasicAsync(ctx, player, monster, strSkills, strDescription);
-
-            bool continueCombat = true;
-            while (continueCombat)
+            var interactivity = new Interactivity(this._usersBlocked, ctx, new TimeSpan(0,0,5));
+            using (interactivity.BlockUser())
             {
-                //Input
+                var player = await this._playerRepository.FindPlayerAsync(ctx);
 
-                await intera.WaitForMessageAsync();
+                //var room = await this._roomRepository.FindRoomOrDefaultAsync(player);
+                //if(room.Monster == null)
+                //{
+                //             this._usersBlocked.UnblockUser(ctx);
+                //    await ctx.RespondAsync("Parece que aqui não tem monstros!");
+                //    return;
+                //}
 
-                // Player skill
-                var playerUseSkill = combat.PlayerUseSkill(basicSkill);
-                continueCombat = playerUseSkill.ContinueCombat;
-                if (continueCombat == false)
-                    goto EndCombat;
+                var character = player.Character;
 
-                // Monster skill
+                // Auto Gerado!
+                var monster = new WafclastMonster(1,"Boneco de teste",7,7,7,7,7,7,7,7);
+                var basicSkill = new WafclastPlayerSkill("Ataque cortante", ctx.User.Id);
+                var damageEffect = new  WafclastSkillDamageEffect(50);
+                basicSkill.Effects.Add(damageEffect);
+                // Auto Gerado!
 
-                EndCombat:
-                await this.RespostaBasicAsync(ctx, player, monster, strSkills, playerUseSkill.CombatDescription, continueCombat);
+                var combat = new WafclastCombat(player,monster);
+                var strSkills = new StringBuilder();
+                var strDescription = new StringBuilder();
+
+                strSkills.AppendLine("Ataque cortante");
+                strSkills.AppendLine("Usar ..");
+                strDescription.AppendLine("Você encontrou um monstro!");
+
+                await this.RespostaBasicAsync(ctx, player, monster, strSkills, strDescription);
+
+                bool continueCombat = true;
+                while (continueCombat)
+                {
+                    //Input
+
+                    await interactivity.WaitForMessageAsync();
+
+                    // Player skill
+                    var playerUseSkill = combat.PlayerUseSkill(basicSkill);
+                    continueCombat = playerUseSkill.ContinueCombat;
+                    if (continueCombat == false)
+                        goto EndCombat;
+
+                    // Monster skill
+
+                    EndCombat:
+                    await this.RespostaBasicAsync(ctx, player, monster, strSkills, playerUseSkill.CombatDescription, continueCombat);
+                }
+                return;
             }
-            this._usersBlocked.UnblockUser(ctx);
-            return;
-
-
-            int turn = 1;
-            bool cont = true;
-            Random rd = new Random();
-            while (cont)
-            {
-                var monsterDamage = rd.Next(1, 10);
-
-                var message = await intera.WaitForMessageAsync();
-                if (message.TimedOut)
-                {
-                    await ctx.RespondAsync("O monstro fugiu!");
-                    return;
-                }
-
-                int? choose = message.Result switch
-                {
-                    "ataque 1" => 1,
-                    "1" => 1,
-                    "ataque 2" => 2,
-                    "2" => 2,
-                    "ataque 3" => 3,
-                    "3" => 3,
-                    "fugir" => 4,
-                    _ => 0,
-                };
-
-                if (choose == 4)
-                {
-                    await ctx.RespondAsync("Você fugiu da batalha igual um patinho feio 🦆🦆🦆!");
-                    return;
-                }
-
-                var playerDamage = 0;
-
-                _ = choose switch
-                {
-                    1 => playerDamage = rd.Next(1, 10),
-                    2 => playerDamage = rd.Next(20, 30),
-                    3 => playerDamage = 100000,
-                };
-
-                var embed = new DiscordEmbedBuilder();
-
-                embed.WithColor(DiscordColor.Red);
-                embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
-                embed.WithTitle("Relatório de Combate");
-                if ((player.Character.LifePoints.Current -= monsterDamage) <= 0)
-                    cont = false;
-                if ((monster.LifePoints.Current -= playerDamage) <= 0)
-                    cont = false;
-
-                var strf = new StringBuilder();
-                strf.AppendLine($"Monster causou {monsterDamage} de dano!");
-                strf.AppendLine($"Jogador causou {playerDamage} de dano!");
-                embed.WithDescription(strf.ToString());
-                embed.AddField(ctx.User.Username, $"{Emojis.DinamicHeartEmoji(player.Character.LifePoints)} {character.LifePoints}", true);
-                embed.AddField(monster.Mention, $"{Emojis.GerarVidaEmoji(monster.LifePoints)} {monster.LifePoints.Current:N2} ", true);
-
-                if (cont)
-                {
-                    //str = new StringBuilder();
-                    //str.AppendLine("Ataque 1: Atacar com as mãos");
-                    //str.AppendLine("Ataque 2: Magia Congelante");
-                    //str.AppendLine("Ataque 3: Magia de Administrador");
-                    //str.AppendLine("Defender");
-                    //str.AppendLine("Fugir");
-
-                    //embed.AddField("O que deseja fazer?", str.ToString());
-                }
-                await ctx.RespondAsync(embed);
-            }
-
-            this._usersBlocked.UnblockUser(ctx);
-            return;
-
 
             //using (await this._session.StartSessionAsync())
             //    this._res = await this._session.WithTransactionAsync(async (s, ct) =>
@@ -205,19 +130,17 @@ namespace WafclastRPG.Commands.UserCommands
         public async Task RespostaBasicAsync(CommandContext ctx, WafclastPlayer player, WafclastMonster monster, StringBuilder strSkills, StringBuilder strDescription, bool showOptions = true)
         {
             var emb = new DiscordEmbedBuilder();
-            emb.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}]", iconUrl: ctx.User.AvatarUrl);
             emb.WithDescription(strDescription.ToString());
-            emb.AddField(ctx.User.Username, player.Character.Life, true);
-            var mana = player.Character.Energia;
-            emb.AddField(mana.Nome, mana.Info, true);
+            emb.AddField(ctx.User.Username, player.Character.LifePointsStatus, true);
+            emb.AddField(player.Character.ResourcePointsName, player.Character.ResourcePointsStatus, true);
             emb.AddField(monster.Mention, $"{Emojis.DinamicHeartEmoji(monster.LifePoints)} {monster.LifePoints.Current:N2} ");
             if (showOptions)
             {
-                emb.AddField("[Ataques/Ações disponíveis]", strSkills.ToString());
+                emb.AddField("[Ataques disponíveis]", strSkills.ToString());
                 emb.WithFooter("Você tem 2 minutos para responder.");
             }
             emb.WithColor(DiscordColor.Red);
-            await ctx.RespondAsync(emb);
+            await ctx.RespondAsync(ctx.User.Mention, emb);
         }
 
 
@@ -254,24 +177,5 @@ namespace WafclastRPG.Commands.UserCommands
             //    });
             //await ctx.RespondAsync(this._res);
         }
-
-        //public async Task ExploreCommandAsync(CommandContext ctx) {
-        //  using (var sessionHandler = await _session.StartSession())
-        //    _res = await sessionHandler.WithTransactionAsync(async (s, ct) => {
-        //      var player = await _playerRepository.FindPlayerAsync(ctx);
-
-        //      var character = player.Character;
-        //      character.Room = await _roomRepository.FindRoomOrDefaultAsync(character.Room.Id);
-
-        //      if (character.Room.Monster == null) {
-        //        return new Response("você procura monstros para atacar.. mas parece que não você não encontrará nada aqui.");
-        //      }
-
-        //      await _playerRepository.SavePlayerAsync(player);
-
-        //      return new Response($"você encontrou **[{character.Room.Monster.Mention}]!**");
-        //    });
-        //  await ctx.RespondAsync(_res);
-        //}
     }
 }

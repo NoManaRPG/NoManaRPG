@@ -10,6 +10,7 @@ namespace WafclastRPG
     {
         public static double CalculateLifePoints(WafclastAttributes attributes) => (attributes.Constitution * 8.0) + (attributes.Strength / 5.0) + ((attributes.Constitution / 5.0) * 3.0);
         public static double CalculateManaPoints(WafclastAttributes attributes) => (attributes.Intelligence * 3.0) + (attributes.Perception / 3.0) + (attributes.Constitution / 3.0);
+        public static double CalculateResourceWarrior(WafclastAttributes attributes) => (attributes.Willpower * 3.0) + (attributes.Strength / 3.0) + (attributes.Constitution / 3.0);
 
         public static double CalculatePhysicalDamage(WafclastAttributes attributes) => attributes.Strength + ((attributes.Strength / 5.0) * 2.0) + (attributes.Dexterity / 2.0);
         public static double CalculateMagicalDamage(WafclastAttributes attributes) => attributes.Intelligence + ((attributes.Intelligence / 5.0) * 2.0) + (attributes.Dexterity / 2.0);

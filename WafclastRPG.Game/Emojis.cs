@@ -46,28 +46,13 @@ namespace WafclastRPG
         public const string DiamanteLaranjaPequeno = ":small_orange_diamond:";
         public const string Aviso = ":warning:";
 
-        [Obsolete]
-        public static string GerarVidaEmoji(WafclastStatePoints lifeAttribute)
-        {
-            switch (lifeAttribute.Current / lifeAttribute.Max)
-            {
-                case double n when (n > 0.75):
-                    return Emojis.CoracaoVerde;
-                case double n when (n > 0.50):
-                    return Emojis.CoracaoAmarelo;
-                case double n when (n > 0.25):
-                    return Emojis.CoracaoLaranja;
-            }
-            return Emojis.CoracaoVermelho;
-        }
-
         public static string DinamicHeartEmoji(WafclastStatePoints attribute) =>
-           (attribute.Current / attribute.Max) switch
-           {
-               double n when (n > 0.75) => Emojis.CoracaoVerde,
-               double n when (n > 0.50) => Emojis.CoracaoAmarelo,
-               double n when (n > 0.25) => Emojis.CoracaoLaranja,
-               _ => Emojis.CoracaoVermelho,
-           };
+            (attribute.Current / attribute.Max) switch
+            {
+                double n when n > 0.75 => CoracaoVerde,
+                double n when n > 0.50 => CoracaoAmarelo,
+                double n when n > 0.25 => CoracaoLaranja,
+                _ => CoracaoVermelho,
+            };
     }
 }

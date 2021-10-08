@@ -120,4 +120,7 @@
   <data name="AindaNãoCriouPersonagem" xml:space="preserve">
     <value>you have not created a character! Type `start` to get one!</value>
   </data>
+  <data name="Vida" xml:space="preserve">
+    <value>Life Points</value>
+  </data>
 </root>

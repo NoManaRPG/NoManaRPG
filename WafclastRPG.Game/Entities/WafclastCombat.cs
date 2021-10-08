@@ -28,6 +28,7 @@ namespace WafclastRPG.Game.Entities
             double damage;
             bool roundEnd = false;
 
+            str.AppendLine($"{_player.Mention} efetuou <:weapon:896025534650253373> **{skill.Name}** em **{_monster.Mention}**!");
             foreach (var item in skill.Effects)
             {
                 switch (item)
@@ -37,7 +38,7 @@ namespace WafclastRPG.Game.Entities
                         {
                             damage = this._rd.Sortear(this._player.Character.Damage + de.Damage);
                             roundEnd = this._monster.TakeDamage(damage);
-                            str.AppendLine($"{this._monster.Mention} recebeu {damage:N2} {this._player.Character.EmojiAttack} de dano!");
+                            str.AppendLine($"Causou {this._player.Character.EmojiAttack} **{damage:N2}**  de dano!");
                         }
                         else
                             str.AppendLine($"{this._monster.Mention} desviou!");
@@ -45,6 +46,12 @@ namespace WafclastRPG.Game.Entities
                 }
             }
 
+            str.AppendLine();
+            if (roundEnd)
+            {
+                str.AppendLine($"{Emojis.CrossBone} **{this._monster.Mention}** morreu!");
+                str.AppendLine();
+            }
             return (!roundEnd, str);
         }
 

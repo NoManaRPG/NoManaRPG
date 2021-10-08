@@ -2,20 +2,19 @@
 
 using MongoDB.Bson.Serialization.Attributes;
 using WafclastRPG.Game.Entities;
+using WafclastRPG.Game.Enums;
 
 namespace WafclastRPG.Game.Characters
 {
     [BsonIgnoreExtraElements]
     public class WafclastCharacterMage : WafclastBaseCharacter
     {
-        public override string EmojiAttack { get; set; } = Emojis.Dardo;
-
-        public override (string, string) Energia => throw new System.NotImplementedException();
-
-        public WafclastCharacterMage()
+        public WafclastCharacterMage(DamageType damageType = DamageType.Magic) : base(damageType)
         {
         }
 
-        public override double CalculateDamagePoints() => Mathematics.CalculateMagicalDamage(this.Attributes);
+        public override string EmojiAttack { get; set; } = Emojis.Dardo;
+
+        public override string ResourcePointsName => "Mana";
     }
 }

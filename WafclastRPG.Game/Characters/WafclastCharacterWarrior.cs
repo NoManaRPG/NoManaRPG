@@ -2,6 +2,7 @@
 
 using MongoDB.Bson.Serialization.Attributes;
 using WafclastRPG.Game.Entities;
+using WafclastRPG.Game.Enums;
 
 namespace WafclastRPG.Game.Characters
 {
@@ -10,15 +11,10 @@ namespace WafclastRPG.Game.Characters
     {
         public override string EmojiAttack { get; set; } = Emojis.Adaga;
 
-        public WafclastStatePoints SR { get; set; } = new WafclastStatePoints(10);
+        public override string ResourcePointsName => "Vontade";
 
-        public override (string, string) Energia => ("Força de vontade", $"{Emojis.DinamicHeartEmoji(this.SR)} {this.SR.Current:N2}");
-
-        public WafclastCharacterWarrior()
+        public WafclastCharacterWarrior(DamageType damageType = DamageType.Physic) : base(damageType)
         {
-
         }
-
-        public override double CalculateDamagePoints() => Mathematics.CalculatePhysicalDamage(this.Attributes);
     }
 }

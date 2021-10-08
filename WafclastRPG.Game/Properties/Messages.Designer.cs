@@ -97,6 +97,15 @@ namespace WafclastRPG.Game.Properties {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Pontos de Vida.
+        /// </summary>
+        public static string PontosDeVida {
+            get {
+                return ResourceManager.GetString("PontosDeVida", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a o seguinte comando está disponível para uso:.
         /// </summary>
         public static string Reminder {

@@ -15,7 +15,7 @@ namespace WafclastRPG
     public struct AnswerResult<T>
     {
         public bool TimedOut { get; }
-        public T Result { get; }
+        public T? Result { get; }
 
         public AnswerResult(bool timedOut, T result)
         {
@@ -24,13 +24,13 @@ namespace WafclastRPG
         }
     }
 
-    public class Interactivity
+    public class Interactivity : IDisposable
     {
         private readonly UsersBlocked _usersBlocked;
         private readonly CommandContext _ctx;
         private readonly InteractivityExtension _interactivityExtension;
         private readonly TimeSpan? _timeOut;
-        private readonly Func<DiscordMessage, bool> _waitMessage;
+        private readonly Func<DiscordMessage, bool> _waitMessageFunc;
 
         public Interactivity(UsersBlocked usersBlocked, CommandContext commandContext, TimeSpan? timeOutOverride = null)
         {
@@ -38,10 +38,14 @@ namespace WafclastRPG
             this._ctx = commandContext;
             this._interactivityExtension = this._ctx.Client.GetInteractivity();
             this._timeOut = timeOutOverride;
-            this._waitMessage = new Func<DiscordMessage, bool>(x => x.Author.Id == this._ctx.User.Id && x.ChannelId == this._ctx.Channel.Id);
+            this._waitMessageFunc = new Func<DiscordMessage, bool>(x => x.Author.Id == this._ctx.User.Id && x.ChannelId == this._ctx.Channel.Id);
         }
 
-        private void BlockUser() => this._usersBlocked.BlockUser(this._ctx);
+        public Interactivity BlockUser()
+        {
+            this._usersBlocked.BlockUser(this._ctx);
+            return this;
+        }
         private void UnblockUser() => this._usersBlocked.UnblockUser(this._ctx);
 
         public async Task<InteractivityResult<DiscordMessage>> WaitForMessageAsync(string message, DiscordEmbedBuilder embed)
@@ -53,14 +57,14 @@ namespace WafclastRPG
         public async Task<AnswerResult<string>> WaitForMessageAsync(string message)
         {
             await this._ctx.RespondAsync(message);
-            var msg = await this._interactivityExtension.WaitForMessageAsync(this._waitMessage, timeoutoverride: this._timeOut);
-            return new AnswerResult<string>(msg.TimedOut, msg.Result.Content);
+            var msg = await this._interactivityExtension.WaitForMessageAsync(this._waitMessageFunc, timeoutoverride: this._timeOut);
+            return new AnswerResult<string>(msg.TimedOut, msg.Result?.Content);
         }
 
         public async Task<AnswerResult<string>> WaitForMessageAsync()
         {
-            var msg = await this._interactivityExtension.WaitForMessageAsync(this._waitMessage, timeoutoverride: this._timeOut);
-            return new AnswerResult<string>(msg.TimedOut, msg.Result.Content);
+            var msg = await this._interactivityExtension.WaitForMessageAsync(this._waitMessageFunc, timeoutoverride: this._timeOut);
+            return new AnswerResult<string>(msg.TimedOut, msg.Result?.Content);
         }
 
         public async Task<AnswerResult<T>> WaitForEnumAsync<T>(string message) where T : Enum
@@ -270,5 +274,7 @@ namespace WafclastRPG
             this.UnblockUser();
             return new AnswerResult<string>(false, wait.Result.Content);
         }
+
+        public void Dispose() => this.UnblockUser();
     }
 }
