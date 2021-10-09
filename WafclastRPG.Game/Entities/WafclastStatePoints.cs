@@ -7,7 +7,6 @@ namespace WafclastRPG.Game.Entities
         public double Max { get; set; }
         public double Current { get; set; }
 
-
         public WafclastStatePoints(double baseValue)
         {
             this.Max = baseValue;
@@ -16,13 +15,13 @@ namespace WafclastRPG.Game.Entities
 
         public void Restart() => this.Current = this.Max;
 
-        public void Add(double value)
+        public void Increment(double value)
         {
             this.Current += value;
             if (this.Current >= this.Max)
                 this.Current = this.Max;
         }
-        public bool Remove(double value)
+        public bool Decrement(double value)
         {
             this.Current -= value;
             if (this.Current <= 0)

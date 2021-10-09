@@ -88,6 +88,7 @@ namespace WafclastRPG.Commands.UserCommands
                         goto EndCombat;
 
                     // Monster skill
+                    var monsterUseSkill = combat.MonsterUseSkill();
 
                     EndCombat:
                     await this.RespostaBasicAsync(ctx, player, monster, strSkills, playerUseSkill.CombatDescription, continueCombat);
@@ -133,7 +134,7 @@ namespace WafclastRPG.Commands.UserCommands
             emb.WithDescription(strDescription.ToString());
             emb.AddField(ctx.User.Username, player.Character.LifePointsStatus, true);
             emb.AddField(player.Character.ResourcePointsName, player.Character.ResourcePointsStatus, true);
-            emb.AddField(monster.Mention, $"{Emojis.DinamicHeartEmoji(monster.LifePoints)} {monster.LifePoints.Current:N2} ");
+            emb.AddField(monster.NameLevel, $"{Emojis.DinamicHeartEmoji(monster.LifePoints)} {monster.LifePoints.Current:N2} ");
             if (showOptions)
             {
                 emb.AddField("[Ataques disponíveis]", strSkills.ToString());

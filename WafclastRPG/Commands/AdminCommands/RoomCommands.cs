@@ -89,7 +89,6 @@ namespace WafclastRPG.Commands.AdminCommands
             }
 
             var monster = new WafclastMonster(1, name,5, 5, 30, 30);
-            monster.CalculateStatistics();
             room.Monster = monster;
             await this._roomRepository.SaveRoomAsync(room);
 

@@ -67,15 +67,11 @@ namespace WafclastRPG.Game.Entities
             this.Base = baseValue;
         }
 
-        public void IncrementBase(double value) => this.Base += value;
-
         public static double operator *(WafclastAttribute attribute, int value) => attribute.Current * Convert.ToDouble(value);
         public static double operator *(WafclastAttribute attribute, double value) => attribute.Current * value;
         public static double operator +(WafclastAttribute attribute, double value) => attribute.Current + value;
         public static double operator +(double value, WafclastAttribute attribute) => value + attribute.Current;
         public static double operator /(WafclastAttribute attribute, double value) => attribute.Current / value;
         public static double operator /(double value, WafclastAttribute attribute) => attribute.Current / value;
-
-        public override string ToString() => this.Current.ToString();
     }
 }
