@@ -11,8 +11,6 @@ using WafclastRPG.Database;
 using WafclastRPG.Database.Interfaces;
 using WafclastRPG.Database.Response;
 using WafclastRPG.Game.Entities;
-using WafclastRPG.Game.Entities.Itens;
-using WafclastRPG.Game.Entities.Rooms;
 
 namespace WafclastRPG.Commands.AdminCommands
 {
@@ -20,17 +18,17 @@ namespace WafclastRPG.Commands.AdminCommands
     public class DatabaseCommands : BaseCommandModule
     {
         private readonly IPlayerRepository _playerRepository;
-        private readonly IRoomRepository _roomRepository;
+        private readonly IZoneRepository _zoneRepository;
         private readonly IMongoSession _session;
         private readonly UsersBlocked _usersBlocked;
         private readonly MongoDbContext _mongoDbContext;
         private readonly TimeSpan _timeout = TimeSpan.FromMinutes(2);
         private IResponse _res;
 
-        public DatabaseCommands(IPlayerRepository playerRepository, IRoomRepository roomRepository, IMongoSession session, MongoDbContext mongoDbContext, UsersBlocked usersBlocked)
+        public DatabaseCommands(IPlayerRepository playerRepository, IZoneRepository zoneRepository, IMongoSession session, MongoDbContext mongoDbContext, UsersBlocked usersBlocked)
         {
             this._playerRepository = playerRepository;
-            this._roomRepository = roomRepository;
+            this._zoneRepository = zoneRepository;
             this._session = session;
             this._usersBlocked = usersBlocked;
             this._mongoDbContext = mongoDbContext;
@@ -61,13 +59,13 @@ namespace WafclastRPG.Commands.AdminCommands
         [RequireOwner]
         public async Task AtualizarItensAsync(CommandContext ctx)
         {
-            FilterDefinition<WafclastBaseItem> filter = FilterDefinition<WafclastBaseItem>.Empty;
-            FindOptions<WafclastBaseItem> options = new FindOptions<WafclastBaseItem> { BatchSize = 8, NoCursorTimeout = false };
-            using (IAsyncCursor<WafclastBaseItem> cursor = await this._mongoDbContext.Items.FindAsync(filter, options))
+            FilterDefinition<WafclastItem> filter = FilterDefinition<WafclastItem>.Empty;
+            FindOptions<WafclastItem> options = new FindOptions<WafclastItem> { BatchSize = 8, NoCursorTimeout = false };
+            using (IAsyncCursor<WafclastItem> cursor = await this._mongoDbContext.Items.FindAsync(filter, options))
                 while (await cursor.MoveNextAsync())
                 {
-                    IEnumerable<WafclastBaseItem> list = cursor.Current;
-                    foreach (WafclastBaseItem item in list)
+                    IEnumerable<WafclastItem> list = cursor.Current;
+                    foreach (WafclastItem item in list)
                     {
 
 
@@ -91,21 +89,6 @@ namespace WafclastRPG.Commands.AdminCommands
 
             var cfx = ctx.CommandsNext.CreateFakeContext(member, ctx.Channel, "", "w.", cmd, args);
             await ctx.CommandsNext.ExecuteCommandAsync(cfx);
-        }
-
-        [Command("distance")]
-        [RequireOwner]
-        public async Task DistAsync(CommandContext ctx, string sx1, string sy1, string sx2, string sy2)
-        {
-            await ctx.TriggerTypingAsync();
-
-            int.TryParse(sx1, out int x1);
-            int.TryParse(sy1, out int y1);
-            int.TryParse(sx2, out int x2);
-            int.TryParse(sy2, out int y2);
-
-            WafclastVector v = new WafclastVector(x1, y1);
-            await ctx.RespondAsync(v.Distance(new WafclastVector(x2, y2)).ToString("N2"));
         }
 
         //[Command("aviajar")]

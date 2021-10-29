@@ -4,24 +4,24 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using WafclastRPG.Database.Interfaces;
-using WafclastRPG.Game.Entities.Itens;
+using WafclastRPG.Game.Entities;
 
 namespace WafclastRPG.Extensions
 {
     public static class IItemRepositoryExtension
     {
-        public static Task<WafclastBaseItem> FindItemOrDefaultAsync(this IItemRepository itemRepository, int globalItemId, DiscordUser user)
+        public static Task<WafclastItem> FindItemOrDefaultAsync(this IItemRepository itemRepository, int globalItemId, DiscordUser user)
             => itemRepository.FindItemOrDefaultAsync(globalItemId, user.Id);
-        public static Task<WafclastBaseItem> FindItemOrDefaultAsync(this IItemRepository itemRepository, int globalItemId, DiscordMember member)
+        public static Task<WafclastItem> FindItemOrDefaultAsync(this IItemRepository itemRepository, int globalItemId, DiscordMember member)
             => itemRepository.FindItemOrDefaultAsync(globalItemId, member.Id);
-        public static Task<WafclastBaseItem> FindItemOrDefaultAsync(this IItemRepository itemRepository, int globalItemId, CommandContext ctx)
+        public static Task<WafclastItem> FindItemOrDefaultAsync(this IItemRepository itemRepository, int globalItemId, CommandContext ctx)
             => itemRepository.FindItemOrDefaultAsync(globalItemId, ctx.Member.Id);
 
-        public static Task<WafclastBaseItem> FindItemOrDefaultAsync(this IItemRepository itemRepository, string itemName, DiscordUser user)
+        public static Task<WafclastItem> FindItemOrDefaultAsync(this IItemRepository itemRepository, string itemName, DiscordUser user)
               => itemRepository.FindItemOrDefaultAsync(itemName, user.Id);
-        public static Task<WafclastBaseItem> FindItemOrDefaultAsync(this IItemRepository itemRepository, string itemName, DiscordMember member)
+        public static Task<WafclastItem> FindItemOrDefaultAsync(this IItemRepository itemRepository, string itemName, DiscordMember member)
               => itemRepository.FindItemOrDefaultAsync(itemName, member.Id);
-        public static Task<WafclastBaseItem> FindItemOrDefaultAsync(this IItemRepository itemRepository, string itemName, CommandContext ctx)
+        public static Task<WafclastItem> FindItemOrDefaultAsync(this IItemRepository itemRepository, string itemName, CommandContext ctx)
               => itemRepository.FindItemOrDefaultAsync(itemName, ctx.Member.Id);
     }
 }

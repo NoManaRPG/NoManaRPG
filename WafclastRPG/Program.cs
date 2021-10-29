@@ -17,23 +17,31 @@ namespace WafclastRPG
     {
         public MongoDbContext MongoDbContext { get; private set; }
         public UsersBlocked UsersTemporaryBlocked { get; private set; }
+        private Configuration _config;
 
         static void Main() => new Program().RodarBotAsync().GetAwaiter().GetResult();
 
         public async Task RodarBotAsync()
         {
+#if DEBUG
+            var map = new ExeConfigurationFileMap { ExeConfigFilename = "App.Debug.config" };
+#else
+            var map = new ExeConfigurationFileMap { ExeConfigFilename = "App.Release.config" };
+#endif
+            this._config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
+
             var bot = new Bot(new DiscordConfiguration
             {
                 TokenType = TokenType.Bot,
                 ReconnectIndefinitely = true,
                 GatewayCompressionLevel = GatewayCompressionLevel.Stream,
                 AutoReconnect = true,
-                Token = ConfigurationManager.AppSettings.Get("Token"),
+                Token = this._config.AppSettings.Settings["Token"].Value,
                 Intents = DiscordIntents.AllUnprivileged,
                 MinimumLogLevel = LogLevel.Debug,
             });
 
-            this.MongoDbContext = new MongoDbContext(ConfigurationManager.ConnectionStrings["MongoConnection"].ConnectionString);
+            this.MongoDbContext = new MongoDbContext(this._config.ConnectionStrings.ConnectionStrings["MongoConnection"].ConnectionString);
             this.UsersTemporaryBlocked = new UsersBlocked();
             var services = new ServiceCollection()
                 .AddSingleton(this.MongoDbContext)
@@ -41,7 +49,7 @@ namespace WafclastRPG
                 .AddScoped<IMongoSession, MongoSession>()
                 .AddScoped<IPlayerRepository, PlayerRepository>()
                 .AddScoped<IItemRepository, ItemRepository>()
-                .AddScoped<IRoomRepository, RoomRepository>()
+                .AddScoped<IZoneRepository, ZoneRepository>()
                 .BuildServiceProvider();
 
             bot.ModuleCommand(new CommandsNextConfiguration
@@ -68,7 +76,7 @@ namespace WafclastRPG
             if (this.UsersTemporaryBlocked.IsUserBlocked(msg.Author.Id))
                 return await Task.FromResult(-1);
 
-            var prefix = await this.MongoDbContext.GetServerPrefixAsync(gld.Id, ConfigurationManager.AppSettings.Get("Prefix"));
+            var prefix = await this.MongoDbContext.GetServerPrefixAsync(gld.Id, this._config.AppSettings.Settings["Prefix"].Value);
             var pfixLocation = msg.GetStringPrefixLength(prefix);
             return await Task.FromResult(pfixLocation);
         }

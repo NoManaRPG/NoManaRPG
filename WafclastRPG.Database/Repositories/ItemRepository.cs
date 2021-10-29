@@ -3,8 +3,7 @@
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using WafclastRPG.Database.Interfaces;
-using WafclastRPG.Game.Entities.Itens;
-
+using WafclastRPG.Game.Entities;
 
 namespace WafclastRPG.Database.Repositories
 {
@@ -19,25 +18,25 @@ namespace WafclastRPG.Database.Repositories
             this._session = session;
         }
 
-        public Task<WafclastBaseItem> FindItemOrDefaultAsync(int globalItemId, ulong playerId)
+        public Task<WafclastItem> FindItemOrDefaultAsync(int globalItemId, ulong playerId)
         {
             if (this._session.Session != null)
                 return this._context.Items.Find(this._session.Session, x => x.GlobalItemId == globalItemId && x.PlayerId == playerId).FirstOrDefaultAsync();
             return this._context.Items.Find(x => x.GlobalItemId == globalItemId && x.PlayerId == playerId).FirstOrDefaultAsync();
         }
-        public Task<WafclastBaseItem> FindItemOrDefaultAsync(string itemName, ulong playerId)
+        public Task<WafclastItem> FindItemOrDefaultAsync(string itemName, ulong playerId)
         {
             if (this._session.Session != null)
                 return this._context.Items.Find(this._session.Session, x => x.Name == itemName && x.PlayerId == playerId, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
             return this._context.Items.Find(x => x.Name == itemName && x.PlayerId == playerId, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
         }
-        public Task SaveItemAsync(WafclastBaseItem item)
+        public Task SaveItemAsync(WafclastItem item)
         {
             if (this._session.Session != null)
                 return this._context.Items.ReplaceOneAsync(this._session.Session, x => x.Id == item.Id, item, new ReplaceOptions { IsUpsert = true });
             return this._context.Items.ReplaceOneAsync(x => x.Id == item.Id, item, new ReplaceOptions { IsUpsert = true });
         }
-        public Task RemoveItemAsync(WafclastBaseItem item)
+        public Task RemoveItemAsync(WafclastItem item)
         {
             if (this._session.Session != null)
                 return this._context.Items.DeleteOneAsync(this._session.Session, x => x.Id == item.Id);

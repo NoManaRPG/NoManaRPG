@@ -11,7 +11,6 @@ namespace WafclastRPG.Game.Entities
         public int Level { get; set; } = 1;
         public double CurrentExperience { get; set; }
         public double ExperienceForNextLevel { get; set; }
-        public int BlockedLevel { get; set; }
 
         public WafclastLevel()
         {
@@ -37,21 +36,6 @@ namespace WafclastRPG.Game.Entities
                 } while (this.CurrentExperience >= this.ExperienceForNextLevel);
             }
             return niveisEv;
-        }
-
-        public void RemoveOneLevel()
-        {
-            this.CurrentExperience = 0;
-
-            if (this.Level == 1)
-                return;
-
-            if (this.Level > this.BlockedLevel + 1)
-                this.BlockedLevel = this.Level;
-
-            this.Level--;
-            this.ExperienceForNextLevel = this.ExperienceTotalLevel(this.Level + 1);
-            this.CurrentExperience = this.ExperienceTotalLevel(this.Level);
         }
 
         private void Evolve()

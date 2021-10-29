@@ -3,8 +3,8 @@
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using WafclastRPG.Database.Extensions;
+using WafclastRPG.Game;
 using WafclastRPG.Game.Entities;
-using WafclastRPG.Game.Entities.Itens;
 using WafclastRPG.Game.Entities.Rooms;
 
 namespace WafclastRPG.Database
@@ -16,11 +16,11 @@ namespace WafclastRPG.Database
         public IMongoDatabase Database { get; }
 
         public IMongoCollection<WafclastPlayer> Players { get; }
-        public IMongoCollection<WafclastRoom> Rooms { get; }
-        public IMongoCollection<WafclastBaseItem> Items { get; }
+        public IMongoCollection<WafclastZone> Zones { get; }
+        public IMongoCollection<WafclastItem> Items { get; }
 
         public IMongoCollection<WafclastServer> Servers { get; }
-        public IMongoCollection<WafclastFabrication> Fabrications { get; }
+        public IMongoCollection<RankUpgrader> Upgraders { get; }
 
         public MongoDbContext(string connection)
         {
@@ -33,11 +33,9 @@ namespace WafclastRPG.Database
 
             this.Players = this.Database.CreateCollection<WafclastPlayer>("WafclastPlayers");
             this.Servers = this.Database.CreateCollection<WafclastServer>("WafclastServers");
-            this.Items = this.Database.CreateCollection<WafclastBaseItem>("WafclastItems");
-            this.Rooms = this.Database.CreateCollection<WafclastRoom>("WafclastRooms");
-
-
-            this.Fabrications = this.Database.CreateCollection<WafclastFabrication>("WafclastRecipes");
+            this.Items = this.Database.CreateCollection<WafclastItem>("WafclastItems");
+            this.Zones = this.Database.CreateCollection<WafclastZone>("WafclastZones");
+            this.Upgraders = this.Database.CreateCollection<RankUpgrader>("WafclastRankUpgraders");
 
             #region Usar no futuro
             //var notificationLogBuilder = Builders<RPGJogador>.IndexKeys;

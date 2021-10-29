@@ -1,13 +1,14 @@
 // This file is part of the WafclastRPG project.
 
+using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
 using WafclastRPG.Game.Entities.Monsters;
 
 namespace WafclastRPG.Game.Entities.Rooms
 {
     [BsonIgnoreExtraElements]
-    public class WafclastRoom : WafclastBaseRoom
+    public class WafclastZone : WafclastBaseZone
     {
-        public WafclastMonster Monster { get; set; }
+        public List<WafclastMonster> Monsters { get; set; }
     }
 }

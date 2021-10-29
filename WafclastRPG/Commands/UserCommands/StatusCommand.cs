@@ -1,9 +1,7 @@
 // This file is part of the WafclastRPG project.
 
-using System;
 using System.Text;
 using System.Threading.Tasks;
-using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -42,20 +40,20 @@ namespace WafclastRPG.Commands.UserCommands
 
                     var str = new StringBuilder();
 
-                    str.AppendLine($"{character.CurrentExperience:N2} de experiencia e precisa {(player.Character.ExperienceForNextLevel - player.Character.CurrentExperience):N2} para o nível {player.Character.Level + 1}.");
-                    str.AppendLine($"{player.Character.MonsterKills} monstros eliminado.");
-                    str.AppendLine($"{player.Character.Deaths} vezes abatido por monstros.");
+                    //str.AppendLine($"{character.CurrentExperience:N2} de experiencia e precisa {(player.Character.ExperienceForNextLevel - player.Character.CurrentExperience):N2} para o nível {player.Character.Level + 1}.");
+                    //str.AppendLine($"{player.Character.MonsterKills} monstros eliminado.");
+                    //str.AppendLine($"{player.Character.Deaths} vezes abatido por monstros.");
 
                     var embed = new DiscordEmbedBuilder();
-                    embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}] ", iconUrl: ctx.User.AvatarUrl);
+                    //embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Character.Level}] ", iconUrl: ctx.User.AvatarUrl);
                     embed.WithThumbnail(ctx.User.AvatarUrl);
                     embed.WithColor(DiscordColor.Blue);
                     embed.WithDescription(str.ToString());
 
-                    embed.AddField("Dano", $"{Emojis.EspadasCruzadas} {character.Damage:N2}", true);
-                    embed.AddField("Armadura", $"{Emojis.Escudo} 0", true);
-                    embed.AddField("Precisão", $"{Emojis.Escudo} {character.PrecisionPoints:N2}", true);
-                    embed.AddField("Evasão", $"{Emojis.Escudo} {character.EvasionPoints:N2}", true);
+                    //embed.AddField("Dano", $"{Emojis.EspadasCruzadas} {character.Damage:N2}", true);
+                    //embed.AddField("Armadura", $"{Emojis.Escudo} 0", true);
+                    //embed.AddField("Precisão", $"{Emojis.Escudo} {character.PrecisionPoints:N2}", true);
+                    //embed.AddField("Evasão", $"{Emojis.Escudo} {character.EvasionPoints:N2}", true);
 
                     var lifePor = character.LifePoints;
                     embed.AddField("Vida", $"{Emojis.GerarVidaEmoji(lifePor)} {character.LifePoints.Current:N2} / {character.LifePoints.Max:N2}", true);
@@ -65,7 +63,7 @@ namespace WafclastRPG.Commands.UserCommands
                     //  embed.AddField("Escudo mágico".Titulo(), $"{player.Character.EnergyShield.CurrentValue:N2} / {player.Character.EnergyShield.MaxValue:N2}", true);
 
 
-                    embed.AddField("Localização", $"{Emojis.Mapa} {Formatter.MaskedUrl(character.Room.Name, new Uri(character.Room.Invite))}");
+                    //embed.AddField("Localização", $"{Emojis.Mapa} {Formatter.MaskedUrl(character.Room.Name, new Uri(character.Room.Invite))}");
 
                     return new EmbedResponse(embed);
                 });

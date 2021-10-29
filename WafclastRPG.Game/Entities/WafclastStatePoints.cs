@@ -14,7 +14,7 @@ namespace WafclastRPG.Game.Entities
             this.Current = baseValue;
         }
 
-        public void Restart() => this.Current = this.Max;
+        public void Reset() => this.Current = this.Max;
 
         public void Add(double value)
         {
