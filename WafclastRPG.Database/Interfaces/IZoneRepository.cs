@@ -7,8 +7,8 @@ namespace WafclastRPG.Database.Interfaces
 {
     public interface IZoneRepository
     {
-        Task<WafclastZone> FindZoneOrDefaultAsync(ulong id);
-        Task<WafclastZone> FindZoneOrDefaultAsync(string name);
+        Task<WafclastZone> FindPlayerZoneAsync(ulong playerId, int level);
+        Task<WafclastZone> FindPlayerHighestZoneAsync(ulong playerId);
         Task SaveZoneAsync(WafclastZone item);
     }
 }

@@ -10,17 +10,33 @@ namespace WafclastRPG.Database.Repositories
     public class ZoneRepository : IZoneRepository
     {
         private readonly MongoDbContext _context;
+        private readonly IMongoSession _session;
 
-        public ZoneRepository(MongoDbContext context)
+        public ZoneRepository(MongoDbContext context, IMongoSession session)
         {
             this._context = context;
+            this._session = session;
         }
 
-        public Task<WafclastZone> FindZoneOrDefaultAsync(ulong id)
-            => this._context.Zones.Find(x => x.Id == id).FirstOrDefaultAsync();
-        public Task<WafclastZone> FindZoneOrDefaultAsync(string name)
-            => this._context.Zones.Find(x => x.Name == name, new FindOptions { Collation = new Collation("pt", false, strength: CollationStrength.Primary) }).FirstOrDefaultAsync();
+        public Task<WafclastZone> FindPlayerHighestZoneAsync(ulong playerId)
+        {
+            if (this._session.Session != null)
+                return this._context.Zones.Find(this._session.Session, x => x.PlayerId == playerId).Sort(Builders<WafclastZone>.Sort.Ascending(x => x.Level)).Limit(1).FirstOrDefaultAsync();
+            return this._context.Zones.Find(x => x.PlayerId == playerId).Sort(Builders<WafclastZone>.Sort.Ascending(x => x.Level)).Limit(1).FirstOrDefaultAsync();
+        }
+
+        public Task<WafclastZone> FindPlayerZoneAsync(ulong playerId, int level)
+        {
+            if (this._session.Session != null)
+                return this._context.Zones.Find(this._session.Session, x => x.PlayerId == playerId && x.Level == level).FirstOrDefaultAsync();
+            return this._context.Zones.Find(x => x.PlayerId == playerId && x.Level == level).FirstOrDefaultAsync();
+
+        }
         public Task SaveZoneAsync(WafclastZone room)
-            => this._context.Zones.ReplaceOneAsync(x => x.Id == room.Id, room, new ReplaceOptions { IsUpsert = true });
+        {
+            if (this._session.Session != null)
+                return this._context.Zones.ReplaceOneAsync(this._session.Session, x => x.PlayerId == room.PlayerId, room, new ReplaceOptions { IsUpsert = true });
+            return this._context.Zones.ReplaceOneAsync(x => x.PlayerId == room.PlayerId, room, new ReplaceOptions { IsUpsert = true });
+        }
     }
 }

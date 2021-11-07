@@ -53,7 +53,7 @@ namespace WafclastRPG.Commands.AdminCommands
 
             var room = new WafclastZone()
             {
-                Id = ctx.Channel.Id,
+                PlayerId = ctx.Channel.Id,
                 Name = name.Result,
             };
 
@@ -61,7 +61,7 @@ namespace WafclastRPG.Commands.AdminCommands
 
             var str = new StringBuilder();
             str.AppendLine("**Quarto criado!**");
-            str.AppendLine($"Id: `{room.Id}`");
+            str.AppendLine($"Id: `{room.PlayerId}`");
             str.AppendLine($"Nome: {name.Result}");
             str.AppendLine($"Região: {regionName.Result}");
             str.AppendLine($"Descrição: {description.Result}");
@@ -75,21 +75,21 @@ namespace WafclastRPG.Commands.AdminCommands
         public async Task NewMonsterCommandAsync(CommandContext ctx, ulong channel, [RemainingText] string name)
         {
 
-            var room = await this._zoneRepository.FindZoneOrDefaultAsync(channel);
-            if (room == null)
-            {
-                await CommandContextExtension.RespondAsync(ctx, "este lugar não é um quarto.");
-                return;
-            }
+            //var room = await this._zoneRepository.FindZoneOrDefaultAsync(channel);
+            //if (room == null)
+            //{
+            //    await CommandContextExtension.RespondAsync(ctx, "este lugar não é um quarto.");
+            //    return;
+            //}
 
 
-            await this._zoneRepository.SaveZoneAsync(room);
+            //await this._zoneRepository.SaveZoneAsync(room);
 
 
-            var str = new StringBuilder();
-            str.AppendLine("**Monstro criado!**");
+            //var str = new StringBuilder();
+            //str.AppendLine("**Monstro criado!**");
 
-            await CommandContextExtension.RespondAsync(ctx, str.ToString());
+            //await CommandContextExtension.RespondAsync(ctx, str.ToString());
         }
 
         [Command("setdescription")]
@@ -98,16 +98,16 @@ namespace WafclastRPG.Commands.AdminCommands
         public async Task SetRoomDescriptionCommandAsync(CommandContext ctx, [RemainingText] string description)
         {
 
-            await ctx.TriggerTypingAsync();
+            //await ctx.TriggerTypingAsync();
 
-            WafclastZone room = null;
-            room = await this._zoneRepository.FindZoneOrDefaultAsync(ctx.Channel.Id);
-            if (room == null)
-                await CommandContextExtension.RespondAsync(ctx, "este lugar não é um quarto.");
+            //WafclastZone room = null;
+            //room = await this._zoneRepository.FindZoneOrDefaultAsync(ctx.Channel.Id);
+            //if (room == null)
+            //    await CommandContextExtension.RespondAsync(ctx, "este lugar não é um quarto.");
 
-            await this._zoneRepository.SaveZoneAsync(room);
+            //await this._zoneRepository.SaveZoneAsync(room);
 
-            await CommandContextExtension.RespondAsync(ctx, $"você alterou a descrição de: **[{room.Name}]!**");
+            //await CommandContextExtension.RespondAsync(ctx, $"você alterou a descrição de: **[{room.Name}]!**");
         }
 
         [Command("setcoordinates")]
@@ -116,17 +116,17 @@ namespace WafclastRPG.Commands.AdminCommands
         public async Task SetRoomCoordinatesCommandAsync(CommandContext ctx, double x, double y)
         {
 
-            await ctx.TriggerTypingAsync();
+            //await ctx.TriggerTypingAsync();
 
-            WafclastZone room = null;
-            room = await this._zoneRepository.FindZoneOrDefaultAsync(ctx.Channel.Id);
-            if (room == null)
-                await CommandContextExtension.RespondAsync(ctx, "este lugar não é um quarto.");
+            //WafclastZone room = null;
+            //room = await this._zoneRepository.FindZoneOrDefaultAsync(ctx.Channel.Id);
+            //if (room == null)
+            //    await CommandContextExtension.RespondAsync(ctx, "este lugar não é um quarto.");
 
-            await this._zoneRepository.SaveZoneAsync(room);
+            //await this._zoneRepository.SaveZoneAsync(room);
 
 
-            await CommandContextExtension.RespondAsync(ctx, $"você alterou as coordenadas de: **[{room.Name}]!**");
+            //await CommandContextExtension.RespondAsync(ctx, $"você alterou as coordenadas de: **[{room.Name}]!**");
         }
     }
 }

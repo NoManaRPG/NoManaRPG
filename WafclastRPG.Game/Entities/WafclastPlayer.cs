@@ -15,6 +15,8 @@ namespace WafclastRPG.Game.Entities
         public WafclastStatePoints Energy { get; private set; }
         public int Coins { get; private set; }
         public int Gens { get; private set; }
+        public ulong MonstersKills { get; set; }
+        public ulong Deaths { get; set; }
         public WafclastCharacter Character { get; private set; }
 
 
@@ -26,6 +28,7 @@ namespace WafclastRPG.Game.Entities
             this.Id = id;
             this.DateAccountCreation = DateTime.UtcNow;
             this.Energy = new WafclastStatePoints(50);
+            this.Character = new WafclastCharacter(true);
         }
 
         public void CoinsAdd(int value) => this.Coins += value;
