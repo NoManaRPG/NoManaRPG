@@ -1,4 +1,4 @@
-// This file is part of the WafclastRPG project.
+// This file is part of WafclastRPG project.
 
 using System.Threading.Tasks;
 using MongoDB.Driver;
@@ -16,7 +16,7 @@ namespace WafclastRPG.Database
         public IMongoDatabase Database { get; }
 
         public IMongoCollection<WafclastPlayer> Players { get; }
-        public IMongoCollection<WafclastZone> Zones { get; }
+        public IMongoCollection<WafclastRoom> Zones { get; }
         public IMongoCollection<WafclastItem> Items { get; }
 
         public IMongoCollection<WafclastServer> Servers { get; }
@@ -34,7 +34,7 @@ namespace WafclastRPG.Database
             this.Players = this.Database.CreateCollection<WafclastPlayer>("WafclastPlayers");
             this.Servers = this.Database.CreateCollection<WafclastServer>("WafclastServers");
             this.Items = this.Database.CreateCollection<WafclastItem>("WafclastItems");
-            this.Zones = this.Database.CreateCollection<WafclastZone>("WafclastZones");
+            this.Zones = this.Database.CreateCollection<WafclastRoom>("WafclastZones");
             this.Upgraders = this.Database.CreateCollection<RankUpgrader>("WafclastRankUpgraders");
 
             #region Usar no futuro

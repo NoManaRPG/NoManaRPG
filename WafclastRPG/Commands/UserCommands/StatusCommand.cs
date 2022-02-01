@@ -1,4 +1,4 @@
-// This file is part of the WafclastRPG project.
+// This file is part of WafclastRPG project.
 
 using System.Text;
 using System.Threading.Tasks;
@@ -36,7 +36,7 @@ namespace WafclastRPG.Commands.UserCommands
             str.AppendLine($"{player.CurrentExperience:N2} de experiencia e precisa {(player.ExperienceForNextLevel - player.CurrentExperience):N2} para o nível {player.Level + 1}.");
             str.AppendLine($"{player.MonstersKills} monstros abatidos.");
             str.AppendLine($"{player.Deaths} vezes morto.");
-            str.AppendLine($"{player.Energy.Current}/{player.Energy.Max} energia disponível.");
+            //str.AppendLine($"{player.Energy.Current}/{player.Energy.Max} energia disponível.");
 
             var embed = new DiscordEmbedBuilder();
             embed.WithAuthor($"{ctx.User.Username} [Nv.{player.Level}] ", iconUrl: ctx.User.AvatarUrl);
@@ -44,10 +44,10 @@ namespace WafclastRPG.Commands.UserCommands
             embed.WithColor(DiscordColor.Blue);
             embed.WithDescription(str.ToString());
 
-            embed.AddField($"Dano [Nv.{character.AttackPointsLevel} R{character.AttackPointsRank}]", $"{Emojis.EspadasCruzadas} {character.AttackPoints:N2}", true);
-            embed.AddField($"Vida [Nv.{character.LifePointsLevel} R{character.LifePointsRank}]", $"{Emojis.CoracaoVermelho} {character.LifePoints.Max:N2}", true);
+            //embed.AddField($"Dano [Nv.{character.AttackPointsLevel} R{character.AttackPointsRank}]", $"{Emojis.EspadasCruzadas} {character.AttackPoints:N2}", true);
+            //embed.AddField($"Vida [Nv.{character.LifePointsLevel} R{character.LifePointsRank}]", $"{Emojis.CoracaoVermelho} {character.LifePoints.Max:N2}", true);
 
-            var zone = await this._zoneRepository.FindPlayerHighestZoneAsync(player.Id);
+            var zone = await this._zoneRepository.FindPlayerHighestZoneAsync(player.DiscordId);
             if (zone != null)
                 embed.AddField("Maior Zona", $"{Emojis.Mapa} {zone.Level}");
 

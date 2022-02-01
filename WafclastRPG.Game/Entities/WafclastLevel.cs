@@ -1,16 +1,17 @@
-// This file is part of the WafclastRPG project.
+// This file is part of WafclastRPG project.
 
 using System;
 using MongoDB.Bson.Serialization.Attributes;
+using WafclastRPG.Game.Interfaces;
 
 namespace WafclastRPG.Game.Entities
 {
     [BsonIgnoreExtraElements]
-    public class WafclastLevel
+    public class WafclastLevel : IWafclastLevel
     {
-        public int Level { get; set; } = 1;
-        public double CurrentExperience { get; set; }
-        public double ExperienceForNextLevel { get; set; }
+        public int Level { get; private set; } = 1;
+        public double CurrentExperience { get; private set; }
+        public double ExperienceForNextLevel { get; private set; }
 
         public WafclastLevel()
         {
@@ -44,7 +45,7 @@ namespace WafclastRPG.Game.Entities
             this.ExperienceForNextLevel = this.ExperienceTotalLevel(this.Level + 1);
         }
 
-        public int ExperienceTotalLevel(int level)
+        private int ExperienceTotalLevel(int level)
         {
             double v1 = 1.0 / 8.0 * level * (level - 1.0) + 75.0;
             double pow1 = Math.Pow(3, (level - 1.0) / 7.0) - 1;

@@ -1,10 +1,9 @@
-// This file is part of the WafclastRPG project.
+// This file is part of WafclastRPG project.
 
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using WafclastRPG.Database.Interfaces;
-using WafclastRPG.Game.Entities;
 
 namespace WafclastRPG.Extensions
 {

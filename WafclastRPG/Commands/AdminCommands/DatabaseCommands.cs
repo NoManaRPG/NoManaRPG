@@ -1,4 +1,4 @@
-// This file is part of the WafclastRPG project.
+// This file is part of WafclastRPG project.
 
 using System;
 using System.Collections.Generic;
@@ -48,7 +48,7 @@ namespace WafclastRPG.Commands.AdminCommands
                     {
 
 
-                        await this._mongoDbContext.Players.ReplaceOneAsync(x => x.Id == item.Id, item);
+                        await this._mongoDbContext.Players.ReplaceOneAsync(x => x.DiscordId == item.DiscordId, item);
                     }
                 }
 

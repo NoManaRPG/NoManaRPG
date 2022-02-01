@@ -1,9 +1,8 @@
-// This file is part of the WafclastRPG project.
+// This file is part of WafclastRPG project.
 
 using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using WafclastRPG.Game.Entities;
 using WafclastRPG.Game.Enuns;
 
 namespace WafclastRPG.Game

@@ -40,7 +40,7 @@ tab_width = 4
 # Organize usings
 dotnet_separate_import_directive_groups = false
 dotnet_sort_system_directives_first = true
-file_header_template = This file is part of the WafclastRPG project.
+file_header_template = This file is part of WafclastRPG project.
 
 # this. and Me. preferences
 dotnet_style_qualification_for_event = true:error

@@ -1,4 +1,4 @@
-// This file is part of the WafclastRPG project.
+// This file is part of WafclastRPG project.
 
 namespace WafclastRPG.Database.Response
 {

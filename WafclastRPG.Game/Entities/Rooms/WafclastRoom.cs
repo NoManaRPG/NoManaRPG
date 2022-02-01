@@ -1,4 +1,4 @@
-// This file is part of the WafclastRPG project.
+// This file is part of WafclastRPG project.
 
 using System.Collections.Generic;
 using MongoDB.Bson;
@@ -8,7 +8,7 @@ using WafclastRPG.Game.Entities.Monsters;
 namespace WafclastRPG.Game.Entities.Rooms
 {
     [BsonIgnoreExtraElements]
-    public class WafclastZone
+    public class WafclastRoom
     {
         [BsonId]
         public ObjectId Id { get; private set; } = ObjectId.GenerateNewId();
@@ -21,9 +21,9 @@ namespace WafclastRPG.Game.Entities.Rooms
         public bool StarZoneCompleted { get; set; }
         public List<WafclastMonster> Monsters { get; set; }
 
-        public WafclastZone() { }
+        public WafclastRoom() { }
 
-        public WafclastZone(WafclastZone zone)
+        public WafclastRoom(WafclastRoom zone)
         {
             this.Id = zone.Id;
             this.PlayerId = zone.PlayerId;

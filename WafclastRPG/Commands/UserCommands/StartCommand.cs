@@ -1,4 +1,4 @@
-// This file is part of the WafclastRPG project.
+// This file is part of WafclastRPG project.
 
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
@@ -29,7 +29,7 @@ namespace WafclastRPG.Commands.UserCommands
             var player = await this._playerRepository.FindPlayerOrDefaultAsync(ctx);
             if (player != null)
             {
-             await ctx.RespondAsync("você já criou um personagem! Se estiver com dúvidas ou problemas, consulte o nosso Servidor Oficial do Discord.");
+                await ctx.RespondAsync("você já criou um personagem! Se estiver com dúvidas ou problemas, consulte o nosso Servidor Oficial do Discord.");
                 return;
             }
 

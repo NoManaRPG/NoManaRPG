@@ -1,4 +1,4 @@
-// This file is part of the WafclastRPG project.
+// This file is part of WafclastRPG project.
 
 using System.Threading.Tasks;
 using MongoDB.Driver;
@@ -18,21 +18,22 @@ namespace WafclastRPG.Database.Repositories
             this._session = session;
         }
 
-        public Task<WafclastZone> FindPlayerHighestZoneAsync(ulong playerId)
+        public Task<WafclastRoom> FindPlayerHighestZoneAsync(ulong playerId)
         {
             if (this._session.Session != null)
-                return this._context.Zones.Find(this._session.Session, x => x.PlayerId == playerId).Sort(Builders<WafclastZone>.Sort.Ascending(x => x.Level)).Limit(1).FirstOrDefaultAsync();
-            return this._context.Zones.Find(x => x.PlayerId == playerId).Sort(Builders<WafclastZone>.Sort.Ascending(x => x.Level)).Limit(1).FirstOrDefaultAsync();
+                return this._context.Zones.Find(this._session.Session, x => x.PlayerId == playerId).Sort(Builders<WafclastRoom>.Sort.Ascending(x => x.Level)).Limit(1).FirstOrDefaultAsync();
+            return this._context.Zones.Find(x => x.PlayerId == playerId).Sort(Builders<WafclastRoom>.Sort.Ascending(x => x.Level)).Limit(1).FirstOrDefaultAsync();
         }
 
-        public Task<WafclastZone> FindPlayerZoneAsync(ulong playerId, int level)
+        public Task<WafclastRoom> FindPlayerZoneAsync(ulong playerId, int level)
         {
             if (this._session.Session != null)
                 return this._context.Zones.Find(this._session.Session, x => x.PlayerId == playerId && x.Level == level).FirstOrDefaultAsync();
             return this._context.Zones.Find(x => x.PlayerId == playerId && x.Level == level).FirstOrDefaultAsync();
 
         }
-        public Task SaveZoneAsync(WafclastZone room)
+
+        public Task SaveZoneAsync(WafclastRoom room)
         {
             if (this._session.Session != null)
                 return this._context.Zones.ReplaceOneAsync(this._session.Session, x => x.PlayerId == room.PlayerId, room, new ReplaceOptions { IsUpsert = true });
