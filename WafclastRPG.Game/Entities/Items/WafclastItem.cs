@@ -19,7 +19,6 @@ namespace WafclastRPG.Game.Entities.Items
 
         public WafclastItem(WafclastItem item)
         {
-            this.ItemId = item.ItemId;
             this.Name = item.Name;
             this.Quantity = item.Quantity;
             this.Volume = item.Volume;

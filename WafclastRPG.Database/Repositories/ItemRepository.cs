@@ -1,8 +1,10 @@
 // This file is part of WafclastRPG project.
 
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using WafclastRPG.Database.Interfaces;
+using WafclastRPG.Game.Entities.Items;
 
 namespace WafclastRPG.Database.Repositories
 {
@@ -17,12 +19,6 @@ namespace WafclastRPG.Database.Repositories
             this._session = session;
         }
 
-        public Task<WafclastItem> FindItemOrDefaultAsync(int globalItemId, ulong playerId)
-        {
-            if (this._session.Session != null)
-                return this._context.Items.Find(this._session.Session, x => x.ItemId == globalItemId && x.PlayerId == playerId).FirstOrDefaultAsync();
-            return this._context.Items.Find(x => x.ItemId == globalItemId && x.PlayerId == playerId).FirstOrDefaultAsync();
-        }
         public Task<WafclastItem> FindItemOrDefaultAsync(string itemName, ulong playerId)
         {
             if (this._session.Session != null)

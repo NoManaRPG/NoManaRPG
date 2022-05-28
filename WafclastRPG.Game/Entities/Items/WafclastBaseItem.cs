@@ -4,7 +4,6 @@ namespace WafclastRPG.Game.Entities.Items
 {
     public class WafclastBaseItem
     {
-        public int ItemId { get; set; }
         public string Name { get; set; }
         public ulong Quantity { get; set; }
 
@@ -14,7 +13,6 @@ namespace WafclastRPG.Game.Entities.Items
 
         public WafclastBaseItem(WafclastBaseItem baseItem)
         {
-            this.ItemId = baseItem.ItemId;
             this.Name = baseItem.Name;
             this.Quantity = baseItem.Quantity;
             this.Volume = baseItem.Volume;

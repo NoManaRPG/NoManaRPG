@@ -5,6 +5,7 @@ using MongoDB.Driver;
 using WafclastRPG.Database.Extensions;
 using WafclastRPG.Game;
 using WafclastRPG.Game.Entities;
+using WafclastRPG.Game.Entities.Items;
 using WafclastRPG.Game.Entities.Rooms;
 
 namespace WafclastRPG.Database

@@ -18,12 +18,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01015" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01015" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01015" />
-    <PackageReference Include="MongoDB.Bson" Version="2.13.1" />
-    <PackageReference Include="MongoDB.Driver" Version="2.13.1" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
+    <PackageReference Include="DSharpPlus" Version="4.3.0-nightly-01135" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.3.0-nightly-01135" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.3.0-nightly-01135" />
+    <PackageReference Include="MongoDB.Bson" Version="2.15.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.15.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

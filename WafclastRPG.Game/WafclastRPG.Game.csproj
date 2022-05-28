@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MongoDB.Bson" Version="2.13.1" />
+    <Compile Remove="Enuns\**" />
+    <EmbeddedResource Remove="Enuns\**" />
+    <None Remove="Enuns\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Enuns\" />
+    <PackageReference Include="MongoDB.Bson" Version="2.15.1" />
   </ItemGroup>
 
 </Project>

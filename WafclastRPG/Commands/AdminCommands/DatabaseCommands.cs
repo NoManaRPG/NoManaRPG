@@ -11,6 +11,7 @@ using WafclastRPG.Database;
 using WafclastRPG.Database.Interfaces;
 using WafclastRPG.Database.Response;
 using WafclastRPG.Game.Entities;
+using WafclastRPG.Game.Entities.Items;
 
 namespace WafclastRPG.Commands.AdminCommands
 {
