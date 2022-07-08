@@ -17,7 +17,7 @@ namespace WafclastRPG
     {
         public MongoDbContext MongoDbContext { get; private set; }
         public UsersBlocked UsersTemporaryBlocked { get; private set; }
-        private Configuration _config;
+        public static Configuration Config { get; private set; }
 
         static void Main() => new Program().RodarBotAsync().GetAwaiter().GetResult();
 
@@ -28,7 +28,7 @@ namespace WafclastRPG
 #else
             var map = new ExeConfigurationFileMap { ExeConfigFilename = "App.Release.config" };
 #endif
-            this._config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
+            Config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
 
             var bot = new Bot(new DiscordConfiguration
             {
@@ -36,12 +36,12 @@ namespace WafclastRPG
                 ReconnectIndefinitely = true,
                 GatewayCompressionLevel = GatewayCompressionLevel.Stream,
                 AutoReconnect = true,
-                Token = this._config.AppSettings.Settings["Token"].Value,
+                Token = Config.AppSettings.Settings["Token"].Value,
                 Intents = DiscordIntents.AllUnprivileged,
                 MinimumLogLevel = LogLevel.Debug,
             });
 
-            this.MongoDbContext = new MongoDbContext(this._config.ConnectionStrings.ConnectionStrings["MongoConnection"].ConnectionString);
+            this.MongoDbContext = new MongoDbContext(Config.ConnectionStrings.ConnectionStrings["MongoConnection"].ConnectionString);
             this.UsersTemporaryBlocked = new UsersBlocked();
             var services = new ServiceCollection()
                 .AddSingleton(this.MongoDbContext)
@@ -76,7 +76,7 @@ namespace WafclastRPG
             if (this.UsersTemporaryBlocked.IsUserBlocked(msg.Author.Id))
                 return await Task.FromResult(-1);
 
-            var prefix = await this.MongoDbContext.GetServerPrefixAsync(gld.Id, this._config.AppSettings.Settings["Prefix"].Value);
+            var prefix = await this.MongoDbContext.GetServerPrefixAsync(gld.Id, Config.AppSettings.Settings["Prefix"].Value);
             var pfixLocation = msg.GetStringPrefixLength(prefix);
             return await Task.FromResult(pfixLocation);
         }

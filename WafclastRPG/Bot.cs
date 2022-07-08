@@ -37,14 +37,20 @@ namespace WafclastRPG
 
             this.Client.UseInteractivity(new InteractivityConfiguration
             {
-                Timeout = TimeSpan.FromSeconds(30),
+                Timeout = TimeSpan.FromMinutes(2),
                 PollBehaviour = PollBehaviour.KeepEmojis,
                 PaginationBehaviour = PaginationBehaviour.Ignore,
                 PaginationDeletion = PaginationDeletion.KeepEmojis,
             });
 
-            this.CommandsNext.SetHelpFormatter<IHelpCommand>();
-            this.CommandsNext.RegisterCommands(Assembly.GetExecutingAssembly());
+            this.Client.MessageCreated += async (s, e) =>
+            {
+                if (e.Message.Content.ToLower().StartsWith("ping"))
+                    await e.Message.RespondAsync("pong!");
+            };
+
+            //this.CommandsNext.SetHelpFormatter<IHelpCommand>();
+            //this.CommandsNext.RegisterCommands(Assembly.GetExecutingAssembly());
         }
     }
 }
