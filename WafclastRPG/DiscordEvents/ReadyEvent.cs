@@ -1,6 +1,7 @@
-﻿// This file is part of WafclastRPG project.
+// This file is part of WafclastRPG project.
 
 using System;
+using System.Configuration;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.Entities;
@@ -13,8 +14,8 @@ namespace WafclastRPG.DiscordEvents
     {
         public static Task Event(DiscordClient client, ReadyEventArgs e)
         {
-            client.Logger.Log(LogLevel.Information, "Cliente está pronto.", DateTime.Now);
-            client.UpdateStatusAsync(new DiscordActivity($"w.ajuda | Venha me conhecer!", ActivityType.ListeningTo), UserStatus.Online);
+            client.Logger.Log(LogLevel.Information, "Bot está pronto para processar comandos!", DateTime.Now);
+            client.UpdateStatusAsync(new DiscordActivity(Program.Config.AppSettings.Settings["ListeningTo"].Value, ActivityType.ListeningTo), UserStatus.Online);
             return Task.CompletedTask;
         }
     }
