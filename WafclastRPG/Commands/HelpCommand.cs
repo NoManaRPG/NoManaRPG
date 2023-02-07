@@ -10,6 +10,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Converters;
 using DSharpPlus.CommandsNext.Entities;
 using DSharpPlus.Entities;
+using DSharpPlus.SlashCommands;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using WafclastRPG.Attributes;
@@ -18,14 +19,15 @@ using static DSharpPlus.CommandsNext.CommandsNextExtension;
 
 namespace WafclastRPG.Commands
 {
-    public class HelpCommand : BaseCommandModule
+    public class HelpCommand : ApplicationCommandModule
     {
         [Command("comandos")]
         [Aliases("commands")]
         [Description("Exibe todos os comandos que o bot reconhece.")]
         [Usage("comandos")]
         [Cooldown(1, 5, CooldownBucketType.User)]
-        public async Task CommandsAsync(CommandContext ctx)
+        [SlashCommand("test", "Que loucura")]
+        public async Task CommandsAsync(InteractionContext ctx)
         {
             var str = new StringBuilder();
             str.AppendLine();
@@ -52,7 +54,7 @@ namespace WafclastRPG.Commands
             str.Append("atributos, ");
             str.Append("atribuir, ");
 
-            await ctx.RespondAsync(Formatter.BlockCode(str.ToString(), "css"));
+            await ctx.CreateResponseAsync(Formatter.BlockCode(str.ToString(), "css"));
         }
 
         [Command("ajuda")]

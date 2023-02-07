@@ -8,6 +8,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.Interactivity.Extensions;
+using DSharpPlus.SlashCommands;
 using WafclastRPG.Commands;
 using WafclastRPG.DiscordEvents;
 
@@ -28,6 +29,7 @@ namespace WafclastRPG
         public void ModuleCommand(CommandsNextConfiguration ccfg)
         {
             this.CommandsNext = this.Client.UseCommandsNext(ccfg);
+            var slash = this.Client.UseSlashCommands();
             this.CommandsNext.CommandExecuted += CommandExecutedEvent.Event;
             this.CommandsNext.CommandErrored += CommandErroredEvent.EventAsync;
             this.Client.Ready += ReadyEvent.Event;
@@ -50,7 +52,8 @@ namespace WafclastRPG
             };
 
             //this.CommandsNext.SetHelpFormatter<IHelpCommand>();
-            //this.CommandsNext.RegisterCommands(Assembly.GetExecutingAssembly());
+            slash.RegisterCommands<HelpCommand>();
+            this.CommandsNext.RegisterCommands(Assembly.GetExecutingAssembly());
         }
     }
 }
