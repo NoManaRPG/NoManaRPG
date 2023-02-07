@@ -3,7 +3,6 @@
 A RPG game for Discord.
 
 <a href="https://github.com/TalionOak/WafclastRPG/blob/WafclastRPG/LICENSE"><img src="https://img.shields.io/badge/license-AGPL%20v3-lightgray.svg">
-<a href="https://apoia.se/wafclastrpg"><img src="https://img.shields.io/badge/apoia.se-WafClastRPG-yellow.svg"></a>
 <a href="https://discord.gg/MAR4NFq"><img src="https://discordapp.com/api/guilds/732102804654522470/widget.png"></a>
 
 # Rewrite
