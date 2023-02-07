@@ -3,11 +3,10 @@
 A RPG game for Discord.
 
 <a href="https://github.com/TalionOak/WafclastRPG/blob/WafclastRPG/LICENSE"><img src="https://img.shields.io/badge/license-AGPL%20v3-lightgray.svg">
-<a href="https://apoia.se/wafclastrpg"><img src="https://img.shields.io/badge/apoia.se-WafClastRPG-yellow.svg"></a>
 <a href="https://discord.gg/MAR4NFq"><img src="https://discordapp.com/api/guilds/732102804654522470/widget.png"></a>
 
 # Rewrite
-This project is currently going under a rewrite. If you want to do any changes or PRing, please do so on the new NewSystem branch. The master branch is basically dead until NewSystem gets merged over.
+This project is currently going under a rewrite. If you want to do any changes or PRing, please do so on the new dev branch.
 
 ## 🤔 How can I add her?
 
