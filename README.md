@@ -1,5 +1,3 @@
-# WafClast RPG
-
 A RPG game for Discord.
 
 <a href="https://github.com/TalionOak/WafclastRPG/blob/WafclastRPG/LICENSE"><img src="https://img.shields.io/badge/license-AGPL%20v3-lightgray.svg">
