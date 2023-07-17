@@ -1,4 +1,4 @@
-// This file is part of WafclastRPG project.
+// This file is part of NoManaRPG project.
 
 using System;
 using System.Reflection;
@@ -12,48 +12,47 @@ using DSharpPlus.SlashCommands;
 using NoManaRPG.Commands;
 using NoManaRPG.DiscordEvents;
 
-namespace NoManaRPG
+namespace NoManaRPG;
+
+public class Bot
 {
-    public class Bot
+    public DiscordClient Client { get; private set; }
+    public CommandsNextExtension CommandsNext { get; private set; }
+
+    public Bot(DiscordConfiguration discordConfiguration)
     {
-        public DiscordClient Client { get; private set; }
-        public CommandsNextExtension CommandsNext { get; private set; }
+        this.Client = new DiscordClient(discordConfiguration);
+    }
 
-        public Bot(DiscordConfiguration discordConfiguration)
+    public Task ConectarAsync() => this.Client.ConnectAsync();
+
+    public void ModuleCommand(CommandsNextConfiguration ccfg)
+    {
+        this.CommandsNext = this.Client.UseCommandsNext(ccfg);
+        var slash = this.Client.UseSlashCommands();
+        this.CommandsNext.CommandExecuted += CommandExecutedEvent.Event;
+        this.CommandsNext.CommandErrored += CommandErroredEvent.EventAsync;
+        this.Client.Ready += ReadyEvent.Event;
+
+        this.Client.GuildAvailable += (c, e) => GuildAvailableEvent.Event(c, e);
+        this.Client.ClientErrored += ClientErroredEvent.Event;
+
+        this.Client.UseInteractivity(new InteractivityConfiguration
         {
-            this.Client = new DiscordClient(discordConfiguration);
-        }
+            Timeout = TimeSpan.FromMinutes(2),
+            PollBehaviour = PollBehaviour.KeepEmojis,
+            PaginationBehaviour = PaginationBehaviour.Ignore,
+            PaginationDeletion = PaginationDeletion.KeepEmojis,
+        });
 
-        public Task ConectarAsync() => this.Client.ConnectAsync();
-
-        public void ModuleCommand(CommandsNextConfiguration ccfg)
+        this.Client.MessageCreated += async (s, e) =>
         {
-            this.CommandsNext = this.Client.UseCommandsNext(ccfg);
-            var slash = this.Client.UseSlashCommands();
-            this.CommandsNext.CommandExecuted += CommandExecutedEvent.Event;
-            this.CommandsNext.CommandErrored += CommandErroredEvent.EventAsync;
-            this.Client.Ready += ReadyEvent.Event;
+            if (e.Message.Content.ToLower().StartsWith("ping"))
+                await e.Message.RespondAsync("pong!");
+        };
 
-            this.Client.GuildAvailable += (c, e) => GuildAvailableEvent.Event(c, e);
-            this.Client.ClientErrored += ClientErroredEvent.Event;
-
-            this.Client.UseInteractivity(new InteractivityConfiguration
-            {
-                Timeout = TimeSpan.FromMinutes(2),
-                PollBehaviour = PollBehaviour.KeepEmojis,
-                PaginationBehaviour = PaginationBehaviour.Ignore,
-                PaginationDeletion = PaginationDeletion.KeepEmojis,
-            });
-
-            this.Client.MessageCreated += async (s, e) =>
-            {
-                if (e.Message.Content.ToLower().StartsWith("ping"))
-                    await e.Message.RespondAsync("pong!");
-            };
-
-            //this.CommandsNext.SetHelpFormatter<IHelpCommand>();
-            slash.RegisterCommands<HelpCommand>();
-            this.CommandsNext.RegisterCommands(Assembly.GetExecutingAssembly());
-        }
+        //this.CommandsNext.SetHelpFormatter<IHelpCommand>();
+        slash.RegisterCommands<HelpCommand>();
+        this.CommandsNext.RegisterCommands(Assembly.GetExecutingAssembly());
     }
 }

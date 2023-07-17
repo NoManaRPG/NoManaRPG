@@ -1,14 +1,13 @@
-﻿// This file is part of WafclastRPG project.
+﻿// This file is part of NoManaRPG project.
 
-namespace NoManaRPG.Database.Response
+namespace NoManaRPG.Database.Response;
+
+public class StringResponse : IResponse
 {
-    public class StringResponse : IResponse
-    {
-        public string Response { get; }
+    public string Response { get; }
 
-        public StringResponse(string response)
-        {
-            this.Response = response;
-        }
+    public StringResponse(string response)
+    {
+        this.Response = response;
     }
 }

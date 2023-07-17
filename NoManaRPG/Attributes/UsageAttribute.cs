@@ -1,16 +1,15 @@
-﻿// This file is part of WafclastRPG project.
+﻿// This file is part of NoManaRPG project.
 
 using System;
 
-namespace NoManaRPG.Attributes
+namespace NoManaRPG.Attributes;
+
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
+public class UsageAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
-    public class UsageAttribute : Attribute
+    public string Command { get; }
+    public UsageAttribute(string command)
     {
-        public string Command { get; }
-        public UsageAttribute(string command)
-        {
-            this.Command = command;
-        }
+        this.Command = command;
     }
 }

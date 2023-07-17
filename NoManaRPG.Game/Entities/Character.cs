@@ -1,29 +1,28 @@
-// This file is part of WafclastRPG project.
+// This file is part of NoManaRPG project.
 
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace NoManaRPG.Game.Entities
+namespace NoManaRPG.Game.Entities;
+
+[BsonIgnoreExtraElements]
+public class Character
 {
-    [BsonIgnoreExtraElements]
-    public class Character
-    {
-        // Change?
-        public string Race { get; private set; }
-        public StatePoints LifePoints { get; private set; }
-        public StatePoints ManaPoints { get; private set; }
+    // Change?
+    public string Race { get; private set; }
+    public StatePoints LifePoints { get; private set; }
+    public StatePoints ManaPoints { get; private set; }
 
 
-        //this will change 
-        public string Job { get; private set; }
+    //this will change 
+    public string Job { get; private set; }
 
 
-        //Skills
-        //Available Jobs
-        //Equips
-        //Titles
+    //Skills
+    //Available Jobs
+    //Equips
+    //Titles
 
 
 
-        public Character() { }
-    }
+    public Character() { }
 }

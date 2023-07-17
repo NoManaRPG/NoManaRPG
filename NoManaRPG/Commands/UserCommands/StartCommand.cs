@@ -1,42 +1,40 @@
-// This file is part of WafclastRPG project.
+// This file is part of NoManaRPG project.
 
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using NoManaRPG.Attributes;
 using NoManaRPG.Database.Repositories;
-using NoManaRPG.Extensions;
 using NoManaRPG.Game.Entities;
 
-namespace NoManaRPG.Commands.UserCommands
+namespace NoManaRPG.Commands.UserCommands;
+
+[ModuleLifespan(ModuleLifespan.Transient)]
+public class StartCommand : BaseCommandModule
 {
-    [ModuleLifespan(ModuleLifespan.Transient)]
-    public class StartCommand : BaseCommandModule
+    private readonly PlayerRepository _playerRepository;
+
+    public StartCommand(PlayerRepository playerRepository, MongoSession session)
     {
-        private readonly PlayerRepository _playerRepository;
+        this._playerRepository = playerRepository;
+    }
 
-        public StartCommand(PlayerRepository playerRepository, MongoSession session)
+    [Command("comecar")]
+    [Aliases("start")]
+    [Description("Permite criar um personagem.")]
+    [Usage("comecar")]
+    public async Task StartCommandAsync(CommandContext ctx)
+    {
+        var player = await this._playerRepository.FindPlayerOrDefaultAsync(ctx.Member.Id);
+        if (player != null)
         {
-            this._playerRepository = playerRepository;
+            await ctx.RespondAsync("você já criou um personagem! Se estiver com dúvidas ou problemas, consulte o nosso Servidor Oficial do Discord.");
+            return;
         }
 
-        [Command("comecar")]
-        [Aliases("start")]
-        [Description("Permite criar um personagem.")]
-        [Usage("comecar")]
-        public async Task StartCommandAsync(CommandContext ctx)
-        {
-            var player = await this._playerRepository.FindPlayerOrDefaultAsync(ctx.Member.Id);
-            if (player != null)
-            {
-                await ctx.RespondAsync("você já criou um personagem! Se estiver com dúvidas ou problemas, consulte o nosso Servidor Oficial do Discord.");
-                return;
-            }
+        player = new Player(ctx.User.Id);
 
-            player = new Player(ctx.User.Id);
-
-            await this._playerRepository.SavePlayerAsync(player);
-            await ctx.RespondAsync("personagem criado com sucesso! Obrigado por escolher Wafclast!");
-        }
+        await this._playerRepository.SavePlayerAsync(player);
+        await ctx.RespondAsync("personagem criado com sucesso! Obrigado por escolher Wafclast!");
     }
 }
