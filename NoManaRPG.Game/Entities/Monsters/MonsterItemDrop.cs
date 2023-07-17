@@ -1,0 +1,16 @@
+// This file is part of WafclastRPG project.
+
+namespace NoManaRPG.Game.Entities.Monsters
+{
+    public class MonsterItemDrop
+    {
+        public int GlobalItemId { get; set; }
+        public double Chance { get; set; }
+
+        public MonsterItemDrop(int globalItemId, double chance)
+        {
+            this.GlobalItemId = globalItemId;
+            this.Chance = chance;
+        }
+    }
+}

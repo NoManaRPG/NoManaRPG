@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoManaRPG", "NoManaRPG\NoManaRPG.csproj", "{6D35FE2A-BEDB-4810-9D79-5CD7DE63ED4B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoManaRPG.Game", "NoManaRPG.Game\NoManaRPG.Game.csproj", "{AF172E09-A09F-4693-9980-262FAF789C6C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoManaRPG.Database", "NoManaRPG.Database\NoManaRPG.Database.csproj", "{79E7F212-9E68-4D64-ABEB-A13FED04479B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{573AEAA5-1C18-4B9B-9815-3BDA64E7935F}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{29715E35-BEBA-4797-8695-D0384881F4CD}"
+	ProjectSection(SolutionItems) = preProject
+		.github\FUNDING.yml = .github\FUNDING.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build Items", "Build Items", "{5691051A-24FB-4DC3-B488-D83917A2B52A}"
+	ProjectSection(SolutionItems) = preProject
+		GerarExe.bat = GerarExe.bat
+		Makefile = Makefile
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{BE4CA0BD-54A3-4995-8E6E-3E649591948E}"
+	ProjectSection(SolutionItems) = preProject
+		Nuget.config = Nuget.config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6D35FE2A-BEDB-4810-9D79-5CD7DE63ED4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D35FE2A-BEDB-4810-9D79-5CD7DE63ED4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D35FE2A-BEDB-4810-9D79-5CD7DE63ED4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D35FE2A-BEDB-4810-9D79-5CD7DE63ED4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF172E09-A09F-4693-9980-262FAF789C6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF172E09-A09F-4693-9980-262FAF789C6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF172E09-A09F-4693-9980-262FAF789C6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF172E09-A09F-4693-9980-262FAF789C6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79E7F212-9E68-4D64-ABEB-A13FED04479B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79E7F212-9E68-4D64-ABEB-A13FED04479B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79E7F212-9E68-4D64-ABEB-A13FED04479B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79E7F212-9E68-4D64-ABEB-A13FED04479B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{29715E35-BEBA-4797-8695-D0384881F4CD} = {573AEAA5-1C18-4B9B-9815-3BDA64E7935F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6F57C18A-5D26-4D05-97D4-E38FD60FACED}
+	EndGlobalSection
+EndGlobal
