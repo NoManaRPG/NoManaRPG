@@ -27,7 +27,7 @@ public class Program
         #endregion
 
         var mongoDbContext = new MongoDbContext(config.ConnectionStrings.ConnectionStrings["MongoConnection"].ConnectionString);
-        var usersTemporaryBlocked = new UsersBlocked();
+        //var usersTemporaryBlocked = new UsersBlocked();
 
         var client = new DiscordClient(new DiscordConfiguration
         {
@@ -40,7 +40,7 @@ public class Program
 
         var services = new ServiceCollection()
             .AddSingleton(mongoDbContext)
-            .AddSingleton(usersTemporaryBlocked)
+            //.AddSingleton(usersTemporaryBlocked)
             .AddSingleton(config)
             .AddScoped<MongoSession>()
             .AddScoped<PlayerRepository>()
