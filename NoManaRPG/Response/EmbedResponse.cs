@@ -1,8 +1,8 @@
-﻿// This file is part of NoManaRPG project.
+// This file is part of NoManaRPG project.
 
 using DSharpPlus.Entities;
 
-namespace NoManaRPG.Database.Response;
+namespace NoManaRPG.Response;
 
 public class EmbedResponse : IResponse
 {

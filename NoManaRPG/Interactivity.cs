@@ -1,4 +1,4 @@
-﻿// This file is part of NoManaRPG project.
+// This file is part of NoManaRPG project.
 
 using System;
 using System.Threading.Tasks;
@@ -6,7 +6,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
-using NoManaRPG.Database;
+using NoManaRPG;
 using NoManaRPG.Exceptions;
 using NoManaRPG.Extensions;
 

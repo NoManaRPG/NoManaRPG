@@ -6,7 +6,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using NoManaRPG.Attributes;
-using NoManaRPG.Database.Repositories;
+using NoManaRPG.Repositories;
 using NoManaRPG.Extensions;
 
 namespace NoManaRPG.Commands.UserCommands;

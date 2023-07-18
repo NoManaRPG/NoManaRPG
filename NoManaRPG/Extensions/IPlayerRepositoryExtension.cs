@@ -3,8 +3,8 @@
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
-using NoManaRPG.Database.Repositories;
-using NoManaRPG.Game.Entities;
+using NoManaRPG.Repositories;
+using NoManaRPG.Entities;
 
 namespace NoManaRPG.Extensions;
 

@@ -1,7 +1,7 @@
-﻿// This file is part of NoManaRPG project.
+// This file is part of NoManaRPG project.
 
 using System;
-using NoManaRPG.Game.Properties;
+using NoManaRPG.Properties;
 
 namespace NoManaRPG.Exceptions;
 

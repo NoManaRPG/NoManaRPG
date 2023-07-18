@@ -1,4 +1,4 @@
-﻿// This file is part of NoManaRPG project.
+// This file is part of NoManaRPG project.
 
 using System;
 using System.Linq;
@@ -10,8 +10,8 @@ using DSharpPlus.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
-using NoManaRPG.Database;
-using NoManaRPG.Database.Exceptions;
+using NoManaRPG;
+using NoManaRPG.Exceptions;
 using NoManaRPG.Exceptions;
 using NoManaRPG.Extensions;
 

@@ -14,7 +14,7 @@ using DSharpPlus.SlashCommands;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using NoManaRPG.Attributes;
-using NoManaRPG.Database;
+using NoManaRPG;
 using static DSharpPlus.CommandsNext.CommandsNextExtension;
 
 namespace NoManaRPG.Commands;

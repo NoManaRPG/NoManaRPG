@@ -1,6 +1,6 @@
-﻿// This file is part of NoManaRPG project.
+// This file is part of NoManaRPG project.
 
-namespace NoManaRPG.Database.Response;
+namespace NoManaRPG.Response;
 
 public class StringResponse : IResponse
 {

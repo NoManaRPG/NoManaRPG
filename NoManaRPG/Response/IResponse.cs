@@ -1,5 +1,5 @@
 // This file is part of NoManaRPG project.
 
-namespace NoManaRPG.Database.Response;
+namespace NoManaRPG.Response;
 
 public interface IResponse { }

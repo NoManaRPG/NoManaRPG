@@ -4,9 +4,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
-using NoManaRPG.Database.Response;
+using NoManaRPG.Response;
 
-namespace NoManaRPG.Database.Repositories;
+namespace NoManaRPG.Repositories;
 
 public class MongoSession : IDisposable
 {

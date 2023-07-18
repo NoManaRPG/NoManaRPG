@@ -7,11 +7,11 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using MongoDB.Driver;
-using NoManaRPG.Database;
-using NoManaRPG.Database.Repositories;
-using NoManaRPG.Database.Response;
-using NoManaRPG.Game.Entities;
-using NoManaRPG.Game.Entities.Items;
+using NoManaRPG;
+using NoManaRPG.Repositories;
+using NoManaRPG.Response;
+using NoManaRPG.Entities;
+using NoManaRPG.Entities.Items;
 
 namespace NoManaRPG.Commands.AdminCommands;
 

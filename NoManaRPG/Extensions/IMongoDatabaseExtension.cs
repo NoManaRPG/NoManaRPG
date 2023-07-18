@@ -3,7 +3,7 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace NoManaRPG.Database.Extensions;
+namespace NoManaRPG.Extensions;
 
 public static class IMongoDatabaseExtension
 {

@@ -2,10 +2,10 @@
 
 using System.Threading.Tasks;
 using MongoDB.Driver;
-using NoManaRPG.Database.Exceptions;
-using NoManaRPG.Game.Entities;
+using NoManaRPG.Exceptions;
+using NoManaRPG.Entities;
 
-namespace NoManaRPG.Database.Repositories;
+namespace NoManaRPG.Repositories;
 
 public class PlayerRepository
 {

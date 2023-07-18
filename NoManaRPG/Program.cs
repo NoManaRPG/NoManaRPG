@@ -8,8 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NoManaRPG.Commands.AdminCommands;
 using NoManaRPG.Commands.UserCommands;
-using NoManaRPG.Database;
-using NoManaRPG.Database.Repositories;
+using NoManaRPG;
+using NoManaRPG.Repositories;
 using NoManaRPG.DiscordEvents;
 
 namespace NoManaRPG;

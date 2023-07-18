@@ -2,9 +2,9 @@
 
 using System.Threading.Tasks;
 using MongoDB.Driver;
-using NoManaRPG.Game.Entities.Rooms;
+using NoManaRPG.Entities.Rooms;
 
-namespace NoManaRPG.Database.Repositories;
+namespace NoManaRPG.Repositories;
 
 public class ZoneRepository
 {

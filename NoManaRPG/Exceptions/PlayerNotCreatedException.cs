@@ -1,9 +1,9 @@
-﻿// This file is part of NoManaRPG project.
+// This file is part of NoManaRPG project.
 
 using System;
-using NoManaRPG.Game.Properties;
+using NoManaRPG.Properties;
 
-namespace NoManaRPG.Database.Exceptions;
+namespace NoManaRPG.Exceptions;
 
 public class PlayerNotCreatedException : Exception
 {

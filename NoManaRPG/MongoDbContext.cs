@@ -2,13 +2,13 @@
 
 using System.Threading.Tasks;
 using MongoDB.Driver;
-using NoManaRPG.Database.Extensions;
-using NoManaRPG.Game;
-using NoManaRPG.Game.Entities;
-using NoManaRPG.Game.Entities.Items;
-using NoManaRPG.Game.Entities.Rooms;
+using NoManaRPG.Extensions;
+using NoManaRPG;
+using NoManaRPG.Entities;
+using NoManaRPG.Entities.Items;
+using NoManaRPG.Entities.Rooms;
 
-namespace NoManaRPG.Database;
+namespace NoManaRPG;
 
 public class MongoDbContext
 {

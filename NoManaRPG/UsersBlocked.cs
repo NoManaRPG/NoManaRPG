@@ -3,7 +3,7 @@
 using System.Collections.Concurrent;
 using DSharpPlus.CommandsNext;
 
-namespace NoManaRPG.Database;
+namespace NoManaRPG;
 
 public class UsersBlocked
 {

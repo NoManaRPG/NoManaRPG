@@ -2,9 +2,9 @@
 
 using System.Threading.Tasks;
 using MongoDB.Driver;
-using NoManaRPG.Game.Entities.Items;
+using NoManaRPG.Entities.Items;
 
-namespace NoManaRPG.Database.Repositories;
+namespace NoManaRPG.Repositories;
 
 public class ItemRepository
 {

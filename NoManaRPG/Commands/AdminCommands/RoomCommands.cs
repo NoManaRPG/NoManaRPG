@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using NoManaRPG.Attributes;
-using NoManaRPG.Database;
-using NoManaRPG.Database.Repositories;
+using NoManaRPG;
+using NoManaRPG.Repositories;
 using NoManaRPG.Extensions;
 
 namespace NoManaRPG.Commands.AdminCommands;
