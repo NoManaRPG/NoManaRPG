@@ -1,39 +1,21 @@
 // This file is part of NoManaRPG project.
 
-using System.Text;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using DSharpPlus;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using NoManaRPG.Attributes;
+using DSharpPlus.Entities;
+using DSharpPlus.SlashCommands;
+using DSharpPlus.SlashCommands.Attributes;
 
 namespace NoManaRPG.Commands.AdminCommands;
 
-public class AdminCommand : BaseCommandModule
+[SlashCommandGroup("Admin", "Comandos de administrador")]
+public class AdminCommand : ApplicationCommandModule
 {
-    [Command("admin")]
-    [Description("Exibe todos os comandos que o bot reconhece de administrador.")]
-    [Usage("admin")]
-    [RequireOwner]
-    [Hidden]
-    public async Task CommandsAsync(CommandContext ctx)
+    [SlashRequireOwner]
+    [SlashCommand("reset", "Admin")]
+    public async Task ResetarCommandosAsync(InteractionContext ctx)
     {
-        var str = new StringBuilder();
-        str.AppendLine("[Admin]");
-
-        str.AppendLine();
-        str.AppendLine("[Monstros]");
-        str.Append("vermonstro, ");
-
-        str.AppendLine();
-        str.AppendLine("[Room]");
-        str.Append("setdescription, ");
-        str.Append("new, ");
-
-        str.AppendLine();
-        str.AppendLine("[Itens]");
-        str.Append("atualizar-itens, ");
-        str.Append("criarfabricacao, ");
-        await ctx.RespondAsync(Formatter.BlockCode(str.ToString(), "css"));
+        await ctx.Client.BulkOverwriteGuildApplicationCommandsAsync(1118002801046474773, new List<DiscordApplicationCommand>());
+        await ctx.CreateResponseAsync("Comandos neste servidor foram apagados! Reinicie o cliente para adicionar novamente os comandos deste servidor", true);
     }
 }

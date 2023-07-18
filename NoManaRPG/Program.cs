@@ -3,80 +3,81 @@
 using System.Configuration;
 using System.Threading.Tasks;
 using DSharpPlus;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.Entities;
+using DSharpPlus.SlashCommands;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NoManaRPG.Commands.AdminCommands;
+using NoManaRPG.Commands.UserCommands;
 using NoManaRPG.Database;
 using NoManaRPG.Database.Repositories;
+using NoManaRPG.DiscordEvents;
 
 namespace NoManaRPG;
 
 public class Program
 {
-    public MongoDbContext MongoDbContext { get; private set; }
-    public UsersBlocked UsersTemporaryBlocked { get; private set; }
-    public static Configuration Config { get; private set; }
-
     static void Main() => new Program().RodarBotAsync().GetAwaiter().GetResult();
 
     public async Task RodarBotAsync()
     {
+        #region Configs
 #if DEBUG
         var map = new ExeConfigurationFileMap { ExeConfigFilename = "App.Debug.config" };
 #else
         var map = new ExeConfigurationFileMap { ExeConfigFilename = "App.Release.config" };
 #endif
-        Config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
+        var config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
+        #endregion
 
-        var bot = new Bot(new DiscordConfiguration
+        var mongoDbContext = new MongoDbContext(config.ConnectionStrings.ConnectionStrings["MongoConnection"].ConnectionString);
+        var usersTemporaryBlocked = new UsersBlocked();
+
+        var client = new DiscordClient(new DiscordConfiguration
         {
-            TokenType = TokenType.Bot,
             ReconnectIndefinitely = true,
-            GatewayCompressionLevel = GatewayCompressionLevel.Stream,
             AutoReconnect = true,
-            Token = Config.AppSettings.Settings["Token"].Value,
+            Token = config.AppSettings.Settings["Token"].Value,
             Intents = DiscordIntents.AllUnprivileged,
             MinimumLogLevel = LogLevel.Debug,
         });
 
-        this.MongoDbContext = new MongoDbContext(Config.ConnectionStrings.ConnectionStrings["MongoConnection"].ConnectionString);
-        this.UsersTemporaryBlocked = new UsersBlocked();
         var services = new ServiceCollection()
-            .AddSingleton(this.MongoDbContext)
-            .AddSingleton(this.UsersTemporaryBlocked)
+            .AddSingleton(mongoDbContext)
+            .AddSingleton(usersTemporaryBlocked)
+            .AddSingleton(config)
             .AddScoped<MongoSession>()
             .AddScoped<PlayerRepository>()
             .AddScoped<ItemRepository>()
             .AddScoped<ZoneRepository>()
             .BuildServiceProvider();
 
-        bot.ModuleCommand(new CommandsNextConfiguration
+        var slashCommands = client.UseSlashCommands(new SlashCommandsConfiguration()
         {
-            PrefixResolver = ResolvePrefixAsync,
-            EnableDms = false,
-            CaseSensitive = false,
-            EnableDefaultHelp = false,
-            EnableMentionPrefix = true,
-            IgnoreExtraArguments = true,
             Services = services,
         });
 
-        await bot.ConectarAsync();
+        slashCommands.RegisterCommands<StartCommand>();
+        slashCommands.RegisterCommands<AdminCommand>(1118002801046474773);
+
+        client.Ready += (c, e) => ReadyEvent.Event(c, e, config);
+        client.GuildAvailable += (c, e) => GuildAvailableEvent.Event(c, e);
+        client.ClientErrored += ClientErroredEvent.Event;
+
+        await client.ConnectAsync();
         await Task.Delay(-1);
     }
 
-    private async Task<int> ResolvePrefixAsync(DiscordMessage msg)
-    {
-        // Private Messages
-        var gld = msg.Channel.Guild;
-        if (gld == null)
-            return await Task.FromResult(-1);
-        if (this.UsersTemporaryBlocked.IsUserBlocked(msg.Author.Id))
-            return await Task.FromResult(-1);
+    //private async Task<int> ResolvePrefixAsync(DiscordMessage msg)
+    //{
+    //    // Private Messages
+    //    var gld = msg.Channel.Guild;
+    //    if (gld == null)
+    //        return await Task.FromResult(-1);
+    //    if (UsersTemporaryBlocked.IsUserBlocked(msg.Author.Id))
+    //        return await Task.FromResult(-1);
 
-        var prefix = await this.MongoDbContext.GetServerPrefixAsync(gld.Id, Config.AppSettings.Settings["Prefix"].Value);
-        var pfixLocation = msg.GetStringPrefixLength(prefix);
-        return await Task.FromResult(pfixLocation);
-    }
+    //    var prefix = await MongoDbContext.GetServerPrefixAsync(gld.Id, Config.AppSettings.Settings["Prefix"].Value);
+    //    var pfixLocation = msg.GetStringPrefixLength(prefix);
+    //    return await Task.FromResult(pfixLocation);
+    //}
 }

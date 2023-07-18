@@ -23,6 +23,8 @@ public class MongoDbContext
     public IMongoCollection<Server> Servers { get; }
     public IMongoCollection<RankUpgrader> Upgraders { get; }
 
+    public UsersBlocked UsersTemporaryBlocked { get; private set; }
+
     public MongoDbContext(string connection)
     {
 

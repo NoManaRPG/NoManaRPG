@@ -26,7 +26,6 @@ public class HelpCommand : ApplicationCommandModule
     [Description("Exibe todos os comandos que o bot reconhece.")]
     [Usage("comandos")]
     [Cooldown(1, 5, CooldownBucketType.User)]
-    [SlashCommand("test", "Que loucura")]
     public async Task CommandsAsync(InteractionContext ctx)
     {
         var str = new StringBuilder();
