@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NoManaRPG.Commands.AdminCommands;
 using NoManaRPG.Commands.UserCommands;
-using NoManaRPG;
 using NoManaRPG.Repositories;
 using NoManaRPG.DiscordEvents;
 
@@ -16,9 +15,7 @@ namespace NoManaRPG;
 
 public class Program
 {
-    static void Main() => new Program().RodarBotAsync().GetAwaiter().GetResult();
-
-    public async Task RodarBotAsync()
+    public static async Task Main(string[] args)
     {
         #region Configs
 #if DEBUG
