@@ -9,15 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Extensions\BotMathematicsExtention.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="BotInfo.json" />
-    <None Remove="Config.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="DSharpPlus" Version="4.4.2" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.4.2" />
     <PackageReference Include="DSharpPlus.Interactivity" Version="4.4.2" />

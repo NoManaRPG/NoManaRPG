@@ -6,9 +6,10 @@ using DSharpPlus;
 using DSharpPlus.SlashCommands;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NoManaRPG.Commands.AdminCommands;
-using NoManaRPG.Commands.UserCommands;
-using NoManaRPG.Repositories;
+using NoManaRPG.Comandos.AdminCommands;
+using NoManaRPG.Comandos.UserCommands;
+using NoManaRPG.Database;
+using NoManaRPG.Database.Repositories;
 using NoManaRPG.DiscordEvents;
 
 namespace NoManaRPG;
@@ -26,7 +27,7 @@ public class Program
         var config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
         #endregion
 
-        var mongoDbContext = new MongoDbContext(config.ConnectionStrings.ConnectionStrings["MongoConnection"].ConnectionString);
+        var mongoDbContext = new DbContext(config.ConnectionStrings.ConnectionStrings["MongoConnection"].ConnectionString);
         //var usersTemporaryBlocked = new UsersBlocked();
 
         var client = new DiscordClient(new DiscordConfiguration
@@ -53,8 +54,8 @@ public class Program
             Services = services,
         });
 
-        slashCommands.RegisterCommands<StartCommand>();
-        slashCommands.RegisterCommands<AdminCommand>(1118002801046474773);
+        slashCommands.RegisterCommands<StartComando>();
+        slashCommands.RegisterCommands<AdminComando>(1118002801046474773);
 
         client.Ready += (c, e) => ReadyEvent.Event(c, e, config);
         client.GuildAvailable += (c, e) => GuildAvailableEvent.Event(c, e);

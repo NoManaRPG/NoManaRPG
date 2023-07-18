@@ -55,8 +55,6 @@ make build
 
 #### Windows:
 ```bash
-dotnet restore --configfile Nuget.config
-
 dotnet build
 ```
 

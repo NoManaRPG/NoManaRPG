@@ -10,10 +10,9 @@ using DSharpPlus.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
-using NoManaRPG;
-using NoManaRPG.Exceptions;
 using NoManaRPG.Exceptions;
 using NoManaRPG.Extensions;
+using NoManaRPG.Interactivity;
 
 namespace NoManaRPG.DiscordEvents;
 
@@ -80,10 +79,10 @@ public static class CommandErroredEvent
                     e.Context.Client.Logger.LogDebug(new EventId(601, "Argument Error"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);
                 break;
             case PlayerNotCreatedException pne:
-                await CommandContextExtension.RespondAsync(ctx, pne.Message);
+                await ctx.RespondAsync(pne.Message);
                 break;
             case AnswerTimeoutException ate:
-                await CommandContextExtension.RespondAsync(ctx, ate.Message);
+                await ctx.RespondAsync(ate.Message);
                 break;
             default:
                 e.Context.Client.Logger.LogDebug(new EventId(601, "Command Error"), $"[{e.Context.User.Username.RemoverAcentos()}({e.Context.User.Id})] tentou usar '{e.Command?.QualifiedName ?? "<comando desconhecido>"}' mas deu erro: {e.Exception}\ninner:{e.Exception?.InnerException}.", DateTime.Now);

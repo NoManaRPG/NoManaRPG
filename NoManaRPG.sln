@@ -13,20 +13,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{29715E35-BEBA-4797-8695-D0384881F4CD}"
-	ProjectSection(SolutionItems) = preProject
-		.github\FUNDING.yml = .github\FUNDING.yml
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build Items", "Build Items", "{5691051A-24FB-4DC3-B488-D83917A2B52A}"
 	ProjectSection(SolutionItems) = preProject
 		GerarExe.bat = GerarExe.bat
 		Makefile = Makefile
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{BE4CA0BD-54A3-4995-8E6E-3E649591948E}"
-	ProjectSection(SolutionItems) = preProject
-		Nuget.config = Nuget.config
 	EndProjectSection
 EndProject
 Global
@@ -42,9 +32,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{29715E35-BEBA-4797-8695-D0384881F4CD} = {573AEAA5-1C18-4B9B-9815-3BDA64E7935F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6F57C18A-5D26-4D05-97D4-E38FD60FACED}

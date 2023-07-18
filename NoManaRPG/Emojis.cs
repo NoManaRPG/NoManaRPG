@@ -1,6 +1,6 @@
 // This file is part of NoManaRPG project.
 
-using NoManaRPG.Entities;
+using NoManaRPG.Entidades;
 
 namespace NoManaRPG;
 
@@ -33,8 +33,8 @@ public static class Emojis
     public const string Fome = ":poultry_leg:";
     public const string Sede = ":cup_with_straw:";
 
-    public const string Coins = "<a:coins:828775068540469269>";
-    public const string Exp = "<:exp:828775431499022366>";
+    //public const string Coins = "<a:coins:828775068540469269>";
+    //public const string Exp = "<:exp:828775431499022366>";
 
     public const string Relogio = ":stopwatch:";
     public const string Demonio = ":smiling_imp:";
