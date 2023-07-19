@@ -38,13 +38,13 @@ public class DatabaseComando : BaseCommandModule
     [RequireOwner]
     public async Task AtualizarAsync(CommandContext ctx)
     {
-        FilterDefinition<Player> filter = FilterDefinition<Player>.Empty;
-        FindOptions<Player> options = new FindOptions<Player> { BatchSize = 8, NoCursorTimeout = false };
-        using (IAsyncCursor<Player> cursor = await this._mongoDbContext.Players.FindAsync(filter, options))
+        FilterDefinition<Jogador> filter = FilterDefinition<Jogador>.Empty;
+        FindOptions<Jogador> options = new FindOptions<Jogador> { BatchSize = 8, NoCursorTimeout = false };
+        using (IAsyncCursor<Jogador> cursor = await this._mongoDbContext.Players.FindAsync(filter, options))
             while (await cursor.MoveNextAsync())
             {
-                IEnumerable<Player> list = cursor.Current;
-                foreach (Player item in list)
+                IEnumerable<Jogador> list = cursor.Current;
+                foreach (Jogador item in list)
                 {
 
 

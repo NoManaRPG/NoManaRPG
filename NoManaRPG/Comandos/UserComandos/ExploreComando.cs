@@ -42,7 +42,7 @@ public class ExploreComando : BaseCommandModule
                 //if (highestZonePlayer.Level + 1 >= zoneWantExplore.Level)
                 //    return new StringResponse("Você não explorou a zona anterior!");
 
-                var player = await this._playerRepository.FindPlayerAsync(ctx);
+                //var player = await this._playerRepository.FindPlayerAsync(ctx);
                 return Task.CompletedTask;
             });
     }

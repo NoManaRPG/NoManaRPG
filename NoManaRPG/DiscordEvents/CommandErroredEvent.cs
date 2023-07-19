@@ -24,31 +24,6 @@ public static class CommandErroredEvent
         CommandContext ctx = e.Context;
         switch (e.Exception)
         {
-            case ChecksFailedException cfe:
-                if (cfe.FailedChecks.FirstOrDefault(x => x is CooldownAttribute) is CooldownAttribute ca)
-                {
-                    TimeSpan time = TimeSpan.FromSeconds(ca.GetRemainingCooldown(ctx).TotalSeconds);
-                    switch (time)
-                    {
-                        case TimeSpan n when (n.Days >= 1):
-                            await ctx.RespondAsync($"Aguarde {time.Days} dias e {time.Hours} horas para usar este comando! {ctx.Member.Mention}.");
-                            break;
-                        case TimeSpan n when (n.Hours >= 1):
-                            await ctx.RespondAsync($"Aguarde {time.Hours} horas e {time.Minutes} minutos para usar este comando! {ctx.Member.Mention}.");
-                            break;
-                        case TimeSpan n when (n.Minutes >= 1):
-                            await ctx.RespondAsync($"Aguarde {time.Minutes} minutos e {time.Seconds} segundos para usar este comando! {ctx.Member.Mention}.");
-                            break;
-                        default:
-                            await ctx.RespondAsync($"{ctx.Member.Mention}, você precisa esperar {time.Seconds} segundos para usar este comando!");
-                            break;
-                    };
-                }
-                break;
-            case CommandNotFoundException cnfe:
-                if (e.Command?.Name == "ajuda")
-                    await ctx.RespondAsync($":no_entry_sign: | {ctx.User.Mention} o comando `{e.Context.RawArgumentString}` não existe!");
-                break;
             case NotFoundException nfe:
                 await ctx.RespondAsync($"{ctx.User.Mention}, o usuario informado não foi encontrado.");
                 break;

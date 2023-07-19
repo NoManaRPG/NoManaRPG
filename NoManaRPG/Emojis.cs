@@ -45,9 +45,9 @@ public static class Emojis
     public const string DiamanteLaranjaPequeno = ":small_orange_diamond:";
     public const string Aviso = ":warning:";
 
-    public static string GerarVidaEmoji(StatePoints lifeAttribute)
+    public static string GerarVidaEmoji(PontosDeEstado lifeAttribute)
     {
-        switch (lifeAttribute.Current / lifeAttribute.Max)
+        switch (lifeAttribute.ValorAtual / lifeAttribute.ValorMaximo)
         {
             case double n when (n > 0.75):
                 return Emojis.CoracaoVerde;
@@ -59,8 +59,8 @@ public static class Emojis
         return Emojis.CoracaoVermelho;
     }
 
-    public static string TesteEmoji(StatePoints lifeAttribute) =>
-       (lifeAttribute.Current / lifeAttribute.Max) switch
+    public static string TesteEmoji(PontosDeEstado lifeAttribute) =>
+       (lifeAttribute.ValorAtual / lifeAttribute.ValorMaximo) switch
        {
            double n when (n > 0.75) => Emojis.CoracaoVerde,
            double n when (n > 0.50) => Emojis.CoracaoAmarelo,

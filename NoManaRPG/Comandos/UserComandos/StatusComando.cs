@@ -2,54 +2,52 @@
 
 using System.Text;
 using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus;
 using DSharpPlus.Entities;
+using DSharpPlus.SlashCommands;
+using DSharpPlus.SlashCommands.Attributes;
 using NoManaRPG.Database.Repositories;
+using NoManaRPG.Entidades;
 using NoManaRPG.Extensions;
 
 namespace NoManaRPG.Comandos.UserCommands;
 
-[ModuleLifespan(ModuleLifespan.Transient)]
-public class StatusComando : BaseCommandModule
+public class StatusComando : ApplicationCommandModule
 {
     private readonly PlayerRepository _playerRepository;
     private readonly ZoneRepository _zoneRepository;
 
-    public StatusComando(PlayerRepository playerRepository, MongoSession session, ZoneRepository zoneRepository)
+    public StatusComando(PlayerRepository playerRepository, ZoneRepository zoneRepository)
     {
         this._playerRepository = playerRepository;
         this._zoneRepository = zoneRepository;
     }
 
-    [Command("status")]
-    [Description("Permite visualizar dados do seu personagem.")]
-    [Cooldown(1, 5, CooldownBucketType.User)]
-    public async Task StatusCommandAsync(CommandContext ctx)
+    [SlashCommand("status", "Permite visualizar dados do seu personagem.")]
+    [SlashCooldown(1, 5, SlashCooldownBucketType.User)]
+    public async Task StatusCommandAsync(InteractionContext ctx)
     {
-        var player = await this._playerRepository.FindPlayerAsync(ctx);
-        var character = player.Character;
+        var player = await this._playerRepository.FindPlayerOrErrorAsync(ctx);
+        var character = player.Personagem;
         var str = new StringBuilder();
 
-        str.AppendLine($"{player.CurrentExperience:N2} de experiencia e precisa {(player.ExperienceForNextLevel - player.CurrentExperience):N2} para o nível {player.ActualLevel + 1}.");
-        str.AppendLine($"{player.MonstersKills} monstros abatidos.");
-        str.AppendLine($"{player.Deaths} vezes morto.");
-        //str.AppendLine($"{player.Energy.Current}/{player.Energy.Max} energia disponível.");
+        str.AppendLine($"**{player.MonstersKills}** monstros abatidos.");
+        str.AppendLine($"**{player.PlayersKills}** jogadores abatidos.");
+        str.AppendLine($"**{player.Deaths}** vezes eliminado.");
+        str.AppendLine($"Conta criada {Formatter.Timestamp(player.DateAccountCreation)}.");
 
         var embed = new DiscordEmbedBuilder();
-        embed.WithAuthor($"{ctx.User.Username} [Nv.{player.ActualLevel}] ", iconUrl: ctx.User.AvatarUrl);
+        embed.WithAuthor($"{ctx.User.Username} [Nvl C. {character.NivelDeCombate}] ", iconUrl: ctx.User.AvatarUrl);
         embed.WithThumbnail(ctx.User.AvatarUrl);
         embed.WithColor(DiscordColor.Blue);
         embed.WithDescription(str.ToString());
 
-        //embed.AddField($"Dano [Nv.{character.AttackPointsLevel} R{character.AttackPointsRank}]", $"{Emojis.EspadasCruzadas} {character.AttackPoints:N2}", true);
-        //embed.AddField($"Vida [Nv.{character.LifePointsLevel} R{character.LifePointsRank}]", $"{Emojis.CoracaoVermelho} {character.LifePoints.Max:N2}", true);
+        embed.AddField($"Vida {Emojis.CoracaoVermelho}", $"{character.PontosDeVida.ValorAtual:N2}/{character.PontosDeVida.ValorMaximo:N2}", true);
+        embed.AddField($"Mana {Emojis.Mago}", $"{character.PontosDeMana.ValorAtual:N2}/{character.PontosDeMana.ValorMaximo:N2}", true);
 
-        var zone = await this._zoneRepository.FindPlayerHighestZoneAsync(player.DiscordId);
-        if (zone != null)
-            embed.AddField("Maior Zona", $"{Emojis.Mapa} {zone.Level}");
-
-
-        await ctx.RespondAsync(embed);
+        //var zone = await this._zoneRepository.FindPlayerHighestZoneAsync(player.DiscordId);
+        //if (zone != null)
+        //    embed.AddField("Maior Zona", $"{Emojis.Mapa} {zone.Level}");
+        await ctx.CreateResponseAsync(embed);
     }
 }

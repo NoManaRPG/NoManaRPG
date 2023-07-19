@@ -7,10 +7,12 @@ using DSharpPlus.SlashCommands;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NoManaRPG.Comandos.AdminCommands;
+using NoManaRPG.Comandos.UserComandos;
 using NoManaRPG.Comandos.UserCommands;
 using NoManaRPG.Database;
 using NoManaRPG.Database.Repositories;
 using NoManaRPG.DiscordEvents;
+using NoManaRPG.Entidades;
 
 namespace NoManaRPG;
 
@@ -56,6 +58,10 @@ public class Program
 
         slashCommands.RegisterCommands<StartComando>();
         slashCommands.RegisterCommands<AdminComando>(1118002801046474773);
+        slashCommands.RegisterCommands<StatusComando>();
+        slashCommands.RegisterCommands<CriarPersonagemComando>(1118002801046474773);
+
+        slashCommands.SlashCommandErrored += SlashCommandErrorEvent.EventAsync;
 
         client.Ready += (c, e) => ReadyEvent.Event(c, e, config);
         client.GuildAvailable += (c, e) => GuildAvailableEvent.Event(c, e);
@@ -64,6 +70,7 @@ public class Program
         await client.ConnectAsync();
         await Task.Delay(-1);
     }
+
 
     //private async Task<int> ResolvePrefixAsync(DiscordMessage msg)
     //{
@@ -79,3 +86,4 @@ public class Program
     //    return await Task.FromResult(pfixLocation);
     //}
 }
+

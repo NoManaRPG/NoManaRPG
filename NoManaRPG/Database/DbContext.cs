@@ -14,11 +14,9 @@ public class DbContext
     public IMongoClient Client { get; }
     public IMongoDatabase Database { get; }
 
-    public IMongoCollection<Player> Players { get; }
+    public IMongoCollection<Jogador> Players { get; }
     public IMongoCollection<Room> Zones { get; }
     public IMongoCollection<Item> Items { get; }
-
-    public IMongoCollection<Server> Servers { get; }
 
     public DbContext(string connection)
     {
@@ -29,8 +27,7 @@ public class DbContext
         this.Client = new MongoClient(mongoUrl);
         this.Database = this.Client.GetDatabase(dbName);
 
-        this.Players = this.Database.CreateCollection<Player>("NoManaPlayers");
-        this.Servers = this.Database.CreateCollection<Server>("NoManaServers");
+        this.Players = this.Database.CreateCollection<Jogador>("NoManaPlayers");
         this.Items = this.Database.CreateCollection<Item>("NoManaItems");
         this.Zones = this.Database.CreateCollection<Room>("NoManaZones");
 

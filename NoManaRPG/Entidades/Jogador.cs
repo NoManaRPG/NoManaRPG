@@ -1,13 +1,12 @@
 // This file is part of NoManaRPG project.
 
 using System;
-using System.Globalization;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace NoManaRPG.Entidades;
 
 [BsonIgnoreExtraElements]
-public class Player : Level
+public class Jogador
 {
     [BsonId]
     public ulong DiscordId { get; private set; }
@@ -16,13 +15,11 @@ public class Player : Level
     public ulong PlayersKills { get; private set; }
     public ulong Deaths { get; private set; }
 
-    public Character Character { get; private set; }
+    public Personagem Personagem { get; private set; }
 
-
-    public string Mention => $"<@{this.DiscordId.ToString(CultureInfo.InvariantCulture)}>";
     public string Language { get; private set; } = "";
 
-    public Player(ulong id)
+    public Jogador(ulong id)
     {
         this.DiscordId = id;
         this.DateAccountCreation = DateTime.UtcNow;
@@ -30,6 +27,6 @@ public class Player : Level
         this.PlayersKills = 0;
         this.Deaths = 0;
 
-        this.Character = new Character();
+        this.Personagem = new();
     }
 }

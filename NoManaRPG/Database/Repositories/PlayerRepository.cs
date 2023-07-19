@@ -3,7 +3,6 @@
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using NoManaRPG.Entidades;
-using NoManaRPG.Exceptions;
 
 namespace NoManaRPG.Database.Repositories;
 
@@ -18,20 +17,14 @@ public class PlayerRepository
         this._session = session;
     }
 
-    public async Task<Player> FindPlayerAsync(ulong id)
-    {
-        var player = await this.FindPlayerOrDefaultAsync(id);
-        if (player == null)
-            throw new PlayerNotCreatedException();
-        return player;
-    }
-    public async Task<Player> FindPlayerOrDefaultAsync(ulong id)
+    public async Task<Jogador> FindPlayerOrNullAsync(ulong id)
     {
         if (this._session.Session != null)
             return await this._context.Players.Find(this._session.Session, x => x.DiscordId == id).FirstOrDefaultAsync();
         return await this._context.Players.Find(x => x.DiscordId == id).FirstOrDefaultAsync();
     }
-    public Task SavePlayerAsync(Player player)
+
+    public Task SavePlayerAsync(Jogador player)
     {
         ReplaceOptions options = new() { IsUpsert = true };
         if (this._session.Session != null)

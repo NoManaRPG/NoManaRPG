@@ -10,7 +10,7 @@ public static class RandomExtension
         => rd.NextDouble() < chance;
 
     public static int Sortear(this Random rd, int max)
-        => rd.Next(0, max);
+        => rd.Next(0, 1 + max);
 
     public static int Sortear(this Random rd, int min, int max)
         => rd.Next(min, 1 + max);
