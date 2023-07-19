@@ -6,13 +6,13 @@ using DSharpPlus;
 using DSharpPlus.SlashCommands;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NoManaRPG.Comandos;
 using NoManaRPG.Comandos.AdminCommands;
 using NoManaRPG.Comandos.UserComandos;
 using NoManaRPG.Comandos.UserCommands;
 using NoManaRPG.Database;
 using NoManaRPG.Database.Repositories;
 using NoManaRPG.DiscordEvents;
-using NoManaRPG.Entidades;
 
 namespace NoManaRPG;
 
@@ -56,10 +56,12 @@ public class Program
             Services = services,
         });
 
-        slashCommands.RegisterCommands<StartComando>();
-        slashCommands.RegisterCommands<AdminComando>(1118002801046474773);
+        const ulong servidor = 1118002801046474773;
+
+        slashCommands.RegisterCommands<AdminComando>(servidor);
         slashCommands.RegisterCommands<StatusComando>();
-        slashCommands.RegisterCommands<CriarPersonagemComando>(1118002801046474773);
+        slashCommands.RegisterCommands<CriarPersonagemComando>();
+        slashCommands.RegisterCommands<InfoComando>();
 
         slashCommands.SlashCommandErrored += SlashCommandErrorEvent.EventAsync;
 

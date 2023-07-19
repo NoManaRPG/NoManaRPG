@@ -7,7 +7,6 @@ using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using DSharpPlus.SlashCommands.Attributes;
 using NoManaRPG.Database.Repositories;
-using NoManaRPG.Entidades;
 using NoManaRPG.Extensions;
 
 namespace NoManaRPG.Comandos.UserCommands;

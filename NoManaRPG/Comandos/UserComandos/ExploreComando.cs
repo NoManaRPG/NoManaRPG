@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using NoManaRPG.Database.Repositories;
-using NoManaRPG.Extensions;
 using NoManaRPG.Interactivity;
 
 namespace NoManaRPG.Comandos.UserCommands;

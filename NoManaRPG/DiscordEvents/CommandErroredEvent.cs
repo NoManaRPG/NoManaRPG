@@ -1,15 +1,11 @@
 // This file is part of NoManaRPG project.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
 using NoManaRPG.Exceptions;
 using NoManaRPG.Extensions;
 using NoManaRPG.Interactivity;

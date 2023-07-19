@@ -1,11 +1,10 @@
 // This file is part of NoManaRPG project.
 
 using System.Threading.Tasks;
-using DSharpPlus.SlashCommands.Attributes;
 using DSharpPlus.SlashCommands;
+using DSharpPlus.SlashCommands.Attributes;
 using NoManaRPG.Database.Repositories;
 using NoManaRPG.Entidades;
-using System;
 
 namespace NoManaRPG.Comandos.UserComandos;
 
